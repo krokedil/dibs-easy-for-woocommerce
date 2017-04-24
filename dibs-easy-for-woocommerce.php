@@ -7,7 +7,7 @@
  * @wordpress-plugin
  * Plugin Name:     DIBS Easy for WooCommerce
  * Plugin URI:      http://krokedil.com/
- * Description:     Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS</a> checkout for WooCommerce.
+ * Description:     Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
  * Version:         1.0.0
  * Author:          WooCommerce
  * Author URI:      https://woocommerce.com/
@@ -72,5 +72,4 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 	}
 	$dibs_easy = new DIBS_Easy();
-
 }

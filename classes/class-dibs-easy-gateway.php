@@ -13,12 +13,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 	public $testmode;
 
-	public $language;
-
-	public $checkout_url;
-
-	public $thank_you_url;
-
 	public function __construct() {
 		$this->id = 'dibs_easy';
 
@@ -43,14 +37,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$this->private_key  = $this->get_option( 'dibs_private_key' );
 
-		$this->language     = $this->get_option( 'dibs_language' );
-
-		$this->checkout_url = $this->get_option( 'dibs_checkout_url' );
-
-		// Add actions for when order is processed
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-
-		//add_action( 'woocommerce_order_status_completed', array($this , 'dibs_order_completed'));
 	}
 	public function init_form_fields() {
 		$this->form_fields = include( DIR_NAME . '/includes/dibs-settings.php' );

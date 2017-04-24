@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class DIBS_Post_Checkout{
+class DIBS_Post_Checkout {
 	public function __construct() {
 		add_action( 'woocommerce_order_status_completed', array( $this, 'dibs_order_completed' ) );
 	}
@@ -14,7 +14,7 @@ class DIBS_Post_Checkout{
 		$body = $order->get_order_cart( $order_id );
 
 		//Get paymentID from order meta and set endpoint
-		$payment_id = get_post_meta( $order_id, '_paymentID' )[0];
+		$payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
 
 		// Add the sufix to the endpoint
 		$endpoint_sufix = '/' . $payment_id . '/charges';
@@ -24,7 +24,7 @@ class DIBS_Post_Checkout{
 		$request = $request->make_request( 'POST', $body, $endpoint_sufix );
 
 		$order = wc_get_order( $order_id );
-		$order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID ' . $request->chargeId, 'woocommerce-dibs-easy' ) ) );
+		$order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'woocommerce-dibs-easy' ), $request->chargeId ) );
 	}
 
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {

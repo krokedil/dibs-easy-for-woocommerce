@@ -10,10 +10,9 @@ class DIBS_Get_WC_Cart {
 
 	// Create the datastring for the AJAX call
 	public function create_cart( $order_id ) {
-		global $woocommerce;
-		$wc_cart = $woocommerce->cart->cart_contents;
+		$wc_cart = WC()->cart->cart_contents;
 		// Set arrays
-		$cart = array();
+		$cart  = array();
 		$order = array();
 		$items = array();
 		// Create the items objects for each product in cart
@@ -28,7 +27,6 @@ class DIBS_Get_WC_Cart {
 		if ( '' != $shipping ) {
 			array_push( $items, $shipping );
 		}
-
 		// Set the rest of the order array objects
 		$amount = $this->get_total_amount( $items );
 		$currency = get_woocommerce_currency();
@@ -42,7 +40,7 @@ class DIBS_Get_WC_Cart {
 
 		//Get the checkout URL from the options.
 		$gateway = new DIBS_Easy_Gateway();
-		$checkout['url'] = $gateway->checkout_url;
+		$checkout['url'] = wc_get_checkout_url();
 
 		// Create the final cart array for the datastring
 		$cart['order'] = $order;
