@@ -9,7 +9,7 @@ class DIBS_Get_WC_Cart {
 	}
 
 	// Create the datastring for the AJAX call
-	public function createCart($orderID){
+	public function create_cart( $order_id ) {
 		global $woocommerce;
 		$wc_cart = $woocommerce->cart->cart_contents;
 		// Set arrays
@@ -17,22 +17,22 @@ class DIBS_Get_WC_Cart {
 		$order = array();
 		$items = array();
 		// Create the items objects for each product in cart
-		foreach($wc_cart as $item){
+		foreach ( $wc_cart as $item ) {
 			$item_name = wc_get_product( $item['product_id'] );
 			$item_name = $item_name->get_title();
-			$itemLine = $this->createItems($item_name, $item['quantity'], $item['line_subtotal'], $item['line_subtotal_tax']);
-			array_push($items, $itemLine);
+			$item_line = $this->create_items( $item_name, $item['quantity'], $item['line_subtotal'], $item['line_subtotal_tax'] );
+			array_push( $items, $item_line );
 		}
 		// Add shipping as an item for order.
-		$shipping = $this->shippingCost();
-		if($shipping != '') {
+		$shipping = $this->shipping_cost();
+		if ( '' != $shipping ) {
 			array_push( $items, $shipping );
 		}
 
 		// Set the rest of the order array objects
-		$amount = $this->getTotalAmount($items);
+		$amount = $this->get_total_amount( $items );
 		$currency = get_woocommerce_currency();
-		$reference = $orderID;
+		$reference = $order_id;
 
 		// Create the order array
 		$order['items']     = $items;
@@ -47,37 +47,37 @@ class DIBS_Get_WC_Cart {
 		// Create the final cart array for the datastring
 		$cart['order'] = $order;
 		$cart['checkout'] = $checkout;
-		return json_encode($cart, JSON_UNESCAPED_SLASHES);
+		return $cart;
 	}
 
 	// Get order information from order ID
-	public function getOrderCart($orderID){
+	public function get_order_cart( $order_id ) {
 		// Get the order from orderID and get the items
-		$order = wc_get_order( $orderID );
+		$order = wc_get_order( $order_id );
 		$order_shipping = $order->get_items( 'shipping' );
 		$order_item = $order->get_items();
 
 		$items = array();
 		// Get the items from the array and save in a format that works for DIBS
-		foreach( $order_item as $item ) {
-			$itemLine = $this->createItems($item['name'], $item['quantity'], $item['subtotal'], $item['subtotal_tax']);
-			array_push($items, $itemLine);
+		foreach ( $order_item as $item ) {
+			$item_line = $this->create_items( $item['name'], $item['quantity'], $item['subtotal'], $item['subtotal_tax'] );
+			array_push( $items, $item_line );
 		}
-		foreach( $order_shipping as $shipping ){
-			$shippingLine = $this->createItems($shipping['method_title'], 1, $shipping['total'], $shipping['total_tax']);
-			array_push($items, $shippingLine);
+		foreach ( $order_shipping as $shipping ) {
+			$shipping_line = $this->create_items( $shipping['method_title'], 1, $shipping['total'], $shipping['total_tax'] );
+			array_push( $items, $shipping_line );
 		}
 		// Calculate total amount to charge customer
-		$amount = $this->getTotalAmount($items);
+		$amount = $this->get_total_amount( $items );
 
 		$return = array();
 		$return['amount'] = $amount;
 		$return['orderItems'] = $items;
-		return json_encode($return);
+		return $return;
 	}
 
 	//Calculate and return shipping cost
-	public function shippingCost(){
+	public function shipping_cost() {
 		if ( WC()->cart->needs_shipping() ) {
 			WC()->cart->calculate_shipping();
 			$packages = WC()->shipping->get_packages();
@@ -86,9 +86,9 @@ class DIBS_Get_WC_Cart {
 			foreach ( $packages as $i => $package ) {
 				foreach ( $package['rates'] as $method ) {
 					if ( $chosen_shipping === $method->id ) {
-						if($method->cost > 0 ) {
-							$shippingItem = $this->createItems($method->label, 1, $method->cost, array_sum( $method->taxes ));
-							return $shippingItem;
+						if ( $method->cost > 0 ) {
+							$shipping_item = $this->create_items( $method->label, 1, $method->cost, array_sum( $method->taxes ) );
+							return $shipping_item;
 						}
 					}
 				}
@@ -97,39 +97,39 @@ class DIBS_Get_WC_Cart {
 	}
 
 	// Create the item array objects.
-	public function createItems($item_name, $item_quanitity, $item_line_subtotal, $item_line_subtotal_tax){
+	public function create_items( $item_name, $item_quantity, $item_line_subtotal, $item_line_subtotal_tax ) {
 		// Set the different variables for the item object
 		$reference        = '1';
 		$name             = $item_name;
-		$quantity         = $item_quanitity;
-		$unit             = (string)$item_quanitity;
-		$unitPrice        = round( ( $item_line_subtotal * 100 ) / $unit );
-		$taxRate          = ($item_line_subtotal_tax / $item_line_subtotal) * 10000;
-		$taxAmount        = $item_line_subtotal_tax * 100;
-		$grossTotalAmount = round( ( $item_line_subtotal + $item_line_subtotal_tax ) * 100 );
-		$netTotalAmount   = $item_line_subtotal * 100;
+		$quantity         = $item_quantity;
+		$unit             = (string) $item_quantity;
+		$unit_price        = round( ( $item_line_subtotal * 100 ) / $unit );
+		$tax_rate          = ($item_line_subtotal_tax / $item_line_subtotal) * 10000;
+		$tax_amount        = $item_line_subtotal_tax * 100;
+		$gross_total_amount = round( ( $item_line_subtotal + $item_line_subtotal_tax ) * 100 );
+		$net_total_amount   = $item_line_subtotal * 100;
 
 		// Return the item object array
 		return array(
-			"reference"         => $reference,
-			"name"              => $name,
-			"quantity"          => $quantity,
-			"unit"              => $unit,
-			"unitPrice"         => $unitPrice,
-			"taxRate"           => $taxRate,
-			"taxAmount"         => $taxAmount,
-			"grossTotalAmount"  => $grossTotalAmount,
-			"netTotalAmount"    => $netTotalAmount
+			'reference'        => $reference,
+			'name'              => $name,
+			'quantity'          => $quantity,
+			'unit'              => $unit,
+			'unitPrice'         => $unit_price,
+			'taxRate'           => $tax_rate,
+			'taxAmount'         => $tax_amount,
+			'grossTotalAmount'  => $gross_total_amount,
+			'netTotalAmount'    => $net_total_amount,
 		);
 	}
 
 	// Calculate the total cart value
-	public function getTotalAmount($items){
+	public function get_total_amount( $items ) {
 		$amount = 0;
-		foreach ($items as $item){
-			foreach($item as $key => $value) {
-				if ( $key == 'grossTotalAmount' ) {
-					$value = intval($value);
+		foreach ( $items as $item ) {
+			foreach ( $item as $key => $value ) {
+				if ( 'grossTotalAmount' == $key ) {
+					$value = intval( $value );
 					$amount = $amount + $value;
 				}
 			}

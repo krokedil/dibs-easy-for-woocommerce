@@ -31,13 +31,13 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Load the settings
 		$this->init_settings();
 		// Get the settings values
-		$this->title        = $this->get_option('title');
+		$this->title        = $this->get_option( 'title' );
 
 		$this->enabled      = $this->get_option( 'enabled' );
 
 		$this->testmode     = 'yes' === $this->get_option( 'test_mode' );
 
-		$this->endpoint     = $this->testmode ? "https://test.api.dibspayment.eu/v1/payments" : "https://checkout.dibspayment.eu/v1/checkout.js?v=1";
+		$this->endpoint     = $this->testmode ? 'https://test.api.dibspayment.eu/v1/payments' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
 
 		$this->key          = $this->testmode ? $this->get_option( 'dibs_test_key' ) : $this->get_option( 'dibs_live_key' );
 
@@ -66,10 +66,10 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		return array(
 			'result'   => 'success',
-			'redirect' => $this->get_return_url( $order )
+			'redirect' => $this->get_return_url( $order ),
 		);
 	}
-	public function listener(){
+	public function listener() {
 		//
 	}
 
