@@ -5,20 +5,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
-	public $endpoint;
-
-	public $key;
-
-	public $private_key;
-
-	public $testmode;
-
 	public function __construct() {
 		$this->id = 'dibs_easy';
 
-		$this->method_title = __( 'DIBS Easy', 'woocommerce-gateway-klarna' );
+		$this->method_title = __( 'DIBS Easy', 'woocommerce-dibs-easy' );
 
-		$this->method_description = 'DIBS Easy Payment for checkout';
+		$this->method_description = __( 'DIBS Easy Payment for checkout', 'woocommerce-dibs-easy' );
 
 		// Load the form fields.
 		$this->init_form_fields();
@@ -29,15 +21,12 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$this->enabled      = $this->get_option( 'enabled' );
 
-		$this->testmode     = 'yes' === $this->get_option( 'test_mode' );
-
-		$this->endpoint     = $this->testmode ? 'https://test.api.dibspayment.eu/v1/payments' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
-
-		$this->key          = $this->testmode ? $this->get_option( 'dibs_test_key' ) : $this->get_option( 'dibs_live_key' );
-
-		$this->private_key  = $this->get_option( 'dibs_private_key' );
-
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+
+		$this->supports = array(
+			'products',
+			'refunds',
+		);
 	}
 	public function init_form_fields() {
 		$this->form_fields = include( DIR_NAME . '/includes/dibs-settings.php' );
@@ -49,6 +38,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$order->payment_complete();
 
+		WC()->session->__unset( 'dibs_incomplete_order' );
 		WC()->session->__unset( 'order_awaiting_payment' );
 
 		return array(
@@ -56,9 +46,46 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			'redirect' => $this->get_return_url( $order ),
 		);
 	}
-	public function listener() {
-		//
+	public function process_refund( $order_id, $amount = null, $reason = '' ) {
+		error_log( $order_id . '   ' . $amount );
+		//Check if amount equals total order
+		$order = wc_get_order( $order_id );
+		if ( $amount == $order->get_total() ) {
+			//Get the order information
+			$cart = new DIBS_Get_WC_Cart();
+			$body = $cart->get_order_cart( $order_id );
+		} else {
+			$body = array(
+				'amount' => $amount,
+				'orderItems' => array(
+					'reference'         => 'Refund',
+					'name'              => 'Refund',
+					'quantity'          => 1,
+					'unit'              => '1',
+					'unitPrice'         => $amount,
+					'taxRate'           => 0,
+					'taxAmount'         => 0,
+					'grossTotalAmount'  => $amount,
+					'netTotalAmount'    => $amount,
+				),
+			);
+		}
+
+		//Get paymentID from order meta and set endpoint
+		$charge_id = get_post_meta( $order_id, '_dibs_charge_id' )[0];
+
+		// Add the sufix to the endpoint
+		$endpoint_sufix = 'charges/' . $charge_id . '/refunds';
+
+		// Make the request
+		$request = new DIBS_Requests();
+		$request = $request->make_request( 'POST', $body, $endpoint_sufix );
+		error_log( var_export( $request, true ) );
+		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
+			$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %s. Reason: %s', 'woocommerce-dibs-easy' ), $request->refundId, $reason ) );
+			return true;
+		} else {
+			return false;
+		}
 	}
-
-
 }// End of class DIBS_Easy_Gateway

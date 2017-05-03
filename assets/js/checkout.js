@@ -1,22 +1,29 @@
 jQuery(document).ready(function($) {
-    // Hide sidebar and give main content 100% width
-    $('#secondary').hide();
-    $('#primary').css('width', '100%');
     var i = 0;
+    var x = 0;
     function triggerDIBS() {
         var data = {
             'action': 'create_paymentID'
         };
 
         jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
-            var paymentID = data.data.paymentId.paymentId;
-            var privateKey = data.data.privateKey;
-            var language = data.data.language;
-            intitCheckout(paymentID, privateKey, language);
+            if (true === data.success ) {
+                var paymentID = data.data.paymentId.paymentId;
+                var privateKey = data.data.privateKey;
+                var language = data.data.language;
+                intitCheckout(paymentID, privateKey, language);
+                $('#dibs-complete-checkout').addClass('dibs-easy');
+                $('#order_review_heading').addClass('dibs-easy');
+                $('#order_review').addClass('dibs-easy');
+                $('.form-row.notes').addClass('dibs-easy');
+                $('.form-row.notes').insertAfter('#dibs-complete-checkout');
+            } else {
+                console.log('error');
+            }
         });
     }
     // Add the div for the DIBS checkout iFrame
-    $('#customer_details').after("<div class='col2-set' id='dibs-complete-checkout'></div>");
+    $('#order_review').after("<div id='dibs-complete-checkout'></div>");
 
     // Load the iFrame and get response from DIBS after checkout is complete
     function intitCheckout(paymentID, privateKey, language) {
@@ -29,14 +36,9 @@ jQuery(document).ready(function($) {
         };
 
         var checkout = new Dibs.Checkout(checkoutOptions);
-        $('#dibs-complete-checkout').addClass('col2-set');
         //After payment is complete
         checkout.on('payment-completed', function (response) {
-
-            //Response:
-            //paymentId: string (GUID without dashes)
             DIBS_Payment_Success(response.paymentId);
-            //window.location = '/PaymentSuccessful';
         });
     }
     if(i === 0) {
@@ -55,7 +57,8 @@ jQuery(document).ready(function($) {
     function usingGateway() {
         if ($('form[name="checkout"] input[name="payment_method"]:checked').val() == 'dibs_easy') {
             $('#dibs-complete-checkout').empty();
-            $('#customer_details').hide();
+            $('.woocommerce-billing-fields').hide();
+            $('.woocommerce-shipping-fields').hide();
             $('.place-order').hide();
             $('#dibs-complete-checkout').show();
             if(i == 0) {
@@ -63,36 +66,51 @@ jQuery(document).ready(function($) {
                 triggerDIBS();
             }
         } else{
-            $('#customer_details').show();
+            $('.woocommerce-billing-fields').show();
+            $('.woocommerce-shipping-fields').show();
             $('.place-order').show();
             $('#dibs-complete-checkout').hide();
             $('#dibs-complete-checkout').empty();
+            $('#dibs-complete-checkout').removeClass('dibs-easy');
+            $('#order_review_heading').removeClass('dibs-easy');
+            $('#order_review').removeClass('dibs-easy');
+            $('.form-row.notes').removeClass('dibs-easy');
+
+            i = 0;
         }
     }
     function DIBS_Payment_Success(paymentId) {
-        var data = {
-            'action': 'payment_success',
-            'paymentId': paymentId
-        };
+        if (x === 0) {
+            var data = {
+                'action': 'payment_success',
+                'paymentId': paymentId
+            };
 
-        jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
-            var returnCountry = data.data.payment.consumer.shippingAddress.country
-            if(returnCountry === "SWE")
-            {
-                var country = "SE"
-            }
+            jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
+                var returnCountry = data.data.payment.consumer.shippingAddress.country
+                if (returnCountry === "SWE") {
+                    var country = "SE"
+                }
 
-            $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
-            $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
-            $("form.checkout #billing_email").val(data.data.payment.consumer.privatePerson.email);
-            $("form.checkout #billing_country").val(country);
-            $("form.checkout #billing_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
-            $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
-            $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
-            $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number );
+                $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
+                $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
+                $("form.checkout #billing_email").val(data.data.payment.consumer.privatePerson.email);
+                $("form.checkout #billing_country").val(country);
+                $("form.checkout #billing_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
+                $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
+                $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
+                $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number);
 
-            $("#place_order").trigger("submit");
-        });
+                $("#place_order").trigger("submit");
+            });
+            x = 1;
+        }
     }
-
+    function move_stuff() {
+        if (i === 0){
+            var order_review_header_parent = $("#order_review").closest("form").prop("id");
+            var order_review_parent = $("#order_review").closest("form").prop("id");
+            var order_note_parent = $("#order_comments_field").closest("div").prop("id");
+        }
+    }
 });

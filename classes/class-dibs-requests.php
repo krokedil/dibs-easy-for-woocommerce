@@ -9,11 +9,14 @@ class DIBS_Requests {
 
 	public $key;
 
+	public $testmode;
+
 	public function __construct() {
-		$gateway = new DIBS_Easy_Gateway();
 		// Set the endpoint and key from settings
-		$this->endpoint = $gateway->endpoint;
-		$this->key = $gateway->key;
+		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+		$this->testmode     = 'yes' === $dibs_settings['test_mode'];
+		$this->key = $this->testmode ? $dibs_settings['dibs_test_key'] : $dibs_settings['dibs_live_key'];
+		$this->endpoint = $this->testmode ? 'https://test.api.dibspayment.eu/v1/' : 'https://checkout.dibspayment.eu/v1/';
 	}
 
 	public function make_request( $method, $body, $endpoint_sufix = '' ) {
@@ -31,6 +34,7 @@ class DIBS_Requests {
 		// Check if body is needed and add the body if needed
 		if ( '' != $body ) {
 			$request_array['body'] = json_encode( $body, JSON_UNESCAPED_SLASHES );
+			error_log( var_export( $request_array['body'], true ) );
 		}
 
 		// Make the request

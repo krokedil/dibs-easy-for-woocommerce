@@ -38,8 +38,7 @@ class DIBS_Get_WC_Cart {
 		$order['currency']  = $currency;
 		$order['reference'] = $reference;
 
-		//Get the checkout URL from the options.
-		$gateway = new DIBS_Easy_Gateway();
+		//Get the checkout URL
 		$checkout['url'] = wc_get_checkout_url();
 
 		// Create the final cart array for the datastring
@@ -74,7 +73,7 @@ class DIBS_Get_WC_Cart {
 		return $return;
 	}
 
-	//Calculate and return shipping cost
+	// Calculate and return shipping cost
 	public function shipping_cost() {
 		if ( WC()->cart->needs_shipping() ) {
 			WC()->cart->calculate_shipping();
@@ -109,7 +108,7 @@ class DIBS_Get_WC_Cart {
 
 		// Return the item object array
 		return array(
-			'reference'        => $reference,
+			'reference'         => $reference,
 			'name'              => $name,
 			'quantity'          => $quantity,
 			'unit'              => $unit,

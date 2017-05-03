@@ -1,11 +1,7 @@
 <?php
 
 class DIBS_Ajax_Calls {
-	public $endpoint;
-
 	public $private_key;
-
-	public $testmode;
 
 	function __construct() {
 		add_action( 'wp_ajax_create_paymentID', array( $this, 'create_payment_id' ) );
@@ -13,21 +9,23 @@ class DIBS_Ajax_Calls {
 		add_action( 'wp_ajax_payment_success', array( $this, 'get_order_data' ) );
 		add_action( 'wp_ajax_nopriv_payment_success', array( $this, 'get_order_data' ) );
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-		$this->testmode     = 'yes' === $dibs_settings['test_mode'];
-		$this->endpoint = $this->testmode ? $dibs_settings['dibs_test_key'] : $dibs_settings['dibs_live_key'];
 		$this->private_key = $dibs_settings['dibs_private_key'];
 	}
+
 	public function create_payment_id() {
 		// Create an empty WooCommerce order and get order id if one is not made already
-		if ( WC()->session->get( 'order_awaiting_payment' ) === null ) {
+		if ( WC()->session->get( 'dibs_incomplete_order' ) === null ) {
 			$order    = wc_create_order();
-			$order_id = $order->get_order_number();
+			$order_id = $order->get_id();
 			// Set the order id as a session variable
-			WC()->session->set( 'order_awaiting_payment', $order_id );
+			WC()->session->set( 'dibs_incomplete_order', $order_id );
+			$order->update_status( 'dibs-incomplete' );
+			$order->save();
 		} else {
-			$order_id = WC()->session->get( 'order_awaiting_payment' );
+			$order_id = WC()->session->get( 'dibs_incomplete_order' );
 			$order = wc_get_order( $order_id );
-			$order->update_status( 'pending' );
+			$order->update_status( 'dibs-incomplete' );
+			$order->save();
 		}
 
 		$get_cart = new DIBS_Get_WC_Cart();
@@ -36,27 +34,46 @@ class DIBS_Ajax_Calls {
 		$datastring = $get_cart->create_cart( $order_id );
 		// Make the request
 		$request = new DIBS_Requests();
-		$request = $request->make_request( 'POST', $datastring );
+		$endpoint_sufix = 'payments/';
+		$request = $request->make_request( 'POST', $datastring, $endpoint_sufix );
+		if ( null != $request ) { // If array has a return
+			if ( array_key_exists( 'paymentId', $request ) ) {
+				error_log( 'success' );
+				// Create the return array
+				$return               = array();
+				$return['privateKey'] = $this->private_key;
+				if ( 'sv_SE' === get_locale() ) {
+					$language = 'sv-SE';
+				} else {
+					$language = 'en-GB';
+				}
+				$return['language']  = $language;
+				$return['paymentId'] = $request;
 
-		// Create the return array
-		$return = array();
-		$return['privateKey'] = $this->private_key;
-		if ( 'sv_SE' === get_locale() ) {
-			$language = 'sv-SE';
-		} else {
-			$language = 'en-GB';
+				wp_send_json_success( $return );
+				wp_die();
+			} elseif ( array_key_exists( 'errors', $request ) ) {
+				if ( array_key_exists( 'amount', $request->errors ) && 'Amount dosent match sum of orderitems' === $request->errors->amount[0] ) {
+					$message = 'DIBS failed to create a Payment ID : ' . $request->errors->amount[0];
+					wp_send_json_error( $this->fail_ajax_call( $order, $message ) );
+					wp_die();
+				}
+			}
+		} else { // If return array equals null
+			wp_send_json_error( $this->fail_ajax_call( $order ) );
+			wp_die();
 		}
-		$return['language'] = $language;
-		$return['paymentId'] = $request;
-
-		wp_send_json_success( $return );
-		wp_die();
 	}
+
 	public function get_order_data() {
 		$payment_id = $_POST['paymentId'];
 
+		$order_id = WC()->session->get( 'dibs_incomplete_order' );
+
+		WC()->session->set( 'order_awaiting_payment', $order_id );
+
 		// Set the endpoint sufix
-		$endpoint_sufix = '/' . $payment_id;
+		$endpoint_sufix = 'payments/' . $payment_id;
 
 		// Make the request
 		$request = new DIBS_Requests();
@@ -66,6 +83,9 @@ class DIBS_Ajax_Calls {
 		$order_id = WC()->session->get( 'order_awaiting_payment' );
 		update_post_meta( $order_id, '_cart_hash', md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
 		$order = wc_get_order( $order_id );
+
+		$order->update_status( 'pending' );
+
 		$order->add_order_note( sprintf( __( 'Order is awaiting completion and payment has been reserved in DIBS', 'woocommerce-dibs-easy' ) ) );
 
 		// Set the paymentID as a meta value to be used later for reference
@@ -74,6 +94,11 @@ class DIBS_Ajax_Calls {
 
 		wp_send_json_success( $request );
 		wp_die();
+	}
+
+	// Function called if a ajax call does not receive the expected result
+	public function fail_ajax_call( $order, $message = 'Failed to create an order with DIBS' ) {
+		$order->add_order_note( sprintf( __( '%s', 'woocommerce-dibs-easy' ), $message ) );
 	}
 }
 $dibs_ajax_calls = new DIBS_Ajax_Calls();
