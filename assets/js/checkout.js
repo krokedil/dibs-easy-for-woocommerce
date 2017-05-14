@@ -12,11 +12,6 @@ jQuery(document).ready(function($) {
                 var privateKey = data.data.privateKey;
                 var language = data.data.language;
                 intitCheckout(paymentID, privateKey, language);
-                $('#dibs-complete-checkout').addClass('dibs-easy');
-                $('#order_review_heading').addClass('dibs-easy');
-                $('#order_review').addClass('dibs-easy');
-                $('.form-row.notes').addClass('dibs-easy');
-                $('.form-row.notes').insertAfter('#dibs-complete-checkout');
             } else {
                 console.log('error');
             }
@@ -61,6 +56,10 @@ jQuery(document).ready(function($) {
             $('.woocommerce-shipping-fields').hide();
             $('.place-order').hide();
             $('#dibs-complete-checkout').show();
+            $('#order_review_heading').addClass('dibs-easy');
+            $('#order_review').addClass('dibs-easy');
+            $('.woocommerce-additional-fields').addClass('dibs-easy');
+            $('.woocommerce-additional-fields').insertAfter('#dibs-complete-checkout');
             if(i == 0) {
                 i = 1;
                 triggerDIBS();
@@ -74,7 +73,8 @@ jQuery(document).ready(function($) {
             $('#dibs-complete-checkout').removeClass('dibs-easy');
             $('#order_review_heading').removeClass('dibs-easy');
             $('#order_review').removeClass('dibs-easy');
-            $('.form-row.notes').removeClass('dibs-easy');
+            $('.woocommerce-additional-fields').removeClass('dibs-easy');
+            $('.woocommerce-additional-fields').appendTo('.col-2');
 
             i = 0;
         }

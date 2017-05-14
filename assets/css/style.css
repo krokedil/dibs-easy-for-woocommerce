@@ -1,5 +1,5 @@
 @media only screen and (min-width : 767px) {
-    #dibs-complete-checkout.dibs-easy{
+    #dibs-complete-checkout{
         float:right !important;
         width:50% !important;
         display:inline-block !important;
@@ -16,10 +16,10 @@
         clear:left !important;
         display:inline-block !important;
     }
-    .form-row.notes.dibs-easy{
-        float:none !important;
-        width:40.1764705882% !important;
-        clear:none !important;
+    .woocommerce-additional-fields.dibs-easy{
+        float:left !important;
+        width:47.8260869565% !important;
+        clear:left !important;
         display:block !important;
     }
 }

@@ -19,7 +19,7 @@ class DIBS_Get_WC_Cart {
 		foreach ( $wc_cart as $item ) {
 			$item_name = wc_get_product( $item['product_id'] );
 			$item_name = $item_name->get_title();
-			$item_line = $this->create_items( $item_name, $item['quantity'], $item['line_subtotal'], $item['line_subtotal_tax'] );
+			$item_line = $this->create_items( $item_name, $item['quantity'], $item['line_total'], $item['line_tax'] );
 			array_push( $items, $item_line );
 		}
 		// Add shipping as an item for order.
@@ -94,17 +94,17 @@ class DIBS_Get_WC_Cart {
 	}
 
 	// Create the item array objects.
-	public function create_items( $item_name, $item_quantity, $item_line_subtotal, $item_line_subtotal_tax ) {
+	public function create_items( $item_name, $item_quantity, $item_line_total, $item_line_tax ) {
 		// Set the different variables for the item object
 		$reference        = '1';
 		$name             = $item_name;
 		$quantity         = $item_quantity;
 		$unit             = (string) $item_quantity;
-		$unit_price        = round( ( $item_line_subtotal * 100 ) / $unit );
-		$tax_rate          = ($item_line_subtotal_tax / $item_line_subtotal) * 10000;
-		$tax_amount        = $item_line_subtotal_tax * 100;
-		$gross_total_amount = round( ( $item_line_subtotal + $item_line_subtotal_tax ) * 100 );
-		$net_total_amount   = $item_line_subtotal * 100;
+		$unit_price        = round( ( $item_line_total * 100 ) / $unit );
+		$tax_rate          = round( ( $item_line_tax / $item_line_total ) * 10000 );
+		$tax_amount        = $item_line_tax * 100;
+		$gross_total_amount = round( ( $item_line_total + $item_line_tax ) * 100 );
+		$net_total_amount   = round( $item_line_total * 100 );
 
 		// Return the item object array
 		return array(
