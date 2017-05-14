@@ -19,7 +19,7 @@ class DIBS_Get_WC_Cart {
 		foreach ( $wc_cart as $item ) {
 			$item_name = wc_get_product( $item['product_id'] );
 			$item_name = $item_name->get_title();
-			$item_line = $this->create_items( $item_name, $item['quantity'], $item['line_total'], $item['line_tax'] );
+			$item_line = $this->create_items( $item['product_id'], $item_name, $item['quantity'], $item['line_total'], $item['line_tax'] );
 			array_push( $items, $item_line );
 		}
 		// Add shipping as an item for order.
@@ -57,11 +57,11 @@ class DIBS_Get_WC_Cart {
 		$items = array();
 		// Get the items from the array and save in a format that works for DIBS
 		foreach ( $order_item as $item ) {
-			$item_line = $this->create_items( $item['name'], $item['quantity'], $item['subtotal'], $item['subtotal_tax'] );
+			$item_line = $this->create_items( $item['product_id'], $item['name'], $item['quantity'], $item['total'], $item['total_tax'] );
 			array_push( $items, $item_line );
 		}
 		foreach ( $order_shipping as $shipping ) {
-			$shipping_line = $this->create_items( $shipping['method_title'], 1, $shipping['total'], $shipping['total_tax'] );
+			$shipping_line = $this->create_items( '1', $shipping['method_title'], 1, $shipping['total'], $shipping['total_tax'] );
 			array_push( $items, $shipping_line );
 		}
 		// Calculate total amount to charge customer
@@ -84,7 +84,7 @@ class DIBS_Get_WC_Cart {
 				foreach ( $package['rates'] as $method ) {
 					if ( $chosen_shipping === $method->id ) {
 						if ( $method->cost > 0 ) {
-							$shipping_item = $this->create_items( $method->label, 1, $method->cost, array_sum( $method->taxes ) );
+							$shipping_item = $this->create_items( '1', $method->label, 1, $method->cost, array_sum( $method->taxes ) );
 							return $shipping_item;
 						}
 					}
@@ -94,9 +94,9 @@ class DIBS_Get_WC_Cart {
 	}
 
 	// Create the item array objects.
-	public function create_items( $item_name, $item_quantity, $item_line_total, $item_line_tax ) {
+	public function create_items( $item_sku, $item_name, $item_quantity, $item_line_total, $item_line_tax ) {
 		// Set the different variables for the item object
-		$reference        = '1';
+		$reference        = $item_sku;
 		$name             = $item_name;
 		$quantity         = $item_quantity;
 		$unit             = (string) $item_quantity;
@@ -132,6 +132,16 @@ class DIBS_Get_WC_Cart {
 			}
 		}
 		return $amount;
+	}
+	public function get_sku( $product ) {
+		if ( $product->get_sku() ) {
+			$part_number = $product->get_sku();
+		} elseif ( $product->variation_id ) {
+			$part_number = $product->variation_id;
+		} else {
+			$part_number = $product->id;
+		}
+		return substr( $part_number, 0, 32 );
 	}
 }
 $dibs_get_wc_cart = new DIBS_Get_WC_Cart();
