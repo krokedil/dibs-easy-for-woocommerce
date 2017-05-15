@@ -14,14 +14,14 @@ class DIBS_Requests {
 	public function __construct() {
 		// Set the endpoint and key from settings
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-		$this->testmode     = 'yes' === $dibs_settings['test_mode'];
+		$this->testmode = 'yes' === $dibs_settings['test_mode'];
 		$this->key = $this->testmode ? $dibs_settings['dibs_test_key'] : $dibs_settings['dibs_live_key'];
 		$this->endpoint = $this->testmode ? 'https://test.api.dibspayment.eu/v1/' : 'https://checkout.dibspayment.eu/v1/';
 	}
 
-	public function make_request( $method, $body, $endpoint_sufix = '' ) {
+	public function make_request( $method, $body, $endpoint_suffix = '' ) {
 		// Create the endpoint
-		$endpoint = $this->endpoint . $endpoint_sufix;
+		$endpoint = $this->endpoint . $endpoint_suffix;
 		// Create the request array
 		$request_array = array(
 			'method'  => $method,

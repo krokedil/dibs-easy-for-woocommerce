@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class DIBS_Post_Checkout {
 	public function __construct() {
 		add_action( 'woocommerce_order_status_completed', array( $this, 'dibs_order_completed' ) );
+		add_action( 'woocommerce_order_status_cancelled', array( $this, 'dibs_order_canceled' ) );
 	}
 
 	public function dibs_order_completed( $order_id ) {
@@ -14,48 +15,70 @@ class DIBS_Post_Checkout {
 		$body  = $order->get_order_cart( $order_id );
 
 		//Check if dibs was used to make the order
-		$gateway_used = get_post_meta( $order->id, '_payment_method', true );
-		if ( 'DIBS Easy' === $gateway_used ) {
+		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
+		if ( 'dibs_easy' === $gateway_used ) {
 
 			//Get paymentID from order meta and set endpoint
 			$payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
 
-			// Add the sufix to the endpoint
-			$endpoint_sufix = 'payments/' . $payment_id . '/charges';
+			// Add the suffix to the endpoint
+			$endpoint_suffix = 'payments/' . $payment_id . '/charges';
 
 			// Make the request
 			$request = new DIBS_Requests();
-			$request = $request->make_request( 'POST', $body, $endpoint_sufix );
+			$request = $request->make_request( 'POST', $body, $endpoint_suffix );
 
-			$order = wc_get_order( $order_id );
 			// Error handling
+			$wc_order = wc_get_order( $order_id );
 			if ( null != $request ) {
 				if ( array_key_exists( 'chargeId', $request ) ) { // Payment success
-					$order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'woocommerce-dibs-easy' ), $request->chargeId ) );
+					$wc_order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'woocommerce-dibs-easy' ), $request->chargeId ) );
 
 					update_post_meta( $order_id, '_dibs_charge_id', $request->chargeId );
 				} elseif ( array_key_exists( 'errors', $request ) ) { // Response with errors
 					if ( array_key_exists( 'instance', $request->errors ) && 'cannot be null' === $request->errors->instance[0] ) { // If return is empty
-						$this->charge_failed( $order, true );
+						$this->charge_failed( $wc_order, true );
 					}
 					if ( array_key_exists( 'amount', $request->errors ) && 'Amount must be greater than 0' === $request->errors->amount[0] ) { // If total amount equals 0
 						$message = 'Total amount equal 0';
-						$this->charge_failed( $order, true, $message );
+						$this->charge_failed( $wc_order, true, $message );
 					}
 					if ( array_key_exists( 'amount', $request->errors ) && 'Amount dosen\'t match sum of orderitems' === $request->errors->amount[0] ) { // If the total amount does not equal the line items total
 						$message = 'Order total amount does not match the order items';
-						$this->charge_failed( $order, true, $message );
+						$this->charge_failed( $wc_order, true, $message );
 					}
 				} elseif ( array_key_exists( 'code', $request ) && '1001' == $request->code ) { // Response with error code for overcharged order
 					$message = 'Payment overcharged';
-					$this->charge_failed( $order, false, $message );
+					$this->charge_failed( $wc_order, false, $message );
 				} else {
-					$this->charge_failed( $order );
+					$this->charge_failed( $wc_order );
 				}
 			} else {
 				$this->charge_failed( $order );
 			}
 		} // End if().
+	}
+
+	public function dibs_order_canceled( $order_id ) {
+		//Get the order information
+		$order = new DIBS_Get_WC_Cart();
+		$body  = $order->get_order_cart( $order_id );
+
+		//Check if dibs was used to make the order
+		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
+		error_log($gateway_used);
+		if ( 'dibs_easy' === $gateway_used ) {
+
+			//Get paymentID from order meta and set endpoint
+			$payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
+
+			// Add the suffix to the endpoint
+			$endpoint_suffix = 'payments/' . $payment_id . '/cancels';
+
+			// Make the request
+			$request = new DIBS_Requests();
+			$request = $request->make_request( 'POST', $body, $endpoint_suffix );
+		}
 	}
 
 	// Function to handle a failed order

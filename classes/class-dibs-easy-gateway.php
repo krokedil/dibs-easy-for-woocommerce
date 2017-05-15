@@ -17,9 +17,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Load the settings
 		$this->init_settings();
 		// Get the settings values
-		$this->title        = $this->get_option( 'title' );
+		$this->title = $this->get_option( 'title' );
 
-		$this->enabled      = $this->get_option( 'enabled' );
+		$this->enabled = $this->get_option( 'enabled' );
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
@@ -28,9 +28,11 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			'refunds',
 		);
 		// Add class if DIBS Easy is set as the gateway in session
-		$selected_gateway = WC()->session->chosen_payment_method;
-		if ( 'dibs_easy' == $selected_gateway ) {
-			add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
+		if ( is_checkout() ) {
+			$selected_gateway = WC()->session->chosen_payment_method;
+			if ( 'dibs_easy' == $selected_gateway ) {
+				add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
+			}
 		}
 	}
 	public function init_form_fields() {

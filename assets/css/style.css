@@ -36,3 +36,6 @@ body.dibs-enabled #dibs-order-review *{
 body.dibs-enabled #order_review{
     width:auto;
 }
+body.dibs-enabled #order_comments_field label{
+    padding: 15px 0;
+}

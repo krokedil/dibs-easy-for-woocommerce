@@ -52,6 +52,9 @@ jQuery(document).ready(function($) {
 
     function usingGateway() {
         if ($('form[name="checkout"] input[name="payment_method"]:checked').val() == 'dibs_easy') {
+            if($('ul.wc_payment_methods.payment_methods').children().size() == 1){
+                $('ul.wc_payment_methods.payment_methods').hide();
+            }
             // Hide/Show the different elements and empty the checkout to prevent duplicate iframes
             $('#dibs-complete-checkout').empty();
             $('.woocommerce-billing-fields').hide();
