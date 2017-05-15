@@ -27,6 +27,11 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			'products',
 			'refunds',
 		);
+		$selected_gateway = WC()->session->chosen_payment_method;
+		error_log(var_export($selected_gateway, true));
+		if ( 'dibs_easy' == $selected_gateway ) {
+			add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
+		}
 	}
 	public function init_form_fields() {
 		$this->form_fields = include( DIR_NAME . '/includes/dibs-settings.php' );
@@ -87,5 +92,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		} else {
 			return false;
 		}
+	}
+	public function dibs_add_body_class( $class ) {
+		$class[] = 'dibs-enabled';
+		return $class;
 	}
 }// End of class DIBS_Easy_Gateway

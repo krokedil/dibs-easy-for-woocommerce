@@ -38,7 +38,6 @@ class DIBS_Ajax_Calls {
 		$request = $request->make_request( 'POST', $datastring, $endpoint_sufix );
 		if ( null != $request ) { // If array has a return
 			if ( array_key_exists( 'paymentId', $request ) ) {
-				error_log( 'success' );
 				// Create the return array
 				$return               = array();
 				$return['privateKey'] = $this->private_key;

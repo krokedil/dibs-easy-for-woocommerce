@@ -34,7 +34,6 @@ class DIBS_Requests {
 		// Check if body is needed and add the body if needed
 		if ( '' != $body ) {
 			$request_array['body'] = json_encode( $body, JSON_UNESCAPED_SLASHES );
-			error_log( var_export( $request_array['body'], true ) );
 		}
 
 		// Make the request

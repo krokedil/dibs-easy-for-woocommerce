@@ -46,36 +46,53 @@ jQuery(document).ready(function($) {
     }
     $('body').on('updated_checkout', function () {
         usingGateway();
-        i = 0;
     });
 
     function usingGateway() {
         if ($('form[name="checkout"] input[name="payment_method"]:checked').val() == 'dibs_easy') {
+            // Hide/Show the different elements and empty the checkout to prevent duplicate iframes
             $('#dibs-complete-checkout').empty();
             $('.woocommerce-billing-fields').hide();
             $('.woocommerce-shipping-fields').hide();
             $('.place-order').hide();
             $('#dibs-complete-checkout').show();
-            $('#order_review_heading').addClass('dibs-easy');
-            $('#order_review').addClass('dibs-easy');
-            $('.woocommerce-additional-fields').addClass('dibs-easy');
-            $('.woocommerce-additional-fields').insertAfter('#dibs-complete-checkout');
+
             if(i == 0) {
+                // Add body class
+                $('body').addClass('dibs-enabled');
+
+                // Add temp divs before each of the elements that we want to move
+                $('#order_review_heading').after('<div id="dibs-temp-div-1"></div>');
+                $('#order_review').after('<div id="dibs-temp-div-2"></div>');
+                $('.woocommerce-additional-fields').after('<div id="dibs-temp-div-3"></div>');
+
+                // Move the elements
+                $('#order_review_heading').appendTo('form.checkout');
+                $('#order_review').appendTo('form.checkout');
+                $('.woocommerce-additional-fields').insertAfter('#order_review');
                 i = 1;
                 triggerDIBS();
             }
         } else{
+            // Show/Hide the different elements, also empty checkout to prevent duplicate iframes
             $('.woocommerce-billing-fields').show();
             $('.woocommerce-shipping-fields').show();
             $('.place-order').show();
             $('#dibs-complete-checkout').hide();
             $('#dibs-complete-checkout').empty();
-            $('#dibs-complete-checkout').removeClass('dibs-easy');
-            $('#order_review_heading').removeClass('dibs-easy');
-            $('#order_review').removeClass('dibs-easy');
-            $('.woocommerce-additional-fields').removeClass('dibs-easy');
-            $('.woocommerce-additional-fields').appendTo('.col-2');
+            if(i == 1) {
+                // Remove body class
+                $('body').removeClass('dibs-enabled');
+                // Move the elements back to the old location using the temp divs
+                $('#order_review_heading').insertAfter('#dibs-temp-div-1');
+                $('#order_review').insertAfter('#dibs-temp-div-2');
+                $('.woocommerce-additional-fields').insertAfter('dibs-temp-div-3');
 
+                // Remove the temp divs to make sure there is no conflict
+                $('#dibs-temp-div-1').remove();
+                $('#dibs-temp-div-2').remove();
+                $('#dibs-temp-div-3').remove();
+            }
             i = 0;
         }
     }
@@ -104,13 +121,6 @@ jQuery(document).ready(function($) {
                 $("#place_order").trigger("submit");
             });
             x = 1;
-        }
-    }
-    function move_stuff() {
-        if (i === 0){
-            var order_review_header_parent = $("#order_review").closest("form").prop("id");
-            var order_review_parent = $("#order_review").closest("form").prop("id");
-            var order_note_parent = $("#order_comments_field").closest("div").prop("id");
         }
     }
 });
