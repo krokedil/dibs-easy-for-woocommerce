@@ -11,46 +11,51 @@ class DIBS_Post_Checkout {
 	public function dibs_order_completed( $order_id ) {
 		//Get the order information
 		$order = new DIBS_Get_WC_Cart();
-		$body = $order->get_order_cart( $order_id );
+		$body  = $order->get_order_cart( $order_id );
 
-		//Get paymentID from order meta and set endpoint
-		$payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
+		//Check if dibs was used to make the order
+		$gateway_used = get_post_meta( $order->id, '_payment_method', true );
+		if ( 'DIBS Easy' === $gateway_used ) {
 
-		// Add the sufix to the endpoint
-		$endpoint_sufix = 'payments/' . $payment_id . '/charges';
+			//Get paymentID from order meta and set endpoint
+			$payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
 
-		// Make the request
-		$request = new DIBS_Requests();
-		$request = $request->make_request( 'POST', $body, $endpoint_sufix );
+			// Add the sufix to the endpoint
+			$endpoint_sufix = 'payments/' . $payment_id . '/charges';
 
-		$order = wc_get_order( $order_id );
-		// Error handling
-		if ( null != $request ) {
-			if ( array_key_exists( 'chargeId', $request ) ) { // Payment success
-				$order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'woocommerce-dibs-easy' ), $request->chargeId ) );
+			// Make the request
+			$request = new DIBS_Requests();
+			$request = $request->make_request( 'POST', $body, $endpoint_sufix );
 
-				update_post_meta( $order_id, '_dibs_charge_id', $request->chargeId );
-			} elseif ( array_key_exists( 'errors', $request ) ) { // Response with errors
-				if ( array_key_exists( 'instance', $request->errors ) && 'cannot be null' === $request->errors->instance[0] ) { // If return is empty
-					$this->charge_failed( $order, true );
+			$order = wc_get_order( $order_id );
+			// Error handling
+			if ( null != $request ) {
+				if ( array_key_exists( 'chargeId', $request ) ) { // Payment success
+					$order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'woocommerce-dibs-easy' ), $request->chargeId ) );
+
+					update_post_meta( $order_id, '_dibs_charge_id', $request->chargeId );
+				} elseif ( array_key_exists( 'errors', $request ) ) { // Response with errors
+					if ( array_key_exists( 'instance', $request->errors ) && 'cannot be null' === $request->errors->instance[0] ) { // If return is empty
+						$this->charge_failed( $order, true );
+					}
+					if ( array_key_exists( 'amount', $request->errors ) && 'Amount must be greater than 0' === $request->errors->amount[0] ) { // If total amount equals 0
+						$message = 'Total amount equal 0';
+						$this->charge_failed( $order, true, $message );
+					}
+					if ( array_key_exists( 'amount', $request->errors ) && 'Amount dosen\'t match sum of orderitems' === $request->errors->amount[0] ) { // If the total amount does not equal the line items total
+						$message = 'Order total amount does not match the order items';
+						$this->charge_failed( $order, true, $message );
+					}
+				} elseif ( array_key_exists( 'code', $request ) && '1001' == $request->code ) { // Response with error code for overcharged order
+					$message = 'Payment overcharged';
+					$this->charge_failed( $order, false, $message );
+				} else {
+					$this->charge_failed( $order );
 				}
-				if ( array_key_exists( 'amount', $request->errors ) && 'Amount must be greater than 0' === $request->errors->amount[0] ) { // If total amount equals 0
-					$message = 'Total amount equal 0';
-					$this->charge_failed( $order, true, $message );
-				}
-				if ( array_key_exists( 'amount', $request->errors ) && 'Amount dosen\'t match sum of orderitems' === $request->errors->amount[0] ) { // If the total amount does not equal the line items total
-					$message = 'Order total amount does not match the order items';
-					$this->charge_failed( $order, true, $message );
-				}
-			} elseif ( array_key_exists( 'code', $request ) && '1001' == $request->code ) { // Response with error code for overcharged order
-				$message = 'Payment overcharged';
-				$this->charge_failed( $order, false , $message );
 			} else {
 				$this->charge_failed( $order );
 			}
-		} else {
-			$this->charge_failed( $order );
-		}
+		} // End if().
 	}
 
 	// Function to handle a failed order
