@@ -1,35 +1,35 @@
 @media only screen and (min-width : 767px) {
     body.dibs-enabled #dibs-complete-checkout{
-        float:right !important;
-        width:50% !important;
-        display:inline-block !important;
+        float:right;
+        width:50%;
+        display:inline-block;
     }
 
     body.dibs-enabled #order_review_heading{
-        float:left !important;
-        clear:left !important;
-        display:inline-block !important;
+        float:left;
+        clear:left;
+        display:inline-block;
     }
 
     body.dibs-enabled #order_review{
-        float:left !important;
-        clear:left !important;
-        display:inline-block !important;
+        float:left;
+        clear:left;
+        display:inline-block;
     }
     body.dibs-enabled .woocommerce-additional-fields{
-        float:left !important;
-        width:47.8260869565% !important;
-        clear:left !important;
-        display:block !important;
+        float:left;
+        width:47.8260869565%;
+        clear:left;
+        display:block;
     }
 }
 
 @media only screen and (max-width : 767px) {
     body.dibs-enabled #order_review_heading, body.dibs-enabled #order_review, body.dibs-enabled .woocommerce-additional-fields{
-        float:none !important;
-        clear:both !important;
-        width:100% !important;
-        display:block !important;
+        float:none;
+        clear:both;
+        width:100%;
+        display:block;
     }
 }
 body.dibs-enabled .woocommerce-billing-fields, body.dibs-enabled .woocommerce-shipping-fields{

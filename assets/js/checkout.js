@@ -46,6 +46,7 @@ jQuery(document).ready(function($) {
     }
     $('body').on('updated_checkout', function () {
         usingGateway();
+        i = 0;
     });
 
     function usingGateway() {
@@ -80,19 +81,20 @@ jQuery(document).ready(function($) {
             $('.place-order').show();
             $('#dibs-complete-checkout').hide();
             $('#dibs-complete-checkout').empty();
-            if(i == 1) {
-                // Remove body class
-                $('body').removeClass('dibs-enabled');
-                // Move the elements back to the old location using the temp divs
-                $('#order_review_heading').insertAfter('#dibs-temp-div-1');
-                $('#order_review').insertAfter('#dibs-temp-div-2');
-                $('.woocommerce-additional-fields').insertAfter('dibs-temp-div-3');
 
-                // Remove the temp divs to make sure there is no conflict
-                $('#dibs-temp-div-1').remove();
-                $('#dibs-temp-div-2').remove();
-                $('#dibs-temp-div-3').remove();
-            }
+            // Remove body class
+            $('body').removeClass('dibs-enabled');
+            // Move the elements back to the old location using the temp divs
+            $('#order_review_heading').insertAfter('#dibs-temp-div-1');
+            $('#order_review').insertAfter('#dibs-temp-div-2');
+            $('.woocommerce-additional-fields').insertAfter('dibs-temp-div-3');
+
+            // Remove the temp divs to make sure there is no conflict
+            $('#dibs-temp-div-1').remove();
+            $('#dibs-temp-div-2').remove();
+
+            $('#dibs-temp-div-3').remove();
+        
             i = 0;
         }
     }
