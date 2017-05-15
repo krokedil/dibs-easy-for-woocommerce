@@ -27,8 +27,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			'products',
 			'refunds',
 		);
+		// Add class if DIBS Easy is set as the gateway in session
 		$selected_gateway = WC()->session->chosen_payment_method;
-		error_log(var_export($selected_gateway, true));
 		if ( 'dibs_easy' == $selected_gateway ) {
 			add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
 		}

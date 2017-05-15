@@ -1,25 +1,20 @@
 @media only screen and (min-width : 767px) {
     body.dibs-enabled #dibs-complete-checkout{
         float:right;
-        width:50%;
-        display:inline-block;
-    }
-
-    body.dibs-enabled #order_review_heading{
-        float:left;
-        clear:left;
-        display:inline-block;
-    }
-
-    body.dibs-enabled #order_review{
-        float:left;
-        clear:left;
-        display:inline-block;
-    }
-    body.dibs-enabled .woocommerce-additional-fields{
-        float:left;
         width:47.8260869565%;
-        clear:left;
+        display:inline-block;
+    }
+
+    body.dibs-enabled #dibs-order-review{
+        width:47.8260869565%;
+        clear:both;
+        float:left;
+        display:inline-block;
+    }
+    body.dibs-enabled #order_review, body.dibs-enabled #order_review_heading, body.dibs-enabled .woocommerce-additional-fields{
+        display:none;
+    }
+    body.dibs-enabled #dibs-order-review #order_review, body.dibs-enabled #dibs-order-review #order_review_heading, body.dibs-enabled #dibs-order-review .woocommerce-additional-fields{
         display:block;
     }
 }
@@ -34,4 +29,10 @@
 }
 body.dibs-enabled .woocommerce-billing-fields, body.dibs-enabled .woocommerce-shipping-fields{
     display:none;
+}
+body.dibs-enabled #dibs-order-review *{
+    float:none;
+}
+body.dibs-enabled #order_review{
+    width:auto;
 }

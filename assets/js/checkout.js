@@ -18,7 +18,8 @@ jQuery(document).ready(function($) {
         });
     }
     // Add the div for the DIBS checkout iFrame
-    $('#order_review').after("<div id='dibs-complete-checkout'></div>");
+    $('form.checkout').append("<div id='dibs-order-review'></div>");
+    $('form.checkout').append("<div id='dibs-complete-checkout'></div>");
 
     // Load the iFrame and get response from DIBS after checkout is complete
     function intitCheckout(paymentID, privateKey, language) {
@@ -68,9 +69,9 @@ jQuery(document).ready(function($) {
                 $('.woocommerce-additional-fields').after('<div id="dibs-temp-div-3"></div>');
 
                 // Move the elements
-                $('#order_review_heading').appendTo('form.checkout');
-                $('#order_review').appendTo('form.checkout');
-                $('.woocommerce-additional-fields').insertAfter('#order_review');
+                $('#order_review_heading').appendTo('#dibs-order-review');
+                $('#order_review').appendTo('#dibs-order-review');
+                $('.woocommerce-additional-fields').appendTo('#dibs-order-review');
                 i = 1;
                 triggerDIBS();
             }
@@ -92,9 +93,8 @@ jQuery(document).ready(function($) {
             // Remove the temp divs to make sure there is no conflict
             $('#dibs-temp-div-1').remove();
             $('#dibs-temp-div-2').remove();
-
             $('#dibs-temp-div-3').remove();
-        
+
             i = 0;
         }
     }
