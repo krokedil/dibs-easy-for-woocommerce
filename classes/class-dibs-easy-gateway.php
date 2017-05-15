@@ -54,7 +54,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		);
 	}
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-		error_log( $order_id . '   ' . $amount );
 		//Check if amount equals total order
 		$order = wc_get_order( $order_id );
 		if ( $amount == $order->get_total() ) {
@@ -63,17 +62,17 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$body = $cart->get_order_cart( $order_id );
 		} else {
 			$body = array(
-				'amount' => $amount,
+				'amount' => intval($amount),
 				'orderItems' => array(
 					'reference'         => 'Refund',
 					'name'              => 'Refund',
 					'quantity'          => 1,
 					'unit'              => '1',
-					'unitPrice'         => $amount,
+					'unitPrice'         => intval( $amount ),
 					'taxRate'           => 0,
 					'taxAmount'         => 0,
-					'grossTotalAmount'  => $amount,
-					'netTotalAmount'    => $amount,
+					'grossTotalAmount'  => intval( $amount ),
+					'netTotalAmount'    => intval( $amount ),
 				),
 			);
 		}
@@ -87,7 +86,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Make the request
 		$request = new DIBS_Requests();
 		$request = $request->make_request( 'POST', $body, $endpoint_sufix );
-		error_log( var_export( $request, true ) );
 		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
 			$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %s. Reason: %s', 'woocommerce-dibs-easy' ), $request->refundId, $reason ) );
 			return true;

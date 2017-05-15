@@ -16,7 +16,7 @@ class DIBS_Requests {
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		$this->testmode = 'yes' === $dibs_settings['test_mode'];
 		$this->key = $this->testmode ? $dibs_settings['dibs_test_key'] : $dibs_settings['dibs_live_key'];
-		$this->endpoint = $this->testmode ? 'https://test.api.dibspayment.eu/v1/' : 'https://checkout.dibspayment.eu/v1/';
+		$this->endpoint = $this->testmode ? 'https://test.api.dibspayment.eu/v1/' : 'https://api.dibspayment.eu/v1/';
 	}
 
 	public function make_request( $method, $body, $endpoint_suffix = '' ) {
@@ -35,7 +35,6 @@ class DIBS_Requests {
 		if ( '' != $body ) {
 			$request_array['body'] = json_encode( $body, JSON_UNESCAPED_SLASHES );
 		}
-
 		// Make the request
 		$response = wp_remote_request( $endpoint, $request_array );
 		$response = wp_remote_retrieve_body( $response );

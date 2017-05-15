@@ -66,7 +66,6 @@ class DIBS_Post_Checkout {
 
 		//Check if dibs was used to make the order
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
-		error_log($gateway_used);
 		if ( 'dibs_easy' === $gateway_used ) {
 
 			//Get paymentID from order meta and set endpoint

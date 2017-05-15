@@ -8,6 +8,8 @@ class DIBS_Ajax_Calls {
 		add_action( 'wp_ajax_nopriv_create_paymentID', array( $this, 'create_payment_id' ) );
 		add_action( 'wp_ajax_payment_success', array( $this, 'get_order_data' ) );
 		add_action( 'wp_ajax_nopriv_payment_success', array( $this, 'get_order_data' ) );
+		add_action( 'wp_ajax_get_options', array( $this, 'get_options' ) );
+		add_action( 'wp_ajax_nopriv_get_options', array( $this, 'get_options' ) );
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		$this->private_key = $dibs_settings['dibs_private_key'];
 	}
@@ -98,6 +100,17 @@ class DIBS_Ajax_Calls {
 	// Function called if a ajax call does not receive the expected result
 	public function fail_ajax_call( $order, $message = 'Failed to create an order with DIBS' ) {
 		$order->add_order_note( sprintf( __( '%s', 'woocommerce-dibs-easy' ), $message ) );
+	}
+	public function get_options(){
+		$return['privateKey'] = $this->private_key;
+		if ( 'sv_SE' === get_locale() ) {
+			$language = 'sv-SE';
+		} else {
+			$language = 'en-GB';
+		}
+		$return['language']  = $language;
+		wp_send_json_success( $return );
+		wp_die();
 	}
 }
 $dibs_ajax_calls = new DIBS_Ajax_Calls();

@@ -61,8 +61,10 @@ class DIBS_Get_WC_Cart {
 			array_push( $items, $item_line );
 		}
 		foreach ( $order_shipping as $shipping ) {
-			$shipping_line = $this->create_items( '1', $shipping['method_title'], 1, $shipping['total'], $shipping['total_tax'] );
-			array_push( $items, $shipping_line );
+			if( $shipping['total'] > 0) {
+				$shipping_line = $this->create_items( '1', $shipping['method_title'], 1, $shipping['total'], $shipping['total_tax'] );
+				array_push( $items, $shipping_line );
+			}
 		}
 		// Calculate total amount to charge customer
 		$amount = $this->get_total_amount( $items );

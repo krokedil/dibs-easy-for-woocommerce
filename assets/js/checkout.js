@@ -2,20 +2,37 @@ jQuery(document).ready(function($) {
     var i = 0;
     var x = 0;
     function triggerDIBS() {
-        var data = {
-            'action': 'create_paymentID'
-        };
-
-        jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
-            if (true === data.success ) {
-                var paymentID = data.data.paymentId.paymentId;
-                var privateKey = data.data.privateKey;
-                var language = data.data.language;
-                intitCheckout(paymentID, privateKey, language);
-            } else {
-                console.log('error');
-            }
-        });
+        // Get current URL
+        var url = window.location.href;
+        if(url.indexOf('paymentId') != -1){
+            var data = {
+                'action': 'get_options'
+            };
+            jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
+                if (true === data.success) {
+                    var paymentID = url.split("=").pop();
+                    var privateKey = data.data.privateKey;
+                    var language = data.data.language;
+                    intitCheckout(paymentID, privateKey, language);
+                } else {
+                    console.log('error');
+                }
+            });
+        }else {
+            var data = {
+                'action': 'create_paymentID'
+            };
+            jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
+                if (true === data.success) {
+                    var paymentID = data.data.paymentId.paymentId;
+                    var privateKey = data.data.privateKey;
+                    var language = data.data.language;
+                    intitCheckout(paymentID, privateKey, language);
+                } else {
+                    console.log('error');
+                }
+            });
+        }
     }
     // Add the div for the DIBS checkout iFrame
     $('form.checkout').append("<div id='dibs-order-review'></div>");
@@ -34,6 +51,7 @@ jQuery(document).ready(function($) {
         var checkout = new Dibs.Checkout(checkoutOptions);
         //After payment is complete
         checkout.on('payment-completed', function (response) {
+            console.log(response.paymentId);
             DIBS_Payment_Success(response.paymentId);
         });
     }
