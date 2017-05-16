@@ -4,9 +4,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class DIBS_Post_Checkout {
+
+	public $manage_orders;
+
 	public function __construct() {
-		add_action( 'woocommerce_order_status_completed', array( $this, 'dibs_order_completed' ) );
-		add_action( 'woocommerce_order_status_cancelled', array( $this, 'dibs_order_canceled' ) );
+		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+		$this->manage_orders = $dibs_settings['dibs_manage_orders'];
+		if ( 'yes' == $this->manage_orders ) {
+			add_action( 'woocommerce_order_status_completed', array( $this, 'dibs_order_completed' ) );
+			add_action( 'woocommerce_order_status_cancelled', array( $this, 'dibs_order_canceled' ) );
+		}
 	}
 
 	public function dibs_order_completed( $order_id ) {

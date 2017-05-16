@@ -55,5 +55,11 @@ return apply_filters( 'dibs_easy_settings',
 			'label'         => __( 'Enable Test mode for DIBS Easy', 'woocommerce-dibs-easy' ),
 			'default'       => 'no',
 		),
+		'dibs_manage_orders' => array(
+			'title'         => __( 'Manage orders', 'woocommerce-dibs-easy' ),
+			'type'          => 'checkbox',
+			'label'         => __( 'Enable WooCommerce to manage orders in DIBS Easys backend', 'woocommerce-dibs-easy' ),
+			'default'       => 'no',
+		),
 	)
 );
