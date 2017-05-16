@@ -11,14 +11,15 @@ class DIBS_Ajax_Calls {
 		add_action( 'wp_ajax_get_options', array( $this, 'get_options' ) );
 		add_action( 'wp_ajax_nopriv_get_options', array( $this, 'get_options' ) );
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-		$this->private_key = $dibs_settings['dibs_private_key'];
+		$this->testmode = 'yes' === $dibs_settings['test_mode'];
+		$this->private_key = $this->testmode ? $dibs_settings['dibs_test_checkout_key'] : $dibs_settings['dibs_checkout_key'];
 	}
 
 	public function create_payment_id() {
 		// Create an empty WooCommerce order and get order id if one is not made already
 		if ( WC()->session->get( 'dibs_incomplete_order' ) === null ) {
 			$order    = wc_create_order();
-			$order_id = $order->get_id();
+			$order_id = $order->get_order_number();
 			// Set the order id as a session variable
 			WC()->session->set( 'dibs_incomplete_order', $order_id );
 			$order->update_status( 'dibs-incomplete' );
@@ -101,7 +102,7 @@ class DIBS_Ajax_Calls {
 	public function fail_ajax_call( $order, $message = 'Failed to create an order with DIBS' ) {
 		$order->add_order_note( sprintf( __( '%s', 'woocommerce-dibs-easy' ), $message ) );
 	}
-	public function get_options(){
+	public function get_options() {
 		$return['privateKey'] = $this->private_key;
 		if ( 'sv_SE' === get_locale() ) {
 			$language = 'sv-SE';
