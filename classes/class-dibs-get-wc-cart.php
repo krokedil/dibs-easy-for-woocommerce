@@ -102,9 +102,9 @@ class DIBS_Get_WC_Cart {
 		$name             = $item_name;
 		$quantity         = $item_quantity;
 		$unit             = (string) $item_quantity;
-		$unit_price        = round( ( $item_line_total * 100 ) / $unit );
-		$tax_rate          = round( ( $item_line_tax / $item_line_total ) * 10000 );
-		$tax_amount        = $item_line_tax * 100;
+		$unit_price       = round( ( $item_line_total * 100 ) / $unit );
+		$tax_rate         = round( ( $item_line_tax / $item_line_total ) * 10000 );
+		$tax_amount       = $item_line_tax * 100;
 		$gross_total_amount = round( ( $item_line_total + $item_line_tax ) * 100 );
 		$net_total_amount   = round( $item_line_total * 100 );
 
@@ -113,7 +113,7 @@ class DIBS_Get_WC_Cart {
 			'reference'         => $reference,
 			'name'              => $name,
 			'quantity'          => $quantity,
-			'unit'              => $unit,
+			'unit'              => __( 'pcs', 'woocommerce-dibs-easy' ),
 			'unitPrice'         => $unit_price,
 			'taxRate'           => $tax_rate,
 			'taxAmount'         => $tax_amount,
