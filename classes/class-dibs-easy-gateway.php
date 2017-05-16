@@ -34,19 +34,13 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
 			}
 		}
+		add_action( 'woocommerce_thankyou_dibs_easy', array( $this, 'dibs_thankyou' ) );
 	}
 	public function init_form_fields() {
 		$this->form_fields = include( DIR_NAME . '/includes/dibs-settings.php' );
 	}
 	public function process_payment( $order_id, $retry = false ) {
 		$order = wc_get_order( $order_id );
-
-		WC()->cart->empty_cart();
-
-		$order->payment_complete();
-
-		WC()->session->__unset( 'dibs_incomplete_order' );
-		WC()->session->__unset( 'order_awaiting_payment' );
 
 		return array(
 			'result'   => 'success',
@@ -62,7 +56,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$body = $cart->get_order_cart( $order_id );
 		} else {
 			$body = array(
-				'amount' => intval($amount),
+				'amount' => intval( $amount ),
 				'orderItems' => array(
 					'reference'         => 'Refund',
 					'name'              => 'Refund',
@@ -96,5 +90,14 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function dibs_add_body_class( $class ) {
 		$class[] = 'dibs-enabled';
 		return $class;
+	}
+	public function dibs_thankyou( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		WC()->cart->empty_cart();
+		$order->payment_complete();
+
+		WC()->session->__unset( 'dibs_incomplete_order' );
+		WC()->session->__unset( 'order_awaiting_payment' );
 	}
 }// End of class DIBS_Easy_Gateway

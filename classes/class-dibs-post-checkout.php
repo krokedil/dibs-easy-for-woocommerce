@@ -84,6 +84,8 @@ class DIBS_Post_Checkout {
 			// Make the request
 			$request = new DIBS_Requests();
 			$request = $request->make_request( 'POST', $body, $endpoint_suffix );
+
+			error_log( $request );
 		}
 	}
 
