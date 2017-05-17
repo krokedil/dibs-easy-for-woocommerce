@@ -30,7 +30,10 @@ class DIBS_Get_WC_Cart {
 		// Set the rest of the order array objects
 		$amount = $this->get_total_amount( $items );
 		$currency = get_woocommerce_currency();
-		$reference = $order_id;
+		$wc_order = wc_get_order( $order_id );
+		$reference = $wc_order->get_order_number();
+		error_log( '$order_id' . $order_id );
+		error_log( '$reference' . $reference );
 
 		// Create the order array
 		$order['items']     = $items;
@@ -61,7 +64,7 @@ class DIBS_Get_WC_Cart {
 			array_push( $items, $item_line );
 		}
 		foreach ( $order_shipping as $shipping ) {
-			if( $shipping['total'] > 0) {
+			if ( $shipping['total'] > 0 ) {
 				$shipping_line = $this->create_items( '1', $shipping['method_title'], 1, $shipping['total'], $shipping['total_tax'] );
 				array_push( $items, $shipping_line );
 			}

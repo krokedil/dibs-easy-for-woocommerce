@@ -27,8 +27,11 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			'products',
 			'refunds',
 		);
-		// Add class if DIBS Easy is set as the gateway in session
 		if ( is_checkout() ) {
+			if ( isset( $_GET['paymentId'] ) ) {
+				add_filter( 'woocommerce_checkout_fields' ,  array( $this, 'dibs_populate_fields' ) );
+			}
+			// Add class if DIBS Easy is set as the gateway in session
 			$selected_gateway = WC()->session->chosen_payment_method;
 			if ( 'dibs_easy' == $selected_gateway ) {
 				add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
@@ -99,5 +102,37 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		WC()->session->__unset( 'dibs_incomplete_order' );
 		WC()->session->__unset( 'order_awaiting_payment' );
+	}
+	public function dibs_populate_fields() {
+		//Get the payment ID
+		$payment_id = $_GET['paymentId'];
+
+		$request = new DIBS_Requests();
+		$request = $request->get_order_fields( $payment_id );
+
+		//Set the values
+		$first_name = (string) $request->payment->consumer->privatePerson->firstName;
+		$last_name = (string) $request->payment->consumer->privatePerson->lastName;
+		$email = (string) $request->payment->consumer->privatePerson->email;
+		$country = (string) $request->payment->consumer->shippingAddress->country;
+		if ( 'SWE' === $country ) {
+			$country = 'SE';
+		}
+		$address = (string) $request->payment->consumer->shippingAddress->addressLine1;
+		$city = (string) $request->payment->consumer->shippingAddress->city;
+		$postcode = (string) $request->payment->consumer->shippingAddress->postalCode;
+		$phone = (string) $request->payment->consumer->privatePerson->phoneNumber->number;
+
+		//Populate the fields
+		$fields['billing']['billing_first_name']['default'] = $first_name;
+		$fields['billing']['billing_last_name']['default'] = $last_name;
+		$fields['billing']['billing_email']['default'] = $email;
+		$fields['billing']['billing_country']['default'] = $country;
+		$fields['billing']['billing_address_1']['default'] = $address;
+		$fields['billing']['billing_city']['default'] = $city;
+		$fields['billing']['billing_postcode']['default'] = $postcode;
+		$fields['billing']['billing_phone']['default'] = $phone;
+
+		return $fields;
 	}
 }// End of class DIBS_Easy_Gateway

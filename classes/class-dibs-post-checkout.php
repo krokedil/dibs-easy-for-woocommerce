@@ -85,7 +85,14 @@ class DIBS_Post_Checkout {
 			$request = new DIBS_Requests();
 			$request = $request->make_request( 'POST', $body, $endpoint_suffix );
 
-			error_log( $request );
+			$wc_order = wc_get_order( $order_id );
+
+			if ( null === $request ) {
+				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in DIBS', 'woocommerce-dibs-easy' ) ) );
+			} else {
+				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS', 'woocommerce-dibs-easy' ) ) );
+				error_log( var_export( $request, true ) );
+			}
 		}
 	}
 

@@ -5,7 +5,18 @@ jQuery(document).ready(function($) {
         // Get current URL
         var url = window.location.href;
         if(url.indexOf('paymentId') != -1){
-            var data = {
+
+            $("form.checkout #billing_first_name").removeAttr('required');
+            $("form.checkout #billing_last_name").removeAttr('required');
+            $("form.checkout #billing_email").removeAttr('required');
+            $("form.checkout #billing_country").removeAttr('required');
+            $("form.checkout #billing_address_1").removeAttr('required');
+            $("form.checkout #billing_city").removeAttr('required');
+            $("form.checkout #billing_postcode").removeAttr('required');
+            $("form.checkout #billing_phone").removeAttr('required');
+
+            $("#place_order").trigger("submit");
+            /*var data = {
                 'action': 'get_options'
             };
             jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
@@ -17,7 +28,7 @@ jQuery(document).ready(function($) {
                 } else {
                     console.log('error');
                 }
-            });
+            });*/
         }else {
             var data = {
                 'action': 'create_paymentID'
