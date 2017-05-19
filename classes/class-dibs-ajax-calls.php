@@ -51,7 +51,6 @@ class DIBS_Ajax_Calls {
 				}
 				$return['language']  = $language;
 				$return['paymentId'] = $request;
-				error_log( var_export( $request, true ) );
 				wp_send_json_success( $return );
 				wp_die();
 			} elseif ( array_key_exists( 'errors', $request ) ) {

@@ -130,6 +130,11 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$city     = (string) $request->payment->consumer->shippingAddress->city;
 			$postcode = (string) $request->payment->consumer->shippingAddress->postalCode;
 			$phone    = (string) $request->payment->consumer->privatePerson->phoneNumber->number;
+			$masked_card = (string) $request->payment->paymentDetails->cardDetails->maskedPan;
+
+			$order_id = WC()->session->get( 'dibs_incomplete_order' );
+			update_post_meta( $order_id, '_dibs_customer_card', $masked_card );
+
 
 			//Populate the fields
 			switch ( $key ) {
