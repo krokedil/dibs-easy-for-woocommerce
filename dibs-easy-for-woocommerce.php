@@ -25,8 +25,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 	class DIBS_Easy {
-
+		public $dibs_settings;
 		public function __construct() {
+			$this->dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+			add_action( 'woocommerce_email_before_order_table', array( $this, 'email_instructions' ), 10, 3 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			define( 'DIR_NAME' , dirname( __FILE__ ) );
 			// Register custom order status
@@ -66,8 +68,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		public function load_scripts() {
 			wp_enqueue_script( 'jquery' );
 			if ( is_checkout() ) {
-				$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-				$testmode      = 'yes' === $dibs_settings['test_mode'];
+				$testmode      = 'yes' === $this->dibs_settings['test_mode'];
 				$script_url    = $testmode ? 'https://test.checkout.dibspayment.eu/v1/checkout.js?v=1' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
 
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
@@ -142,6 +143,16 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		public function jk_remove_sticky_checkout() {
 			wp_dequeue_script( 'storefront-sticky-payment' );
 		}
+		public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
+
+			$dibs_settings = $this->dibs_settings;
+
+			if ( ! $sent_to_admin && 'dibs_easy' === $order->payment_method ) {
+				if ( $dibs_settings['email_text'] ) {
+					echo wpautop( wptexturize( $dibs_settings['email_text'] ) );
+				}
+			}
+		}
 	}
 	$dibs_easy = new DIBS_Easy();
-}
+}// End if().
