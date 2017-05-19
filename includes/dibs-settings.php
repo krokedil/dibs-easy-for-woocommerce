@@ -23,7 +23,7 @@ return apply_filters( 'dibs_easy_settings',
 		),
 		'email_text'        => array(
 			'title'         => __( 'Email text', 'woocommerce-dibs-easy' ),
-			'type'          => 'text',
+			'type'          => 'textarea',
 			'description'   => __( 'This text will be added to your customers order confirmation email.', 'woocommerce-dibs-easy' ),
 			'default'       => '',
 		),

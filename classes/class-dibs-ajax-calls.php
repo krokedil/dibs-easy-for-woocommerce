@@ -19,7 +19,7 @@ class DIBS_Ajax_Calls {
 		// Create an empty WooCommerce order and get order id if one is not made already
 		if ( WC()->session->get( 'dibs_incomplete_order' ) === null ) {
 			$order    = wc_create_order();
-			$order_id = $order->get_order_number();
+			$order_id = $order->get_id();
 			// Set the order id as a session variable
 			WC()->session->set( 'dibs_incomplete_order', $order_id );
 			$order->update_status( 'dibs-incomplete' );

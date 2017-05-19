@@ -133,7 +133,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$masked_card = (string) $request->payment->paymentDetails->cardDetails->maskedPan;
 
 			$order_id = WC()->session->get( 'dibs_incomplete_order' );
-			update_post_meta( $order_id, '_dibs_customer_card', $masked_card );
+			update_post_meta( $order_id, 'dibs_customer_card', $masked_card );
 
 
 			//Populate the fields
