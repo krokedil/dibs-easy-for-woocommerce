@@ -52,7 +52,6 @@ class DIBS_Requests {
 
 		// Make the request
 		$request = $this->make_request( 'GET', '', $endpoint_suffix );
-
 		// Get order id and update the hash for the order
 		$order_id = WC()->session->get( 'order_awaiting_payment' );
 		update_post_meta( $order_id, '_cart_hash', md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );

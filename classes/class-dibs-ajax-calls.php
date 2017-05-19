@@ -93,7 +93,6 @@ class DIBS_Ajax_Calls {
 		// Set the paymentID as a meta value to be used later for reference
 		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s', 'woocommerce-dibs-easy' ), $payment_id ) );
-
 		wp_send_json_success( $request );
 		wp_die();
 	}

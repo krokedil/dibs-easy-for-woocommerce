@@ -58,6 +58,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$cart = new DIBS_Get_WC_Cart();
 			$body = $cart->get_order_cart( $order_id );
 		} else {
+			/*
 			$body = array(
 				'amount' => intval( $amount ),
 				'orderItems' => array(
@@ -72,6 +73,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 					'netTotalAmount'    => intval( $amount ),
 				),
 			);
+			*/
+			$order->add_order_note( sprintf( __( 'DIBS Easy currently only supports full refunds, for a partial refund use the DIBS backend system', 'woocommerce-dibs-easy' ) ) );
+			return false;
 		}
 
 		//Get paymentID from order meta and set endpoint
@@ -110,29 +114,41 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$request = new DIBS_Requests();
 		$request = $request->get_order_fields( $payment_id );
 
-		//Set the values
-		$first_name = (string) $request->payment->consumer->privatePerson->firstName;
-		$last_name = (string) $request->payment->consumer->privatePerson->lastName;
-		$email = (string) $request->payment->consumer->privatePerson->email;
-		$country = (string) $request->payment->consumer->shippingAddress->country;
-		if ( 'SWE' === $country ) {
-			$country = 'SE';
+		// Check if order was processed correctly
+
+
+		if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
+			//Set the values
+			$first_name = (string) $request->payment->consumer->privatePerson->firstName;
+			$last_name  = (string) $request->payment->consumer->privatePerson->lastName;
+			$email      = (string) $request->payment->consumer->privatePerson->email;
+			$country    = (string) $request->payment->consumer->shippingAddress->country;
+			if ( 'SWE' === $country ) {
+				$country = 'SE';
+			}
+			$address  = (string) $request->payment->consumer->shippingAddress->addressLine1;
+			$city     = (string) $request->payment->consumer->shippingAddress->city;
+			$postcode = (string) $request->payment->consumer->shippingAddress->postalCode;
+			$phone    = (string) $request->payment->consumer->privatePerson->phoneNumber->number;
+
+			//Populate the fields
+			$fields['billing']['billing_first_name']['default'] = $first_name;
+			$fields['billing']['billing_last_name']['default']  = $last_name;
+			$fields['billing']['billing_email']['default']      = $email;
+			$fields['billing']['billing_country']['default']    = $country;
+			$fields['billing']['billing_address_1']['default']  = $address;
+			$fields['billing']['billing_city']['default']       = $city;
+			$fields['billing']['billing_postcode']['default']   = $postcode;
+			$fields['billing']['billing_phone']['default']      = $phone;
+
+			return $fields;
+		} else {
+			$order_id = WC()->session->get( 'dibs_incomplete_order' );
+
+			$order = wc_get_order( $order_id );
+
+			wp_redirect( $order->get_cancel_order_url() );
+			exit;
 		}
-		$address = (string) $request->payment->consumer->shippingAddress->addressLine1;
-		$city = (string) $request->payment->consumer->shippingAddress->city;
-		$postcode = (string) $request->payment->consumer->shippingAddress->postalCode;
-		$phone = (string) $request->payment->consumer->privatePerson->phoneNumber->number;
-
-		//Populate the fields
-		$fields['billing']['billing_first_name']['default'] = $first_name;
-		$fields['billing']['billing_last_name']['default'] = $last_name;
-		$fields['billing']['billing_email']['default'] = $email;
-		$fields['billing']['billing_country']['default'] = $country;
-		$fields['billing']['billing_address_1']['default'] = $address;
-		$fields['billing']['billing_city']['default'] = $city;
-		$fields['billing']['billing_postcode']['default'] = $postcode;
-		$fields['billing']['billing_phone']['default'] = $phone;
-
-		return $fields;
 	}
 }// End of class DIBS_Easy_Gateway
