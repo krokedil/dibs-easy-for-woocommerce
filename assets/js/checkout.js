@@ -5,7 +5,7 @@ jQuery(document).ready(function($) {
         // Get current URL
         var url = window.location.href;
         if(url.indexOf('paymentId') != -1){
-            if( $('form #billing_first_name').val() != 'Firstname' ) {
+            if( $('form #billing_first_name').val() != '' ) {
                 $("#place_order").trigger("submit");
             }
         }else {
