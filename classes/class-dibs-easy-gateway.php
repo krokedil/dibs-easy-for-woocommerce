@@ -105,10 +105,10 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
 		$request = new DIBS_Requests();
 		$request = $request->get_order_fields( $payment_id );
-		error_log('thankyou ' . var_export($request, true));
 		if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
 			$order->update_status( 'pending' );
-			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s', 'woocommerce-dibs-easy' ), $payment_id ) );
+			update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
+			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s. Payment type - %s.', 'woocommerce-dibs-easy' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 			$order->payment_complete( $payment_id );
 			WC()->cart->empty_cart();
 		}
