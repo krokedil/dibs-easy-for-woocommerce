@@ -31,7 +31,18 @@ class DIBS_Get_WC_Cart {
 		$amount = $this->get_total_amount( $items );
 		$currency = get_woocommerce_currency();
 		$wc_order = wc_get_order( $order_id );
-		$reference = $wc_order->get_order_number();
+		// Make sure to run Sequential Order numbers if plugin exsists
+		if ( class_exists( 'WC_Seq_Order_Number_Pro' ) ) {
+			$sequential = new WC_Seq_Order_Number_Pro;
+			$sequential->set_sequential_order_number( $order_id );
+			$reference = $sequential->get_order_number( $wc_order->get_order_number(), $wc_order );
+		} elseif ( class_exists( 'WC_Seq_Order_Number' ) ) {
+			$sequential = new WC_Seq_Order_Number;
+			$sequential->set_sequential_order_number( $order_id, get_post( $order_id ) );
+			$reference = $sequential->get_order_number( $wc_order->get_order_number(), $wc_order );
+		} else {
+			$reference = $wc_order->get_order_number();
+		}
 		error_log( '$order_id' . $order_id );
 		error_log( '$reference' . $reference );
 

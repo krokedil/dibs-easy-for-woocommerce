@@ -87,8 +87,6 @@ class DIBS_Ajax_Calls {
 
 		$order->update_status( 'pending' );
 
-		$order->add_order_note( sprintf( __( 'Order is awaiting completion and payment has been reserved in DIBS', 'woocommerce-dibs-easy' ) ) );
-
 		// Set the paymentID as a meta value to be used later for reference
 		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s', 'woocommerce-dibs-easy' ), $payment_id ) );
