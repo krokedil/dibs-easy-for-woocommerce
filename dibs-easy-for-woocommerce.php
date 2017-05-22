@@ -28,7 +28,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		public $dibs_settings;
 		public function __construct() {
 			$this->dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-			add_action( 'woocommerce_email_before_order_table', array( $this, 'email_instructions' ), 10, 3 );
 			add_action( 'woocommerce_email_after_order_table', array( $this, 'email_extra_information' ), 10, 3 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			define( 'DIR_NAME' , dirname( __FILE__ ) );
@@ -144,27 +143,30 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		public function jk_remove_sticky_checkout() {
 			wp_dequeue_script( 'storefront-sticky-payment' );
 		}
-		public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
-			$order_id     = $order->get_id();
-			$gateway_used = get_post_meta( $order_id, '_payment_method', true );
-
-			$dibs_settings = $this->dibs_settings;
-			if ( 'dibs_easy' == $gateway_used ) {
-				if ( ! $sent_to_admin && 'dibs_easy' === $order->payment_method ) {
-					if ( $dibs_settings['email_text'] ) {
-						echo wpautop( wptexturize( $dibs_settings['email_text'] ) );
-					}
-				}
-			}
-		}
+		
 		public function email_extra_information( $order, $sent_to_admin, $plain_text = false ) {
 			$order_id     = $order->get_id();
 			$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 			if ( 'dibs_easy' == $gateway_used ) {
-				$payment_id    = get_post_meta( $order_id, '_dibs_payment_id', true );
-				$customer_card = get_post_meta( $order_id, 'dibs_customer_card', true );
-				if ( '' != $customer_card ) {
+				$payment_id    	= get_post_meta( $order_id, '_dibs_payment_id', true );
+				$customer_card 	= get_post_meta( $order_id, 'dibs_customer_card', true );
+				$payment_type 	= get_post_meta( $order_id, 'dibs_payment_type', true );
+				$order_date = wc_format_datetime( $order->get_date_created() );
+				$dibs_settings 	= $this->dibs_settings;
+				
+				if ( $dibs_settings['email_text'] ) {
+						echo wpautop( wptexturize( $dibs_settings['email_text'] ) );
+				}
+				if ( $order_date ) {
+					echo wpautop( wptexturize( __( 'Order date: ', 'woocommerce-dibs-easy' ) . $order_date ) );
+				}
+				if ( $payment_id ) {
 					echo wpautop( wptexturize( __( 'DIBS Payment ID: ', 'woocommerce-dibs-easy' ) . $payment_id ) );
+				}
+				if ( $payment_type ) {
+					echo wpautop( wptexturize( __( 'Payment type: ', 'woocommerce-dibs-easy' ) . $payment_type ) );
+				}
+				if ( $customer_card ) {
 					echo wpautop( wptexturize( __( 'Customer card: ', 'woocommerce-dibs-easy' ) . $customer_card ) );
 				}
 			}
