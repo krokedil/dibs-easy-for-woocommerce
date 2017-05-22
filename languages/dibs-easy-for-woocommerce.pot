@@ -1,0 +1,190 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: DIBS Easy for WooCommerce\n"
+"POT-Creation-Date: 2017-05-22 14:58+0200\n"
+"PO-Revision-Date: 2017-05-22 14:58+0200\n"
+"Last-Translator: Niklas Högefjord <info@krokedil.se>\n"
+"Language-Team: Niklas Högefjord <info@krokedil.se>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: dibs-easy-for-woocommerce.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: classes/class-dibs-ajax-calls.php:99
+#, php-format
+msgid "%s"
+msgstr ""
+
+#: classes/class-dibs-easy-gateway.php:11 includes/dibs-settings.php:22
+msgid "DIBS Easy"
+msgstr ""
+
+#: classes/class-dibs-easy-gateway.php:13
+msgid "DIBS Easy Payment for checkout"
+msgstr ""
+
+#: classes/class-dibs-easy-gateway.php:79
+msgid ""
+"DIBS Easy currently only supports full refunds, for a partial refund use the "
+"DIBS backend system"
+msgstr ""
+
+#: classes/class-dibs-easy-gateway.php:93
+#, php-format
+msgid "Refund made in DIBS with charge ID %s. Reason: %s"
+msgstr ""
+
+#: classes/class-dibs-easy-gateway.php:111
+#, php-format
+msgid "Order made in DIBS with Payment ID %s. Payment type - %s."
+msgstr ""
+
+#: classes/class-dibs-get-wc-cart.php:130
+msgid "pcs"
+msgstr ""
+
+#: classes/class-dibs-post-checkout.php:42
+#, php-format
+msgid "Payment made in DIBS with charge ID %s"
+msgstr ""
+
+#: classes/class-dibs-post-checkout.php:91
+msgid "Order has been canceled in DIBS"
+msgstr ""
+
+#: classes/class-dibs-post-checkout.php:93
+msgid "There was a problem canceling the order in DIBS"
+msgstr ""
+
+#: classes/class-dibs-post-checkout.php:101
+#, php-format
+msgid "DIBS Error: %s"
+msgstr ""
+
+#: dibs-easy-for-woocommerce.php:114
+#, php-format
+msgid "DIBS incomplete <span class=\"count\">(%s)</span>"
+msgid_plural "DIBS incomplete <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: dibs-easy-for-woocommerce.php:164
+msgid "Order date: "
+msgstr ""
+
+#: dibs-easy-for-woocommerce.php:167
+msgid "DIBS Payment ID: "
+msgstr ""
+
+#: dibs-easy-for-woocommerce.php:170
+msgid "Payment type: "
+msgstr ""
+
+#: dibs-easy-for-woocommerce.php:173
+msgid "Customer card: "
+msgstr ""
+
+#: includes/dibs-settings.php:13
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/dibs-settings.php:15
+msgid "Enable DIBS Easy"
+msgstr ""
+
+#: includes/dibs-settings.php:19
+msgid "Title"
+msgstr ""
+
+#: includes/dibs-settings.php:21
+msgid ""
+"This is the title that the user sees on the checkout page for DIBS Easy."
+msgstr ""
+
+#: includes/dibs-settings.php:25
+msgid "Live Key"
+msgstr ""
+
+#: includes/dibs-settings.php:27
+msgid "Enter your DIBS Easy live key"
+msgstr ""
+
+#: includes/dibs-settings.php:32
+msgid "Checkout key"
+msgstr ""
+
+#: includes/dibs-settings.php:34
+msgid "Enter your DIBS Easy Checkout key"
+msgstr ""
+
+#: includes/dibs-settings.php:39
+msgid "Test Key"
+msgstr ""
+
+#: includes/dibs-settings.php:41
+msgid "Enter your DIBS Easy Test key if you want to run in test mode."
+msgstr ""
+
+#: includes/dibs-settings.php:46
+msgid "Test checkout key"
+msgstr ""
+
+#: includes/dibs-settings.php:48
+msgid "Enter your DIBS Easy Test checkout key"
+msgstr ""
+
+#: includes/dibs-settings.php:53
+msgid "Test mode"
+msgstr ""
+
+#: includes/dibs-settings.php:55
+msgid "Enable Test mode for DIBS Easy"
+msgstr ""
+
+#: includes/dibs-settings.php:59
+msgid "Email text"
+msgstr ""
+
+#: includes/dibs-settings.php:61
+msgid "This text will be added to your customers order confirmation email."
+msgstr ""
+
+#: includes/dibs-settings.php:65
+msgid "Manage orders"
+msgstr ""
+
+#: includes/dibs-settings.php:67
+msgid "Enable WooCommerce to manage orders in DIBS Easys backend"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "DIBS Easy for WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://krokedil.com/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Extends WooCommerce. Provides a <a href=\"http://www.dibspayment.com/\" "
+"target=\"_blank\">DIBS Easy</a> checkout for WooCommerce."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WooCommerce"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://woocommerce.com/"
+msgstr ""
