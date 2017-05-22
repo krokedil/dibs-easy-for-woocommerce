@@ -8,9 +8,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function __construct() {
 		$this->id = 'dibs_easy';
 
-		$this->method_title = __( 'DIBS Easy', 'woocommerce-dibs-easy' );
+		$this->method_title = __( 'DIBS Easy', 'dibs-easy-for-woocommerce' );
 
-		$this->method_description = __( 'DIBS Easy Payment for checkout', 'woocommerce-dibs-easy' );
+		$this->method_description = __( 'DIBS Easy Payment for checkout', 'dibs-easy-for-woocommerce' );
 
 		// Load the form fields.
 		$this->init_form_fields();
@@ -76,7 +76,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				),
 			);
 			*/
-			$order->add_order_note( sprintf( __( 'DIBS Easy currently only supports full refunds, for a partial refund use the DIBS backend system', 'woocommerce-dibs-easy' ) ) );
+			$order->add_order_note( sprintf( __( 'DIBS Easy currently only supports full refunds, for a partial refund use the DIBS backend system', 'dibs-easy-for-woocommerce' ) ) );
 			return false;
 		}
 
@@ -90,7 +90,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$request = new DIBS_Requests();
 		$request = $request->make_request( 'POST', $body, $endpoint_sufix );
 		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
-			$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %s. Reason: %s', 'woocommerce-dibs-easy' ), $request->refundId, $reason ) );
+			$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %s. Reason: %s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
 			return true;
 		} else {
 			return false;
@@ -108,7 +108,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
 			$order->update_status( 'pending' );
 			update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
-			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s. Payment type - %s.', 'woocommerce-dibs-easy' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
+			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s. Payment type - %s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 			$order->payment_complete( $payment_id );
 			WC()->cart->empty_cart();
 		}

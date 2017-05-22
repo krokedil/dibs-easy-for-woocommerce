@@ -48,6 +48,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once( plugin_basename( 'classes/class-dibs-get-wc-cart.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-ajax-calls.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-post-checkout.php' ) );
+			
+			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+			
 			$this->init_gateway();
 			include_once( plugin_basename( 'classes/class-dibs-requests.php' ) );
 
@@ -158,16 +161,16 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 						echo wpautop( wptexturize( $dibs_settings['email_text'] ) );
 				}
 				if ( $order_date ) {
-					echo wpautop( wptexturize( __( 'Order date: ', 'woocommerce-dibs-easy' ) . $order_date ) );
+					echo wpautop( wptexturize( __( 'Order date: ', 'dibs-easy-for-woocommerce' ) . $order_date ) );
 				}
 				if ( $payment_id ) {
-					echo wpautop( wptexturize( __( 'DIBS Payment ID: ', 'woocommerce-dibs-easy' ) . $payment_id ) );
+					echo wpautop( wptexturize( __( 'DIBS Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) );
 				}
 				if ( $payment_type ) {
-					echo wpautop( wptexturize( __( 'Payment type: ', 'woocommerce-dibs-easy' ) . $payment_type ) );
+					echo wpautop( wptexturize( __( 'Payment type: ', 'dibs-easy-for-woocommerce' ) . $payment_type ) );
 				}
 				if ( $customer_card ) {
-					echo wpautop( wptexturize( __( 'Customer card: ', 'woocommerce-dibs-easy' ) . $customer_card ) );
+					echo wpautop( wptexturize( __( 'Customer card: ', 'dibs-easy-for-woocommerce' ) . $customer_card ) );
 				}
 			}
 		}

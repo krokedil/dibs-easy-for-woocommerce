@@ -39,7 +39,7 @@ class DIBS_Post_Checkout {
 			$wc_order = wc_get_order( $order_id );
 			if ( null != $request ) {
 				if ( array_key_exists( 'chargeId', $request ) ) { // Payment success
-					$wc_order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'woocommerce-dibs-easy' ), $request->chargeId ) );
+					$wc_order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'dibs-easy-for-woocommerce' ), $request->chargeId ) );
 
 					update_post_meta( $order_id, '_dibs_charge_id', $request->chargeId );
 				} elseif ( array_key_exists( 'errors', $request ) ) { // Response with errors
@@ -88,9 +88,9 @@ class DIBS_Post_Checkout {
 			$wc_order = wc_get_order( $order_id );
 
 			if ( null === $request ) {
-				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in DIBS', 'woocommerce-dibs-easy' ) ) );
+				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in DIBS', 'dibs-easy-for-woocommerce' ) ) );
 			} else {
-				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS', 'woocommerce-dibs-easy' ) ) );
+				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS', 'dibs-easy-for-woocommerce' ) ) );
 				error_log( var_export( $request, true ) );
 			}
 		}
@@ -98,7 +98,7 @@ class DIBS_Post_Checkout {
 
 	// Function to handle a failed order
 	public function charge_failed( $order, $fail = true, $message = 'Payment failed in DIBS' ) {
-		$order->add_order_note( sprintf( __( 'DIBS Error: %s', 'woocommerce-dibs-easy' ), $message ) );
+		$order->add_order_note( sprintf( __( 'DIBS Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 		if ( true === $fail ) {
 			$order->update_status( 'processing' );
 			$order->save();

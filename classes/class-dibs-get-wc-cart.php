@@ -127,7 +127,7 @@ class DIBS_Get_WC_Cart {
 			'reference'         => $reference,
 			'name'              => $name,
 			'quantity'          => $quantity,
-			'unit'              => __( 'pcs', 'woocommerce-dibs-easy' ),
+			'unit'              => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'         => $unit_price,
 			'taxRate'           => $tax_rate,
 			'taxAmount'         => $tax_amount,
