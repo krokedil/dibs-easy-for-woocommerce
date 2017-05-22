@@ -110,67 +110,69 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		WC()->session->__unset( 'order_awaiting_payment' );
 	}
 	public function dibs_populate_fields( $value, $key ) {
-		//Get the payment ID
-		$payment_id = $_GET['paymentId'];
-
-		$request = new DIBS_Requests();
-		$request = $request->get_order_fields( $payment_id );
-
-		// Check if order was processed correctly
-		if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
-			//Set the values
-			$first_name = (string) $request->payment->consumer->privatePerson->firstName;
-			$last_name  = (string) $request->payment->consumer->privatePerson->lastName;
-			$email      = (string) $request->payment->consumer->privatePerson->email;
-			$country    = (string) $request->payment->consumer->shippingAddress->country;
-			if ( 'SWE' === $country ) {
-				$country = 'SE';
-			}
-			$address  = (string) $request->payment->consumer->shippingAddress->addressLine1;
-			$city     = (string) $request->payment->consumer->shippingAddress->city;
-			$postcode = (string) $request->payment->consumer->shippingAddress->postalCode;
-			$phone    = (string) $request->payment->consumer->privatePerson->phoneNumber->number;
-			$masked_card = (string) $request->payment->paymentDetails->cardDetails->maskedPan;
-
-			$order_id = WC()->session->get( 'dibs_incomplete_order' );
-			update_post_meta( $order_id, 'dibs_customer_card', $masked_card );
-
-
-			//Populate the fields
-			switch ( $key ) {
-				case 'billing_first_name':
-					return $first_name;
-					break;
-				case 'billing_last_name':
-					return $last_name;
-					break;
-				case 'billing_email':
-					return $email;
-					break;
-				case 'billing_country':
-					return $country;
-					break;
-				case 'billing_address_1':
-					return $address;
-					break;
-				case 'billing_city':
-					return $city;
-					break;
-				case 'billing_postcode':
-					return $postcode;
-					break;
-				case 'billing_phone':
-					return $phone;
-					break;
-			}
-		} else {
-			$order_id = WC()->session->get( 'dibs_incomplete_order' );
-
-			$order = wc_get_order( $order_id );
-
-			wp_redirect( $order->get_cancel_order_url() );
-			exit;
-		} // End if().
+		if(isset($_GET['paymentId'])) {
+			//Get the payment ID
+			$payment_id = $_GET['paymentId'];
+	
+			$request = new DIBS_Requests();
+			$request = $request->get_order_fields( $payment_id );
+			
+			// Check if order was processed correctly
+			if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
+				//Set the values
+				$first_name = (string) $request->payment->consumer->privatePerson->firstName;
+				$last_name  = (string) $request->payment->consumer->privatePerson->lastName;
+				$email      = (string) $request->payment->consumer->privatePerson->email;
+				$country    = (string) $request->payment->consumer->shippingAddress->country;
+				if ( 'SWE' === $country ) {
+					$country = 'SE';
+				}
+				$address  = (string) $request->payment->consumer->shippingAddress->addressLine1;
+				$city     = (string) $request->payment->consumer->shippingAddress->city;
+				$postcode = (string) $request->payment->consumer->shippingAddress->postalCode;
+				$phone    = (string) $request->payment->consumer->privatePerson->phoneNumber->number;
+				$masked_card = (string) $request->payment->paymentDetails->cardDetails->maskedPan;
+	
+				$order_id = WC()->session->get( 'dibs_incomplete_order' );
+				update_post_meta( $order_id, 'dibs_customer_card', $masked_card );
+	
+	
+				//Populate the fields
+				switch ( $key ) {
+					case 'billing_first_name':
+						return $first_name;
+						break;
+					case 'billing_last_name':
+						return $last_name;
+						break;
+					case 'billing_email':
+						return $email;
+						break;
+					case 'billing_country':
+						return $country;
+						break;
+					case 'billing_address_1':
+						return $address;
+						break;
+					case 'billing_city':
+						return $city;
+						break;
+					case 'billing_postcode':
+						return $postcode;
+						break;
+					case 'billing_phone':
+						return $phone;
+						break;
+				}
+			} else {
+				$order_id = WC()->session->get( 'dibs_incomplete_order' );
+	
+				$order = wc_get_order( $order_id );
+	
+				wp_redirect( $order->get_cancel_order_url() );
+				exit;
+			} // End if().
+		}
 	}
 	public function dibs_set_not_required() {
 		//Set fields to not required, to prevent orders from failing
