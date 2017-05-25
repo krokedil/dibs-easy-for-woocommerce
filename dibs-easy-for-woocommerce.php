@@ -23,6 +23,21 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
+
+/**
+ * Plugin updates
+ */
+require 'classes/plugin_update_check.php';
+$MyUpdateChecker = new PluginUpdateChecker_2_0 (
+    'https://kernl.us/api/v1/updates/5922e30cd062992781279508/',
+    __FILE__,
+    'dibs-easy-for-woocommerce',
+    1
+);
+$MyUpdateChecker->purchaseCode = "abc123";
+$MyUpdateChecker->remoteGetTimeout = 3;
+
+
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 	class DIBS_Easy {
 		public $dibs_settings;
