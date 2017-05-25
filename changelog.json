@@ -1,0 +1,13 @@
+{
+"0.1.0" : {
+     "description" : "First release",
+     "requires" : "4.7.0",
+     "tested" : "4.7.5",
+     "upgrade_notice" : "This plugin is in beta."
+},
+"0.2.0" : {
+     "description" : "Added notice in cart page if purchase is denied in 3DSecure window.",
+     "requires" : "4.7.0",
+     "tested" : "4.7.5",
+     "upgrade_notice" : "Still in beta."
+}
