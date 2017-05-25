@@ -1,3 +1,7 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
-2016.05.22  - version 10.1.0-beta
+2016.05.25  - version 0.2.0
+* Tweak		- Added automatic updates via WordPress admin.
+* Tweak		- Add error notice in cancel order page (cart page) if purchase wasn’t approved in 3DSecure.
+
+2016.05.22  - version 0.1.0-beta
