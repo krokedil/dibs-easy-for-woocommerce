@@ -172,10 +172,10 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				}
 			} else {
 				$order_id = WC()->session->get( 'dibs_incomplete_order' );
-	
 				$order = wc_get_order( $order_id );
-	
-				wp_redirect( $order->get_cancel_order_url() );
+				$order->add_order_note( sprintf( __( 'There was a problem with Payment ID %s.', 'dibs-easy-for-woocommerce' ), $payment_id ) );
+				$redirect_url = add_query_arg( 'dibs-payment-id', $payment_id, trailingslashit( $order->get_cancel_order_url() ) );
+				wp_redirect( $redirect_url );
 				exit;
 			} // End if().
 		}

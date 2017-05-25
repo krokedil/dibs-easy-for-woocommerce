@@ -42,6 +42,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			// Remove the storefront sticky checkout.
 			add_action( 'wp_enqueue_scripts', array( $this, 'jk_remove_sticky_checkout' ), 99 );
+			
+			// Cart page error notice
+			add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
 		}
 		// Include the classes and enqueue the scripts.
 		public function init() {
@@ -172,6 +175,12 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				if ( $customer_card ) {
 					echo wpautop( wptexturize( __( 'Customer card: ', 'dibs-easy-for-woocommerce' ) . $customer_card ) );
 				}
+			}
+		}
+		
+		public function add_error_notice_to_cart_page() {
+			if (isset($_GET['dibs-payment-id'])) {
+				wc_print_notice( __( 'There was a problem paying with DIBS.', 'dibs-easy-for-woocommerce' ), 'error' );
 			}
 		}
 	}
