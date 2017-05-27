@@ -34,8 +34,6 @@ $MyUpdateChecker = new PluginUpdateChecker_2_0 (
     'dibs-easy-for-woocommerce',
     1
 );
-$MyUpdateChecker->purchaseCode = "abc123";
-$MyUpdateChecker->remoteGetTimeout = 3;
 
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
