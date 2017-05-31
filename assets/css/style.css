@@ -1,41 +1,51 @@
-@media only screen and (min-width : 767px) {
-    body.dibs-enabled #dibs-complete-checkout{
+@media only screen and (min-width : 768px) {
+    body.dibs-selected #dibs-complete-checkout{
         float:right;
         width:47.8260869565%;
         display:inline-block;
     }
 
-    body.dibs-enabled #dibs-order-review{
+    body.dibs-selected #dibs-order-review{
         width:47.8260869565%;
         clear:both;
         float:left;
         display:inline-block;
     }
-    body.dibs-enabled #order_review, body.dibs-enabled #order_review_heading, body.dibs-enabled .woocommerce-additional-fields{
+    body.dibs-selected #order_review, body.dibs-selected #order_review_heading, body.dibs-selected .woocommerce-additional-fields{
         display:none;
     }
-    body.dibs-enabled #dibs-order-review #order_review, body.dibs-enabled #dibs-order-review #order_review_heading, body.dibs-enabled #dibs-order-review .woocommerce-additional-fields{
+    body.dibs-selected #dibs-order-review #order_review, body.dibs-selected #dibs-order-review #order_review_heading, body.dibs-selected #dibs-order-review .woocommerce-additional-fields{
         display:block;
     }
 }
 
 @media only screen and (max-width : 767px) {
-    body.dibs-enabled #order_review_heading, body.dibs-enabled #order_review, body.dibs-enabled .woocommerce-additional-fields{
+    body.dibs-selected #order_review_heading, body.dibs-selected #order_review, body.dibs-selected .woocommerce-additional-fields{
         float:none;
         clear:both;
         width:100%;
         display:block;
     }
 }
-body.dibs-enabled .woocommerce-billing-fields, body.dibs-enabled .woocommerce-shipping-fields{
+body.dibs-selected .woocommerce-billing-fields, 
+body.dibs-selected .woocommerce-shipping-fields,
+.woocommerce-billing-fields,
+.woocommerce-shipping-fields,
+body.dibs-deselected #customer_details,
+#customer_details {
     display:none;
 }
-body.dibs-enabled #dibs-order-review *{
+body.dibs-deselected .woocommerce-billing-fields, 
+body.dibs-deselected .woocommerce-shipping-fields,
+body.dibs-deselected #customer_details {
+    display:block;
+}
+body.dibs-selected #dibs-order-review *{
     float:none;
 }
-body.dibs-enabled #order_review{
+body.dibs-selected #order_review{
     width:auto;
 }
-body.dibs-enabled #order_comments_field label{
+body.dibs-selected #order_comments_field label{
     padding: 15px 0;
 }
