@@ -66,6 +66,7 @@ jQuery(document).ready(function($) {
 
     function usingGateway() {
         if ($('form[name="checkout"] input[name="payment_method"]:checked').val() == 'dibs_easy') {
+	        
             if($('ul.wc_payment_methods.payment_methods').children().size() == 1){
                 $('ul.wc_payment_methods.payment_methods').hide();
             }
@@ -78,8 +79,7 @@ jQuery(document).ready(function($) {
 
             if(i == 0) {
                 // Add body class
-                $('body').addClass('dibs-enabled');
-
+				wc_dibs_body_class();
                 // Add temp divs before each of the elements that we want to move
                 $('#order_review_heading').after('<div id="dibs-temp-div-1"></div>');
                 $('#order_review').after('<div id="dibs-temp-div-2"></div>');
@@ -93,6 +93,7 @@ jQuery(document).ready(function($) {
                 triggerDIBS();
             }
         } else{
+	        
             // Show/Hide the different elements, also empty checkout to prevent duplicate iframes
             $('.woocommerce-billing-fields').show();
             $('.woocommerce-shipping-fields').show();
@@ -101,11 +102,11 @@ jQuery(document).ready(function($) {
             $('#dibs-complete-checkout').empty();
 
             // Remove body class
-            $('body').removeClass('dibs-enabled');
+            wc_dibs_body_class();
             // Move the elements back to the old location using the temp divs
             $('#order_review_heading').insertAfter('#dibs-temp-div-1');
             $('#order_review').insertAfter('#dibs-temp-div-2');
-            $('.woocommerce-additional-fields').insertAfter('dibs-temp-div-3');
+            $('.woocommerce-additional-fields').insertAfter('#dibs-temp-div-3');
 
             // Remove the temp divs to make sure there is no conflict
             $('#dibs-temp-div-1').remove();
