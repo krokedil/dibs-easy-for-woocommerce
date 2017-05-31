@@ -147,4 +147,23 @@ jQuery(document).ready(function($) {
             x = 1;
         }
     }
+
+    $('#order_comments').focusout(function(){
+        var text = $('#order_comments').val();
+        if( text.length > 0 ) {
+            $.ajax(
+                wc_dibs_easy.ajaxurl,
+                {
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action  : 'dibs_customer_order_note',
+                        order_note : text
+                    },
+                    success: function(response) {
+                    }
+                }
+            );
+        }
+    });
 });
