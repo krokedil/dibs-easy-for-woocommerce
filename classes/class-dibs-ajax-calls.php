@@ -10,6 +10,11 @@ class DIBS_Ajax_Calls {
 		add_action( 'wp_ajax_nopriv_payment_success', array( $this, 'get_order_data' ) );
 		add_action( 'wp_ajax_get_options', array( $this, 'get_options' ) );
 		add_action( 'wp_ajax_nopriv_get_options', array( $this, 'get_options' ) );
+
+		// Ajax to add order notes as a session for the customer
+		add_action( 'wp_ajax_dibs_customer_order_note', array( $this, 'dibs_add_customer_order_note' ) );
+		add_action( 'wp_ajax_nopriv_dibs_customer_order_note', array( $this, 'dibs_add_customer_order_note' ) );
+
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		$this->testmode = 'yes' === $dibs_settings['test_mode'];
 		$this->private_key = $this->testmode ? $dibs_settings['dibs_test_checkout_key'] : $dibs_settings['dibs_checkout_key'];
@@ -107,6 +112,12 @@ class DIBS_Ajax_Calls {
 		}
 		$return['language']  = $language;
 		wp_send_json_success( $return );
+		wp_die();
+	}
+
+	public function dibs_add_customer_order_note() {
+		WC()->session->set( 'dibs_customer_order_note', $_POST['order_note'] );
+		wp_send_json_success();
 		wp_die();
 	}
 }

@@ -116,13 +116,13 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		WC()->session->__unset( 'order_awaiting_payment' );
 	}
 	public function dibs_populate_fields( $value, $key ) {
-		if(isset($_GET['paymentId'])) {
+		if ( isset( $_GET['paymentId'] ) ) {
 			//Get the payment ID
 			$payment_id = $_GET['paymentId'];
-	
+
 			$request = new DIBS_Requests();
 			$request = $request->get_order_fields( $payment_id );
-			
+
 			// Check if order was processed correctly
 			if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
 				//Set the values
@@ -138,11 +138,11 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				$postcode = (string) $request->payment->consumer->shippingAddress->postalCode;
 				$phone    = (string) $request->payment->consumer->privatePerson->phoneNumber->number;
 				$masked_card = (string) $request->payment->paymentDetails->cardDetails->maskedPan;
-	
+
 				$order_id = WC()->session->get( 'dibs_incomplete_order' );
 				update_post_meta( $order_id, 'dibs_customer_card', $masked_card );
-	
-	
+
+
 				//Populate the fields
 				switch ( $key ) {
 					case 'billing_first_name':
@@ -169,6 +169,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 					case 'billing_phone':
 						return $phone;
 						break;
+					case 'order_comments':
+						return WC()->session->get( 'dibs_customer_order_note' );
+						break;
 				}
 			} else {
 				$order_id = WC()->session->get( 'dibs_incomplete_order' );
@@ -178,9 +181,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				wp_redirect( $redirect_url );
 				exit;
 			} // End if().
-		}
+		} // End if().
 	}
-	
+
 	public function dibs_set_not_required( $checkout_fields ) {
 		//Set fields to not required, to prevent orders from failing
 		if ( 'dibs_easy' === WC()->session->get( 'chosen_payment_method' ) ) {
