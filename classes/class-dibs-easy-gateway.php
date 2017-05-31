@@ -180,17 +180,16 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			} // End if().
 		}
 	}
-	public function dibs_set_not_required() {
+	
+	public function dibs_set_not_required( $checkout_fields ) {
 		//Set fields to not required, to prevent orders from failing
-		$fields['billing']['billing_first_name']['required'] = false;
-		$fields['billing']['billing_last_name']['required']  = false;
-		$fields['billing']['billing_email']['required']      = false;
-		$fields['billing']['billing_country']['required']    = false;
-		$fields['billing']['billing_address_1']['required']  = false;
-		$fields['billing']['billing_city']['required']       = false;
-		$fields['billing']['billing_postcode']['required']   = false;
-		$fields['billing']['billing_phone']['required']      = false;
-
-		return $fields;
+		if ( 'dibs_easy' === WC()->session->get( 'chosen_payment_method' ) ) {
+			foreach ( $checkout_fields as $fieldset_key => $fieldset ) {
+				foreach ( $fieldset as $field_key => $field ) {
+					$checkout_fields[ $fieldset_key ][ $field_key ]['required'] = false;
+				}
+			}
+		}
+		return $checkout_fields;
 	}
 }// End of class DIBS_Easy_Gateway
