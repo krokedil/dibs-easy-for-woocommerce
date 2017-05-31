@@ -6,6 +6,12 @@ jQuery(document).ready(function($) {
         var url = window.location.href;
         if(url.indexOf('paymentId') != -1){
             if( $('form #billing_first_name').val() != '' ) {
+	            
+	            // Check Terms checkbox, if it exists
+                if ($("form.checkout #terms").length > 0) {
+                    $("form.checkout #terms").prop("checked", true);
+                }
+                
                 $("#place_order").trigger("submit");
             }
         }else {
@@ -130,7 +136,12 @@ jQuery(document).ready(function($) {
                 $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
                 $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
                 $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number);
-
+				
+				// Check Terms checkbox, if it exists
+                if ($("form.checkout #terms").length > 0) {
+                    $("form.checkout #terms").prop("checked", true);
+                }
+                    
                 $("#place_order").trigger("submit");
             });
             x = 1;
