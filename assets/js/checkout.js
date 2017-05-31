@@ -106,7 +106,7 @@ jQuery(document).ready(function($) {
             // Move the elements back to the old location using the temp divs
             $('#order_review_heading').insertAfter('#dibs-temp-div-1');
             $('#order_review').insertAfter('#dibs-temp-div-2');
-            $('.woocommerce-additional-fields').insertAfter('dibs-temp-div-3');
+            $('.woocommerce-additional-fields').insertAfter('#dibs-temp-div-3');
 
             // Remove the temp divs to make sure there is no conflict
             $('#dibs-temp-div-1').remove();
