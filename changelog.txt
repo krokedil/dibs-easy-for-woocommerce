@@ -1,5 +1,13 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2016.05.31  - version 0.3.0
+* Tweak		- Make all WC checkout forms not required if using DIBS Easy.
+* Fix		- Don't display standard billing fields on initial checkout pageload.
+* Fix		- Check terms checkbox (if it exist) before submitting the WC form.
+* Fix		- Customer order note saved correctly even when redirected to 3DSecure window.
+* Fix		- Move customer order note textarea field bug fix.
+
+
 2016.05.25  - version 0.2.0
 * Tweak		- Added automatic updates via WordPress admin.
 * Tweak		- Add error notice in cancel order page (cart page) if purchase wasn’t approved in 3DSecure.

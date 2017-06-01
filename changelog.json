@@ -10,4 +10,10 @@
      "requires" : "4.7.0",
      "tested" : "4.7.5",
      "upgrade_notice" : "Still in beta."
+},
+"0.3.0" : {
+     "description" : "Several checkout display bug fixes.",
+     "requires" : "4.7.0",
+     "tested" : "4.7.5",
+     "upgrade_notice" : "Still in beta."
 }
