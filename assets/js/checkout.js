@@ -167,4 +167,12 @@ jQuery(document).ready(function($) {
             );
         }
     });
+    
+    var wc_dibs_body_class = function wc_dibs_body_class() {
+		if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
+			$("body").addClass("dibs-selected").removeClass("dibs-deselected");
+		} else {
+			$("body").removeClass("dibs-selected").addClass("dibs-deselected");
+		}
+	};
 });
