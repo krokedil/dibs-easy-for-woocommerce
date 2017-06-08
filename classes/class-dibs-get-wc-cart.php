@@ -152,10 +152,8 @@ class DIBS_Get_WC_Cart {
 	public function get_sku( $product ) {
 		if ( $product->get_sku() ) {
 			$part_number = $product->get_sku();
-		} elseif ( $product->variation_id ) {
-			$part_number = $product->variation_id;
 		} else {
-			$part_number = $product->id;
+			$part_number = $product->get_id();
 		}
 		return substr( $part_number, 0, 32 );
 	}
