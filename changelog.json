@@ -16,4 +16,10 @@
      "requires" : "4.7.0",
      "tested" : "4.7.5",
      "upgrade_notice" : "Still in beta."
+},
+"0.3.1" : {
+     "description" : "Sending SKU instead of product id to DIBS. Flatsome theme compatibility improvments",
+     "requires" : "4.7.0",
+     "tested" : "4.7.5",
+     "upgrade_notice" : "Sending SKU instead of product id to DIBS."
 }

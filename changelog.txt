@@ -1,5 +1,10 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2016.06.08  - version 0.3.1
+* Tweak		- Flatsome theme compatibility - remove blue rectangle in checkout if DIBS is the selected payment method.
+* Fix		- Send SKU instead of product id as reference to DIBS.
+* Fix		- PHP notices.
+
 2016.05.31  - version 0.3.0
 * Tweak		- Make all WC checkout forms not required if using DIBS Easy.
 * Fix		- Don't display standard billing fields on initial checkout pageload.
