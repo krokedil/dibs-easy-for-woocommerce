@@ -49,3 +49,10 @@ body.dibs-selected #order_review{
 body.dibs-selected #order_comments_field label{
     padding: 15px 0;
 }
+
+/* Theme compatibility */
+
+/* Flatsome v3.3.5+ */
+.dibs-selected .row.pt-0 {
+    display: none;
+}
