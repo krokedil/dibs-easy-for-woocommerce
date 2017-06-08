@@ -19,7 +19,8 @@ class DIBS_Get_WC_Cart {
 		foreach ( $wc_cart as $item ) {
 			$item_name = wc_get_product( $item['product_id'] );
 			$item_name = $item_name->get_title();
-			$item_line = $this->create_items( $item['product_id'], $item_name, $item['quantity'], $item['line_total'], $item['line_tax'] );
+			$product = wc_get_product( $item['product_id'] );
+			$item_line = $this->create_items( $this->get_sku( $product ), $item_name, $item['quantity'], $item['line_total'], $item['line_tax'] );
 			array_push( $items, $item_line );
 		}
 		// Add shipping as an item for order.
@@ -43,8 +44,6 @@ class DIBS_Get_WC_Cart {
 		} else {
 			$reference = $wc_order->get_order_number();
 		}
-		error_log( '$order_id' . $order_id );
-		error_log( '$reference' . $reference );
 
 		// Create the order array
 		$order['items']     = $items;
@@ -71,7 +70,8 @@ class DIBS_Get_WC_Cart {
 		$items = array();
 		// Get the items from the array and save in a format that works for DIBS
 		foreach ( $order_item as $item ) {
-			$item_line = $this->create_items( $item['product_id'], $item['name'], $item['quantity'], $item['total'], $item['total_tax'] );
+			$product = wc_get_product( $item['product_id'] );
+			$item_line = $this->create_items( $this->get_sku( $product ), $item['name'], $item['quantity'], $item['total'], $item['total_tax'] );
 			array_push( $items, $item_line );
 		}
 		foreach ( $order_shipping as $shipping ) {
