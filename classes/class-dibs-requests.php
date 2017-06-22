@@ -11,6 +11,8 @@ class DIBS_Requests {
 
 	public $testmode;
 
+	public static $log = false;
+
 	public function __construct() {
 		// Set the endpoint and key from settings
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
@@ -35,11 +37,18 @@ class DIBS_Requests {
 		if ( '' != $body ) {
 			$request_array['body'] = json_encode( $body, JSON_UNESCAPED_SLASHES );
 		}
+		$this->log( 'Endpoint: ' . $endpoint . ' Request array to DIBS: ' . var_export( $request_array, true ) );
 		// Make the request
 		$response = wp_remote_request( $endpoint, $request_array );
-		$response = wp_remote_retrieve_body( $response );
-		$response = json_decode( $response );
-		return $response;
+		$this->log( 'Response from DIBS: ' . var_export( $response, true ) );
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'Error connecting to DIBS' );
+		} else {
+			 $response = wp_remote_retrieve_body( $response );
+			 $response = json_decode( $response );
+
+			 return $response;
+		}
 	}
 
 	public function get_order_fields( $payment_id ) {
@@ -65,6 +74,16 @@ class DIBS_Requests {
 		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		//$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 		return $request;
+	}
+
+	public static function log( $message ) {
+		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+		if ( 'yes' === $dibs_settings['debug_mode'] ) {
+			if ( empty( self::$log ) ) {
+				self::$log = new WC_Logger();
+			}
+			self::$log->add( 'dibs_easy', $message );
+		}
 	}
 }
 $dibs_easy_requests = new DIBS_Requests();

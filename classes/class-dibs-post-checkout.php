@@ -91,7 +91,6 @@ class DIBS_Post_Checkout {
 				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in DIBS', 'dibs-easy-for-woocommerce' ) ) );
 			} else {
 				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS', 'dibs-easy-for-woocommerce' ) ) );
-				error_log( var_export( $request, true ) );
 			}
 		}
 	}
