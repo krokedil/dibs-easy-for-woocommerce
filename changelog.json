@@ -22,4 +22,10 @@
      "requires" : "4.7.0",
      "tested" : "4.7.5",
      "upgrade_notice" : "Sending SKU instead of product id to DIBS."
+},
+"0.3.2" : {
+     "description" : "Added debug log feature + adding request logging.",
+     "requires" : "4.7.0",
+     "tested" : "4.8",
+     "upgrade_notice" : "Added debug log feature + adding request logging."
 }
