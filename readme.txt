@@ -3,6 +3,7 @@ Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
 Tested up to: 4.8
+Stable tag: trunk
 Requires WooCommerce at least: 3.0
 Tested WooCommerce up to: 3.1.1
 License: GPLv3
