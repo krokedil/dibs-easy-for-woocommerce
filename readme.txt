@@ -4,7 +4,7 @@ Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
 Tested up to: 4.8
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.0.8
+Tested WooCommerce up to: 3.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,7 +18,6 @@ To get started with DIBS Easy you need to [sign up](http://www.dibs.se/easy-se) 
 More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
 
 
-
 == INSTALLATION	 ==
 1. Download and unzip the latest release zip file.
 2. If you use the WordPress plugin uploader to install this plugin skip to step 4.
@@ -26,6 +25,15 @@ More information on how to get started can be found in the [plugin documentation
 4. Activate the plugin through the 'Plugins' menu in WordPress Administration.
 5. Go WooCommerce Settings --> Payment Gateways and configure your DIBS Easy settings.
 6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+
+
+== Frequently Asked Questions ==
+= Which countries does this payment gateway support? =
+At the moment it's only available for merchants in Sweden.
+
+= Where can I find DIBS Easy for WooCommerce documentation? =
+For help setting up and configuring DIBS Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+
 
 
 == CHANGELOG ==
