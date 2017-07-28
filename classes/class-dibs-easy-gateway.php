@@ -134,18 +134,15 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Check if order was processed correctly
 		if ( key_exists( 'reservedAmount', $checkout_fields->payment->summary ) ) {
 			//Set the values
-			$first_name = (string) $checkout_fields->payment->consumer->privatePerson->firstName;
-			$last_name  = (string) $checkout_fields->payment->consumer->privatePerson->lastName;
-			$email      = (string) $checkout_fields->payment->consumer->privatePerson->email;
-			$country    = (string) $checkout_fields->payment->consumer->shippingAddress->country;
-			if ( 'SWE' === $country ) {
-				$country = 'SE';
-			}
-			$address  = (string) $checkout_fields->payment->consumer->shippingAddress->addressLine1;
-			$city     = (string) $checkout_fields->payment->consumer->shippingAddress->city;
-			$postcode = (string) $checkout_fields->payment->consumer->shippingAddress->postalCode;
-			$phone    = (string) $checkout_fields->payment->consumer->privatePerson->phoneNumber->number;
-			$masked_card = (string) $checkout_fields->payment->paymentDetails->cardDetails->maskedPan;
+			$first_name 	= (string) $checkout_fields->payment->consumer->privatePerson->firstName;
+			$last_name  	= (string) $checkout_fields->payment->consumer->privatePerson->lastName;
+			$email      	= (string) $checkout_fields->payment->consumer->privatePerson->email;
+			$country    	= (string) dibs_get_iso_2_country( $checkout_fields->payment->consumer->shippingAddress->country );
+			$address  		= (string) $checkout_fields->payment->consumer->shippingAddress->addressLine1;
+			$city     		= (string) $checkout_fields->payment->consumer->shippingAddress->city;
+			$postcode 		= (string) $checkout_fields->payment->consumer->shippingAddress->postalCode;
+			$phone    		= (string) $checkout_fields->payment->consumer->privatePerson->phoneNumber->number;
+			$masked_card 	= (string) $checkout_fields->payment->paymentDetails->cardDetails->maskedPan;
 
 			$order_id = WC()->session->get( 'dibs_incomplete_order' );
 			update_post_meta( $order_id, 'dibs_customer_card', $masked_card );

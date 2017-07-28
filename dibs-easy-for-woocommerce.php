@@ -53,6 +53,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once( plugin_basename( 'classes/class-dibs-get-wc-cart.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-ajax-calls.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-post-checkout.php' ) );
+			include_once( plugin_basename( 'includes/dibs-country-converter-functions.php' ) );
 			
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 			

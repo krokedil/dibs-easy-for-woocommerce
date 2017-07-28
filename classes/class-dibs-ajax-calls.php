@@ -91,7 +91,12 @@ class DIBS_Ajax_Calls {
 		$order = wc_get_order( $order_id );
 
 		$order->update_status( 'pending' );
-
+		
+		// Convert country code from 3 to 2 letters 
+		if( $request->payment->consumer->shippingAddress->country ) {
+			$request->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $request->payment->consumer->shippingAddress->country );
+		}
+		
 		// Set the paymentID as a meta value to be used later for reference
 		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		//$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );

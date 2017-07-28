@@ -124,15 +124,11 @@ jQuery(document).ready(function($) {
             };
 
             jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
-                var returnCountry = data.data.payment.consumer.shippingAddress.country
-                if (returnCountry === "SWE") {
-                    var country = "SE"
-                }
 
                 $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
                 $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
                 $("form.checkout #billing_email").val(data.data.payment.consumer.privatePerson.email);
-                $("form.checkout #billing_country").val(country);
+                $("form.checkout #billing_country").val(data.data.payment.consumer.shippingAddress.country);
                 $("form.checkout #billing_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
                 $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
                 $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
