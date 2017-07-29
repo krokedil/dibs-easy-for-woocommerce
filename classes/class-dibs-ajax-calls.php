@@ -72,24 +72,21 @@ class DIBS_Ajax_Calls {
 	}
 
 	public function get_order_data() {
+		
+		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
+			define( 'WOOCOMMERCE_CHECKOUT', true );
+		}
+		
 		$payment_id = $_POST['paymentId'];
-
-		$order_id = WC()->session->get( 'dibs_incomplete_order' );
-
-		WC()->session->set( 'order_awaiting_payment', $order_id );
-
 		// Set the endpoint sufix
 		$endpoint_sufix = 'payments/' . $payment_id;
 
 		// Make the request
 		$request = new DIBS_Requests();
 		$request = $request->make_request( 'GET', '', $endpoint_sufix );
-
-		// Get order id and update the hash for the order
-		$order_id = WC()->session->get( 'order_awaiting_payment' );
-		update_post_meta( $order_id, '_cart_hash', md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
+		
+		$order_id = WC()->session->get( 'dibs_incomplete_order' );
 		$order = wc_get_order( $order_id );
-
 		$order->update_status( 'pending' );
 		
 		// Convert country code from 3 to 2 letters 
@@ -97,9 +94,20 @@ class DIBS_Ajax_Calls {
 			$request->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $request->payment->consumer->shippingAddress->country );
 		}
 		
+		// Update customer country
+		WC()->customer->set_billing_country( $request->payment->consumer->shippingAddress->country );
+		WC()->customer->set_shipping_country( $request->payment->consumer->shippingAddress->country );
+		WC()->customer->save();
+		WC()->cart->calculate_totals();
+		
+		WC()->session->set( 'order_awaiting_payment', $order_id );
+		
+		// Get order id and update the hash for the order
+		update_post_meta( $order_id, '_cart_hash', md5( json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
+		
 		// Set the paymentID as a meta value to be used later for reference
 		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
-		//$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
+		
 		wp_send_json_success( $request );
 		wp_die();
 	}
