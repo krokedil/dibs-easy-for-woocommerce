@@ -10,12 +10,12 @@
  * Description:     Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
  * Version:         1.0.0
  * Author:          Krokedil
- * Author URI:      https://woocommerce.com/
+ * Author URI:      https://krokedil.se/
  * Developer:       Krokedil
- * Developer URI:   http://krokedil.com/
+ * Developer URI:   https://krokedil.se/
  * Text Domain:     dibs-easy-for-woocommerce
  * Domain Path:     /languages
- * Copyright:       © 2009-2017 WooCommerce.
+ * Copyright:       © 2017 Krokedil Produktionsbyrå AB.
  * License:         GNU General Public License v3.0
  * License URI:     http://www.gnu.org/licenses/gpl-3.0.html
  */
