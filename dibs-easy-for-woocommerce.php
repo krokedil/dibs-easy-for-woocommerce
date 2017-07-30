@@ -24,6 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+/**
+ * Required minimums and constants
+ */
+define( 'WC_DIBS_VERSION', '1.0.0' );
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 	class DIBS_Easy {
@@ -81,7 +85,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				$script_url    = $testmode ? 'https://test.checkout.dibspayment.eu/v1/checkout.js?v=1' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
 
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
-				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ) );
+				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_VERSION );
 				wp_localize_script( 'checkout', 'wc_dibs_easy', array(
 					'ajaxurl' => admin_url( 'admin-ajax.php' ),
 				) );
