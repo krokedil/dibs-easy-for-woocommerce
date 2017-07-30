@@ -1,4 +1,18 @@
-<?php	
+<?php
+/**
+ * DIBS Country Converter Functions
+ *
+ * Helper functions for switching between 2 & 3 letter country codes.
+ *
+ * @author  Krokedil
+ * @package DIBS/Functions
+ * @since   1.0.0
+ */
+ 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 function dibs_get_iso_2_country( $country = false ) {
 	$result = '';
 	$countries = dibs_get_all_countries();
