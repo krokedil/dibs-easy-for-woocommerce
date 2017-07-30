@@ -205,5 +205,34 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$request = new DIBS_Requests();
 		$this->checkout_fields = $request->get_order_fields( $payment_id );
+		
+		// Update customer country
+		$country = (string) dibs_get_iso_2_country( $this->checkout_fields->payment->consumer->shippingAddress->country );
+		$order_id = WC()->session->get( 'dibs_incomplete_order' );
+		
+		$this->prepare_cart_before_form_processing( $country );
+		$this->prepare_local_order_before_form_processing( $order_id, $payment_id );
+	}
+	
+	// Helper function to prepare the cart session before processing the order form
+	public function prepare_cart_before_form_processing( $country = false ) {
+		if( $country ) {
+			WC()->customer->set_billing_country( $country );
+			WC()->customer->set_shipping_country( $country );
+			WC()->customer->save();
+			WC()->cart->calculate_totals();
+		}
+	}
+	
+	// Helper function to prepare the local order before processing the order form
+	public function prepare_local_order_before_form_processing( $order_id, $payment_id ) {
+		// Update cart hash
+		update_post_meta( $order_id, '_cart_hash', md5( json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
+		// Set the paymentID as a meta value to be used later for reference
+		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
+		// Order ready for processing
+		WC()->session->set( 'order_awaiting_payment', $order_id );
+		$order = wc_get_order( $order_id );
+		$order->update_status( 'pending' );
 	}
 }// End of class DIBS_Easy_Gateway

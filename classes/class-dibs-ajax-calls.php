@@ -86,32 +86,42 @@ class DIBS_Ajax_Calls {
 		$request = $request->make_request( 'GET', '', $endpoint_sufix );
 		
 		$order_id = WC()->session->get( 'dibs_incomplete_order' );
-		$order = wc_get_order( $order_id );
-		$order->update_status( 'pending' );
+		
 		
 		// Convert country code from 3 to 2 letters 
 		if( $request->payment->consumer->shippingAddress->country ) {
 			$request->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $request->payment->consumer->shippingAddress->country );
 		}
 		
-		// Update customer country
-		WC()->customer->set_billing_country( $request->payment->consumer->shippingAddress->country );
-		WC()->customer->set_shipping_country( $request->payment->consumer->shippingAddress->country );
-		WC()->customer->save();
-		WC()->cart->calculate_totals();
-		
-		WC()->session->set( 'order_awaiting_payment', $order_id );
-		
-		// Get order id and update the hash for the order
-		update_post_meta( $order_id, '_cart_hash', md5( json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
-		
-		// Set the paymentID as a meta value to be used later for reference
-		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
+		$this->prepare_cart_before_form_processing( $request->payment->consumer->shippingAddress->country );
+		$this->prepare_local_order_before_form_processing( $order_id, $payment_id );
 		
 		wp_send_json_success( $request );
 		wp_die();
 	}
-
+	
+	// Helper function to prepare the cart session before processing the order form
+	public function prepare_cart_before_form_processing( $country = false ) {
+		if( $country ) {
+			WC()->customer->set_billing_country( $country );
+			WC()->customer->set_shipping_country( $country );
+			WC()->customer->save();
+			WC()->cart->calculate_totals();
+		}
+	}
+	
+	// Helper function to prepare the local order before processing the order form
+	public function prepare_local_order_before_form_processing( $order_id, $payment_id ) {
+		// Update cart hash
+		update_post_meta( $order_id, '_cart_hash', md5( json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
+		// Set the paymentID as a meta value to be used later for reference
+		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
+		// Order ready for processing
+		WC()->session->set( 'order_awaiting_payment', $order_id );
+		$order = wc_get_order( $order_id );
+		$order->update_status( 'pending' );
+	}
+	
 	// Function called if a ajax call does not receive the expected result
 	public function fail_ajax_call( $order, $message = 'Failed to create an order with DIBS' ) {
 		$order->add_order_note( sprintf( __( '%s', 'dibs-easy-for-woocommerce' ), $message ) );
