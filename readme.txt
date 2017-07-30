@@ -9,14 +9,27 @@ Tested WooCommerce up to: 3.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-DIBS Easy for WooCommerce is a plugin that extends WooCommerce, allowing you to take payments via DIBS new payment method DIBS Easy.
-
-
 
 == DESCRIPTION ==
+DIBS Easy for WooCommerce is a plugin that extends WooCommerce, allowing you to take payments via DIBS new payment method Easy.
+
+Easy is an exceptionally quick checkout for consumers. A single agreement for all payment methods. These are just some of the benefits to look forward to when choosing our new Easy payment solution for your online store.
+
+https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
+
+*All-in-one* - One agreement for all payment options including card acquiring agreements makes it easy to get started. At the moment, we offer card payments and in the autumn, invoice payments will also be added.
+
+*Easy checkout* - Quick and mobile optimised payments for your customers with full freedom to choose payment options and the possibility of saving multiple payment cards. Returning customers also pay with just one click. Embedded in every step ensuring a smooth shopping experience.      
+
+*Easy administration* - Track sales in our user-friendly administration portal and get all payments collected in a report. It saves time in account reconsiliation and bookkeeping.
+
+= Get started =
 To get started with DIBS Easy you need to [sign up](http://www.dibs.se/easy-se) for an account.
 
 More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+
+= Connect Easy to your webshop by setting up a test account. It is free and created immediately =
+With a test account, you will see how the Easy administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).  
 
 
 == INSTALLATION	 ==
@@ -39,6 +52,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2017.07.29  	- version 1.0.0 =
+* Tweak			- First release on wordpress.org.
+* Fix			- Added helper functions to convert country codes. Makes it possible to take international purchases.
+
 = 2017.06.22  	- version 0.3.2 =
 * Added     	- Debug logging to catch all requests.
 * Fix       	- Changed populate_fields to only make one call.
@@ -54,7 +71,6 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * Fix			- Check terms checkbox (if it exist) before submitting the WC form.
 * Fix			- Customer order note saved correctly even when redirected to 3DSecure window.
 * Fix			- Move customer order note textarea field bug fix.
-
 
 = 2017.05.25  	- version 0.2.0 =
 * Tweak			- Added automatic updates via WordPress admin.
