@@ -121,7 +121,7 @@ class DIBS_Get_WC_Cart {
 		$tax_amount       = $item_line_tax * 100;
 		$gross_total_amount = round( ( $item_line_total + $item_line_tax ) * 100 );
 		$net_total_amount   = round( $item_line_total * 100 );
-
+		
 		// Return the item object array
 		return array(
 			'reference'         => $reference,
