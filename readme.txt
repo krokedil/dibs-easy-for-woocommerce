@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 4.8
+Tested up to: 4.8.1
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.1.1
+Tested WooCommerce up to: 3.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 
 == CHANGELOG ==
+
+= 2017.08.25  	- version 1.0.1 =
+* Fix       	- Fixed a bug where invalid characters could be sent (in product name) to DIBS Easy API.
+* Fix			- Error messaging improvements in console.log on checkout page.
 
 = 2017.07.29  	- version 1.0.0 =
 * Tweak			- First release on wordpress.org.
