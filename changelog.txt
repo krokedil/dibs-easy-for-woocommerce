@@ -1,5 +1,8 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2017.08.24  - version 1.0.0
+* Fix       - Fixed a bug where invalid characters where sent to the DIBS Easy API
+
 2017.07.29  - version 1.0.0
 * Tweak		- First release on wordpress.org.
 * Fix		- Added helper functions to convert country codes. Makes it possible to take international purchases.

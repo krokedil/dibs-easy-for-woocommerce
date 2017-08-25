@@ -121,7 +121,10 @@ class DIBS_Get_WC_Cart {
 		$tax_amount       = $item_line_tax * 100;
 		$gross_total_amount = round( ( $item_line_total + $item_line_tax ) * 100 );
 		$net_total_amount   = round( $item_line_total * 100 );
-		
+
+		// Clean the name of illegal characters
+		$name = preg_replace('/[^!#$%()*+,-.\/:;=?@\[\]\\\^_`{}|~a-zA-Z0-9\s]+/i', '', $name);
+
 		// Return the item object array
 		return array(
 			'reference'         => $reference,
