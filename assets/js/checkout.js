@@ -2,6 +2,7 @@ jQuery(document).ready(function($) {
     var i = 0;
     var x = 0;
     function triggerDIBS() {
+	    
         // Get current URL
         var url = window.location.href;
         if(url.indexOf('paymentId') != -1){
@@ -19,13 +20,14 @@ jQuery(document).ready(function($) {
                 'action': 'create_paymentID'
             };
             jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
+	            
                 if (true === data.success) {
                     var paymentID = data.data.paymentId.paymentId;
                     var privateKey = data.data.privateKey;
                     var language = data.data.language;
                     intitCheckout(paymentID, privateKey, language);
                 } else {
-                    console.log('error');
+                    console.log( data.data );
                 }
             });
         }

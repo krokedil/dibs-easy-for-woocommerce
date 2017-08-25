@@ -58,10 +58,16 @@ class DIBS_Ajax_Calls {
 				$return['paymentId'] = $request;
 				wp_send_json_success( $return );
 				wp_die();
+				
 			} elseif ( array_key_exists( 'errors', $request ) ) {
+				
 				if ( array_key_exists( 'amount', $request->errors ) && 'Amount dosent match sum of orderitems' === $request->errors->amount[0] ) {
 					$message = 'DIBS failed to create a Payment ID : ' . $request->errors->amount[0];
 					wp_send_json_error( $this->fail_ajax_call( $order, $message ) );
+					wp_die();
+				} else {
+					$message = 'DIBS request error: ' . print_r($request->errors, true);
+					wp_send_json_error( $message );
 					wp_die();
 				}
 			}
@@ -125,6 +131,7 @@ class DIBS_Ajax_Calls {
 	// Function called if a ajax call does not receive the expected result
 	public function fail_ajax_call( $order, $message = 'Failed to create an order with DIBS' ) {
 		$order->add_order_note( sprintf( __( '%s', 'dibs-easy-for-woocommerce' ), $message ) );
+		return $message;
 	}
 	public function get_options() {
 		$return['privateKey'] = $this->private_key;
