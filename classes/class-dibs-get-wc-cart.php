@@ -118,7 +118,7 @@ class DIBS_Get_WC_Cart {
 		$unit             = (string) $item_quantity;
 		$unit_price       = round( ( $item_line_total * 100 ) / $unit );
 		$tax_rate         = round( ( $item_line_tax / $item_line_total ) * 10000 );
-		$tax_amount       = $item_line_tax * 100;
+		$tax_amount       = intval( round( $item_line_tax, 2 ) * 100 );
 		$gross_total_amount = round( ( $item_line_total + $item_line_tax ) * 100 );
 		$net_total_amount   = round( $item_line_total * 100 );
 
