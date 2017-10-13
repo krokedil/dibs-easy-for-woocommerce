@@ -1,5 +1,8 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2017.10.13  - version 1.0.2
+* Fix       - Set Set DIBS Easy as the chosen payment method when retrieving payment id from DIBS (to be able to handel the checkout process better when Easy isn't the default payment method).
+
 2017.08.25  - version 1.0.1
 * Fix       - Fixed a bug where invalid characters could be sent (in product name) to DIBS Easy API.
 * Fix		- Error messaging improvements in console.log on checkout page.
