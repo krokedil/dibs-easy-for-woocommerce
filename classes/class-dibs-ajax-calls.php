@@ -21,6 +21,10 @@ class DIBS_Ajax_Calls {
 	}
 
 	public function create_payment_id() {
+		
+		// Set DIBS Easy as the chosen payment method
+		WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
+		
 		// Create an empty WooCommerce order and get order id if one is not made already
 		if ( WC()->session->get( 'dibs_incomplete_order' ) === null ) {
 			$order    = wc_create_order();
