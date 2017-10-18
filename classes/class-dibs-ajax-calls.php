@@ -53,11 +53,22 @@ class DIBS_Ajax_Calls {
 				// Create the return array
 				$return               = array();
 				$return['privateKey'] = $this->private_key;
-				if ( 'sv_SE' === get_locale() ) {
-					$language = 'sv-SE';
-				} else {
-					$language = 'en-GB';
+				
+				switch ( get_locale() ) {
+					case 'sv_SE' :
+						$language = 'sv-SE';
+						break;
+					case 'nb_NO' :
+					case 'nn_NO' :
+						$language = 'nb-NO';
+						break;
+					case 'da_DK' :
+						$language = 'da-DK';
+						break;
+					default :
+						$language = 'en-GB';
 				}
+				
 				$return['language']  = $language;
 				$return['paymentId'] = $request;
 				wp_send_json_success( $return );
