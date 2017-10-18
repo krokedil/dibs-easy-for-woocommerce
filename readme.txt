@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 4.8.1
+Tested up to: 4.8.2
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.1.2
+Tested WooCommerce up to: 3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 
 == CHANGELOG ==
+
+= 2017.10.18  	- version 1.0.3 =
+* Feature		- Added support for Norwegian and Danish locale.
+* Fix			- Save masked card number in WC order in direct payment flow (purchases with no redirect to 3D Secure).
 
 = 2017.10.13  	- version 1.0.2 =
 * Fix       	- Set Set DIBS Easy as the chosen payment method when retrieving payment id from DIBS (to be able to handel the checkout process better when Easy isn't the default payment method).

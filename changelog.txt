@@ -1,5 +1,9 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2017.10.18  - version 1.0.3
+* Feature	- Added support for Norwegian and Danish locale.
+* Fix		- Save masked card number in WC order in direct payment flow (purchases with no redirect to 3D Secure).
+
 2017.10.13  - version 1.0.2
 * Fix       - Set Set DIBS Easy as the chosen payment method when retrieving payment id from DIBS (to be able to handel the checkout process better when Easy isn't the default payment method).
 
