@@ -20,9 +20,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$this->init_settings();
 		// Get the settings values
 		$this->title = $this->get_option( 'title' );
-
 		$this->enabled = $this->get_option( 'enabled' );
-
+		
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
 		$this->supports = array(
@@ -118,6 +117,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
 			$order->update_status( 'pending' );
 			update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
+			update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
 			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s. Payment type - %s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 			$order->payment_complete( $payment_id );
 			WC()->cart->empty_cart();
@@ -142,11 +142,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$city     		= (string) $checkout_fields->payment->consumer->shippingAddress->city;
 			$postcode 		= (string) $checkout_fields->payment->consumer->shippingAddress->postalCode;
 			$phone    		= (string) $checkout_fields->payment->consumer->privatePerson->phoneNumber->number;
-			$masked_card 	= (string) $checkout_fields->payment->paymentDetails->cardDetails->maskedPan;
-
-			$order_id = WC()->session->get( 'dibs_incomplete_order' );
-			update_post_meta( $order_id, 'dibs_customer_card', $masked_card );
-
 
 			//Populate the fields
 			switch ( $key ) {
