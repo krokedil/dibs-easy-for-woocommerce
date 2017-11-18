@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 4.8.2
+Tested up to: 4.9
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.2
+Tested WooCommerce up to: 3.2.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 
 == CHANGELOG ==
+
+= 2017.11.18  	- version 1.0.4 =
+* Tweak			- Adds plugin action links (to settings and docs).
+* Tweak			- Updated settings labels.
 
 = 2017.10.18  	- version 1.0.3 =
 * Feature		- Added support for Norwegian and Danish locale.

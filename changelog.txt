@@ -1,5 +1,9 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2017.11.18  - version 1.0.4
+* Tweak		- Adds plugin action links (to settings and docs).
+* Tweak		- Updated settings labels.
+
 2017.10.18  - version 1.0.3
 * Feature	- Added support for Norwegian and Danish locale.
 * Fix		- Save masked card number in WC order in direct payment flow (purchases with no redirect to 3D Secure).
