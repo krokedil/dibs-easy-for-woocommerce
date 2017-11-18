@@ -67,6 +67,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once( plugin_basename( 'classes/class-dibs-requests.php' ) );
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
+			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 		}
 
 		// Include DIBS Gateway if WC_Payment_Gateway exist
@@ -100,6 +101,21 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				);
 				wp_enqueue_style( 'dibs_style' );
 			}
+		}
+		
+		/**
+		 * Adds plugin action links
+		 *
+		 * @since 1.0.4
+		 */
+		public function plugin_action_links( $links ) {
+
+			$plugin_links = array(
+				'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=dibs_easy' ) . '">' . __( 'Settings', 'dibs-easy-for-woocommerce' ) . '</a>',
+				'<a href="http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/">' . __( 'Docs', 'dibs-easy-for-woocommerce' ) . '</a>',
+				'<a href="https://krokedil.se/support/">' . __( 'Support', 'dibs-easy-for-woocommerce' ) . '</a>',
+			);
+			return array_merge( $plugin_links, $links );
 		}
 
 		// Add DIBS Easy gateway to WooCommerce Admin interface
