@@ -135,6 +135,12 @@ jQuery(document).ready(function($) {
                 $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
                 $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
                 $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number);
+                $("form.checkout #shipping_first_name").val(data.data.payment.consumer.privatePerson.firstName);
+                $("form.checkout #shipping_last_name").val(data.data.payment.consumer.privatePerson.lastName);
+                $("form.checkout #shipping_country").val(data.data.payment.consumer.shippingAddress.country);
+                $("form.checkout #shipping_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
+                $("form.checkout #shipping_city").val(data.data.payment.consumer.shippingAddress.city);
+                $("form.checkout #shipping_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
 				
 				// Check Terms checkbox, if it exists
                 if ($("form.checkout #terms").length > 0) {
