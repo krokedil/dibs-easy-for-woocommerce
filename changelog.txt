@@ -1,5 +1,9 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2017.11.28  - version 1.0.5
+* Tweak		- Updated SKU function to get variable ID if variable SKU is missing but parent product has SKU
+* Fix		- Adds shipping address to prepopulated fields before submitting form.
+
 2017.11.18  - version 1.0.4
 * Tweak		- Adds plugin action links (to settings and docs).
 * Tweak		- Updated settings labels.

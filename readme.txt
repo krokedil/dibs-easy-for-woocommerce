@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 4.9
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.2.4
+Tested WooCommerce up to: 3.2.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 
 == CHANGELOG ==
+
+= 2017.11.28  	- version 1.0.5 =
+* Tweak		    - Updated SKU function to get variable ID if variable SKU is missing but parent product has SKU
+* Fix		    - Adds shipping address to prepopulated fields before submitting form.
 
 = 2017.11.18  	- version 1.0.4 =
 * Tweak			- Adds plugin action links (to settings and docs).
