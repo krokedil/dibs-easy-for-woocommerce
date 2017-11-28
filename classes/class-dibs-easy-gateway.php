@@ -165,9 +165,27 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 					break;
 				case 'billing_postcode':
 					return $postcode;
-					break;
+					break;				
 				case 'billing_phone':
 					return $phone;
+					break;
+				case 'shipping_first_name':
+					return $first_name;
+					break;
+				case 'shipping_last_name':
+					return $last_name;
+					break;
+				case 'shipping_country':
+					return $country;
+					break;
+				case 'shipping_address_1':
+					return $address;
+					break;
+				case 'shipping_city':
+					return $city;
+					break;
+				case 'shipping_postcode':
+					return $postcode;
 					break;
 				case 'order_comments':
 					return WC()->session->get( 'dibs_customer_order_note' );
