@@ -19,8 +19,14 @@ class DIBS_Get_WC_Cart {
 		foreach ( $wc_cart as $item ) {
 			$item_name = wc_get_product( $item['product_id'] );
 			$item_name = $item_name->get_title();
-			$product = wc_get_product( $item['product_id'] );
-			$item_line = $this->create_items( $this->get_sku( $product ), $item_name, $item['quantity'], $item['line_total'], $item['line_tax'] );
+			if ( $item['variation_id'] ) {
+				$product = wc_get_product( $item['variation_id'] );
+				$product_id = $item['variation_id'];
+			} else {
+				$product = wc_get_product( $item['product_id'] );
+				$product_id = $item['product_id'];
+			}
+			$item_line = $this->create_items( $this->get_sku( $product, $product_id ), $item_name, $item['quantity'], $item['line_total'], $item['line_tax'] );
 			array_push( $items, $item_line );
 		}
 		// Add shipping as an item for order.
@@ -70,8 +76,14 @@ class DIBS_Get_WC_Cart {
 		$items = array();
 		// Get the items from the array and save in a format that works for DIBS
 		foreach ( $order_item as $item ) {
-			$product = wc_get_product( $item['product_id'] );
-			$item_line = $this->create_items( $this->get_sku( $product ), $item['name'], $item['quantity'], $item['total'], $item['total_tax'] );
+			if ( $item['variation_id'] ) {
+				$product = wc_get_product( $item['variation_id'] );
+				$product_id = $item['variation_id'];
+			} else {
+				$product = wc_get_product( $item['product_id'] );
+				$product_id = $item['product_id'];
+			}
+			$item_line = $this->create_items( $this->get_sku( $product, $product_id ), $item['name'], $item['quantity'], $item['total'], $item['total_tax'] );
 			array_push( $items, $item_line );
 		}
 		foreach ( $order_shipping as $shipping ) {
@@ -152,8 +164,8 @@ class DIBS_Get_WC_Cart {
 		}
 		return $amount;
 	}
-	public function get_sku( $product ) {
-		if ( $product->get_sku() ) {
+	public function get_sku( $product, $product_id ) {
+		if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
 			$part_number = $product->get_sku();
 		} else {
 			$part_number = $product->get_id();
