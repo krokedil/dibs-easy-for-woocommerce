@@ -111,19 +111,21 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	}
 	public function dibs_thankyou( $order_id ) {
 		$order = wc_get_order( $order_id );
-		$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
-		$request = new DIBS_Requests();
-		$request = $request->get_order_fields( $payment_id );
-		if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
-			$order->update_status( 'pending' );
-			update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
-			update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
-			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s. Payment type - %s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
-			$order->payment_complete( $payment_id );
-			WC()->cart->empty_cart();
+		if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
+			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+			$request = new DIBS_Requests();
+			$request = $request->get_order_fields( $payment_id );
+			if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
+				$order->update_status( 'pending' );
+				update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
+				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
+				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s. Payment type - %s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
+				$order->payment_complete( $payment_id );
+				WC()->cart->empty_cart();
+			}
+			WC()->session->__unset( 'dibs_incomplete_order' );
+			WC()->session->__unset( 'order_awaiting_payment' );
 		}
-		WC()->session->__unset( 'dibs_incomplete_order' );
-		WC()->session->__unset( 'order_awaiting_payment' );
 	}
 	public function dibs_populate_fields( $value, $key ) {
 		//Get the payment ID
