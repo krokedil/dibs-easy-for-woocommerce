@@ -33,13 +33,12 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			if ( isset( $_GET['paymentId'] ) ) {
 				add_action( 'woocommerce_before_checkout_form', array( $this, 'dibs_get_field_values' ) );
 				add_filter( 'woocommerce_checkout_get_value', array( $this, 'dibs_populate_fields' ), 10, 2 );
-				add_filter( 'woocommerce_checkout_fields' ,  array( $this, 'dibs_set_not_required' ), 20 );
 			}
 		}
 
 		// Add class if DIBS Easy is set as the default gateway
 		add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
-
+		add_filter( 'woocommerce_checkout_fields' ,  array( $this, 'dibs_set_not_required' ), 20 );
 		add_action( 'woocommerce_thankyou_dibs_easy', array( $this, 'dibs_thankyou' ) );
 	}
 	public function init_form_fields() {
