@@ -52,6 +52,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2017.11.29      - version 1.0.6 =
+* Fix		    - Prevent order status to be changed to Pending and back to Processing if thankyou page is reloaded and sessions aren't deleted properly.
+
 = 2017.11.28  	- version 1.0.5 =
 * Tweak		    - Updated SKU function to get variable ID if variable SKU is missing but parent product has SKU
 * Fix		    - Adds shipping address to prepopulated fields before submitting form.
