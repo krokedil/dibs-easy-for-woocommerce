@@ -52,6 +52,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2017.11.29      - version 1.0.7 =
+* Fix		    - Set WC checkout fields as not required if DIBS Easy is the selected payment gateway.
+
 = 2017.11.29      - version 1.0.6 =
 * Fix		    - Prevent order status to be changed to Pending and back to Processing if thankyou page is reloaded and sessions aren't deleted properly.
 
