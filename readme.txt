@@ -52,6 +52,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2017.12.05    - version 1.0.8 =
+* Fix		    - Improved how checkout fields are set as not required by hooking into filter woocommerce_checkout_posted_data.
+
+
 = 2017.11.30    - version 1.0.7 =
 * Fix		    - Change how WC checkout fields are set as not required if DIBS Easy is the selected payment gateway.
 
