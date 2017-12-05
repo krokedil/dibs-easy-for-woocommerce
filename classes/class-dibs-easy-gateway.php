@@ -38,7 +38,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		// Add class if DIBS Easy is set as the default gateway
 		add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
-		add_filter( 'woocommerce_checkout_fields' ,  array( $this, 'dibs_set_not_required' ), 100 );
 		add_action( 'woocommerce_thankyou_dibs_easy', array( $this, 'dibs_thankyou' ) );
 	}
 	public function init_form_fields() {
@@ -202,17 +201,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		} // End if().
 	}
 
-	public function dibs_set_not_required( $checkout_fields ) {
-		//Set fields to not required, to prevent orders from failing
-		if ( 'dibs_easy' === WC()->session->get( 'chosen_payment_method' ) ) {
-			foreach ( $checkout_fields as $fieldset_key => $fieldset ) {
-				foreach ( $fieldset as $field_key => $field ) {
-					$checkout_fields[ $fieldset_key ][ $field_key ]['required'] = false;
-				}
-			}
-		}
-		return $checkout_fields;
-	}
 	public function dibs_get_field_values() {
 		//Get the payment ID
 		$payment_id = $_GET['paymentId'];
