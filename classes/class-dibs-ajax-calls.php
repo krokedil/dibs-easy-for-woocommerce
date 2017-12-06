@@ -106,24 +106,39 @@ class DIBS_Ajax_Calls {
 		$endpoint_sufix = 'payments/' . $payment_id;
 
 		// Make the request
-		$request = new DIBS_Requests();
-		$request = $request->make_request( 'GET', '', $endpoint_sufix );
-		
-		$order_id = WC()->session->get( 'dibs_incomplete_order' );
-		
-		// Convert country code from 3 to 2 letters 
-		if( $request->payment->consumer->shippingAddress->country ) {
-			$request->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $request->payment->consumer->shippingAddress->country );
-		}
-		
-		// Store the order data in a sesstion. We might need it if form processing in Woo fails
-		WC()->session->set( 'dibs_order_data', $request );
+		$request 	= new DIBS_Requests();
+		$response 	= $request->make_request( 'GET', '', $endpoint_sufix );
+		$order_id 	= WC()->session->get( 'dibs_incomplete_order' );
 
-		$this->prepare_cart_before_form_processing( $request->payment->consumer->shippingAddress->country );
 		$this->prepare_local_order_before_form_processing( $order_id, $payment_id );
 		
-		wp_send_json_success( $request );
-		wp_die();
+		if ( is_wp_error( $response ) || empty( $response ) ) {
+			// Something went wrong
+			if( is_wp_error( $response ) ) {
+				$message = $response->get_error_message();
+			} else {
+				$message = 'Empty response from DIBS.';
+			}
+			$order = wc_get_order( $order_id );
+			$order->add_order_note( sprintf( __( 'Something went wrong when connecting to DIBS during checkout completion. Error message: %s. Please check your DIBS backoffice to control the order.', 'dibs-easy-for-woocommerce' ), $message ) );
+			wp_send_json_error( $message );
+			wp_die();
+		} else {
+			// All good with the request
+			// Convert country code from 3 to 2 letters 
+			if( $response->payment->consumer->shippingAddress->country ) {
+				$response->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $response->payment->consumer->shippingAddress->country );
+			}
+			
+			// Store the order data in a sesstion. We might need it if form processing in Woo fails
+			WC()->session->set( 'dibs_order_data', $response );
+
+			$this->prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
+			
+			wp_send_json_success( $response );
+			wp_die();
+		}
+		
 	}
 	
 	// Helper function to prepare the cart session before processing the order form
