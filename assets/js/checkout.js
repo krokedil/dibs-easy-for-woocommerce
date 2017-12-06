@@ -178,5 +178,33 @@ jQuery(document).ready(function($) {
 		} else {
 			$("body").removeClass("dibs-selected").addClass("dibs-deselected");
 		}
-	};
+    };
+    
+    // When WooCommerce checkout submission fails
+	$(document.body).on("checkout_error", function () {
+		if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
+			
+			$.ajax(
+	            wc_dibs_easy.ajaxurl,
+	            {
+	                type: "POST",
+	                dataType: "json",
+	                async: true,
+	                data: {
+	                    action:		"dibs_on_checkout_error"
+	                },
+	                success: function (data) {
+					},
+					error: function (data) {
+					},
+					complete: function (data) {
+						console.log('dibs checkout error');
+						console.log(data.responseJSON);
+						window.location.href = data.responseJSON.data.redirect;
+					}
+	            }
+	        );
+			
+		}
+	});
 });
