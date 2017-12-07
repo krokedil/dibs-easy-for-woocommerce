@@ -27,6 +27,7 @@ class DIBS_Requests {
 		// Create the request array
 		$request_array = array(
 			'method'  => $method,
+			'timeout' => 10,
 			'headers' => array(
 				'Content-type'  => 'application/json',
 				'Accept'        => 'application/json',
@@ -42,13 +43,13 @@ class DIBS_Requests {
 		$response = wp_remote_request( $endpoint, $request_array );
 		$this->log( 'Response from DIBS: ' . var_export( $response, true ) );
 		if ( is_wp_error( $response ) ) {
-			$this->log( 'Error connecting to DIBS' );
+			$error_message = $response->get_error_message();
+			$this->log( 'Error connecting to DIBS. Error message: ' . $error_message );
 		} else {
 			 $response = wp_remote_retrieve_body( $response );
 			 $response = json_decode( $response );
-
-			 return $response;
 		}
+		return $response;
 	}
 
 	public function get_order_fields( $payment_id ) {

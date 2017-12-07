@@ -120,35 +120,49 @@ jQuery(document).ready(function($) {
     }
     function DIBS_Payment_Success(paymentId) {
         if (x === 0) {
-            var data = {
-                'action': 'payment_success',
-                'paymentId': paymentId
-            };
-
-            jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
-
-                $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
-                $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
-                $("form.checkout #billing_email").val(data.data.payment.consumer.privatePerson.email);
-                $("form.checkout #billing_country").val(data.data.payment.consumer.shippingAddress.country);
-                $("form.checkout #billing_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
-                $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
-                $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
-                $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number);
-                $("form.checkout #shipping_first_name").val(data.data.payment.consumer.privatePerson.firstName);
-                $("form.checkout #shipping_last_name").val(data.data.payment.consumer.privatePerson.lastName);
-                $("form.checkout #shipping_country").val(data.data.payment.consumer.shippingAddress.country);
-                $("form.checkout #shipping_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
-                $("form.checkout #shipping_city").val(data.data.payment.consumer.shippingAddress.city);
-                $("form.checkout #shipping_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
-				
-				// Check Terms checkbox, if it exists
-                if ($("form.checkout #terms").length > 0) {
-                    $("form.checkout #terms").prop("checked", true);
-                }
-                    
-                $("#place_order").trigger("submit");
-            });
+            $.ajax(
+	            wc_dibs_easy.ajaxurl,
+	            {
+	                type: "POST",
+	                dataType: "json",
+	                async: true,
+	                data: {
+                        action:		'payment_success',
+                        'paymentId': paymentId
+	                },
+	                success: function (data) {
+                        console.log(data);
+                        if( false === data.success ) {
+                            console.log( data );
+                        } else {
+                            $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
+                            $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
+                            $("form.checkout #billing_email").val(data.data.payment.consumer.privatePerson.email);
+                            $("form.checkout #billing_country").val(data.data.payment.consumer.shippingAddress.country);
+                            $("form.checkout #billing_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
+                            $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
+                            $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
+                            $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number);
+                            $("form.checkout #shipping_first_name").val(data.data.payment.consumer.privatePerson.firstName);
+                            $("form.checkout #shipping_last_name").val(data.data.payment.consumer.privatePerson.lastName);
+                            $("form.checkout #shipping_country").val(data.data.payment.consumer.shippingAddress.country);
+                            $("form.checkout #shipping_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
+                            $("form.checkout #shipping_city").val(data.data.payment.consumer.shippingAddress.city);
+                            $("form.checkout #shipping_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
+                        }
+                        
+                        // Check Terms checkbox, if it exists
+                        if ($("form.checkout #terms").length > 0) {
+                            $("form.checkout #terms").prop("checked", true);
+                        }
+                        $("#place_order").trigger("submit");
+					},
+					error: function (data) {
+					},
+					complete: function (data) {
+					}
+	            }
+	        );
             x = 1;
         }
     }
@@ -178,5 +192,33 @@ jQuery(document).ready(function($) {
 		} else {
 			$("body").removeClass("dibs-selected").addClass("dibs-deselected");
 		}
-	};
+    };
+    
+    // When WooCommerce checkout submission fails
+	$(document.body).on("checkout_error", function () {
+		if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
+			
+			$.ajax(
+	            wc_dibs_easy.ajaxurl,
+	            {
+	                type: "POST",
+	                dataType: "json",
+	                async: true,
+	                data: {
+	                    action:		"dibs_on_checkout_error"
+	                },
+	                success: function (data) {
+					},
+					error: function (data) {
+					},
+					complete: function (data) {
+						console.log('dibs checkout error');
+						console.log(data.responseJSON);
+						window.location.href = data.responseJSON.data.redirect;
+					}
+	            }
+	        );
+			
+		}
+	});
 });

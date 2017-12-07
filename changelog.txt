@@ -1,5 +1,10 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2017.12.07  - version 1.1.0
+* Tweak     - Adds support for order submission failure handling.
+* Tweak     - Increased timeout to 10 seconds when communicating with DIBS.
+* Fix       - Fallback to be able to process order even if DIBS doesn't respond on our call after payment sucess.
+
 2017.12.05  - version 1.0.8
 * Fix		- Improved how checkout fields are set as not required by hooking into filter woocommerce_checkout_posted_data.
 

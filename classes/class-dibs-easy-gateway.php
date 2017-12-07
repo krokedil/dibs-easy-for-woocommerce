@@ -123,6 +123,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			}
 			WC()->session->__unset( 'dibs_incomplete_order' );
 			WC()->session->__unset( 'order_awaiting_payment' );
+			WC()->session->__unset( 'dibs_order_data' );
 		}
 	}
 	public function dibs_populate_fields( $value, $key ) {
@@ -208,11 +209,17 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$request = new DIBS_Requests();
 		$this->checkout_fields = $request->get_order_fields( $payment_id );
 		
-		// Update customer country
-		$country = (string) dibs_get_iso_2_country( $this->checkout_fields->payment->consumer->shippingAddress->country );
 		$order_id = WC()->session->get( 'dibs_incomplete_order' );
 		
-		$this->prepare_cart_before_form_processing( $country );
+		// Convert country code from 3 to 2 letters 
+		if( $this->checkout_fields->payment->consumer->shippingAddress->country ) {
+			$this->checkout_fields->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $this->checkout_fields->payment->consumer->shippingAddress->country );
+		}
+
+		// Store the order data in a session. We might need it if form processing in Woo fails
+		WC()->session->set( 'dibs_order_data', $this->checkout_fields );
+
+		$this->prepare_cart_before_form_processing( $this->checkout_fields->payment->consumer->shippingAddress->country );
 		$this->prepare_local_order_before_form_processing( $order_id, $payment_id );
 	}
 	
