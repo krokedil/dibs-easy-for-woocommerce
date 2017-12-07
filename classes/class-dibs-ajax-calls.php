@@ -198,6 +198,9 @@ class DIBS_Ajax_Calls {
 		// Add customer data to order
 		$this->helper_add_customer_data_to_local_order( $order, $dibs_order_data );
 
+		// Add payment method to order
+		$this->add_order_payment_method( $order );
+
 		// Add order items
 		$this->helper_add_items_to_local_order( $order_id );
 
@@ -309,6 +312,7 @@ class DIBS_Ajax_Calls {
 			}
 		}
 	}
+
 	/**
 	 * Adds order tax rows to local order.
 	 * 
@@ -326,6 +330,7 @@ class DIBS_Ajax_Calls {
 			}
 		}
 	}
+
 	/**
 	 * Adds order coupons to local order.
 	 *
@@ -345,7 +350,18 @@ class DIBS_Ajax_Calls {
 		}
 	}
 	
-
+	/**
+	 * Adds payment method to local order.
+	 *
+	 * @since  1.6.0
+	 * @access public
+	 *
+	 */
+	public function add_order_payment_method( $order ) {
+		$available_gateways = WC()->payment_gateways->payment_gateways();
+		$payment_method     = $available_gateways['dibs_easy'];
+		$order->set_payment_method( $payment_method );
+	}
 
 	/**
 	 * Adds customer data to WooCommerce order.
