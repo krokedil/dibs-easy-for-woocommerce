@@ -212,14 +212,14 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$order_id = WC()->session->get( 'dibs_incomplete_order' );
 		
 		// Convert country code from 3 to 2 letters 
-		if( $request->payment->consumer->shippingAddress->country ) {
-			$request->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $request->payment->consumer->shippingAddress->country );
+		if( $this->checkout_fields->payment->consumer->shippingAddress->country ) {
+			$this->checkout_fields->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $this->checkout_fields->payment->consumer->shippingAddress->country );
 		}
 
 		// Store the order data in a session. We might need it if form processing in Woo fails
-		WC()->session->set( 'dibs_order_data', $request );
+		WC()->session->set( 'dibs_order_data', $this->checkout_fields );
 
-		$this->prepare_cart_before_form_processing( $request->payment->consumer->shippingAddress->country );
+		$this->prepare_cart_before_form_processing( $this->checkout_fields->payment->consumer->shippingAddress->country );
 		$this->prepare_local_order_before_form_processing( $order_id, $payment_id );
 	}
 	
