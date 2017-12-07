@@ -2,7 +2,7 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 4.9
+Tested up to: 4.9.1
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
 Tested WooCommerce up to: 3.2.5
@@ -52,9 +52,13 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2017.12.07    - version 1.1.0
+* Tweak         - Adds support for order submission failure handling.
+* Tweak         - Increased timeout to 10 seconds when communicating with DIBS.
+* Fix           - Fallback to be able to process order even if DIBS doesn't respond on our call after payment sucess.
+
 = 2017.12.05    - version 1.0.8 =
 * Fix		    - Improved how checkout fields are set as not required by hooking into filter woocommerce_checkout_posted_data.
-
 
 = 2017.11.30    - version 1.0.7 =
 * Fix		    - Change how WC checkout fields are set as not required if DIBS Easy is the selected payment gateway.
