@@ -261,7 +261,7 @@ class DIBS_Ajax_Calls {
 	/**
 	 * Adds order fees to local order.
 	 *
-	 * @since  1.6.0
+	 * @since  1.1.0
 	 * @access public
 	 *
 	 * @param  object $order Local WC order.
@@ -273,7 +273,6 @@ class DIBS_Ajax_Calls {
 		foreach ( WC()->cart->get_fees() as $fee_key => $fee ) {
 			$item_id = $order->add_fee( $fee );
 			if ( ! $item_id ) {
-				//WC_Gateway_Ecster::log( 'Unable to add order fee.' );
 				throw new Exception( __( 'Error: Unable to create order. Please try again.', 'woocommerce' ) );
 			}
 			// Allow plugins to add order item meta to fees.
@@ -284,7 +283,7 @@ class DIBS_Ajax_Calls {
 	/**
 	 * Adds order shipping to local order.
 	 *
-	 * @since  1.6.0
+	 * @since  1.1.0
 	 * @access public
 	 *
 	 * @param  object $order Local WC order.
@@ -304,7 +303,6 @@ class DIBS_Ajax_Calls {
 			if ( isset( $package['rates'][ $this_shipping_methods[ $package_key ] ] ) ) {
 				$item_id = $order->add_shipping( $package['rates'][ $this_shipping_methods[ $package_key ] ] );
 				if ( ! $item_id ) {
-					//WC_Gateway_Ecster::log( 'Unable to add shipping item.' );
 					throw new Exception( __( 'Error: Unable to add shipping item. Please try again.', 'woocommerce' ) );
 				}
 				// Allows plugins to add order item meta to shipping.
@@ -316,7 +314,7 @@ class DIBS_Ajax_Calls {
 	/**
 	 * Adds order tax rows to local order.
 	 * 
-	 * @since  1.6.0
+	 * @since  1.1.0
 	 * @param  object $order Local WC order.
 	 *
 	 * @throws Exception PHP Exception.
@@ -325,7 +323,6 @@ class DIBS_Ajax_Calls {
 		// Store tax rows.
 		foreach ( array_keys( WC()->cart->taxes + WC()->cart->shipping_taxes ) as $tax_rate_id ) {
 			if ( $tax_rate_id && ! $order->add_tax( $tax_rate_id, WC()->cart->get_tax_amount( $tax_rate_id ), WC()->cart->get_shipping_tax_amount( $tax_rate_id ) ) && apply_filters( 'woocommerce_cart_remove_taxes_zero_rate_id', 'zero-rated' ) !== $tax_rate_id ) {
-				//WC_Gateway_Ecster::log( 'Unable to add taxes.' );
 				throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 405 ) );
 			}
 		}
@@ -334,7 +331,7 @@ class DIBS_Ajax_Calls {
 	/**
 	 * Adds order coupons to local order.
 	 *
-	 * @since  1.6.0
+	 * @since  1.1.0
 	 * @access public
 	 *
 	 * @param  object $order Local WC order.
@@ -344,7 +341,6 @@ class DIBS_Ajax_Calls {
 	public function helper_add_order_coupons( $order ) {
 		foreach ( WC()->cart->get_coupons() as $code => $coupon ) {
 			if ( ! $order->add_coupon( $code, WC()->cart->get_coupon_discount_amount( $code ) ) ) {
-				//WC_Gateway_Ecster::log( 'Unable to create order.' );
 				throw new Exception( __( 'Error: Unable to create order. Please try again.', 'woocommerce' ) );
 			}
 		}
@@ -353,7 +349,7 @@ class DIBS_Ajax_Calls {
 	/**
 	 * Adds payment method to local order.
 	 *
-	 * @since  1.6.0
+	 * @since  1.1.0
 	 * @access public
 	 *
 	 */
@@ -366,9 +362,9 @@ class DIBS_Ajax_Calls {
 	/**
 	 * Adds customer data to WooCommerce order.
 	 *
+	 * @since  1.1.0
 	 * @param integer $order_id 		WooCommerce order ID.
-	 * @param array   $customer_data  	Customer data returned by Ecster.
-	 * @param array   $addresses      	Addresses to update (shipping and/or billing).
+	 * @param array   $dibs_order_data  Customer data returned by DIBS.
 	 */
 	public function helper_add_customer_data_to_local_order( $order, $dibs_order_data ) {
 		$order_id 		= $order->get_id();
