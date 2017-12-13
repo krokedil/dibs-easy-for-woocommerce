@@ -17,10 +17,11 @@ jQuery(document).ready(function($) {
             }
         }else {
             var data = {
-                'action': 'create_paymentID'
+                'action': 'create_paymentID',
+                'dibs_payment_id' : wc_dibs_easy.dibs_payment_id
             };
+            console.log( wc_dibs_easy.dibs_payment_id );
             jQuery.post(wc_dibs_easy.ajaxurl, data, function (data) {
-	            
                 if (true === data.success) {
                     var paymentID = data.data.paymentId.paymentId;
                     var privateKey = data.data.privateKey;
