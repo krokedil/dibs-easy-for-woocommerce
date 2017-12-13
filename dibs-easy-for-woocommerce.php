@@ -90,11 +90,18 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( is_checkout() ) {
 				$testmode      = 'yes' === $this->dibs_settings['test_mode'];
 				$script_url    = $testmode ? 'https://test.checkout.dibspayment.eu/v1/checkout.js?v=1' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
+				
+				if( isset( $_GET['dibs-payment-id'] ) ) {
+					$dibs_payment_id = $_GET['dibs-payment-id'];
+				} else {
+					$dibs_payment_id = null;
+				}
 
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
 				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_VERSION );
 				wp_localize_script( 'checkout', 'wc_dibs_easy', array(
 					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'dibs_payment_id' => $dibs_payment_id,
 				) );
 				wp_enqueue_script( 'checkout' );
 

@@ -211,16 +211,32 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		
 		$order_id = WC()->session->get( 'dibs_incomplete_order' );
 		
-		// Convert country code from 3 to 2 letters 
-		if( $this->checkout_fields->payment->consumer->shippingAddress->country ) {
-			$this->checkout_fields->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $this->checkout_fields->payment->consumer->shippingAddress->country );
+		// Check payment status
+		if( key_exists( 'reservedAmount', $this->checkout_fields->payment->summary ) ) {
+			// Payment is ok, DIBS have reserved an amount
+			// Convert country code from 3 to 2 letters 
+			if( $this->checkout_fields->payment->consumer->shippingAddress->country ) {
+				$this->checkout_fields->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $this->checkout_fields->payment->consumer->shippingAddress->country );
+			}
+
+			// Store the order data in a session. We might need it if form processing in Woo fails
+			WC()->session->set( 'dibs_order_data', $this->checkout_fields );
+
+			$this->prepare_cart_before_form_processing( $this->checkout_fields->payment->consumer->shippingAddress->country );
+			$this->prepare_local_order_before_form_processing( $order_id, $payment_id );
+		} else {
+			// Payment is not ok (no reservedAmount). Possibly a card without enough funds or a canceled order from 3DSecure window.
+			// Redirect the customer to checkout page but change the param paymentId to dibs-payment-id. 
+			// By doing this the WC form will not be submitted, instead the Easy iframe will be displayed again.
+			$order_id = WC()->session->get( 'dibs_incomplete_order' );
+			$order = wc_get_order( $order_id );
+			if( is_object( $order ) ) {
+				$order->add_order_note( sprintf( __( 'There was a problem with Payment ID %s. Customer redirected back to checkout page to finalize purchase again.', 'dibs-easy-for-woocommerce' ), $payment_id ) );
+			}
+			$redirect_url = add_query_arg( 'dibs-payment-id', $payment_id, trailingslashit( wc_get_checkout_url() ) );
+			wp_redirect( $redirect_url );
+			exit;
 		}
-
-		// Store the order data in a session. We might need it if form processing in Woo fails
-		WC()->session->set( 'dibs_order_data', $this->checkout_fields );
-
-		$this->prepare_cart_before_form_processing( $this->checkout_fields->payment->consumer->shippingAddress->country );
-		$this->prepare_local_order_before_form_processing( $order_id, $payment_id );
 	}
 	
 	// Helper function to prepare the cart session before processing the order form

@@ -25,32 +25,48 @@ class DIBS_Ajax_Calls {
 
 	public function create_payment_id() {
 		
-		// Set DIBS Easy as the chosen payment method
-		WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
-		
-		// Create an empty WooCommerce order and get order id if one is not made already
-		if ( WC()->session->get( 'dibs_incomplete_order' ) === null ) {
-			$order    = wc_create_order();
-			$order_id = $order->get_id();
-			// Set the order id as a session variable
-			WC()->session->set( 'dibs_incomplete_order', $order_id );
-			$order->update_status( 'dibs-incomplete' );
-			$order->save();
+		// Check if we should create a new payment ID or use an existing one
+		if( isset( $_POST['dibs_payment_id'] ) && !empty( $_POST['dibs_payment_id'] ) ) {
+
+			// This is a return from 3DSecure. Use the current payment ID
+			$payment_id = $_POST['dibs_payment_id'];
+			$request = new stdClass;
+			$request->paymentId = $payment_id;
+
 		} else {
-			$order_id = WC()->session->get( 'dibs_incomplete_order' );
-			$order = wc_get_order( $order_id );
-			$order->update_status( 'dibs-incomplete' );
-			$order->save();
+
+			// This is a new order
+			// Set DIBS Easy as the chosen payment method
+			WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
+			
+			// Create an empty WooCommerce order and get order id if one is not made already
+			if ( WC()->session->get( 'dibs_incomplete_order' ) === null ) {
+				$order    = wc_create_order();
+				$order_id = $order->get_id();
+				// Set the order id as a session variable
+				WC()->session->set( 'dibs_incomplete_order', $order_id );
+				$order->update_status( 'dibs-incomplete' );
+				$order->save();
+			} else {
+				$order_id = WC()->session->get( 'dibs_incomplete_order' );
+				$order = wc_get_order( $order_id );
+				$order->update_status( 'dibs-incomplete' );
+				$order->save();
+			}
+
+			$get_cart = new DIBS_Get_WC_Cart();
+
+			// Get the datastring
+			$datastring = $get_cart->create_cart( $order_id );
+			// Make the request
+			$request = new DIBS_Requests();
+			$endpoint_sufix = 'payments/';
+			$request = $request->make_request( 'POST', $datastring, $endpoint_sufix );
+
 		}
 
-		$get_cart = new DIBS_Get_WC_Cart();
+		
 
-		// Get the datastring
-		$datastring = $get_cart->create_cart( $order_id );
-		// Make the request
-		$request = new DIBS_Requests();
-		$endpoint_sufix = 'payments/';
-		$request = $request->make_request( 'POST', $datastring, $endpoint_sufix );
 		if ( null != $request ) { // If array has a return
 			if ( array_key_exists( 'paymentId', $request ) ) {
 				// Create the return array
@@ -74,6 +90,7 @@ class DIBS_Ajax_Calls {
 				
 				$return['language']  = $language;
 				$return['paymentId'] = $request;
+				error_log('$request ' . var_export($return, true) );
 				wp_send_json_success( $return );
 				wp_die();
 				
