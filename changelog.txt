@@ -1,5 +1,8 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2017.12.13  - version 1.1.1
+* Fix       - Better handling of failed/canceled card payments when customer is redirected back to checkout from 3DSecure window.
+
 2017.12.07  - version 1.1.0
 * Tweak     - Adds support for order submission failure handling.
 * Tweak     - Increased timeout to 10 seconds when communicating with DIBS.
