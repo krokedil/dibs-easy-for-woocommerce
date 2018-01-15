@@ -8,7 +8,7 @@
  * Plugin Name:     		DIBS Easy for WooCommerce
  * Plugin URI:      		https://krokedil.se/dibs/
  * Description:     		Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:         		1.1.1
+ * Version:         		1.2.0
  * Author:          		Krokedil
  * Author URI:      		https://krokedil.se/
  * Developer:       		Krokedil
@@ -16,8 +16,8 @@
  * Text Domain:     		dibs-easy-for-woocommerce
  * Domain Path:     		/languages
  * WC requires at least:	3.0.0
- * WC tested up to: 		3.2.5
- * Copyright:       		© 2017 Krokedil Produktionsbyrå AB.
+ * WC tested up to: 		3.2.6
+ * Copyright:       		© 2017-2018 Krokedil Produktionsbyrå AB.
  * License:         		GNU General Public License v3.0
  * License URI:     		http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_VERSION', '1.1.1' );
+define( 'WC_DIBS_VERSION', '1.2.0' );
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 	class DIBS_Easy {

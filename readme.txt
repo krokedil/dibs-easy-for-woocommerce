@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 4.9.1
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.2.5
+Tested WooCommerce up to: 3.2.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 
 == CHANGELOG ==
+
+= 2018.01.15    - version 1.2.0 =
+* Feature		- Added termsUrl sent to DIBS (using WooCommerce terms & conditions page).
+* Tweak			- Added Admin notices class to inform merchant if no terms page is set in WooCommerce settings.
 
 = 2017.12.13    - version 1.1.1 =
 * Fix           - Better handling of failed/canceled card payments when customer is redirected back to checkout from 3DSecure window.

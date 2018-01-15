@@ -1,5 +1,9 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2018.01.15  - version 1.2.0
+* Feature	- Added termsUrl sent to DIBS (using WooCommerce terms & conditions page).
+* Tweak		- Added Admin notices class to inform merchant if no terms page is set in WooCommerce settings.
+
 2017.12.13  - version 1.1.1
 * Fix       - Better handling of failed/canceled card payments when customer is redirected back to checkout from 3DSecure window.
 
