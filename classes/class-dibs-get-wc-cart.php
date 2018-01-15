@@ -59,6 +59,9 @@ class DIBS_Get_WC_Cart {
 
 		//Get the checkout URL
 		$checkout['url'] = wc_get_checkout_url();
+		
+		// Get the terms URL
+		$checkout['termsUrl'] = wc_get_page_permalink( 'terms' );
 
 		// Create the final cart array for the datastring
 		$cart['order'] = $order;
