@@ -17,7 +17,7 @@ Easy is an exceptionally quick checkout for consumers. A single agreement for al
 
 https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 
-*All-in-one* - One agreement for all payment options including card acquiring agreements makes it easy to get started. At the moment, we offer card payments and in the autumn, invoice payments will also be added.
+*All-in-one* -  One agreement for all payment options including card acquiring agreements makes it easy to get started. At the moment, we offer card and invoice payments.
 
 *Easy checkout* - Quick and mobile optimised payments for your customers with full freedom to choose payment options and the possibility of saving multiple payment cards. Returning customers also pay with just one click. Embedded in every step ensuring a smooth shopping experience.      
 
@@ -43,7 +43,7 @@ With a test account, you will see how the Easy administration portal works. In t
 
 == Frequently Asked Questions ==
 = Which countries does this payment gateway support? =
-At the moment it's only available for merchants in Sweden.
+Available for merchants in Denmark, Sweden and Norway.
 
 = Where can I find DIBS Easy for WooCommerce documentation? =
 For help setting up and configuring DIBS Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
