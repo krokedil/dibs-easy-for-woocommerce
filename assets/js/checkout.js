@@ -150,6 +150,11 @@ jQuery(document).ready(function($) {
                             $("form.checkout #shipping_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
                             $("form.checkout #shipping_city").val(data.data.payment.consumer.shippingAddress.city);
                             $("form.checkout #shipping_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
+
+                            if(data.data.payment.consumer.shippingAddress.addressLine2 != null) {
+                                $("form.checkout #billing_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
+                                $("form.checkout #shipping_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
+                            }
                         }
                         
                         // Check Terms checkbox, if it exists
