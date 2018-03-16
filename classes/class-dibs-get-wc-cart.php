@@ -63,6 +63,11 @@ class DIBS_Get_WC_Cart {
 		// Get the terms URL
 		$checkout['termsUrl'] = wc_get_page_permalink( 'terms' );
 
+		// Get available shipping countries
+		if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
+			$checkout['ShippingCountries'] = $this->get_shipping_countries();
+		}
+		
 		// Create the final cart array for the datastring
 		$cart['order'] = $order;
 		$cart['checkout'] = $checkout;
@@ -174,6 +179,27 @@ class DIBS_Get_WC_Cart {
 			$part_number = $product->get_id();
 		}
 		return substr( $part_number, 0, 32 );
+	}
+
+	public function get_shipping_countries() {
+		$converted_countries = array();
+		$supported_dibs_countries = dibs_get_supported_countries();
+		// Add shipping countries
+		$wc_countries = new WC_Countries();
+		$countries = array_keys( $wc_countries->get_allowed_countries() );
+		$i = 0;
+		foreach( $countries as $country ) {
+			$converted_country = dibs_get_iso_3_country( $country );
+			if( in_array( $converted_country, $supported_dibs_countries ) ) {
+				$converted_countries[] = array('countryCode' => $converted_country );
+				$i++;
+				// DIBS only allow 5 countries
+				if( $i == 5 ) {
+					break;
+				}
+			}
+		}
+		return $converted_countries;
 	}
 }
 $dibs_get_wc_cart = new DIBS_Get_WC_Cart();
