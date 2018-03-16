@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 4.9.1
+Tested up to: 4.9.4
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.2.6
+Tested WooCommerce up to: 3.3.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 
 == CHANGELOG ==
+
+= 2018.03.16    - version 1.3.0 =
+* Feature       - Added support for ShippingCountries (possible to add up to 5 specific countries that the e-commerce store ship to).
+* Tweak         - Save DIBS cusotmer data addressLine2 in billing_address_2 & shipping_address_2 in WC if it exist in order.
 
 = 2018.01.15    - version 1.2.0 =
 * Feature		- Added termsUrl sent to DIBS (using WooCommerce terms & conditions page).
