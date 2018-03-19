@@ -1,5 +1,9 @@
 *** DIBS Easy for WooCommerce Changelog ***
 
+2018.03.16    - version 1.3.0
+* Feature       - Added support for ShippingCountries (possible to add up to 5 specific countries that the e-commerce store ship to).
+* Tweak         - Save DIBS cusotmer data addressLine2 in billing_address_2 & shipping_address_2 in WC if it exist in order.
+
 2018.01.15  - version 1.2.0
 * Feature	- Added termsUrl sent to DIBS (using WooCommerce terms & conditions page).
 * Tweak		- Added Admin notices class to inform merchant if no terms page is set in WooCommerce settings.
