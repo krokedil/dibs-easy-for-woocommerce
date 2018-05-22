@@ -64,6 +64,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once( plugin_basename( 'classes/class-dibs-post-checkout.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-order-submission-failure.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-admin-notices.php' ) );
+			include_once( plugin_basename( 'classes/class-dibs-api-callbacks.php' ) );
 			include_once( plugin_basename( 'includes/dibs-country-converter-functions.php' ) );
 			
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
@@ -257,6 +258,16 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				}
 			}
 			return $data;
+		}
+
+		public static function log( $message ) {
+			$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+			if ( 'yes' === $dibs_settings['debug_mode'] ) {
+				if ( empty( self::$log ) ) {
+					self::$log = new WC_Logger();
+				}
+				self::$log->add( 'dibs_easy', $message );
+			}
 		}
 	}
 	$dibs_easy = new DIBS_Easy();

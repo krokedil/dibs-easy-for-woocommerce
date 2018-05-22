@@ -71,6 +71,7 @@ class DIBS_Get_WC_Cart {
 		// Create the final cart array for the datastring
 		$cart['order'] = $order;
 		$cart['checkout'] = $checkout;
+		$cart['notifications']['webHooks'] = $this->get_web_hooks();
 		return $cart;
 	}
 
@@ -200,6 +201,18 @@ class DIBS_Get_WC_Cart {
 			}
 		}
 		return $converted_countries;
+	}
+
+	// Prepare webhooks
+	public function get_web_hooks() {
+		$web_hooks = array();
+		$web_hooks[] = array(
+			'eventName' 	=> 'payment.reservation.created',
+			'url' 			=> get_home_url() . '/wc-api/DIBS_WC_Payment_Created/',
+			'authorization'	=> 'kantarell'
+		);
+		
+		return $web_hooks;
 	}
 }
 $dibs_get_wc_cart = new DIBS_Get_WC_Cart();
