@@ -90,7 +90,6 @@ class DIBS_Ajax_Calls {
 				
 				$return['language']  = $language;
 				$return['paymentId'] = $request;
-				error_log('$request ' . var_export($return, true) );
 				wp_send_json_success( $return );
 				wp_die();
 				
