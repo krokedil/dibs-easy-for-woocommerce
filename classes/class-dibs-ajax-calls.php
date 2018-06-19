@@ -6,6 +6,8 @@ class DIBS_Ajax_Calls {
 	function __construct() {
 		add_action( 'wp_ajax_create_paymentID', array( $this, 'create_payment_id' ) );
 		add_action( 'wp_ajax_nopriv_create_paymentID', array( $this, 'create_payment_id' ) );
+		add_action( 'wp_ajax_dibs_update_checkout', array( $this, 'update_checkout' ) );
+		add_action( 'wp_ajax_nopriv_dibs_update_checkout', array( $this, 'update_checkout' ) );
 		add_action( 'wp_ajax_payment_success', array( $this, 'get_order_data' ) );
 		add_action( 'wp_ajax_nopriv_payment_success', array( $this, 'get_order_data' ) );
 		add_action( 'wp_ajax_get_options', array( $this, 'get_options' ) );
@@ -15,12 +17,42 @@ class DIBS_Ajax_Calls {
 		add_action( 'wp_ajax_dibs_customer_order_note', array( $this, 'dibs_add_customer_order_note' ) );
 		add_action( 'wp_ajax_nopriv_dibs_customer_order_note', array( $this, 'dibs_add_customer_order_note' ) );
 
+		// Ajax to change payment method
+		add_action( 'wp_ajax_dibs_change_payment_method', array( $this, 'change_payment_method' ) );
+		add_action( 'wp_ajax_nopriv_dibs_change_payment_method', array( $this, 'change_payment_method' ) );
+
+		// On checkout form submission error
 		add_action( 'wp_ajax_dibs_on_checkout_error', array( $this, 'ajax_on_checkout_error' ) );
 		add_action( 'wp_ajax_nopriv_dibs_on_checkout_error', array( $this, 'ajax_on_checkout_error' ) );
 
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		$this->testmode = 'yes' === $dibs_settings['test_mode'];
 		$this->private_key = $this->testmode ? $dibs_settings['dibs_test_checkout_key'] : $dibs_settings['dibs_checkout_key'];
+	}
+
+	public function update_checkout() {
+		WC()->cart->calculate_shipping();
+		WC()->cart->calculate_fees();
+		WC()->cart->calculate_totals();
+		
+		$request = new DIBS_Requests();
+		$dibs_payment_id = $request->get_payment_id();
+		$return = array();
+		
+		if( is_wp_error( $dibs_payment_id ) ) {
+			wc_dibs_unset_sessions();
+			$return['redirect_url'] = wc_get_checkout_url();
+			wp_send_json_error( $return );
+			wp_die();
+		} else {
+			
+			$return['paymentId'] = $dibs_payment_id;
+			$return['language'] = wc_dibs_get_locale();
+			$return['checkoutKey'] = $this->private_key;
+			wp_send_json_success( $return );
+			wp_die();
+		}
+
 	}
 
 	public function create_payment_id() {
@@ -155,6 +187,36 @@ class DIBS_Ajax_Calls {
 			wp_die();
 		}
 		
+	}
+
+	// Change payment method
+	public function change_payment_method() {
+		error_log('tesssst');
+		WC()->cart->calculate_shipping();
+		WC()->cart->calculate_fees();
+		WC()->cart->calculate_totals();
+		
+		$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+		if ( 'false' === $_POST['dibs_easy'] ) {
+			// Set chosen payment method to first gateway that is not DIBS Easy.
+			$first_gateway = reset( $available_gateways );
+			if ( 'dibs_easy' !== $first_gateway->id ) {
+				WC()->session->set( 'chosen_payment_method', $first_gateway->id );
+			} else {
+				$second_gateway = next( $available_gateways );
+				WC()->session->set( 'chosen_payment_method', $second_gateway->id );
+			}
+		} else {
+			WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
+		}
+		WC()->payment_gateways()->set_current_gateway( $available_gateways );
+		
+		$redirect = wc_get_checkout_url();
+		$data = array(
+			'redirect' => $redirect,
+		);
+		wp_send_json_success( $data );
+		wp_die();
 	}
 	
 	// Helper function to prepare the cart session before processing the order form

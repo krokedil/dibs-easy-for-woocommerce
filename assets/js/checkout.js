@@ -33,9 +33,6 @@ jQuery(document).ready(function($) {
             });
         }
     }
-    // Add the div for the DIBS checkout iFrame
-    $('form.checkout').append("<div id='dibs-order-review'></div>");
-    $('form.checkout').append("<div id='dibs-complete-checkout'></div>");
 
     // Load the iFrame and get response from DIBS after checkout is complete
     function intitCheckout(paymentID, privateKey, language) {
@@ -56,6 +53,7 @@ jQuery(document).ready(function($) {
     }
     if(i === 0) {
         $('body').on('updated_checkout', function () {
+            console.log('Updated checkout 1');
             usingGateway();
             $('input[name="payment_method"]').change(function () {
                 usingGateway();
@@ -63,59 +61,28 @@ jQuery(document).ready(function($) {
         });
     }
     $('body').on('updated_checkout', function () {
-        usingGateway();
+        console.log('Updated checkout 2');
+        //usingGateway();
         i = 0;
     });
 
     function usingGateway() {
         if ($('form[name="checkout"] input[name="payment_method"]:checked').val() == 'dibs_easy') {
-	        
-            if($('ul.wc_payment_methods.payment_methods').children().size() == 1){
-                $('ul.wc_payment_methods.payment_methods').hide();
-            }
             // Hide/Show the different elements and empty the checkout to prevent duplicate iframes
             $('#dibs-complete-checkout').empty();
-            $('.woocommerce-billing-fields').hide();
-            $('.woocommerce-shipping-fields').hide();
-            $('.place-order').hide();
             $('#dibs-complete-checkout').show();
 
             if(i == 0) {
                 // Add body class
 				wc_dibs_body_class();
-                // Add temp divs before each of the elements that we want to move
-                $('#order_review_heading').after('<div id="dibs-temp-div-1"></div>');
-                $('#order_review').after('<div id="dibs-temp-div-2"></div>');
-                $('.woocommerce-additional-fields').after('<div id="dibs-temp-div-3"></div>');
 
-                // Move the elements
-                $('#order_review_heading').appendTo('#dibs-order-review');
-                $('#order_review').appendTo('#dibs-order-review');
-                $('.woocommerce-additional-fields').appendTo('#dibs-order-review');
                 i = 1;
                 triggerDIBS();
             }
         } else{
-	        
-            // Show/Hide the different elements, also empty checkout to prevent duplicate iframes
-            $('.woocommerce-billing-fields').show();
-            $('.woocommerce-shipping-fields').show();
-            $('.place-order').show();
-            $('#dibs-complete-checkout').hide();
-            $('#dibs-complete-checkout').empty();
 
             // Remove body class
             wc_dibs_body_class();
-            // Move the elements back to the old location using the temp divs
-            $('#order_review_heading').insertAfter('#dibs-temp-div-1');
-            $('#order_review').insertAfter('#dibs-temp-div-2');
-            $('.woocommerce-additional-fields').insertAfter('#dibs-temp-div-3');
-
-            // Remove the temp divs to make sure there is no conflict
-            $('#dibs-temp-div-1').remove();
-            $('#dibs-temp-div-2').remove();
-            $('#dibs-temp-div-3').remove();
-
             i = 0;
         }
     }
@@ -199,6 +166,62 @@ jQuery(document).ready(function($) {
 			$("body").removeClass("dibs-selected").addClass("dibs-deselected");
 		}
     };
+
+    // When Select another payment method button is clicked
+    $(document.body).on('click', '#dibs-easy-select-other', function (e) {
+        e.preventDefault();
+			
+        $.ajax(
+            wc_dibs_easy.ajaxurl,
+            {
+                type: "POST",
+                dataType: "json",
+                async: true,
+                data: {
+                    action:		"dibs_change_payment_method",
+                    dibs_easy 	: false
+                },
+                success: function (data) {
+                },
+                error: function (data) {
+                },
+                complete: function (data) {
+                    console.log('Change payment method sucess');
+                    console.log(data.responseJSON.data.redirect);
+					$('body').removeClass('dibs-selected');
+					window.location.href = data.responseJSON.data.redirect;
+                }
+            }
+        );
+    });
+    
+    // When payment method is changed
+    $(document.body).on("change", "input[name='payment_method']", function (event) {
+        if ( "dibs_easy" === $("input[name='payment_method']:checked").val() ) {	
+            $.ajax(
+                wc_dibs_easy.ajaxurl,
+                {
+                    type: "POST",
+                    dataType: "json",
+                    async: true,
+                    data: {
+                        action:		"dibs_change_payment_method",
+                        dibs_easy 	: true
+                    },
+                    success: function (data) {
+                    },
+                    error: function (data) {
+                    },
+                    complete: function (data) {
+                        console.log('Change payment method sucess');
+                        console.log(data.responseJSON.data.redirect);
+                        $('body').removeClass('dibs-deselected');
+                        window.location.href = data.responseJSON.data.redirect;
+                    }
+                }
+            );
+        }
+	});
     
     // When WooCommerce checkout submission fails
 	$(document.body).on("checkout_error", function () {

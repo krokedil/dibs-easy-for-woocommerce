@@ -63,6 +63,63 @@ class DIBS_Requests {
 		return $request;
 	}
 
+	public function get_payment_id() {
+		
+		// Check if we should create a new payment ID or use an existing one
+		if( isset( $_POST['dibs_payment_id'] ) && !empty( $_POST['dibs_payment_id'] ) ) {
+
+			// This is a return from 3DSecure. Use the current payment ID
+			$dibs_payment_id = sanitize_key( $_POST['dibs_payment_id'] );
+			
+		} else {
+
+			// This is a new order
+			// Set DIBS Easy as the chosen payment method
+			WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
+			
+			// Create an empty WooCommerce order and get order id if one is not made already
+			if ( WC()->session->get( 'dibs_incomplete_order' ) === null ) {
+				$order    = wc_create_order();
+				$order_id = $order->get_id();
+				// Set the order id as a session variable
+				WC()->session->set( 'dibs_incomplete_order', $order_id );
+				$order->update_status( 'dibs-incomplete' );
+				$order->save();
+			} else {
+				$order_id = WC()->session->get( 'dibs_incomplete_order' );
+				$order = wc_get_order( $order_id );
+				$order->update_status( 'dibs-incomplete' );
+				$order->save();
+			}
+
+			$get_cart = new DIBS_Get_WC_Cart();
+
+			// Get the datastring
+			$datastring = $get_cart->create_cart( $order_id );
+			// Make the request
+			$request = new DIBS_Requests();
+			$endpoint_sufix = 'payments/';
+			$response = $request->make_request( 'POST', $datastring, $endpoint_sufix );
+
+			if( is_wp_error( $response ) ) {
+				$message = $response->get_error_message();
+				$order->add_order_note( sprintf( __( 'Could not connect to DIBS: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+				$dibs_payment_id = new WP_Error( 'error', sprintf( __( 'Could not connect to DIBS: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+			} elseif( empty( $response ) ) {
+				$order->add_order_note( sprintf( __( 'No response when connecting to DIBS:', 'dibs-easy-for-woocommerce' ), $message ) );
+				$dibs_payment_id = new WP_Error( 'error', sprintf( __( 'No response when connecting to DIBS: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+			} elseif( array_key_exists( 'errors', $response ) ) {
+				$message = var_export( $response->errors, true );
+				$order->add_order_note( sprintf( __( 'Connection error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+				$dibs_payment_id = new WP_Error( 'error', sprintf( __( 'Connection error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+			} else {
+				$dibs_payment_id = sanitize_key( $response->paymentId );
+			}
+		}
+
+		return $dibs_payment_id;
+	}
+
 	public static function log( $message ) {
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		if ( 'yes' === $dibs_settings['debug_mode'] ) {

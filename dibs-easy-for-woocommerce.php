@@ -30,6 +30,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Required minimums and constants
  */
 define( 'WC_DIBS_VERSION', '1.3.0' );
+define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
+define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 	class DIBS_Easy {
@@ -65,7 +67,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once( plugin_basename( 'classes/class-dibs-order-submission-failure.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-admin-notices.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-api-callbacks.php' ) );
+			include_once( plugin_basename( 'classes/class-dibs-templates.php' ) );
 			include_once( plugin_basename( 'includes/dibs-country-converter-functions.php' ) );
+			include_once( plugin_basename( 'includes/dibs-checkout-functions.php' ) );
 			
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 			
@@ -99,11 +103,18 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					$dibs_payment_id = null;
 				}
 
+				if( isset( $_GET['paymentId'] ) ) {
+					$paymentId = $_GET['paymentId'];
+				} else {
+					$paymentId = null;
+				}
+
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
 				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_VERSION );
 				wp_localize_script( 'checkout', 'wc_dibs_easy', array(
 					'ajaxurl' => admin_url( 'admin-ajax.php' ),
 					'dibs_payment_id' => $dibs_payment_id,
+					'paymentId' => $paymentId,
 				) );
 				wp_enqueue_script( 'checkout' );
 
