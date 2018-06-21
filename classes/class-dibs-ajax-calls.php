@@ -245,7 +245,7 @@ class DIBS_Ajax_Calls {
 		$order->add_order_note( sprintf( __( '%s', 'dibs-easy-for-woocommerce' ), $message ) );
 		return $message;
 	}
-	
+
 	public function get_options() {
 		$return['privateKey'] = $this->private_key;
 		if ( 'sv_SE' === get_locale() ) {
@@ -273,6 +273,13 @@ class DIBS_Ajax_Calls {
 		$order 				= wc_get_order( $order_id );
 		$dibs_order_data 	= WC()->session->get( 'dibs_order_data' );
 
+		// Error message
+		if ( ! empty( $_POST['error_message'] ) ) { // Input var okay.
+			$error_message = 'Error message: ' . sanitize_text_field( trim( $_POST['error_message'] ) );
+		} else {
+			$error_message = 'Error message could not be retreived';
+		}
+
 		// Add customer data to order
 		$this->helper_add_customer_data_to_local_order( $order, $dibs_order_data );
 
@@ -293,6 +300,10 @@ class DIBS_Ajax_Calls {
 		
 		// Store coupons.
 		$this->helper_add_order_coupons( $order );
+
+		// Add an order note to inform merchant that the order has been finalized via a fallback routine.
+		$note = sprintf( __( 'This order was made as a fallback due to an error in the checkout (%s). Please verify the order with DIBS.', 'dibs-easy-for-woocommerce' ), $error_message );
+			$order->add_order_note( $note );
 		
 		// Save order totals
 		$order->calculate_totals();

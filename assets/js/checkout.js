@@ -226,7 +226,7 @@ jQuery(document).ready(function($) {
     // When WooCommerce checkout submission fails
 	$(document.body).on("checkout_error", function () {
 		if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
-			
+			var error_message = $( ".woocommerce-NoticeGroup-checkout" ).text();
 			$.ajax(
 	            wc_dibs_easy.ajaxurl,
 	            {
@@ -234,7 +234,8 @@ jQuery(document).ready(function($) {
 	                dataType: "json",
 	                async: true,
 	                data: {
-	                    action:		"dibs_on_checkout_error"
+                        action:		"dibs_on_checkout_error",
+                        error_message: error_message,
 	                },
 	                success: function (data) {
 					},
