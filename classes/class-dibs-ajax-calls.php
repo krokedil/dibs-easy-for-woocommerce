@@ -191,7 +191,6 @@ class DIBS_Ajax_Calls {
 
 	// Change payment method
 	public function change_payment_method() {
-		error_log('tesssst');
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_totals();
@@ -246,6 +245,7 @@ class DIBS_Ajax_Calls {
 		$order->add_order_note( sprintf( __( '%s', 'dibs-easy-for-woocommerce' ), $message ) );
 		return $message;
 	}
+	
 	public function get_options() {
 		$return['privateKey'] = $this->private_key;
 		if ( 'sv_SE' === get_locale() ) {
