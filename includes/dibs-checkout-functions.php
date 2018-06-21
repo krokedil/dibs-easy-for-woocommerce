@@ -31,7 +31,7 @@ function wc_dibs_show_another_gateway_button() {
 
 	if ( count( $available_gateways ) > 1 ) {
 		$settings                   = get_option( 'woocommerce_dibs_easy_settings' );
-		$select_another_method_text = isset( $settings['select_another_method_text'] ) && '' !== $settings['select_another_method_text'] ? $settings['select_another_method_text'] : __( 'Select another payment method', 'woocommerce-gateway-paysoncheckout' );
+		$select_another_method_text = isset( $settings['select_another_method_text'] ) && '' !== $settings['select_another_method_text'] ? $settings['select_another_method_text'] : __( 'Select another payment method', 'dibs-easy-for-woocommerce' );
 
 		?>
 		<p style="margin-top:30px">
@@ -56,6 +56,7 @@ function wc_dibs_add_woocommerce_checkout_form_fields() {
 		echo apply_filters( 'woocommerce_pay_order_button_html', '<button type="submit" class="button alt" id="place_order" value="' . esc_attr( $order_button_text ) . '" data-value="' . esc_attr( $order_button_text ) . '">' . esc_html( $order_button_text ) . '</button>' );
 		echo '<input type="checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" name="terms"' . checked( apply_filters( 'woocommerce_terms_is_checked_default', isset( $_POST['terms'] ) ), true ) . ' id="terms" />';
 		wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce' );
+		echo '<input style="display:none" type="radio" name="payment_method" value="dibs_easy"/>';
 	echo '</div>';
 }
 
@@ -68,14 +69,8 @@ function wc_dibs_calculate_totals() {
 	WC()->cart->calculate_totals();
 }
 
-function wc_dibs_show_payment_method_field() {
-	?>
-	<input style="display:none" type="radio" name="payment_method" value="dibs_easy"/>
-	<?php
-}
-
 /**
- * Unset Payson session
+ * Unset DIBS session
  */
 function wc_dibs_unset_sessions() {
 	WC()->session->__unset( 'dibs_incomplete_order' );

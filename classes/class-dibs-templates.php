@@ -2,8 +2,12 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 /**
  * DIBS_Templates class.
+ * 
+ * @since 1.4.0
+ * 
  */
 class DIBS_Templates {
 
@@ -40,7 +44,6 @@ class DIBS_Templates {
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_show_customer_order_notes', 10 );
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_show_another_gateway_button', 20 );
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_add_woocommerce_checkout_form_fields', 30 );
-		add_action( 'wc_dibs_after_snippet', 'wc_dibs_show_payment_method_field', 10 );
 	}
 
 	/**
@@ -101,7 +104,6 @@ class DIBS_Templates {
 
 		return $template;
 	}
-
 }
 
 DIBS_Templates::get_instance();
