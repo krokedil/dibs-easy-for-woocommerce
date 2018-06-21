@@ -209,7 +209,7 @@ class DIBS_Get_WC_Cart {
 		$web_hooks[] = array(
 			'eventName' 	=> 'payment.reservation.created',
 			'url' 			=> get_home_url() . '/wc-api/DIBS_WC_Payment_Created/',
-			'authorization'	=> 'kantarell'
+			'authorization'	=> wp_create_nonce( 'dibs_web_hooks' )
 		);
 		
 		return $web_hooks;
