@@ -53,7 +53,7 @@ jQuery(document).ready(function($) {
     }
     if(i === 0) {
         $('body').on('updated_checkout', function () {
-            console.log('Updated checkout 1');
+            //console.log('Updated checkout 1');
             usingGateway();
             $('input[name="payment_method"]').change(function () {
                 usingGateway();
@@ -61,7 +61,7 @@ jQuery(document).ready(function($) {
         });
     }
     $('body').on('updated_checkout', function () {
-        console.log('Updated checkout 2');
+        //console.log('Updated checkout 2');
         //usingGateway();
         i = 0;
     });
