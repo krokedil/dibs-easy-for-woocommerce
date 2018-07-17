@@ -10,6 +10,7 @@ class DIBS_Get_WC_Cart {
 
 	// Create the datastring for the AJAX call
 	public function create_cart( $order_id ) {
+		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		$wc_cart = WC()->cart->cart_contents;
 		// Set arrays
 		$cart  = array();
@@ -67,6 +68,27 @@ class DIBS_Get_WC_Cart {
 		if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
 			$checkout['ShippingCountries'] = $this->get_shipping_countries();
 		}
+
+		// Get consumerType
+		$allowed_customer_types = ( isset( $dibs_settings['allowed_customer_types'] ) ) ? $dibs_settings['allowed_customer_types'] : 'B2C';
+		switch ( $allowed_customer_types ) {
+			case 'B2C':
+				$checkout['consumerType']['supportedTypes'] = array('B2C');
+				break;
+			case 'B2B':
+				$checkout['consumerType']['supportedTypes'] = array('B2B');
+				break;
+			case 'B2CB':
+				$checkout['consumerType']['supportedTypes'] = array('B2C','B2B');
+				$checkout['consumerType']['default'] = 'B2C';
+				break;
+			case 'B2BC':
+				$checkout['consumerType']['supportedTypes'] = array('B2B','B2C');
+				$checkout['consumerType']['default'] = 'B2B';
+				break;
+			default:
+				$checkout['consumerType']['supportedTypes'] = array('B2B');
+		} // End switch().
 		
 		// Create the final cart array for the datastring
 		$cart['order'] = $order;

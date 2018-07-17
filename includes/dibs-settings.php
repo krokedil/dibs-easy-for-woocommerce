@@ -55,6 +55,19 @@ return apply_filters( 'dibs_easy_settings',
 			'label'         => __( 'Enable Test mode for DIBS Easy', 'dibs-easy-for-woocommerce' ),
 			'default'       => 'no',
 		),
+		'allowed_customer_types'       => array(
+			'title'       => __( 'Allowed Customer Types', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'select',
+			'options'     => array(
+				'B2C'  => __( 'B2C only', 'dibs-easy-for-woocommerce' ),
+				'B2B'  => __( 'B2B only', 'dibs-easy-for-woocommerce' ),
+				'B2CB' => __( 'B2C & B2B (defaults to B2C)', 'dibs-easy-for-woocommerce' ),
+				'B2BC' => __( 'B2B & B2C (defaults to B2B)', 'dibs-easy-for-woocommerce' ),
+			),
+			'description' => __( 'Select if you want to sell both to consumers and companies or only to one of them.', 'dibs-easy-for-woocommerce' ),
+			'default'     => 'B2C',
+			'desc_tip'    => false
+		),
 		'email_text'        => array(
 			'title'         => __( 'Email text', 'dibs-easy-for-woocommerce' ),
 			'type'          => 'textarea',
