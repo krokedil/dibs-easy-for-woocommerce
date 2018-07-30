@@ -52,6 +52,19 @@ class DIBS_Requests {
 		return $response;
 	}
 
+	public function update_dibs_order( $order_id, $payment_id ) {
+		$get_cart = new DIBS_Get_WC_Cart();
+
+		// Get the datastring
+		$datastring = $get_cart->update_cart( $order_id );
+		// Make the request
+		$request = new DIBS_Requests();
+		$endpoint_sufix = 'payments/' . $payment_id . '/orderitems';
+		$request = $request->make_request( 'PUT', $datastring, $endpoint_sufix );
+
+		return $request;
+	}
+
 	public function get_order_fields( $payment_id ) {
 		$order_id = WC()->session->get( 'dibs_incomplete_order' );
 
