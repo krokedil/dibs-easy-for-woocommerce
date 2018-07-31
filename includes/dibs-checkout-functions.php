@@ -88,6 +88,7 @@ function wc_dibs_calculate_totals() {
 function wc_dibs_unset_sessions() {
 	WC()->session->__unset( 'dibs_incomplete_order' );
 	WC()->session->__unset( 'dibs_order_data' );
+	WC()->session->__unset( 'dibs_payment_id' );
 }
 
 function wc_dibs_get_locale() {
@@ -132,7 +133,10 @@ function wc_dibs_get_payment_id() {
 		
 		if ( array_key_exists( 'paymentId', $request ) ) {
 			WC()->session->set( 'dibs_payment_id', $request->paymentId );
-			//echo("<script>console.log('DIBS Payment_id: ".json_encode($request->paymentId)."');</script>");
+			
+			// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
+			set_transient( 'dibs_payment_id_' . $request->paymentId, $request->paymentId, 15 * MINUTE_IN_SECONDS );
+
 			return $request->paymentId;
 		} else {
 			echo("<script>console.log('DIBS error: ".json_encode($request)."');</script>");

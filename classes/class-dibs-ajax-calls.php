@@ -38,11 +38,22 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	}
 
 	public static function update_checkout() {
+
+		$order_id = WC()->session->get( 'dibs_incomplete_order' );
+		$payment_id = WC()->session->get( 'dibs_payment_id' );
+
+		// Check that the DIBS paymentId session is still valid
+		if( false === get_transient( 'dibs_payment_id_' . $payment_id ) ) {
+			wc_dibs_unset_sessions();
+			$return['redirect_url'] = wc_get_checkout_url();
+			wp_send_json_error( $return );
+			wp_die();
+		}
+
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_totals();
-		$order_id = WC()->session->get( 'dibs_incomplete_order' );
-		$payment_id = WC()->session->get( 'dibs_payment_id' );
+		
 		$request = new DIBS_Requests();
 		$response = $request->update_dibs_order( $order_id, $payment_id );
 		
@@ -177,6 +188,8 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 				
 				$return['language']  = $language;
 				$return['paymentId'] = $request;
+
+				
 				wp_send_json_success( $return );
 				wp_die();
 				
