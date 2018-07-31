@@ -121,9 +121,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				$order->payment_complete( $payment_id );
 				WC()->cart->empty_cart();
 			}
-			WC()->session->__unset( 'dibs_incomplete_order' );
-			WC()->session->__unset( 'order_awaiting_payment' );
-			WC()->session->__unset( 'dibs_order_data' );
+			
+			wc_dibs_unset_sessions();
 		}
 	}
 	public function dibs_populate_fields( $value, $key ) {
