@@ -39,6 +39,12 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 	public static function update_checkout() {
 
+		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
+
+		WC()->cart->calculate_shipping();
+		WC()->cart->calculate_fees();
+		WC()->cart->calculate_totals();
+
 		$order_id = WC()->session->get( 'dibs_incomplete_order' );
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 
@@ -49,10 +55,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			wp_send_json_error( $return );
 			wp_die();
 		}
-
-		WC()->cart->calculate_shipping();
-		WC()->cart->calculate_fees();
-		WC()->cart->calculate_totals();
 		
 		$request = new DIBS_Requests();
 		$response = $request->update_dibs_order( $order_id, $payment_id );
