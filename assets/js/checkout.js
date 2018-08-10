@@ -195,24 +195,30 @@
     function update_checkout() {
         if( checkout_initiated == 'yes' && wc_dibs_easy.paymentId == null ) {
             console.log('update checkout');
-            var data = {
-                'action': 'update_checkout'
-            };
-            jQuery.post(wc_dibs_easy.update_checkout_url, data, function (data) {
-                if (true === data.success) {
-                    console.log('update checkout success');
-                    //window.collector.checkout.api.resume();
-                    
-                } else {
-                    console.log('error');
-                    window.location.href = data.data.redirect_url;
+            $.ajax(
+                wc_dibs_easy.update_checkout_url,
+                {
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action  : 'update_checkout'
+                    },
+                    success: function(response) {
+                        if (true === response.success) {
+                            console.log('update checkout success');
+                            checkout.thawCheckout();
+                            
+                        } else {
+                            console.log('error');
+                            window.location.href = response.data.redirect_url;
+                        }
+                    }
                 }
+            );
 
-            });
         } else {
             checkout_initiated = 'yes';
         }
-        checkout.thawCheckout();
     }
 
     $('#order_comments').focusout(function(){
