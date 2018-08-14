@@ -5,34 +5,16 @@
     var x = 0;
     var checkout_initiated = wc_dibs_easy.checkout_initiated;
     var paymentId = wc_dibs_easy.paymentId;
-    /*
-    function triggerDIBS() {
-	    
-        // Get current URL
-        var url = window.location.href;
-        if(url.indexOf('paymentId') != -1){
-            if( $('form #billing_first_name').val() != '' ) {
-	            
-	            // Check Terms checkbox, if it exists
-                if ($("form.checkout #terms").length > 0) {
-                    $("form.checkout #terms").prop("checked", true);
-                }
-                
-                $("#place_order").trigger("submit");
-            }
-        }
-    }
-   */
             
     $( document ).ready( function() {
         if ("dibs_easy" === $("input[name='payment_method']:checked").val() ) {
 
             addressChangedListener();
-
             paymentCompletedListener();
         }
     });
     
+    // Address updated in Easy checkout
     function addressChangedListener() {
         dibsCheckout.on('address-changed', function (address) {
             if( address ) {
@@ -152,6 +134,7 @@
         }
     }
 
+    // Update DIBS Easy checkout (after Woo updated_checkout)
     function update_checkout() {
         if( checkout_initiated == 'yes' && wc_dibs_easy.paymentId == null ) {
             console.log('update checkout');
@@ -181,6 +164,7 @@
         }
     }
 
+    // Save customer order comments
     $('#order_comments').focusout(function(){
         var text = $('#order_comments').val();
         if( text.length > 0 ) {

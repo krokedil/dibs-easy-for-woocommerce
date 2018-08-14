@@ -37,6 +37,9 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 	}
 
+	/**
+	 * Update DIBS Easy Checkout - executed when Woo updated_checkout event has been triggered
+	 */
 	public static function update_checkout() {
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
