@@ -76,10 +76,12 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 */
 	public static function customer_adress_updated() {
 		
+		/*
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'dibs_nonce' ) ) {
-			//exit( 'Nonce can not be verified.' );
+			exit( 'Nonce can not be verified.' );
 		}
-		$update_needed = 'no';
+		*/
+		$update_needed = 'yes';
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 		
