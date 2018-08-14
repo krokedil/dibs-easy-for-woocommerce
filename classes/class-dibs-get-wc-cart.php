@@ -58,7 +58,7 @@ class DIBS_Get_WC_Cart {
 		$order['currency']  				= $currency;
 		$order['reference'] 				= $reference;
 		//$order['shipping']['costSpecified']	= true;
-		$order['shippingCostSpecified']	= true;
+		//$order['shippingCostSpecified']	= true;
 
 		//Get the checkout URL
 		$checkout['url'] = wc_get_checkout_url();
@@ -137,8 +137,8 @@ class DIBS_Get_WC_Cart {
 		// Create the order array
 		$cart['amount']    					= $amount;
 		$cart['items']     					= $items;
-		//$cart['shipping']['costSpecified']	= true;
-		$cart['shippingCostSpecified']	= true;
+		$cart['shipping']['costSpecified']	= true;
+		//$cart['shippingCostSpecified']	= true;
 		return $cart;
 	}
 
