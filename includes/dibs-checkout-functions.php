@@ -18,7 +18,7 @@ function wc_dibs_show_snippet() {
 					containerId : "dibs-complete-checkout", 					//[optional] defaultValue: dibs-checkout-content
 					language: "<?php echo wc_dibs_get_locale(); ?>",            //[optional] defaultValue: en-GB
 		};
-		var checkout = new Dibs.Checkout(checkoutOptions);
+		var dibsCheckout = new Dibs.Checkout(checkoutOptions);
 		console.log(checkoutOptions);
 	</script>
 	<?php
@@ -86,9 +86,18 @@ function wc_dibs_calculate_totals() {
  * Unset DIBS session
  */
 function wc_dibs_unset_sessions() {
-	WC()->session->__unset( 'dibs_incomplete_order' );
-	WC()->session->__unset( 'dibs_order_data' );
-	WC()->session->__unset( 'dibs_payment_id' );
+
+	if ( method_exists( WC()->session, '__unset' ) ) {
+		if( WC()->session->get( 'dibs_incomplete_order' ) ) {
+			WC()->session->__unset( 'dibs_incomplete_order' );
+		}
+		if( WC()->session->get( 'dibs_order_data' ) ) {
+			WC()->session->__unset( 'dibs_order_data' );
+		}
+		if( WC()->session->get( 'dibs_payment_id' ) ) {
+			WC()->session->__unset( 'dibs_payment_id' );
+		}
+	}
 }
 
 function wc_dibs_get_locale() {
