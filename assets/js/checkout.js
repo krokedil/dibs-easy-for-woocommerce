@@ -5,7 +5,7 @@
     var x = 0;
     var checkout_initiated = wc_dibs_easy.checkout_initiated;
     var paymentId = wc_dibs_easy.paymentId;
-
+    /*
     function triggerDIBS() {
 	    
         // Get current URL
@@ -22,67 +22,7 @@
             }
         }
     }
-
-    // Load the iFrame and get response from DIBS after checkout is complete
-    /*
-    function intitCheckout(paymentID, privateKey, language) {
-        var checkoutOptions = {
-            checkoutKey: privateKey,
-
-            paymentId: paymentID,
-            containerId: 'dibs-complete-checkout',
-            language: language
-        };
-
-        var checkout = new Dibs.Checkout(checkoutOptions);
-        //After payment is complete
-        checkout.on('payment-completed', function (response) {
-            console.log(response.paymentId);
-            DIBS_Payment_Success(response.paymentId);
-        });
-    }
-    if(i === 0) {
-        $('body').on('updated_checkout', function () {
-            //console.log('Updated checkout 1');
-            //usingGateway();
-            $('input[name="payment_method"]').change(function () {
-                //usingGateway();
-            });
-        });
-    }
-    $('body').on('updated_checkout', function () {
-        //console.log('Updated checkout 2');
-        //usingGateway();
-        i = 0;
-
-        if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
-	        update_checkout();
-        }
-    });
-    */
-    /*
-    function usingGateway() {
-        if ($('form[name="checkout"] input[name="payment_method"]:checked').val() == 'dibs_easy') {
-            // Hide/Show the different elements and empty the checkout to prevent duplicate iframes
-            $('#dibs-complete-checkout').empty();
-            $('#dibs-complete-checkout').show();
-
-            if(i == 0) {
-                // Add body class
-				wc_dibs_body_class();
-
-                i = 1;
-                triggerDIBS();
-            }
-        } else{
-
-            // Remove body class
-            wc_dibs_body_class();
-            i = 0;
-        }
-    }
-    */
-   
+   */
             
     $( document ).ready( function() {
         if ("dibs_easy" === $("input[name='payment_method']:checked").val() ) {
@@ -141,6 +81,24 @@
 
     function DIBS_Payment_Success(paymentId) {
         if (x === 0) {
+            $('body').block({
+                message: "",
+                baseZ: 99999,
+                overlayCSS:
+                    {
+                        background: "#fff",
+                        opacity: 0.6
+                    },
+                css: {
+                    padding:        "20px",
+                    zindex:         "9999999",
+                    textAlign:      "center",
+                    color:          "#555",
+                    backgroundColor:"#fff",
+                    cursor:         "wait",
+                    lineHeight:		"24px",
+                }
+            });
             $.ajax(
 	            wc_dibs_easy.get_order_data_url,
 	            {
@@ -181,6 +139,7 @@
                         if ($("form.checkout #terms").length > 0) {
                             $("form.checkout #terms").prop("checked", true);
                         }
+                        $('input#ship-to-different-address-checkbox').prop('checked', true);
                         $("#place_order").trigger("submit");
 					},
 					error: function (data) {
