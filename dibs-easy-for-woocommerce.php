@@ -125,11 +125,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					'dibs_payment_id' 					=> $dibs_payment_id,
 					'paymentId' 						=> $paymentId,
 					'checkout_initiated' 				=> $checkout_initiated,
-					'create_payment_id_url'				=> WC_AJAX::get_endpoint( 'create_payment_id' ),
+					
 					'update_checkout_url'   			=> WC_AJAX::get_endpoint( 'update_checkout' ),
 					'customer_adress_updated_url'   	=> WC_AJAX::get_endpoint( 'customer_adress_updated' ),
 					'get_order_data_url'   				=> WC_AJAX::get_endpoint( 'get_order_data' ),
-					'get_options_url'   				=> WC_AJAX::get_endpoint( 'get_options' ),
+					
 					'dibs_add_customer_order_note_url'  => WC_AJAX::get_endpoint( 'dibs_add_customer_order_note' ),
 					'change_payment_method_url'   		=> WC_AJAX::get_endpoint( 'change_payment_method' ),
 					'ajax_on_checkout_error_url'   		=> WC_AJAX::get_endpoint( 'ajax_on_checkout_error' ),
