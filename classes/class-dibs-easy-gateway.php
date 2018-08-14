@@ -39,6 +39,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Add class if DIBS Easy is set as the default gateway
 		add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
 		add_action( 'woocommerce_thankyou_dibs_easy', array( $this, 'dibs_thankyou' ) );
+		add_action( 'woocommerce_thankyou', array( $this, 'maybe_delete_dibs_sessions' ), 100, 1 );
 	}
 	public function init_form_fields() {
 		$this->form_fields = include( DIR_NAME . '/includes/dibs-settings.php' );
@@ -125,6 +126,13 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			wc_dibs_unset_sessions();
 		}
 	}
+
+
+	public function maybe_delete_dibs_sessions( $order_id ) {
+		wc_dibs_unset_sessions();
+	}
+	
+	
 	public function dibs_populate_fields( $value, $key ) {
 		//Get the payment ID
 		$payment_id = $_GET['paymentId'];
@@ -202,6 +210,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	public function dibs_get_field_values() {
+		
 		//Get the payment ID
 		$payment_id = $_GET['paymentId'];
 
