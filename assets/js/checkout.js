@@ -85,7 +85,8 @@
    
             
     $( document ).ready( function() {
-        if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
+        if ("dibs_easy" === $("input[name='payment_method']:checked").val() ) {
+
             addressChangedListener();
 
             paymentCompletedListener();
@@ -93,7 +94,7 @@
     });
     
     function addressChangedListener() {
-        checkout.on('address-changed', function (address) {
+        dibsCheckout.on('address-changed', function (address) {
             if( address ) {
                 console.log('address-changed');    
                 console.log(address);
@@ -124,14 +125,14 @@
                         }
                     }
                 );
-                checkout.thawCheckout();
+                dibsCheckout.thawCheckout();
             }
         });
     }
 
     //After payment is complete
     function paymentCompletedListener() {
-        checkout.on('payment-completed', function (response) {
+        dibsCheckout.on('payment-completed', function (response) {
             console.log('payment-completed');
             console.log(response.paymentId);
             DIBS_Payment_Success(response.paymentId);
@@ -206,7 +207,7 @@
                     success: function(response) {
                         if (true === response.success) {
                             console.log('update checkout success');
-                            checkout.thawCheckout();
+                            dibsCheckout.thawCheckout();
                             
                         } else {
                             console.log('error');
@@ -336,7 +337,7 @@
     // Suspend DIBS Checkout during WooCommerce checkout update
     $(document).on('update_checkout', function () {
         if ("dibs_easy" === $("input[name='payment_method']:checked").val() && checkout_initiated == 'yes' && paymentId == null ) {
-            checkout.freezeCheckout();
+            dibsCheckout.freezeCheckout();
         }
     });
 
