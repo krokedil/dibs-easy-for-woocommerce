@@ -110,10 +110,15 @@
                             $("form.checkout #shipping_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
                             $("form.checkout #shipping_city").val(data.data.payment.consumer.shippingAddress.city);
                             $("form.checkout #shipping_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
-
+                            $("form.checkout #order_comments").val(data.data.order_note);
+                            
                             if(data.data.payment.consumer.shippingAddress.addressLine2 != null) {
                                 $("form.checkout #billing_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
                                 $("form.checkout #shipping_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
+                            }
+
+                            if(data.data.order_note != null) {
+                                
                             }
                         }
                         
@@ -165,7 +170,7 @@
     }
 
     // Save customer order comments
-    $('#order_comments').focusout(function(){
+    $(document).on('focusout', '#order_comments', function () {
         var text = $('#order_comments').val();
         if( text.length > 0 ) {
             $.ajax(

@@ -97,6 +97,9 @@ function wc_dibs_unset_sessions() {
 		if( WC()->session->get( 'dibs_payment_id' ) ) {
 			WC()->session->__unset( 'dibs_payment_id' );
 		}
+		if( WC()->session->get( 'dibs_customer_order_note' ) ) {
+			WC()->session->__unset( 'dibs_customer_order_note' );
+		}
 	}
 }
 

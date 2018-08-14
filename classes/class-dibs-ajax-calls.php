@@ -18,11 +18,9 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-			'create_payment_id' => true,
 			'update_checkout' => true,
 			'customer_adress_updated' => true,
 			'get_order_data' => true,
-			'get_options' => true,
 			'dibs_add_customer_order_note' => true,
 			'change_payment_method' => true,
 			'ajax_on_checkout_error' => true,
@@ -125,98 +123,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	}
 
 
-	public static function create_payment_id() {
-		
-		// Check if we should create a new payment ID or use an existing one
-		if( isset( $_POST['dibs_payment_id'] ) && !empty( $_POST['dibs_payment_id'] ) ) {
-
-			// This is a return from 3DSecure. Use the current payment ID
-			$payment_id = $_POST['dibs_payment_id'];
-			$request = new stdClass;
-			$request->paymentId = $payment_id;
-
-		} else {
-
-			// This is a new order
-			// Set DIBS Easy as the chosen payment method
-			WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
-			
-			// Create an empty WooCommerce order and get order id if one is not made already
-			if ( WC()->session->get( 'dibs_incomplete_order' ) === null ) {
-				$order    = wc_create_order();
-				$order_id = $order->get_id();
-				// Set the order id as a session variable
-				WC()->session->set( 'dibs_incomplete_order', $order_id );
-				$order->update_status( 'dibs-incomplete' );
-				$order->save();
-			} else {
-				$order_id = WC()->session->get( 'dibs_incomplete_order' );
-				$order = wc_get_order( $order_id );
-				$order->update_status( 'dibs-incomplete' );
-				$order->save();
-			}
-
-			$get_cart = new DIBS_Get_WC_Cart();
-
-			// Get the datastring
-			$datastring = $get_cart->create_cart( $order_id );
-			// Make the request
-			$request = new DIBS_Requests();
-			$endpoint_sufix = 'payments/';
-			$request = $request->make_request( 'POST', $datastring, $endpoint_sufix );
-
-		}
-
-		
-
-		if ( null != $request ) { // If array has a return
-			if ( array_key_exists( 'paymentId', $request ) ) {
-				// Create the return array
-				$return               = array();
-				$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-				$testmode = 'yes' === $dibs_settings['test_mode'];
-				$private_key = $testmode ? $dibs_settings['dibs_test_checkout_key'] : $dibs_settings['dibs_checkout_key'];
-				$return['privateKey'] = $private_key;
-				
-				switch ( get_locale() ) {
-					case 'sv_SE' :
-						$language = 'sv-SE';
-						break;
-					case 'nb_NO' :
-					case 'nn_NO' :
-						$language = 'nb-NO';
-						break;
-					case 'da_DK' :
-						$language = 'da-DK';
-						break;
-					default :
-						$language = 'en-GB';
-				}
-				
-				$return['language']  = $language;
-				$return['paymentId'] = $request;
-
-				
-				wp_send_json_success( $return );
-				wp_die();
-				
-			} elseif ( array_key_exists( 'errors', $request ) ) {
-				
-				if ( array_key_exists( 'amount', $request->errors ) && 'Amount dosent match sum of orderitems' === $request->errors->amount[0] ) {
-					$message = 'DIBS failed to create a Payment ID : ' . $request->errors->amount[0];
-					wp_send_json_error( self::fail_ajax_call( $order, $message ) );
-					wp_die();
-				} else {
-					$message = 'DIBS request error: ' . print_r($request->errors, true);
-					wp_send_json_error( $message );
-					wp_die();
-				}
-			}
-		} else { // If return array equals null
-			wp_send_json_error( self::fail_ajax_call( $order ) );
-			wp_die();
-		}
-	}
+	
 
 	public static function get_order_data() {
 		
@@ -251,6 +158,13 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			// Convert country code from 3 to 2 letters 
 			if( $response->payment->consumer->shippingAddress->country ) {
 				$response->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $response->payment->consumer->shippingAddress->country );
+			}
+
+			// Maybe add customer order note
+			if ( null != WC()->session->get( 'dibs_customer_order_note' ) ) {
+				$response->order_note = WC()->session->get( 'dibs_customer_order_note' );
+			} else {
+				$response->order_note = '';
 			}
 			
 			// Store the order data in a sesstion. We might need it if form processing in Woo fails
@@ -321,24 +235,9 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		return $message;
 	}
 
-	public static function get_options() {
-		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-		$testmode = 'yes' === $dibs_settings['test_mode'];
-		$private_key = $testmode ? $dibs_settings['dibs_test_checkout_key'] : $dibs_settings['dibs_checkout_key'];
-		$return['privateKey'] = $private_key;
-		if ( 'sv_SE' === get_locale() ) {
-			$language = 'sv-SE';
-		} else {
-			$language = 'en-GB';
-		}
-		$return['language']  = $language;
-		wp_send_json_success( $return );
-		wp_die();
-	}
-
 	public static function dibs_add_customer_order_note() {
 		WC()->session->set( 'dibs_customer_order_note', $_POST['order_note'] );
-		wp_send_json_success();
+		wp_send_json_success( $_POST['order_note'] );
 		wp_die();
 	}
 
