@@ -38,10 +38,10 @@ class DIBS_Requests {
 		if ( '' != $body ) {
 			$request_array['body'] = json_encode( $body, JSON_UNESCAPED_SLASHES );
 		}
-		$this->log( 'Endpoint: ' . $endpoint . ' Request array to DIBS: ' . var_export( $request_array, true ) );
+		$this->log( 'Endpoint: ' . $endpoint . ' Request array to DIBS: ' . stripslashes_deep( json_encode( $request_array ) ) );
 		// Make the request
 		$response = wp_remote_request( $endpoint, $request_array );
-		$this->log( 'Response from DIBS: ' . var_export( $response, true ) );
+		$this->log( 'Response from DIBS: ' . stripslashes_deep( json_encode( $response ) ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			$this->log( 'Error connecting to DIBS. Error message: ' . $error_message );
