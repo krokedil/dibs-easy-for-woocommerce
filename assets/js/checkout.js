@@ -121,6 +121,8 @@
                                 $("form.checkout #billing_phone").val(data.data.payment.consumer.company.contactDetails.phoneNumber.prefix + data.data.payment.consumer.company.contactDetails.phoneNumber.number);
                             } else {
                                 // B2C purchase
+                                $("form.checkout #billing_company").val('');
+                                $("form.checkout #shipping_company").val('');
                                 $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
                                 $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
                                 $("form.checkout #shipping_first_name").val(data.data.payment.consumer.privatePerson.firstName);
