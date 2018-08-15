@@ -38,10 +38,10 @@ class DIBS_Requests {
 		if ( '' != $body ) {
 			$request_array['body'] = json_encode( $body, JSON_UNESCAPED_SLASHES );
 		}
-		$this->log( 'Endpoint: ' . $endpoint . ' Request array to DIBS: ' . var_export( $request_array, true ) );
+		$this->log( 'Endpoint: ' . $endpoint . ' Request array to DIBS: ' . stripslashes_deep( json_encode( $request_array ) ) );
 		// Make the request
 		$response = wp_remote_request( $endpoint, $request_array );
-		$this->log( 'Response from DIBS: ' . var_export( $response, true ) );
+		$this->log( 'Response from DIBS: ' . stripslashes_deep( json_encode( $response ) ) );
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			$this->log( 'Error connecting to DIBS. Error message: ' . $error_message );
@@ -50,6 +50,19 @@ class DIBS_Requests {
 			 $response = json_decode( $response );
 		}
 		return $response;
+	}
+
+	public function update_dibs_order( $order_id, $payment_id ) {
+		$get_cart = new DIBS_Get_WC_Cart();
+
+		// Get the datastring
+		$datastring = $get_cart->update_cart( $order_id );
+		// Make the request
+		$request = new DIBS_Requests();
+		$endpoint_sufix = 'payments/' . $payment_id . '/orderitems';
+		$request = $request->make_request( 'PUT', $datastring, $endpoint_sufix );
+
+		return $request;
 	}
 
 	public function get_order_fields( $payment_id ) {

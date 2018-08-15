@@ -39,8 +39,6 @@ class DIBS_Templates {
 
 		// Template hooks.
 		add_action( 'wc_dibs_before_checkout_form', 'wc_dibs_calculate_totals', 1 );
-		add_action( 'wc_dibs_before_checkout_form', 'woocommerce_checkout_login_form', 10 );
-		add_action( 'wc_dibs_before_checkout_form', 'woocommerce_checkout_coupon_form', 20 );
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_show_customer_order_notes', 10 );
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_show_another_gateway_button', 20 );
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_add_woocommerce_checkout_form_fields', 30 );
@@ -60,7 +58,7 @@ class DIBS_Templates {
 			if ( 'checkout/form-checkout.php' === $template_name ) {
 				$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 
-				if ( locate_template( 'woocommerce/dibs-checkout.php' ) ) {
+				if ( locate_template( 'woocommerce/dibs-easy-checkout.php' ) ) {
 					$dibs_easy_checkout_template = locate_template( 'woocommerce/dibs-easy-checkout.php' );
 				} else {
 					$dibs_easy_checkout_template = WC_DIBS_PATH . '/templates/dibs-easy-checkout.php';
@@ -70,9 +68,7 @@ class DIBS_Templates {
 				if ( array_key_exists( 'dibs_easy', $available_gateways ) ) {
 					// If chosen payment method exists.
 					if ( 'dibs_easy' === WC()->session->get( 'chosen_payment_method' ) ) {
-						if ( ! isset( $_GET['paymentId'] ) ) {
-							$template = $dibs_easy_checkout_template;
-						}
+						$template = $dibs_easy_checkout_template;
 					}
 
 					// If chosen payment method does not exist and Easy is the first gateway.
@@ -80,9 +76,7 @@ class DIBS_Templates {
 						reset( $available_gateways );
 
 						if ( 'dibs_easy' === key( $available_gateways ) ) {
-							if ( ! isset( $_GET['paymentId'] ) ) {
-								$template = $dibs_easy_checkout_template;
-							}
+							$template = $dibs_easy_checkout_template;
 						}
 					}
 
@@ -92,9 +86,7 @@ class DIBS_Templates {
 							reset( $available_gateways );
 
 							if ( 'dibs_easy' === key( $available_gateways ) ) {
-								if ( ! isset( $_GET['paymentId'] ) ) {
-									$template =  $dibs_easy_checkout_template;
-								}
+								$template =  $dibs_easy_checkout_template;
 							}
 						}
 					}

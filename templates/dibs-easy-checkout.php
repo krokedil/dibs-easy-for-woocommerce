@@ -7,6 +7,7 @@
  * @package dibs-easy-for-woocommerce
  */
 
+do_action( 'woocommerce_before_checkout_form', $checkout );
 do_action( 'wc_dibs_before_checkout_form' );
 ?>
 
@@ -26,6 +27,7 @@ do_action( 'wc_dibs_before_checkout_form' );
 	</div>
 </form>
 
-<?php do_action( 'wc_dibs_after_checkout_form' ); 
-
+<?php 
+do_action( 'wc_dibs_after_checkout_form' ); 
+do_action( 'woocommerce_after_checkout_form', $checkout );
 ?>

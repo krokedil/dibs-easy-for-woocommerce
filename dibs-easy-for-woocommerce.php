@@ -113,12 +113,24 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					$paymentId = null;
 				}
 
+				if( WC()->session->get( 'dibs_payment_id' ) ) {
+					$checkout_initiated = 'yes';
+				} else {
+					$checkout_initiated = 'no';
+				}
+
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
 				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_VERSION );
 				wp_localize_script( 'checkout', 'wc_dibs_easy', array(
-					'ajaxurl' => admin_url( 'admin-ajax.php' ),
-					'dibs_payment_id' => $dibs_payment_id,
-					'paymentId' => $paymentId,
+					'dibs_payment_id' 					=> $dibs_payment_id,
+					'paymentId' 						=> $paymentId,
+					'checkout_initiated' 				=> $checkout_initiated,
+					'update_checkout_url'   			=> WC_AJAX::get_endpoint( 'update_checkout' ),
+					'customer_adress_updated_url'   	=> WC_AJAX::get_endpoint( 'customer_adress_updated' ),
+					'get_order_data_url'   				=> WC_AJAX::get_endpoint( 'get_order_data' ),
+					'dibs_add_customer_order_note_url'  => WC_AJAX::get_endpoint( 'dibs_add_customer_order_note' ),
+					'change_payment_method_url'   		=> WC_AJAX::get_endpoint( 'change_payment_method' ),
+					'ajax_on_checkout_error_url'   		=> WC_AJAX::get_endpoint( 'ajax_on_checkout_error' ),
 				) );
 				wp_enqueue_script( 'checkout' );
 
