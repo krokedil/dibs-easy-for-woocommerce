@@ -10,6 +10,7 @@ class DIBS_Get_WC_Cart {
 
 	// Create the datastring for the AJAX call
 	public function create_cart( $order_id ) {
+		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		$wc_cart = WC()->cart->cart_contents;
 		// Set arrays
 		$cart  = array();
@@ -52,10 +53,11 @@ class DIBS_Get_WC_Cart {
 		}
 
 		// Create the order array
-		$order['items']     = $items;
-		$order['amount']    = $amount;
-		$order['currency']  = $currency;
-		$order['reference'] = $reference;
+		$order['items']     				= $items;
+		$order['amount']    				= $amount;
+		$order['currency']  				= $currency;
+		$order['reference'] 				= $reference;
+		$order['shipping']['costSpecified']	= true;
 
 		//Get the checkout URL
 		$checkout['url'] = wc_get_checkout_url();
@@ -67,10 +69,74 @@ class DIBS_Get_WC_Cart {
 		if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
 			$checkout['ShippingCountries'] = $this->get_shipping_countries();
 		}
+
+		// Test
+		$checkout['shipping']['countries'] = array();
+		$checkout['shipping']['merchantHandlesShippingCost'] = true;
+
+		// Get consumerType
+		$allowed_customer_types = ( isset( $dibs_settings['allowed_customer_types'] ) ) ? $dibs_settings['allowed_customer_types'] : 'B2C';
+		switch ( $allowed_customer_types ) {
+			case 'B2C':
+				$checkout['consumerType']['supportedTypes'] = array('B2C');
+				break;
+			case 'B2B':
+				$checkout['consumerType']['supportedTypes'] = array('B2B');
+				break;
+			case 'B2CB':
+				$checkout['consumerType']['supportedTypes'] = array('B2C','B2B');
+				$checkout['consumerType']['default'] = 'B2C';
+				break;
+			case 'B2BC':
+				$checkout['consumerType']['supportedTypes'] = array('B2B','B2C');
+				$checkout['consumerType']['default'] = 'B2B';
+				break;
+			default:
+				$checkout['consumerType']['supportedTypes'] = array('B2B');
+		} // End switch().
 		
 		// Create the final cart array for the datastring
 		$cart['order'] = $order;
 		$cart['checkout'] = $checkout;
+		$cart['notifications']['webHooks'] = $this->get_web_hooks();
+		return $cart;
+	}
+
+	// Create the datastring for the AJAX call
+	public function update_cart( $order_id ) {
+		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+		$wc_cart = WC()->cart->cart_contents;
+		// Set arrays
+		$cart  = array();
+		
+		$items = array();
+		// Create the items objects for each product in cart
+		foreach ( $wc_cart as $item ) {
+			$item_name = wc_get_product( $item['product_id'] );
+			$item_name = $item_name->get_title();
+			if ( $item['variation_id'] ) {
+				$product = wc_get_product( $item['variation_id'] );
+				$product_id = $item['variation_id'];
+			} else {
+				$product = wc_get_product( $item['product_id'] );
+				$product_id = $item['product_id'];
+			}
+			$item_line = $this->create_items( $this->get_sku( $product, $product_id ), $item_name, $item['quantity'], $item['line_total'], $item['line_tax'] );
+			array_push( $items, $item_line );
+		}
+		// Add shipping as an item for order.
+		$shipping = $this->shipping_cost();
+		if ( '' != $shipping ) {
+			array_push( $items, $shipping );
+		}
+		// Set the rest of the order array objects
+		$amount = $this->get_total_amount( $items );
+		$wc_order = wc_get_order( $order_id );
+
+		// Create the order array
+		$cart['amount']    					= $amount;
+		$cart['items']     					= $items;
+		$cart['shipping']['costSpecified']	= true;
 		return $cart;
 	}
 
@@ -200,6 +266,18 @@ class DIBS_Get_WC_Cart {
 			}
 		}
 		return $converted_countries;
+	}
+
+	// Prepare webhooks
+	public function get_web_hooks() {
+		$web_hooks = array();
+		$web_hooks[] = array(
+			'eventName' 	=> 'payment.reservation.created',
+			'url' 			=> get_home_url() . '/wc-api/DIBS_WC_Payment_Created/',
+			'authorization'	=> wp_create_nonce( 'dibs_web_hooks' )
+		);
+		
+		return $web_hooks;
 	}
 }
 $dibs_get_wc_cart = new DIBS_Get_WC_Cart();

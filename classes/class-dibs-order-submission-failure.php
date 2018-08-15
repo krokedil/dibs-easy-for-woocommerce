@@ -50,11 +50,6 @@ class DIBS_OSF {
                 WC()->session->__unset( 'dibs_incomplete_order' );
                 WC()->session->__unset( 'order_awaiting_payment' );
                 
-                   
-                $order->add_order_note( sprintf(
-                    __( 'WooCommerce order finalized via submission backup.', 'dibs-easy-for-woocommerce' ),
-                    $order_id
-                ) );
                 update_post_meta( $order_id, '_dibs_osf', true );
             }   
             wp_safe_redirect( $order->get_checkout_order_received_url() );

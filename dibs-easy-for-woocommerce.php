@@ -8,7 +8,7 @@
  * Plugin Name:     		DIBS Easy for WooCommerce
  * Plugin URI:      		https://krokedil.se/dibs/
  * Description:     		Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:         		1.3.0
+ * Version:         		1.3.1
  * Author:          		Krokedil
  * Author URI:      		https://krokedil.se/
  * Developer:       		Krokedil
@@ -16,7 +16,7 @@
  * Text Domain:     		dibs-easy-for-woocommerce
  * Domain Path:     		/languages
  * WC requires at least:	3.0.0
- * WC tested up to: 		3.3.3
+ * WC tested up to: 		3.4.2
  * Copyright:       		© 2017-2018 Krokedil Produktionsbyrå AB.
  * License:         		GNU General Public License v3.0
  * License URI:     		http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,11 +29,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_VERSION', '1.3.0' );
+define( 'WC_DIBS_VERSION', '1.3.1' );
+define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
+define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 	class DIBS_Easy {
+
+		public static $log = '';
+
 		public $dibs_settings;
+		
 		public function __construct() {
 			$this->dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 			add_action( 'woocommerce_email_after_order_table', array( $this, 'email_extra_information' ), 10, 3 );
@@ -64,7 +70,10 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once( plugin_basename( 'classes/class-dibs-post-checkout.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-order-submission-failure.php' ) );
 			include_once( plugin_basename( 'classes/class-dibs-admin-notices.php' ) );
+			include_once( plugin_basename( 'classes/class-dibs-api-callbacks.php' ) );
+			include_once( plugin_basename( 'classes/class-dibs-templates.php' ) );
 			include_once( plugin_basename( 'includes/dibs-country-converter-functions.php' ) );
+			include_once( plugin_basename( 'includes/dibs-checkout-functions.php' ) );
 			
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 			
@@ -98,11 +107,30 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					$dibs_payment_id = null;
 				}
 
+				if( isset( $_GET['paymentId'] ) ) {
+					$paymentId = $_GET['paymentId'];
+				} else {
+					$paymentId = null;
+				}
+
+				if( WC()->session->get( 'dibs_payment_id' ) ) {
+					$checkout_initiated = 'yes';
+				} else {
+					$checkout_initiated = 'no';
+				}
+
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
 				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_VERSION );
 				wp_localize_script( 'checkout', 'wc_dibs_easy', array(
-					'ajaxurl' => admin_url( 'admin-ajax.php' ),
-					'dibs_payment_id' => $dibs_payment_id,
+					'dibs_payment_id' 					=> $dibs_payment_id,
+					'paymentId' 						=> $paymentId,
+					'checkout_initiated' 				=> $checkout_initiated,
+					'update_checkout_url'   			=> WC_AJAX::get_endpoint( 'update_checkout' ),
+					'customer_adress_updated_url'   	=> WC_AJAX::get_endpoint( 'customer_adress_updated' ),
+					'get_order_data_url'   				=> WC_AJAX::get_endpoint( 'get_order_data' ),
+					'dibs_add_customer_order_note_url'  => WC_AJAX::get_endpoint( 'dibs_add_customer_order_note' ),
+					'change_payment_method_url'   		=> WC_AJAX::get_endpoint( 'change_payment_method' ),
+					'ajax_on_checkout_error_url'   		=> WC_AJAX::get_endpoint( 'ajax_on_checkout_error' ),
 				) );
 				wp_enqueue_script( 'checkout' );
 
@@ -257,6 +285,16 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				}
 			}
 			return $data;
+		}
+
+		public static function log( $message ) {
+			$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+			if ( 'yes' === $dibs_settings['debug_mode'] ) {
+				if ( empty( self::$log ) ) {
+					self::$log = new WC_Logger();
+				}
+				self::$log->add( 'dibs_easy', $message );
+			}
 		}
 	}
 	$dibs_easy = new DIBS_Easy();

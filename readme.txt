@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 4.9.4
+Tested up to: 4.9.6
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.3.3
+Tested WooCommerce up to: 3.4.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,6 +51,11 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 
 == CHANGELOG ==
+
+2018.06.xx    	- version 1.4.0
+* Feature       - Use template file for displaying DIBS Easy. Making it possible to overwrite via theme.
+* Feature		- Added support for DIBS webhooks (API callbacks for payment.reservation.created).
+* Tweak			- Improved messaging (saved as an order note) on order submission failure.
 
 = 2018.03.16    - version 1.3.0 =
 * Feature       - Added support for ShippingCountries (possible to add up to 5 specific countries that the e-commerce store ship to).

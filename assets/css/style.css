@@ -1,58 +1,14 @@
 @media only screen and (min-width : 768px) {
-    body.dibs-selected #dibs-complete-checkout{
+    #dibs-iframe {
         float:right;
         width:47.8260869565%;
         display:inline-block;
     }
 
-    body.dibs-selected #dibs-order-review{
+    #dibs-order-review {
         width:47.8260869565%;
         clear:both;
         float:left;
         display:inline-block;
     }
-    body.dibs-selected #order_review, body.dibs-selected #order_review_heading, body.dibs-selected .woocommerce-additional-fields{
-        display:none;
-    }
-    body.dibs-selected #dibs-order-review #order_review, body.dibs-selected #dibs-order-review #order_review_heading, body.dibs-selected #dibs-order-review .woocommerce-additional-fields{
-        display:block;
-    }
-}
-
-@media only screen and (max-width : 767px) {
-    body.dibs-selected #order_review_heading, body.dibs-selected #order_review, body.dibs-selected .woocommerce-additional-fields{
-        float:none;
-        clear:both;
-        width:100%;
-        display:block;
-    }
-}
-body.dibs-selected .woocommerce-billing-fields, 
-body.dibs-selected .woocommerce-shipping-fields,
-.woocommerce-billing-fields,
-.woocommerce-shipping-fields,
-body.dibs-deselected #customer_details,
-#customer_details {
-    display:none;
-}
-body.dibs-deselected .woocommerce-billing-fields, 
-body.dibs-deselected .woocommerce-shipping-fields,
-body.dibs-deselected #customer_details {
-    display:block;
-}
-body.dibs-selected #dibs-order-review *{
-    float:none;
-}
-body.dibs-selected #order_review{
-    width:auto;
-}
-body.dibs-selected #order_comments_field label{
-    padding: 15px 0;
-}
-
-/* Theme compatibility */
-
-/* Flatsome v3.3.5+ */
-.dibs-selected .row.pt-0 {
-    display: none;
 }
