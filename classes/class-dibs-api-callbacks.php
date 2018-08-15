@@ -115,17 +115,18 @@ class DIBS_Api_Callbacks {
 	 * @throws Exception WC_Data_Exception.
 	 */
 	public function check_order_status( $data, $order_id ) {
-
 		$order = wc_get_order( $order_id );
 		
 		if( is_object( $order ) ) {
 			// Check order status
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+				$order_totals_match = $this->check_order_totals( $order, $data );
+				
 				// Set order status in Woo
-				$this->set_order_status( $order, $data );
+				if( true === $order_totals_match ) {
+					$this->set_order_status( $order, $data );
+				}
 			}
-			
-			// @todo - create check_order_totals function
 		}
 	}
 
@@ -143,6 +144,32 @@ class DIBS_Api_Callbacks {
 	
 			//DIBS_Easy::log('Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to On hold.');
 		}
+	}
+
+	/**
+	 * Check order totals
+	 *
+	 */
+	public function check_order_totals( $order, $dibs_order ) {
+
+		$order_totals_match = true;
+
+		// Check order total and compare it with Woo
+		$woo_order_total = intval( round( $order->get_total() ) * 100 );
+		$dibs_order_total = $dibs_order['data']['amount']['amount'];
+		
+		if( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
+			$order->update_status( 'on-hold',  sprintf(__( 'Order needs manual review. WooCommerce order total and DIBS order total do not match. DIBS order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
+			DIBS_Easy::log('Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. DIBS order total: ' . $dibs_order_total );
+			$order_totals_match = false;
+		} elseif( $dibs_order_total > $woo_order_total && ( $dibs_order_total - $woo_order_total ) > 30 ) {
+			$order->update_status( 'on-hold',  sprintf(__( 'Order needs manual review. WooCommerce order total and DIBS order total do not match. DIBS order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
+			DIBS_Easy::log('Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. DIBS order total: ' . $dibs_order_total );
+			$order_totals_match = false;
+		}
+
+		return $order_totals_match;
+	
 	}
 	 
 }
