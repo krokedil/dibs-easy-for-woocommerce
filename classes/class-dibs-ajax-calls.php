@@ -171,7 +171,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			WC()->session->set( 'dibs_order_data', $response );
 
 			self::prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
-			
 			wp_send_json_success( $response );
 			wp_die();
 		}

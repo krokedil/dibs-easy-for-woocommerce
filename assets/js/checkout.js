@@ -96,30 +96,44 @@
                         if( false === data.success ) {
                             console.log( data );
                         } else {
-                            $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
-                            $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
-                            $("form.checkout #billing_email").val(data.data.payment.consumer.privatePerson.email);
-                            $("form.checkout #billing_country").val(data.data.payment.consumer.shippingAddress.country);
+
                             $("form.checkout #billing_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
-                            $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
                             $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
-                            $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number);
-                            $("form.checkout #shipping_first_name").val(data.data.payment.consumer.privatePerson.firstName);
-                            $("form.checkout #shipping_last_name").val(data.data.payment.consumer.privatePerson.lastName);
-                            $("form.checkout #shipping_country").val(data.data.payment.consumer.shippingAddress.country);
+                            $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
+                            $("form.checkout #billing_country").val(data.data.payment.consumer.shippingAddress.country);
+                            
                             $("form.checkout #shipping_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
-                            $("form.checkout #shipping_city").val(data.data.payment.consumer.shippingAddress.city);
                             $("form.checkout #shipping_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
+                            $("form.checkout #shipping_city").val(data.data.payment.consumer.shippingAddress.city);
+                            $("form.checkout #shipping_country").val(data.data.payment.consumer.shippingAddress.country);
+                            
                             $("form.checkout #order_comments").val(data.data.order_note);
+
+                            if(data.data.payment.consumer.company.name != null) {
+                                // B2B purchase
+                                $("form.checkout #billing_company").val(data.data.payment.consumer.company.name);
+                                $("form.checkout #shipping_company").val(data.data.payment.consumer.company.name);
+                                $("form.checkout #billing_first_name").val(data.data.payment.consumer.company.contactDetails.firstName);
+                                $("form.checkout #billing_last_name").val(data.data.payment.consumer.company.contactDetails.lastName);
+                                $("form.checkout #shipping_first_name").val(data.data.payment.consumer.company.contactDetails.firstName);
+                                $("form.checkout #shipping_last_name").val(data.data.payment.consumer.company.contactDetails.lastName);
+                                $("form.checkout #billing_email").val(data.data.payment.consumer.company.contactDetails.email);
+                                $("form.checkout #billing_phone").val(data.data.payment.consumer.company.contactDetails.phoneNumber.prefix + data.data.payment.consumer.company.contactDetails.phoneNumber.number);
+                            } else {
+                                // B2C purchase
+                                $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
+                                $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
+                                $("form.checkout #shipping_first_name").val(data.data.payment.consumer.privatePerson.firstName);
+                                $("form.checkout #shipping_last_name").val(data.data.payment.consumer.privatePerson.lastName);
+                                $("form.checkout #billing_email").val(data.data.payment.consumer.privatePerson.email);
+                                $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number);
+                            }
                             
                             if(data.data.payment.consumer.shippingAddress.addressLine2 != null) {
                                 $("form.checkout #billing_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
                                 $("form.checkout #shipping_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
                             }
 
-                            if(data.data.order_note != null) {
-                                
-                            }
                         }
                         
                         // Check Terms checkbox, if it exists

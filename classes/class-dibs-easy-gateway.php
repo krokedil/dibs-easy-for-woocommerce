@@ -41,6 +41,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		add_action( 'woocommerce_thankyou_dibs_easy', array( $this, 'dibs_thankyou' ) );
 		add_action( 'woocommerce_thankyou', array( $this, 'maybe_delete_dibs_sessions' ), 100, 1 );
 	}
+	
 	public function init_form_fields() {
 		$this->form_fields = include( DIR_NAME . '/includes/dibs-settings.php' );
 	}
