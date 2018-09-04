@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 4.9.8
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.4.4
+Tested WooCommerce up to: 3.4.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,9 +48,19 @@ Available for merchants in Denmark, Sweden and Norway.
 = Where can I find DIBS Easy for WooCommerce documentation? =
 For help setting up and configuring DIBS Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
 
-
+= Are there any specific requirements? =
+* WooCommerce 3.0 or newer is required.
+* PHP 5.6 or higher is required.
+* A SSL Certificate is required.
+* This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+2018.09.04    	- version 1.4.1
+* Tweak			- Plugin now requires https.
+* Tweak			- Added admin notice if https is note set in store.
+* Tweak			- Added WooCommerce account settings check. To avoid issues during finalizing of checkout form submission.
+* Fix			- Only allow payment method to be available is currency is DKK, NOK or SEK. 
 
 2018.08.15    	- version 1.4.0
 * Feature 		- Added support for listening to DIBS shipping update event (possibility to update shipping methods/shipping depending on entered customer data in Easy iframe).
