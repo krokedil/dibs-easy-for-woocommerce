@@ -35,6 +35,15 @@ class DIBS_Get_WC_Cart {
 		if ( '' != $shipping ) {
 			array_push( $items, $shipping );
 		}
+
+		// Fees
+		if ( ! empty( WC()->cart->get_fees() ) ) {
+			foreach ( WC()->cart->get_fees() as $fee_key => $fee ) {
+				$fee_line = $this->create_items( $fee->id, $fee->name, 1, $fee->amount, $fee->tax );
+				array_push( $items, $fee_line );
+			}
+		}
+
 		// Set the rest of the order array objects
 		$amount = $this->get_total_amount( $items );
 		$currency = get_woocommerce_currency();
@@ -129,6 +138,15 @@ class DIBS_Get_WC_Cart {
 		if ( '' != $shipping ) {
 			array_push( $items, $shipping );
 		}
+
+		// Fees
+		if ( ! empty( WC()->cart->get_fees() ) ) {
+			foreach ( WC()->cart->get_fees() as $fee_key => $fee ) {
+				$fee_line = $this->create_items( $fee->id, $fee->name, 1, $fee->amount, $fee->tax );
+				array_push( $items, $fee_line );
+			}
+		}
+
 		// Set the rest of the order array objects
 		$amount = $this->get_total_amount( $items );
 		$wc_order = wc_get_order( $order_id );
