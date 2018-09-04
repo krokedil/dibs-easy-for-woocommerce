@@ -56,6 +56,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+2018.09.04    	- version 1.4.2
+* Tweak			- Added fees when sending order lines to DIBS.
+
 2018.09.04    	- version 1.4.1
 * Tweak			- Plugin now requires https.
 * Tweak			- Added admin notice if https is note set in store.
