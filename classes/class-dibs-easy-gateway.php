@@ -41,6 +41,27 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		add_action( 'woocommerce_thankyou_dibs_easy', array( $this, 'dibs_thankyou' ) );
 		add_action( 'woocommerce_thankyou', array( $this, 'maybe_delete_dibs_sessions' ), 100, 1 );
 	}
+
+	/**
+	 * Checks if method should be available.
+	 *
+	 * @return bool
+	 */
+	public function is_available() {
+		if ( 'yes' !== $this->enabled ) {
+			return false;
+		}
+
+		if ( is_checkout() ) {
+			// If we can't retrieve a set of credentials, disable KCO.
+			if ( ! in_array( get_woocommerce_currency(), array( 'DKK', 'NOK', 'SEK' ) ) ) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 	
 	public function init_form_fields() {
 		$this->form_fields = include( DIR_NAME . '/includes/dibs-settings.php' );
