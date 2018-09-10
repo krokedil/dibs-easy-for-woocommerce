@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DIBS Easy for WooCommerce\n"
-"POT-Creation-Date: 2017-05-22 14:58+0200\n"
-"PO-Revision-Date: 2018-09-10 13:36+0000\n"
+"POT-Creation-Date: 2018-09-10 13:49+0000\n"
+"PO-Revision-Date: 2018-09-10 13:59+0000\n"
 "Last-Translator: divint <admin@divint.no>\n"
 "Language-Team: Norsk bokmål\n"
 "Language: nb_NO\n"
@@ -21,38 +21,112 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Report-Msgid-Bugs-To: "
 
-#: classes/class-dibs-ajax-calls.php:99
-#, php-format
-msgid "%s"
-msgstr "%s"
+#: dibs-easy-for-woocommerce.php:154
+msgid "Settings"
+msgstr "Instillinger"
 
-#: classes/class-dibs-easy-gateway.php:11 includes/dibs-settings.php:22
-msgid "DIBS Easy"
-msgstr "DIBS Easy"
+#: dibs-easy-for-woocommerce.php:155
+msgid "Docs"
+msgstr "Dokumentasjon"
 
-#: classes/class-dibs-easy-gateway.php:13
-msgid "DIBS Easy Payment for checkout"
-msgstr "DIBS Easy Payment for kasse"
+#: dibs-easy-for-woocommerce.php:156
+msgid "Support"
+msgstr "Support"
 
-#: classes/class-dibs-easy-gateway.php:79
-msgid ""
-"DIBS Easy currently only supports full refunds, for a partial refund use the "
-"DIBS backend system"
-msgstr ""
+#: dibs-easy-for-woocommerce.php:232
+msgid "Order date: "
+msgstr "Ordredato: "
 
-#: classes/class-dibs-easy-gateway.php:93
-#, php-format
-msgid "Refund made in DIBS with charge ID %s. Reason: %s"
-msgstr ""
+#: dibs-easy-for-woocommerce.php:235
+msgid "DIBS Payment ID: "
+msgstr "DIBS Betalnings ID: "
 
-#: classes/class-dibs-easy-gateway.php:111
+#: dibs-easy-for-woocommerce.php:238
+msgid "Payment type: "
+msgstr "Betalingsmåte:"
+
+#: dibs-easy-for-woocommerce.php:241
+msgid "Customer card: "
+msgstr "Kortnummer: "
+
+#: dibs-easy-for-woocommerce.php:248
+msgid "There was a problem paying with DIBS."
+msgstr "Det oppstod ett problem i forbindelse med betaling via DIBS."
+
+#: classes/class-dibs-order-submission-failure.php:46
+#: classes/class-dibs-easy-gateway.php:143
 #, php-format
 msgid "Order made in DIBS with Payment ID %s. Payment type - %s."
 msgstr "Order utført i DIBS med Betalings-ID %s. Betalingsmåte - %s."
 
-#: classes/class-dibs-get-wc-cart.php:130
-msgid "pcs"
+#: classes/class-dibs-api-callbacks.php:162
+#: classes/class-dibs-api-callbacks.php:166
+#, php-format
+msgid ""
+"Order needs manual review. WooCommerce order total and DIBS order total do "
+"not match. DIBS order total: %s."
 msgstr ""
+"Ordre krever manuell gjennomgang. WooCommerce ordretotal og DIBS ordretotal "
+"samsvarer ikke. DIBS ordretotal: %s."
+
+#: classes/class-dibs-easy-gateway.php:13 includes/dibs-settings.php:22
+msgid "DIBS Easy"
+msgstr "DIBS Easy"
+
+#: classes/class-dibs-easy-gateway.php:15
+msgid "DIBS Easy Payment for checkout"
+msgstr "DIBS Easy Payment for kasse-siden."
+
+#: classes/class-dibs-easy-gateway.php:101
+msgid ""
+"DIBS Easy currently only supports full refunds, for a partial refund use the "
+"DIBS backend system"
+msgstr ""
+"DIBS Easy støtter bare full tilbakebetaling, for delvis tilbakebetaling "
+"vennligst benytt DIBS kontrollpanel."
+
+#: classes/class-dibs-easy-gateway.php:115
+#, php-format
+msgid "Refund made in DIBS with charge ID %s. Reason: %s"
+msgstr "Tilbakebetaling utført i DIBS med betalings-ID %s. Årsak: %s"
+
+#: classes/class-dibs-easy-gateway.php:227
+#, php-format
+msgid "There was a problem with Payment ID %s."
+msgstr "Det oppstod ett problem med betalings-ID %s."
+
+#: classes/class-dibs-easy-gateway.php:264
+#, php-format
+msgid ""
+"There was a problem with Payment ID %s. Customer redirected back to checkout "
+"page to finalize purchase again."
+msgstr ""
+"Det oppstod ett problem med betalings-ID %s. Kunde videresendt tilbake til "
+"kasse-siden for å fullføre bestillingen på nytt."
+
+#: classes/class-dibs-ajax-calls.php:153
+#, php-format
+msgid ""
+"Something went wrong when connecting to DIBS during checkout completion. "
+"Error message: %s. Please check your DIBS backoffice to control the order."
+msgstr ""
+"En feil oppstod i tilkoblingen mot DIBS i forbindelse med fullføring av "
+"betaling. Feilmelding: %s. Vennligst sjekk DIBS kontrollpanel for å handtere "
+"ordren."
+
+#: classes/class-dibs-ajax-calls.php:233
+#, php-format
+msgid "%s"
+msgstr "%s"
+
+#: classes/class-dibs-ajax-calls.php:281
+#, php-format
+msgid ""
+"This order was made as a fallback due to an error in the checkout (%s). "
+"Please verify the order with DIBS."
+msgstr ""
+"Denne ordren ble utført som en fallback på grunn av en feil i kassen (%s). "
+"Vennligst verifiser ordren med DIBS."
 
 #: classes/class-dibs-post-checkout.php:42
 #, php-format
@@ -61,39 +135,82 @@ msgstr "Betaling gjennomført i DIBS  med betalings-ID %s"
 
 #: classes/class-dibs-post-checkout.php:91
 msgid "Order has been canceled in DIBS"
-msgstr "Ordre ble avbrudt i DIBS"
+msgstr "Ordren ble avbrutt i DIBS"
 
 #: classes/class-dibs-post-checkout.php:93
 msgid "There was a problem canceling the order in DIBS"
-msgstr ""
+msgstr "Det oppstod ett problem med kansellering av ordren i DIBS"
 
-#: classes/class-dibs-post-checkout.php:101
+#: classes/class-dibs-post-checkout.php:100
 #, php-format
 msgid "DIBS Error: %s"
-msgstr ""
+msgstr "DIBS feil: %s"
 
-#: dibs-easy-for-woocommerce.php:114
+#: classes/class-dibs-requests.php:119 classes/class-dibs-requests.php:120
 #, php-format
-msgid "DIBS incomplete <span class=\"count\">(%s)</span>"
-msgid_plural "DIBS incomplete <span class=\"count\">(%s)</span>"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Could not connect to DIBS: %s"
+msgstr "Kunne ikke koble til DIBS: %s"
 
-#: dibs-easy-for-woocommerce.php:164
-msgid "Order date: "
-msgstr "Ordredato: "
+#: classes/class-dibs-requests.php:122
+msgid "No response when connecting to DIBS:"
+msgstr "Ingen respons ved tilkobling mot DIBS:"
 
-#: dibs-easy-for-woocommerce.php:167
-msgid "DIBS Payment ID: "
-msgstr "DIBS Betalnings ID: "
+#: classes/class-dibs-requests.php:123
+#, php-format
+msgid "No response when connecting to DIBS: %s"
+msgstr "Ingen respons ved tilkobling mot DIBS: %s"
 
-#: dibs-easy-for-woocommerce.php:170
-msgid "Payment type: "
-msgstr "Betalingsmåte:"
+#: classes/class-dibs-requests.php:126 classes/class-dibs-requests.php:127
+#, php-format
+msgid "Connection error: %s"
+msgstr "Tilkoblingsfeil: %s"
 
-#: dibs-easy-for-woocommerce.php:173
-msgid "Customer card: "
-msgstr "Kortnummer: "
+#: classes/class-dibs-admin-notices.php:44
+#, php-format
+msgid ""
+"You need to <a href=\"%s\" target=\"_blank\">specify a terms page</a> in "
+"WooCommerce Settings to be able to use DIBS Easy."
+msgstr ""
+"Du må spesifisere en vilkårs-side i WooCommerce sine instillinger for å "
+"kunne bruke DIBS Easy."
+
+#: classes/class-dibs-admin-notices.php:58
+msgid "You need to enable and configure https to be able to use DIBS Easy."
+msgstr "Du må aktivere og konfigurere https (ssl) for å kunne bruke DIBS Easy."
+
+#: classes/class-dibs-admin-notices.php:73
+#, php-format
+msgid ""
+"To be able to use DIBS Easy correctly you need to tick the checkbox <i>When "
+"creating an account, automatically generate a username from the customer's "
+"email address</i> when having the <i>Allow customers to create an account "
+"during checkout</i> setting activated. This can be changed in the <a "
+"href=\"%s\">Accounts & Privacy tab</a>."
+msgstr ""
+"For å kunne bruke DIBS Easy må du krysse av <i>Skal brukernavn automatisk "
+"genereres basert på e-postadresse når en ny konto opprettes</i> når du har "
+"<i>Tillat kunder å opprette en brukerkonto på betalingssiden</i> -"
+"instillingen aktivert. Dette kan du forandre under <a href=\"%s\">Kontoer & "
+"personvern -fanen</a>."
+
+#: classes/class-dibs-admin-notices.php:79
+#, php-format
+msgid ""
+"To be able to use DIBS Easy correctly you need to tick the checkbox <i>When "
+"creating an account, automatically generate an account password</i> when "
+"having the <i>Allow customers to create an account during checkout</i> "
+"setting activated. This can be changed in the <a href=\"%s\">Accounts & "
+"Privacy tab</a>."
+msgstr ""
+"For å kunne bruke DIBS Easy må du krysse av <i>Skal brukernavn automatisk "
+"genereres basert på e-postadresse når en ny konto opprettes</i> når du har "
+"<i>Tillat kunder å opprette en brukerkonto på betalingssiden</i> -"
+"instillingen aktivert. Dette kan du forandre under <a href=\"%s\">Kontoer & "
+"personvern -fanen</a>."
+
+#: classes/class-dibs-get-wc-cart.php:237
+msgid "pcs"
+msgstr "stk"
 
 #: includes/dibs-settings.php:13
 msgid "Enable/Disable"
@@ -110,72 +227,107 @@ msgstr "Tittel"
 #: includes/dibs-settings.php:21
 msgid ""
 "This is the title that the user sees on the checkout page for DIBS Easy."
-msgstr ""
+msgstr "Dette er tittelen som kunden vil se på kasse-siden for DIBS Easy."
 
 #: includes/dibs-settings.php:25
-msgid "Live Key"
-msgstr ""
+msgid "Live Secret key"
+msgstr "\"Live Secret\" -nøkkel"
 
 #: includes/dibs-settings.php:27
 msgid "Enter your DIBS Easy live key"
-msgstr ""
+msgstr "Fyll inn din DIBS Easy live nøkkel"
 
 #: includes/dibs-settings.php:32
-msgid "Checkout key"
-msgstr ""
+msgid "Live Checkout key"
+msgstr "\"Live Checkout\" -nøkkel"
 
 #: includes/dibs-settings.php:34
 msgid "Enter your DIBS Easy Checkout key"
-msgstr ""
+msgstr "Fyll inn din DIBS Easy kasse-nøkkel"
 
 #: includes/dibs-settings.php:39
-msgid "Test Key"
-msgstr ""
+msgid "Test Secret key"
+msgstr "\"Test Secret\" -nøkkel"
 
 #: includes/dibs-settings.php:41
 msgid "Enter your DIBS Easy Test key if you want to run in test mode."
-msgstr ""
+msgstr "Fyll inn din DIBS Easy test nøkkel hvis du ønsker å kjøre i testmodus."
 
 #: includes/dibs-settings.php:46
-msgid "Test checkout key"
-msgstr ""
+msgid "Test Checkout key"
+msgstr "\"Test Checkout\" -nøkkel"
 
 #: includes/dibs-settings.php:48
 msgid "Enter your DIBS Easy Test checkout key"
-msgstr ""
+msgstr "Fyll inn din DIBS Easy test kasse-nøkkel"
 
 #: includes/dibs-settings.php:53
 msgid "Test mode"
-msgstr ""
+msgstr "Testmodus"
 
 #: includes/dibs-settings.php:55
 msgid "Enable Test mode for DIBS Easy"
-msgstr ""
+msgstr "Aktivere testmodus for DIBS Easy"
 
 #: includes/dibs-settings.php:59
-msgid "Email text"
-msgstr "Epost-tekst"
+msgid "Allowed Customer Types"
+msgstr "Tillatte kundetyper"
 
-#: includes/dibs-settings.php:61
-msgid "This text will be added to your customers order confirmation email."
-msgstr "Denne teksten vil legges til ordrebekreftelsen."
+#: includes/dibs-settings.php:62
+msgid "B2C only"
+msgstr "Kun B2C"
+
+#: includes/dibs-settings.php:63
+msgid "B2B only"
+msgstr "Kun B2B"
+
+#: includes/dibs-settings.php:64
+msgid "B2C & B2B (defaults to B2C)"
+msgstr "B2C og B2B (B2C som standard)"
 
 #: includes/dibs-settings.php:65
-msgid "Manage orders"
-msgstr "Håndtere ordre"
+msgid "B2B & B2C (defaults to B2B)"
+msgstr "B2B og B2C (B2B som standard)"
 
 #: includes/dibs-settings.php:67
+msgid ""
+"Select if you want to sell both to consumers and companies or only to one of "
+"them."
+msgstr ""
+"Velg om du ønsker å selge til både kunder og selskap eller bare en av dem."
+
+#: includes/dibs-settings.php:72
+msgid "Email text"
+msgstr "Ordrebekreftelsestekst"
+
+#: includes/dibs-settings.php:74
+msgid "This text will be added to your customers order confirmation email."
+msgstr "Denne teksten vil legges til ordrebekreftelsen som sendes på e-post."
+
+#: includes/dibs-settings.php:78
+msgid "Manage orders"
+msgstr "Handtere ordrer"
+
+#: includes/dibs-settings.php:80
 msgid "Enable WooCommerce to manage orders in DIBS Easys backend"
 msgstr ""
-"Aktiverer WooCommerce-håndtering av ordrer i kontrollpanelet på DIBS Easy."
+"Aktiverer WooCommerce-handtering av ordrer i kontrollpanelet på DIBS Easy."
+
+#: includes/dibs-settings.php:84
+msgid "Debug mode"
+msgstr "Testmodus"
+
+#: includes/dibs-settings.php:86
+msgid "Enable Debug mode for DIBS Easy"
+msgstr "Aktiver testmodus for DIBS Easy"
+
+#: includes/dibs-checkout-functions.php:47
+msgid "Select another payment method"
+msgstr "Velg en annen betalingsmåte"
 
 #. Plugin Name of the plugin/theme
 msgid "DIBS Easy for WooCommerce"
 msgstr "DIBS Easy for WooCommerce"
-
-#. Plugin URI of the plugin/theme
-msgid "http://krokedil.com/"
-msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
@@ -185,10 +337,14 @@ msgstr ""
 "Utvider WooCommerce. Gir deg mulighet til å benytte <a href=\"http://www."
 "dibspayment.com/\" target=\"_blank\">DIBS Easy</a> i kassen for WooCommerce."
 
-#. Author of the plugin/theme
-msgid "WooCommerce"
-msgstr ""
+#. URI of the plugin
+msgid "https://krokedil.se/dibs/"
+msgstr "https://krokedil.se/dibs/"
 
-#. Author URI of the plugin/theme
-msgid "https://woocommerce.com/"
-msgstr ""
+#. Author of the plugin
+msgid "Krokedil"
+msgstr "Krokedil"
+
+#. Author URI of the plugin
+msgid "https://krokedil.se/"
+msgstr "https://krokedil.se/"
