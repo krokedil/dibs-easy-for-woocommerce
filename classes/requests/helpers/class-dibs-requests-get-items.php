@@ -83,6 +83,18 @@ class DIBS_Requests_Items {
 							'grossTotalAmount' => round( $method->cost + array_sum( $method->taxes ), 2 ) * 100,
 							'netTotalAmount'   => $method->cost * 100,
 						);
+					} else {
+						return array(
+							'reference'        => '1',
+							'name'             => $method->label,
+							'quantity'         => 1,
+							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
+							'unitPrice'        => 0,
+							'taxRate'          => 0,
+							'taxAmount'        => 0,
+							'grossTotalAmount' => 0,
+							'netTotalAmount'   => 0,
+						);
 					}
 				}
 			}

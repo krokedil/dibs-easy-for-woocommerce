@@ -46,7 +46,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_totals();
 
-		$order_id   = WC()->session->get( 'dibs_incomplete_order' );
+		// $order_id   = WC()->session->get( 'dibs_incomplete_order' );
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 
 		// Check that the DIBS paymentId session is still valid
@@ -61,7 +61,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		// $response = $request->update_dibs_order( $order_id, $payment_id );
 		$request  = new DIBS_Requests_Update_DIBS_Order( $payment_id );
 		$response = $request->request();
-
 		if ( is_wp_error( $response ) ) {
 			wc_dibs_unset_sessions();
 			$return['redirect_url'] = wc_get_checkout_url();
