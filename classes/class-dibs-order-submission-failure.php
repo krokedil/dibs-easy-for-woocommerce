@@ -36,12 +36,12 @@ class DIBS_OSF {
 			$order    = wc_get_order( $order_id );
 
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-
-				$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+				$payment_id = WC()->session->get( 'dibs_payment_id' );
+				update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 				// $request = new DIBS_Requests();
 				// $request = $request->get_order_fields( $payment_id );
 				$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
-				$request = $request->request();
+				$request = json_decode( $request->request() );
 				if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
 					update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
 					update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
@@ -49,9 +49,9 @@ class DIBS_OSF {
 					$order->payment_complete( $payment_id );
 					WC()->cart->empty_cart();
 				}
-				WC()->session->__unset( 'dibs_incomplete_order' );
 				WC()->session->__unset( 'order_awaiting_payment' );
-
+				$order->update_status( 'on-hold', __( 'Order created on checkout error fallback. Please verify the order to make sure its correct.', 'dibs-easy-for-woocommerce' ) );
+				$order->save();
 				update_post_meta( $order_id, '_dibs_osf', true );
 			}
 			wp_safe_redirect( $order->get_checkout_order_received_url() );

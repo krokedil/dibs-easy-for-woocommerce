@@ -74,6 +74,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-admin-notices.php' );
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
 			include_once plugin_basename( 'classes/class-dibs-templates.php' );
+			include_once plugin_basename( 'classes/class-dibs-create-local-order-fallback.php' );
+
 			include_once plugin_basename( 'includes/dibs-country-converter-functions.php' );
 			include_once plugin_basename( 'includes/dibs-checkout-functions.php' );
 
