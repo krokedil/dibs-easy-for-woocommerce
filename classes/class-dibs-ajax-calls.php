@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class DIBS_Ajax_Calls extends WC_AJAX {
 	public $private_key;
-	
+
 	/**
 	 * Hook in ajax handlers.
 	 */
@@ -18,12 +18,12 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-			'update_checkout' => true,
-			'customer_adress_updated' => true,
-			'get_order_data' => true,
+			'update_checkout'              => true,
+			'customer_adress_updated'      => true,
+			'get_order_data'               => true,
 			'dibs_add_customer_order_note' => true,
-			'change_payment_method' => true,
-			'ajax_on_checkout_error' => true,
+			'change_payment_method'        => true,
+			'ajax_on_checkout_error'       => true,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -46,21 +46,23 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_totals();
 
-		$order_id = WC()->session->get( 'dibs_incomplete_order' );
+		$order_id   = WC()->session->get( 'dibs_incomplete_order' );
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 
 		// Check that the DIBS paymentId session is still valid
-		if( false === get_transient( 'dibs_payment_id_' . $payment_id ) ) {
+		if ( false === get_transient( 'dibs_payment_id_' . $payment_id ) ) {
 			wc_dibs_unset_sessions();
 			$return['redirect_url'] = wc_get_checkout_url();
 			wp_send_json_error( $return );
 			wp_die();
 		}
-		
-		$request = new DIBS_Requests();
-		$response = $request->update_dibs_order( $order_id, $payment_id );
-		
-		if( is_wp_error( $response ) ) {
+
+		// $request = new DIBS_Requests();
+		// $response = $request->update_dibs_order( $order_id, $payment_id );
+		$request  = new DIBS_Requests_Update_DIBS_Order( $payment_id );
+		$response = $request->request();
+
+		if ( is_wp_error( $response ) ) {
 			wc_dibs_unset_sessions();
 			$return['redirect_url'] = wc_get_checkout_url();
 			wp_send_json_error( $return );
@@ -76,7 +78,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 * Customer address updated - triggered when address-changed event is fired
 	 */
 	public static function customer_adress_updated() {
-		
+
 		/*
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'dibs_nonce' ) ) {
 			exit( 'Nonce can not be verified.' );
@@ -85,66 +87,65 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		$update_needed = 'yes';
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
-		
+
 		// Get customer data from Collector
-		$country 			= dibs_get_iso_2_country($_REQUEST['address']['countryCode']);
-		$post_code			= $_REQUEST['address']['postalCode'];
-		
-		if( $country ) {
-			
+		$country   = dibs_get_iso_2_country( $_REQUEST['address']['countryCode'] );
+		$post_code = $_REQUEST['address']['postalCode'];
+
+		if ( $country ) {
+
 			// If country is changed then we need to trigger an cart update in the Collector Checkout
-			if( WC()->customer->get_billing_country() !== $country ) {
+			if ( WC()->customer->get_billing_country() !== $country ) {
 				$update_needed = 'yes';
 			}
-			
+
 			// If country is changed then we need to trigger an cart update in the Collector Checkout
-			if( WC()->customer->get_shipping_postcode() !== $post_code ) {
+			if ( WC()->customer->get_shipping_postcode() !== $post_code ) {
 				$update_needed = 'yes';
 			}
 			// Set customer data in Woo
-			
-			
 			WC()->customer->set_billing_country( $country );
 			WC()->customer->set_shipping_country( $country );
 			WC()->customer->set_billing_postcode( $post_code );
 			WC()->customer->set_shipping_postcode( $post_code );
 			WC()->customer->save();
-			
+
 			WC()->cart->calculate_totals();
-			
+
 		}
 		$response = array(
 			'updateNeeded' => $update_needed,
-			'country' 		=> $country,
-			'postCode'		=> $post_code,
+			'country'      => $country,
+			'postCode'     => $post_code,
 		);
 		wp_send_json_success( $response );
 		wp_die();
 	}
 
 
-	
+
 
 	public static function get_order_data() {
-		
+
 		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
 			define( 'WOOCOMMERCE_CHECKOUT', true );
 		}
-		
+
 		$payment_id = $_POST['paymentId'];
 		// Set the endpoint sufix
 		$endpoint_sufix = 'payments/' . $payment_id;
 
 		// Make the request
-		$request 	= new DIBS_Requests();
-		$response 	= $request->make_request( 'GET', '', $endpoint_sufix );
-		$order_id 	= WC()->session->get( 'dibs_incomplete_order' );
-
-		self::prepare_local_order_before_form_processing( $order_id, $payment_id );
-		
+		// $request  = new DIBS_Requests();
+		// $response = $request->make_request( 'GET', '', $endpoint_sufix );
+		$request  = new DIBS_Requests_Get_DIBS_Order( $payment_id );
+		$response = $request->request();
+		error_log( var_export( $response, true ) );
+		// $order_id = WC()->session->get( 'dibs_incomplete_order' );
+		// self::prepare_local_order_before_form_processing( $order_id, $payment_id );
 		if ( is_wp_error( $response ) || empty( $response ) ) {
 			// Something went wrong
-			if( is_wp_error( $response ) ) {
+			if ( is_wp_error( $response ) ) {
 				$message = $response->get_error_message();
 			} else {
 				$message = 'Empty response from DIBS.';
@@ -155,8 +156,8 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			wp_die();
 		} else {
 			// All good with the request
-			// Convert country code from 3 to 2 letters 
-			if( $response->payment->consumer->shippingAddress->country ) {
+			// Convert country code from 3 to 2 letters
+			if ( $response->payment->consumer->shippingAddress->country ) {
 				$response->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $response->payment->consumer->shippingAddress->country );
 			}
 
@@ -166,7 +167,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			} else {
 				$response->order_note = '';
 			}
-			
+
 			// Store the order data in a sesstion. We might need it if form processing in Woo fails
 			WC()->session->set( 'dibs_order_data', $response );
 
@@ -174,7 +175,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			wp_send_json_success( $response );
 			wp_die();
 		}
-		
+
 	}
 
 	// Change payment method
@@ -182,7 +183,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_totals();
-		
+
 		$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 		if ( 'false' === $_POST['dibs_easy'] ) {
 			// Set chosen payment method to first gateway that is not DIBS Easy.
@@ -197,25 +198,25 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
 		}
 		WC()->payment_gateways()->set_current_gateway( $available_gateways );
-		
+
 		$redirect = wc_get_checkout_url();
-		$data = array(
+		$data     = array(
 			'redirect' => $redirect,
 		);
 		wp_send_json_success( $data );
 		wp_die();
 	}
-	
+
 	// Helper function to prepare the cart session before processing the order form
 	public static function prepare_cart_before_form_processing( $country = false ) {
-		if( $country ) {
+		if ( $country ) {
 			WC()->customer->set_billing_country( $country );
 			WC()->customer->set_shipping_country( $country );
 			WC()->customer->save();
 			WC()->cart->calculate_totals();
 		}
 	}
-	
+
 	// Helper function to prepare the local order before processing the order form
 	public static function prepare_local_order_before_form_processing( $order_id, $payment_id ) {
 		// Update cart hash
@@ -227,7 +228,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		$order = wc_get_order( $order_id );
 		$order->update_status( 'pending' );
 	}
-	
+
 	// Function called if a ajax call does not receive the expected result
 	public static function fail_ajax_call( $order, $message = 'Failed to create an order with DIBS' ) {
 		$order->add_order_note( sprintf( __( '%s', 'dibs-easy-for-woocommerce' ), $message ) );
@@ -244,10 +245,10 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 * Handles WooCommerce checkout error (if checkout submission fails), after DIBS order has already been created.
 	 */
 	public static function ajax_on_checkout_error() {
-		
-		$order_id 			= WC()->session->get( 'dibs_incomplete_order' );
-		$order 				= wc_get_order( $order_id );
-		$dibs_order_data 	= WC()->session->get( 'dibs_order_data' );
+
+		$order_id        = WC()->session->get( 'dibs_incomplete_order' );
+		$order           = wc_get_order( $order_id );
+		$dibs_order_data = WC()->session->get( 'dibs_order_data' );
 
 		// Error message
 		if ( ! empty( $_POST['error_message'] ) ) { // Input var okay.
@@ -267,30 +268,32 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 		// Add order fees.
 		self::helper_add_order_fees( $order );
-		
+
 		// Add order shipping.
 		self::helper_add_order_shipping( $order );
-		
+
 		// Add order taxes.
 		self::helper_add_order_tax_rows( $order );
-		
+
 		// Store coupons.
 		self::helper_add_order_coupons( $order );
 
 		// Add an order note to inform merchant that the order has been finalized via a fallback routine.
 		$note = sprintf( __( 'This order was made as a fallback due to an error in the checkout (%s). Please verify the order with DIBS.', 'dibs-easy-for-woocommerce' ), $error_message );
 			$order->add_order_note( $note );
-		
+
 		// Save order totals
 		$order->calculate_totals();
 		$order->save();
 
-		$redirect_url 	= wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) );
-		$redirect_url = add_query_arg( array(
-						    'dibs-osf' => 'true',
-						    'order-id' => $order_id,
-						), $redirect_url );
-		
+		$redirect_url = wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) );
+		$redirect_url = add_query_arg(
+			array(
+				'dibs-osf' => 'true',
+				'order-id' => $order_id,
+			), $redirect_url
+		);
+
 		wp_send_json_success( array( 'redirect' => $redirect_url ) );
 		wp_die();
 	}
@@ -306,16 +309,18 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		// Remove items as to stop the item lines from being duplicated.
 		$local_order->remove_order_items();
 		foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) { // Store the line items to the new/resumed order.
-			$item_id = $local_order->add_product( $values['data'], $values['quantity'], array(
-				'variation' => $values['variation'],
-				'totals'    => array(
-					'subtotal'     => $values['line_subtotal'],
-					'subtotal_tax' => $values['line_subtotal_tax'],
-					'total'        => $values['line_total'],
-					'tax'          => $values['line_tax'],
-					'tax_data'     => $values['line_tax_data'],
-				),
-			) );
+			$item_id = $local_order->add_product(
+				$values['data'], $values['quantity'], array(
+					'variation' => $values['variation'],
+					'totals'    => array(
+						'subtotal'     => $values['line_subtotal'],
+						'subtotal_tax' => $values['line_subtotal_tax'],
+						'total'        => $values['line_total'],
+						'tax'          => $values['line_tax'],
+						'tax_data'     => $values['line_tax_data'],
+					),
+				)
+			);
 			if ( ! $item_id ) {
 				throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 525 ) );
 			}
@@ -360,8 +365,8 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		if ( ! defined( 'WOOCOMMERCE_CART' ) ) {
 			define( 'WOOCOMMERCE_CART', true );
 		}
-		$order_id 				= $order->get_id();
-		$this_shipping_methods 	= WC()->session->get( 'chosen_shipping_methods' );
+		$order_id              = $order->get_id();
+		$this_shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
 		WC()->cart->calculate_shipping();
 		// Store shipping for all packages.
 		foreach ( WC()->shipping->get_packages() as $package_key => $package ) {
@@ -378,7 +383,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 	/**
 	 * Adds order tax rows to local order.
-	 * 
+	 *
 	 * @since  1.1.0
 	 * @param  object $order Local WC order.
 	 *
@@ -410,13 +415,12 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds payment method to local order.
 	 *
 	 * @since  1.1.0
 	 * @access public
-	 *
 	 */
 	public static function add_order_payment_method( $order ) {
 		$available_gateways = WC()->payment_gateways->payment_gateways();
@@ -428,32 +432,32 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 * Adds customer data to WooCommerce order.
 	 *
 	 * @since  1.1.0
-	 * @param integer $order_id 		WooCommerce order ID.
+	 * @param integer $order_id         WooCommerce order ID.
 	 * @param array   $dibs_order_data  Customer data returned by DIBS.
 	 */
 	public static function helper_add_customer_data_to_local_order( $order, $dibs_order_data ) {
-		$order_id 		= $order->get_id();
-		$first_name 	= (string) $dibs_order_data->payment->consumer->privatePerson->firstName;
-		$last_name  	= (string) $dibs_order_data->payment->consumer->privatePerson->lastName;
-		$email      	= (string) $dibs_order_data->payment->consumer->privatePerson->email;
-		$country    	= (string) $dibs_order_data->payment->consumer->shippingAddress->country;
-		$address  		= (string) $dibs_order_data->payment->consumer->shippingAddress->addressLine1;
-		$city     		= (string) $dibs_order_data->payment->consumer->shippingAddress->city;
-		$postcode 		= (string) $dibs_order_data->payment->consumer->shippingAddress->postalCode;
-		$phone    		= (string) $dibs_order_data->payment->consumer->privatePerson->phoneNumber->number;
-		
+		$order_id   = $order->get_id();
+		$first_name = (string) $dibs_order_data->payment->consumer->privatePerson->firstName;
+		$last_name  = (string) $dibs_order_data->payment->consumer->privatePerson->lastName;
+		$email      = (string) $dibs_order_data->payment->consumer->privatePerson->email;
+		$country    = (string) $dibs_order_data->payment->consumer->shippingAddress->country;
+		$address    = (string) $dibs_order_data->payment->consumer->shippingAddress->addressLine1;
+		$city       = (string) $dibs_order_data->payment->consumer->shippingAddress->city;
+		$postcode   = (string) $dibs_order_data->payment->consumer->shippingAddress->postalCode;
+		$phone      = (string) $dibs_order_data->payment->consumer->privatePerson->phoneNumber->number;
+
 		update_post_meta( $order_id, '_billing_first_name', $first_name );
 		update_post_meta( $order_id, '_billing_last_name', $last_name );
-		update_post_meta( $order_id, '_billing_address_1', $address  );
+		update_post_meta( $order_id, '_billing_address_1', $address );
 		update_post_meta( $order_id, '_billing_city', $city );
 		update_post_meta( $order_id, '_billing_postcode', $postcode );
 		update_post_meta( $order_id, '_billing_country', $country );
 		update_post_meta( $order_id, '_billing_phone', $phone );
 		update_post_meta( $order_id, '_billing_email', $email );
-	
+
 		update_post_meta( $order_id, '_shipping_first_name', $first_name );
 		update_post_meta( $order_id, '_shipping_last_name', $last_name );
-		update_post_meta( $order_id, '_shipping_address_1', $address  );
+		update_post_meta( $order_id, '_shipping_address_1', $address );
 		update_post_meta( $order_id, '_shipping_city', $city );
 		update_post_meta( $order_id, '_shipping_postcode', $postcode );
 		update_post_meta( $order_id, '_shipping_country', $country );

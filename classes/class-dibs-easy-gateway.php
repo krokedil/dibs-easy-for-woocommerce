@@ -19,9 +19,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Load the settings
 		$this->init_settings();
 		// Get the settings values
-		$this->title = $this->get_option( 'title' );
+		$this->title   = $this->get_option( 'title' );
 		$this->enabled = $this->get_option( 'enabled' );
-		
+
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
 		$this->supports = array(
@@ -58,13 +58,13 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
-	
+
 	public function init_form_fields() {
-		$this->form_fields = include( DIR_NAME . '/includes/dibs-settings.php' );
+		$this->form_fields = include DIR_NAME . '/includes/dibs-settings.php';
 	}
 	public function process_payment( $order_id, $retry = false ) {
 		$order = wc_get_order( $order_id );
@@ -75,12 +75,21 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		);
 	}
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-		//Check if amount equals total order
+		// Check if amount equals total order
 		$order = wc_get_order( $order_id );
 		if ( $amount == $order->get_total() ) {
-			//Get the order information
-			$cart = new DIBS_Get_WC_Cart();
-			$body = $cart->get_order_cart( $order_id );
+			// Get the order information
+			// $cart = new DIBS_Get_WC_Cart();
+			// $body = $cart->get_order_cart( $order_id );
+			$request = new DIBS_Request_Refund_Order( $order_id );
+			$request = json_decode( $request->request() );
+
+			if ( array_key_exists( 'refundId', $request ) ) { // Payment success
+				$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			/*
 			$body = array(
@@ -102,7 +111,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			return false;
 		}
 
-		//Get paymentID from order meta and set endpoint
+		/*
+		// Get paymentID from order meta and set endpoint
 		$charge_id = get_post_meta( $order_id, '_dibs_charge_id' )[0];
 
 		// Add the sufix to the endpoint
@@ -112,11 +122,12 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$request = new DIBS_Requests();
 		$request = $request->make_request( 'POST', $body, $endpoint_sufix );
 		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
-			$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %s. Reason: %s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
+			$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
 			return true;
 		} else {
 			return false;
 		}
+		*/
 	}
 	public function dibs_add_body_class( $class ) {
 		if ( is_checkout() ) {
@@ -133,18 +144,25 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function dibs_thankyou( $order_id ) {
 		$order = wc_get_order( $order_id );
 		if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
-			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
-			$request = new DIBS_Requests();
-			$request = $request->get_order_fields( $payment_id );
+			// $payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+			$payment_id = WC()->session->get( 'dibs_payment_id' );
+			// $request    = new DIBS_Requests();
+			// $request    = $request->get_order_fields( $payment_id );
+			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
+			$request = $request->request();
+
+			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
+			$request = $request->request();
 			if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
 				$order->update_status( 'pending' );
 				update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
 				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
-				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %s. Payment type - %s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
+				update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
+				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 				$order->payment_complete( $payment_id );
 				WC()->cart->empty_cart();
 			}
-			
+
 			wc_dibs_unset_sessions();
 		}
 	}
@@ -153,27 +171,27 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function maybe_delete_dibs_sessions( $order_id ) {
 		wc_dibs_unset_sessions();
 	}
-	
-	
+
+
 	public function dibs_populate_fields( $value, $key ) {
-		//Get the payment ID
+		// Get the payment ID
 		$payment_id = $_GET['paymentId'];
 
 		$checkout_fields = $this->checkout_fields;
 
 		// Check if order was processed correctly
 		if ( key_exists( 'reservedAmount', $checkout_fields->payment->summary ) ) {
-			//Set the values
-			$first_name 	= (string) $checkout_fields->payment->consumer->privatePerson->firstName;
-			$last_name  	= (string) $checkout_fields->payment->consumer->privatePerson->lastName;
-			$email      	= (string) $checkout_fields->payment->consumer->privatePerson->email;
-			$country    	= (string) dibs_get_iso_2_country( $checkout_fields->payment->consumer->shippingAddress->country );
-			$address  		= (string) $checkout_fields->payment->consumer->shippingAddress->addressLine1;
-			$city     		= (string) $checkout_fields->payment->consumer->shippingAddress->city;
-			$postcode 		= (string) $checkout_fields->payment->consumer->shippingAddress->postalCode;
-			$phone    		= (string) $checkout_fields->payment->consumer->privatePerson->phoneNumber->number;
+			// Set the values
+			$first_name = (string) $checkout_fields->payment->consumer->privatePerson->firstName;
+			$last_name  = (string) $checkout_fields->payment->consumer->privatePerson->lastName;
+			$email      = (string) $checkout_fields->payment->consumer->privatePerson->email;
+			$country    = (string) dibs_get_iso_2_country( $checkout_fields->payment->consumer->shippingAddress->country );
+			$address    = (string) $checkout_fields->payment->consumer->shippingAddress->addressLine1;
+			$city       = (string) $checkout_fields->payment->consumer->shippingAddress->city;
+			$postcode   = (string) $checkout_fields->payment->consumer->shippingAddress->postalCode;
+			$phone      = (string) $checkout_fields->payment->consumer->privatePerson->phoneNumber->number;
 
-			//Populate the fields
+			// Populate the fields
 			switch ( $key ) {
 				case 'billing_first_name':
 					return $first_name;
@@ -195,7 +213,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 					break;
 				case 'billing_postcode':
 					return $postcode;
-					break;				
+					break;
 				case 'billing_phone':
 					return $phone;
 					break;
@@ -223,7 +241,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			}
 		} else {
 			$order_id = WC()->session->get( 'dibs_incomplete_order' );
-			$order = wc_get_order( $order_id );
+			$order    = wc_get_order( $order_id );
 			$order->add_order_note( sprintf( __( 'There was a problem with Payment ID %s.', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 			$redirect_url = add_query_arg( 'dibs-payment-id', $payment_id, trailingslashit( $order->get_cancel_order_url() ) );
 			wp_redirect( $redirect_url );
@@ -232,20 +250,22 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	public function dibs_get_field_values() {
-		
-		//Get the payment ID
+
+		// Get the payment ID
 		$payment_id = $_GET['paymentId'];
 
-		$request = new DIBS_Requests();
-		$this->checkout_fields = $request->get_order_fields( $payment_id );
-		
+		// $request               = new DIBS_Requests();
+		// $this->checkout_fields = $request->get_order_fields( $payment_id );
+		$request               = new DIBS_Requests_Get_DIBS_Order( $payment_id );
+		$this->checkout_fields = $request->request();
+
 		$order_id = WC()->session->get( 'dibs_incomplete_order' );
-		
+
 		// Check payment status
-		if( key_exists( 'reservedAmount', $this->checkout_fields->payment->summary ) ) {
+		if ( key_exists( 'reservedAmount', $this->checkout_fields->payment->summary ) ) {
 			// Payment is ok, DIBS have reserved an amount
-			// Convert country code from 3 to 2 letters 
-			if( $this->checkout_fields->payment->consumer->shippingAddress->country ) {
+			// Convert country code from 3 to 2 letters
+			if ( $this->checkout_fields->payment->consumer->shippingAddress->country ) {
 				$this->checkout_fields->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $this->checkout_fields->payment->consumer->shippingAddress->country );
 			}
 
@@ -253,14 +273,14 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			WC()->session->set( 'dibs_order_data', $this->checkout_fields );
 
 			$this->prepare_cart_before_form_processing( $this->checkout_fields->payment->consumer->shippingAddress->country );
-			$this->prepare_local_order_before_form_processing( $order_id, $payment_id );
+			// $this->prepare_local_order_before_form_processing( $order_id, $payment_id );
 		} else {
 			// Payment is not ok (no reservedAmount). Possibly a card without enough funds or a canceled order from 3DSecure window.
-			// Redirect the customer to checkout page but change the param paymentId to dibs-payment-id. 
+			// Redirect the customer to checkout page but change the param paymentId to dibs-payment-id.
 			// By doing this the WC form will not be submitted, instead the Easy iframe will be displayed again.
 			$order_id = WC()->session->get( 'dibs_incomplete_order' );
-			$order = wc_get_order( $order_id );
-			if( is_object( $order ) ) {
+			$order    = wc_get_order( $order_id );
+			if ( is_object( $order ) ) {
 				$order->add_order_note( sprintf( __( 'There was a problem with Payment ID %s. Customer redirected back to checkout page to finalize purchase again.', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 			}
 			$redirect_url = add_query_arg( 'dibs-payment-id', $payment_id, trailingslashit( wc_get_checkout_url() ) );
@@ -268,17 +288,17 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			exit;
 		}
 	}
-	
+
 	// Helper function to prepare the cart session before processing the order form
 	public function prepare_cart_before_form_processing( $country = false ) {
-		if( $country ) {
+		if ( $country ) {
 			WC()->customer->set_billing_country( $country );
 			WC()->customer->set_shipping_country( $country );
 			WC()->customer->save();
 			WC()->cart->calculate_totals();
 		}
 	}
-	
+
 	// Helper function to prepare the local order before processing the order form
 	public function prepare_local_order_before_form_processing( $order_id, $payment_id ) {
 		// Update cart hash
@@ -287,7 +307,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		// Order ready for processing
 		WC()->session->set( 'order_awaiting_payment', $order_id );
-		$order = wc_get_order( $order_id );
-		$order->update_status( 'pending' );
+		// $order = wc_get_order( $order_id );
+		// $order->update_status( 'pending' );
 	}
-}// End of class DIBS_Easy_Gateway
+}//end class
