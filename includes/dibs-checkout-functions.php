@@ -62,6 +62,7 @@ function wc_dibs_show_another_gateway_button() {
  * when the checkout form is being submitted.
  */
 function wc_dibs_add_woocommerce_checkout_form_fields() {
+
 	echo '<div id="dibs-hidden" style="display:none;">';
 		do_action( 'woocommerce_checkout_billing' );
 		do_action( 'woocommerce_checkout_shipping' );

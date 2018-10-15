@@ -8,7 +8,7 @@
             
     $( document ).ready( function() {
         if ("dibs_easy" === $("input[name='payment_method']:checked").val() ) {
-
+            removeStandardOrderNote();
             addressChangedListener();
             paymentCompletedListener();
         }
@@ -311,5 +311,10 @@
 	        update_checkout();
         }
     });
+
+    // Removes the standard order note from the DOM
+    function removeStandardOrderNote() {
+        $('#dibs-hidden #order_comments_field').remove();
+    }
 
 }(jQuery));
