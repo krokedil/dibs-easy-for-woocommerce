@@ -21,7 +21,7 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 			return wp_remote_retrieve_body( $response );
 		} else {
 			$this->get_error_message( $response );
-			return 'ERROR';
+			return wp_remote_retrieve_body( $response );
 		}
 	}
 

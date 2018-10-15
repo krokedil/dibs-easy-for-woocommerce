@@ -7,21 +7,32 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Echoes DIBS Easy iframe snippet.
  */
 function wc_dibs_show_snippet() {
+	$private_key = wc_dibs_get_private_key();
+	$payment_id  = wc_dibs_get_payment_id();
+	$locale      = wc_dibs_get_locale();
 
-	$container = '<div id="dibs-complete-checkout"></div>';
-	echo $container;
+	if ( ! is_array( $payment_id ) ) {
 	?>
+	<div id="dibs-complete-checkout"></div>
 	<script type="text/javascript">
 		var checkoutOptions = {
-					checkoutKey: "<?php echo wc_dibs_get_private_key(); ?>", 	//[Required] Test or Live GUID with dashes
-					paymentId : "<?php echo wc_dibs_get_payment_id(); ?>", 		//[required] GUID without dashes
-					containerId : "dibs-complete-checkout", 					//[optional] defaultValue: dibs-checkout-content
-					language: "<?php echo wc_dibs_get_locale(); ?>",            //[optional] defaultValue: en-GB
+					checkoutKey: "<?php _e( $private_key ); ?>", 	//[Required] Test or Live GUID with dashes
+					paymentId : "<?php _e( $payment_id ); ?>", 		//[required] GUID without dashes
+					containerId : "dibs-complete-checkout", 		//[optional] defaultValue: dibs-checkout-content
+					language: "<?php _e( $locale ); ?>",            //[optional] defaultValue: en-GB
 		};
 		var dibsCheckout = new Dibs.Checkout(checkoutOptions);
 		console.log(checkoutOptions);
 	</script>
 	<?php
+	} else {
+		?>
+		<ul class="woocommerce-error" role="alert">
+			<li><?php _e( 'DIBS API Error: ' . $payment_id['error_message'] ); ?></li>
+		</ul>
+		<?php
+		// echo 'DIBS API Error: ' . $payment_id['error_message'];
+	}
 }
 
 
@@ -151,7 +162,14 @@ function wc_dibs_get_payment_id() {
 
 			return $request->paymentId;
 		} else {
-			echo( "<script>console.log('DIBS error: " . json_encode( $request ) . "');</script>" );
+			foreach ( $request->errors as $error ) {
+				$error_message = $error[0];
+			}
+			echo( "<script>console.log('DIBS error: " . $error_message . "');</script>" );
+			return array(
+				'result'        => false,
+				'error_message' => $error_message,
+			);
 		}
 	}
 }
