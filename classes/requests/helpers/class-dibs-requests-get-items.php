@@ -43,7 +43,7 @@ class DIBS_Requests_Items {
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) / $cart_item['quantity'], 2 ) * 100,
 			'taxRate'          => round( $cart_item['line_tax'] / $cart_item['line_total'], 2 ) * 10000,
-			'taxAmount'        => $cart_item['line_tax'] * 100,
+			'taxAmount'        => round( $cart_item['line_tax'], 2 ) * 100,
 			'grossTotalAmount' => ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100,
 			'netTotalAmount'   => $cart_item['line_total'] * 100,
 		);
@@ -57,7 +57,7 @@ class DIBS_Requests_Items {
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => $fee->amount * 100,
 			'taxRate'          => round( $fee->tax / $fee->amount, 2 ) * 100,
-			'taxAmount'        => $fee->tax * 100,
+			'taxAmount'        => round( $fee->tax, 2 ) * 100,
 			'grossTotalAmount' => round( $fee->amount + $fee->tax, 2 ) * 100,
 			'netTotalAmount'   => ( $fee->amount - $fee->tax ) * 100,
 		);
@@ -79,7 +79,7 @@ class DIBS_Requests_Items {
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 							'unitPrice'        => round( $method->cost + array_sum( $method->taxes ), 2 ) * 100,
 							'taxRate'          => round( array_sum( $method->taxes ) / $method->cost, 2 ) * 100,
-							'taxAmount'        => array_sum( $method->taxes ) * 100,
+							'taxAmount'        => round( array_sum( $method->taxes ), 2 ) * 100,
 							'grossTotalAmount' => round( $method->cost + array_sum( $method->taxes ), 2 ) * 100,
 							'netTotalAmount'   => $method->cost * 100,
 						);
