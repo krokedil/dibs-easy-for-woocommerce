@@ -31,7 +31,7 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 			'method'  => 'POST',
 			'body'    => json_encode( $this->request_body() ),
 		);
-		DIBS_Easy::log( 'DIBS Create Order request args: ' . json_encode( $request_args ) );
+		DIBS_Easy::log( 'DIBS Create Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 		return apply_filters( 'dibs_easy_create_order_args', $request_args );
 	}
 	public function request_body() {

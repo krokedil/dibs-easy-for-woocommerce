@@ -33,7 +33,7 @@ class DIBS_Requests_Get_DIBS_Order extends DIBS_Requests2 {
 			'headers' => $this->request_headers(),
 			'method'  => 'GET',
 		);
-		DIBS_Easy::log( 'DIBS Get Order request args: ' . json_encode( $request_args ) );
+		DIBS_Easy::log( 'DIBS Get Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 
 		return $request_args;
 	}

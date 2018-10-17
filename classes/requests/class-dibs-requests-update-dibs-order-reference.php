@@ -37,7 +37,7 @@ class DIBS_Requests_Update_DIBS_Order_Reference extends DIBS_Requests2 {
 			'method'  => 'PUT',
 			'body'    => json_encode( $this->request_body() ),
 		);
-		DIBS_Easy::log( 'DIBS Update Order request args: ' . json_encode( $request_args ) );
+		DIBS_Easy::log( 'DIBS Update Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 
 		return $request_args;
 	}
