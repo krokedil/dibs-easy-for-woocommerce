@@ -144,8 +144,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function dibs_thankyou( $order_id ) {
 		$order = wc_get_order( $order_id );
 		if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
-			// $payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
-			$payment_id = WC()->session->get( 'dibs_payment_id' );
+			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+			//$payment_id = WC()->session->get( 'dibs_payment_id' );
 			// $request    = new DIBS_Requests();
 			// $request    = $request->get_order_fields( $payment_id );
 			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
@@ -157,7 +157,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				$order->update_status( 'pending' );
 				update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
 				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
-				update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 				$order->payment_complete( $payment_id );
 				WC()->cart->empty_cart();

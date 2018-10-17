@@ -103,6 +103,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
+
+			// Save DIBS data (payment id) in WC order
+			add_action( 'woocommerce_new_order', array( $this, 'save_dibs_order_data' ) );
 		}
 
 		// Include DIBS Gateway if WC_Payment_Gateway exist
@@ -147,6 +150,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 						'dibs_payment_id'                  => $dibs_payment_id,
 						'paymentId'                        => $paymentId,
 						'checkout_initiated'               => $checkout_initiated,
+						'dibs_process_order_text'          => __( 'Please wait while we process your order...', 'dibs-easy-for-woocommerce' ),
 						'update_checkout_url'              => WC_AJAX::get_endpoint( 'update_checkout' ),
 						'customer_adress_updated_url'      => WC_AJAX::get_endpoint( 'customer_adress_updated' ),
 						'get_order_data_url'               => WC_AJAX::get_endpoint( 'get_order_data' ),
@@ -320,6 +324,22 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					self::$log = new WC_Logger();
 				}
 				self::$log->add( 'dibs_easy', $message );
+			}
+		}
+
+		/**
+		 * Saves DIBS data to WooCommerce order as meta field.
+		 *
+		 * @param string $order_id WooCommerce order id.
+		 * @param array    $data  Posted data.
+		 */
+		public function save_dibs_order_data( $order_id ) {
+			if ( method_exists( WC()->session, 'get' ) ) {
+				if( WC()->session->get( 'dibs_payment_id' ) ) {
+					$payment_id = WC()->session->get( 'dibs_payment_id' );
+					DIBS_Easy::log('Saving DIBS meta data for payment id ' . WC()->session->get( 'dibs_payment_id' ) . ' in order id ' . $order_id );
+					update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
+				}
 			}
 		}
 	}
