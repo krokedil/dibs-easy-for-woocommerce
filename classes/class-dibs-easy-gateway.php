@@ -148,8 +148,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			//$payment_id = WC()->session->get( 'dibs_payment_id' );
 			// $request    = new DIBS_Requests();
 			// $request    = $request->get_order_fields( $payment_id );
-			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
-			$request = $request->request();
+			//$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
+			//$request = $request->request();
 
 			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 			$request = $request->request();
