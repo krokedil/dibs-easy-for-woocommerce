@@ -41,11 +41,11 @@ class DIBS_Requests_Items {
 			'name'             => $product->get_title(),
 			'quantity'         => $cart_item['quantity'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) / $cart_item['quantity'], 2 ) * 100,
-			'taxRate'          => round( $cart_item['line_tax'] / $cart_item['line_total'], 2 ) * 10000,
-			'taxAmount'        => round( $cart_item['line_tax'], 2 ) * 100,
-			'grossTotalAmount' => ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100,
-			'netTotalAmount'   => $cart_item['line_total'] * 100,
+			'unitPrice'        => intval( round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) / $cart_item['quantity'], 2 ) * 100 ),
+			'taxRate'          => intval( round( $cart_item['line_tax'] / $cart_item['line_total'], 2 ) * 10000 ),
+			'taxAmount'        => intval( round( $cart_item['line_tax'], 2 ) * 100 ),
+			'grossTotalAmount' => intval( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 ),
+			'netTotalAmount'   => intval( $cart_item['line_total'] * 100 ),
 		);
 	}
 
@@ -56,10 +56,10 @@ class DIBS_Requests_Items {
 			'quantity'         => 1,
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => $fee->amount * 100,
-			'taxRate'          => round( $fee->tax / $fee->amount, 2 ) * 100,
-			'taxAmount'        => round( $fee->tax, 2 ) * 100,
-			'grossTotalAmount' => round( $fee->amount + $fee->tax, 2 ) * 100,
-			'netTotalAmount'   => ( $fee->amount - $fee->tax ) * 100,
+			'taxRate'          => intval( round( $fee->tax / $fee->amount, 2 ) * 10000 ),
+			'taxAmount'        => intval( round( $fee->tax, 2 ) * 100 ),
+			'grossTotalAmount' => intval( round( $fee->amount + $fee->tax, 2 ) * 100 ),
+			'netTotalAmount'   => intval( ( $fee->amount - $fee->tax ) * 100 ),
 		);
 	}
 
@@ -78,10 +78,10 @@ class DIBS_Requests_Items {
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 							'unitPrice'        => round( $method->cost + array_sum( $method->taxes ), 2 ) * 100,
-							'taxRate'          => round( array_sum( $method->taxes ) / $method->cost, 2 ) * 100,
-							'taxAmount'        => round( array_sum( $method->taxes ), 2 ) * 100,
-							'grossTotalAmount' => round( $method->cost + array_sum( $method->taxes ), 2 ) * 100,
-							'netTotalAmount'   => $method->cost * 100,
+							'taxRate'          => intval( round( array_sum( $method->taxes ) / $method->cost, 2 ) * 10000 ),
+							'taxAmount'        => intval( round( array_sum( $method->taxes ), 2 ) * 100 ),
+							'grossTotalAmount' => intval( round( $method->cost + array_sum( $method->taxes ), 2 ) * 100 ),
+							'netTotalAmount'   => intval( round( $method->cost, 2 ) * 100 ),
 						);
 					} else {
 						return array(
