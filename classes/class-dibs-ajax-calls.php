@@ -87,6 +87,12 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
+		// Update DIBS with Woo order number 
+		$order_id = wc_dibs_get_order_id();
+		$payment_id = WC()->session->get( 'dibs_payment_id' );
+		$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
+		$request = $request->request();
+
 		// Get customer data from Collector
 		$country   = dibs_get_iso_2_country( $_REQUEST['address']['countryCode'] );
 		$post_code = $_REQUEST['address']['postalCode'];
@@ -139,8 +145,10 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		// $response = $request->make_request( 'GET', '', $endpoint_sufix );
 		$request  = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$response = $request->request();
-		// $order_id = WC()->session->get( 'dibs_incomplete_order' );
-		// self::prepare_local_order_before_form_processing( $order_id, $payment_id );
+		
+		$order_id = WC()->session->get( 'dibs_incomplete_order' );
+		
+		
 		if ( is_wp_error( $response ) || empty( $response ) ) {
 			// Something went wrong
 			if ( is_wp_error( $response ) ) {
@@ -170,6 +178,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			WC()->session->set( 'dibs_order_data', $response );
 
 			self::prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
+			self::prepare_local_order_before_form_processing( $order_id, $payment_id );
 			wp_send_json_success( $response );
 			wp_die();
 		}
@@ -218,7 +227,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	// Helper function to prepare the local order before processing the order form
 	public static function prepare_local_order_before_form_processing( $order_id, $payment_id ) {
 		// Update cart hash
-		update_post_meta( $order_id, '_cart_hash', md5( json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
+		update_post_meta( $order_id, '_cart_hash', md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
 		// Set the paymentID as a meta value to be used later for reference
 		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		// Order ready for processing
