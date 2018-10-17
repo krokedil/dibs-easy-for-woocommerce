@@ -8,8 +8,10 @@ class DIBS_Requests_Update_DIBS_Order_Reference extends DIBS_Requests2 {
 	public $order_id;
 
 	public function __construct( $payment_id, $order_id ) {
-		$this->payment_id = $payment_id;
-		$this->order_id   = $order_id;
+		$this->payment_id 	= $payment_id;
+		$this->order_id   	= $order_id;
+		$order 				= wc_get_order( $order_id );
+		$this->order_number = $order->get_order_number();
 
 		parent::__construct();
 	}
@@ -44,7 +46,7 @@ class DIBS_Requests_Update_DIBS_Order_Reference extends DIBS_Requests2 {
 	}
 	public function request_body() {
 		return array(
-			'reference'   => $this->order_id,
+			'reference'   => $this->order_number,
 			'checkoutUrl' => wc_get_checkout_url(),
 		);
 	}
