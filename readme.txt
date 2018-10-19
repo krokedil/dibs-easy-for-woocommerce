@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 4.9.8
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.4.5
+Tested WooCommerce up to: 3.4.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,16 +56,27 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
-2018.09.04    	- version 1.4.2
+= 2018.10.19    - version 1.5.0 =
+* Tweak			- Rewrite of request classes used for communication between Woo and DIBS.
+* Tweak			- Don't create order in Woo until customer have identified herself in Easy checkout (on DIBS address-changed JS event).
+* Tweak			- Send Woo order number to DIBS via their update reference endpoint.
+* Tweak			- Improved error message response on checkout page if something is wrong with create Payment ID request.
+* Tweak			- Added checkout form processing modal with a message that the customer should wait until the process has been finalized.
+* fix			- Changes to avoid duplicate orders during checkout form processing in Woo.
+* Fix			- Added fix for double order_comment fields causing js error.
+* Fix			- Make sure all prices are sent as integers.
+* Fix			- PHP notice fix. 
+
+= 2018.09.04    - version 1.4.2 =
 * Tweak			- Added fees when sending order lines to DIBS.
 
-2018.09.04    	- version 1.4.1
+= 2018.09.04    - version 1.4.1
 * Tweak			- Plugin now requires https.
 * Tweak			- Added admin notice if https is note set in store.
 * Tweak			- Added WooCommerce account settings check. To avoid issues during finalizing of checkout form submission.
 * Fix			- Only allow payment method to be available is currency is DKK, NOK or SEK. 
 
-2018.08.15    	- version 1.4.0
+= 2018.08.15    - version 1.4.0 =
 * Feature 		- Added support for listening to DIBS shipping update event (possibility to update shipping methods/shipping depending on entered customer data in Easy iframe).
 * Feature       - Use template file for displaying DIBS Easy. Making it possible to overwrite via theme.
 * Feature 		- Added support for B2B purchases.
