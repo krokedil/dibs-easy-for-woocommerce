@@ -181,7 +181,7 @@ function wc_dibs_get_order_id() {
 		$order_id = $order->get_id();
 		// Set the order id as a session variable
 		WC()->session->set( 'dibs_incomplete_order', $order_id );
-		//$order->update_status( 'dibs-incomplete' );
+		$order->update_status( 'dibs-incomplete' );
 		$order->save();
 	} else {
 		$order_id = WC()->session->get( 'dibs_incomplete_order' );
