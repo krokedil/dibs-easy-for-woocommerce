@@ -5,9 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * DIBS_Templates class.
- * 
+ *
  * @since 1.4.0
- * 
  */
 class DIBS_Templates {
 
@@ -86,7 +85,7 @@ class DIBS_Templates {
 							reset( $available_gateways );
 
 							if ( 'dibs_easy' === key( $available_gateways ) ) {
-								$template =  $dibs_easy_checkout_template;
+								$template = $dibs_easy_checkout_template;
 							}
 						}
 					}

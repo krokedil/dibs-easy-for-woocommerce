@@ -8,7 +8,7 @@ class DIBS_Post_Checkout {
 	public $manage_orders;
 
 	public function __construct() {
-		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+		$dibs_settings       = get_option( 'woocommerce_dibs_easy_settings' );
 		$this->manage_orders = $dibs_settings['dibs_manage_orders'];
 		if ( 'yes' == $this->manage_orders ) {
 			add_action( 'woocommerce_order_status_completed', array( $this, 'dibs_order_completed' ) );
@@ -17,23 +17,22 @@ class DIBS_Post_Checkout {
 	}
 
 	public function dibs_order_completed( $order_id ) {
-		//Get the order information
-		$order = new DIBS_Get_WC_Cart();
-		$body  = $order->get_order_cart( $order_id );
-
-		//Check if dibs was used to make the order
+		// Get the order information
+		// $order = new DIBS_Get_WC_Cart();
+		// $body  = $order->get_order_cart( $order_id );
+		// Check if dibs was used to make the order
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
 
-			//Get paymentID from order meta and set endpoint
-			$payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
-
+			// Get paymentID from order meta and set endpoint
+			// $payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
 			// Add the suffix to the endpoint
-			$endpoint_suffix = 'payments/' . $payment_id . '/charges';
-
+			// $endpoint_suffix = 'payments/' . $payment_id . '/charges';
 			// Make the request
-			$request = new DIBS_Requests();
-			$request = $request->make_request( 'POST', $body, $endpoint_suffix );
+			// $request = new DIBS_Requests();
+			// $request = $request->make_request( 'POST', $body, $endpoint_suffix );
+			$request = new DIBS_Requests_Activate_Order( $order_id );
+			$request = json_decode( $request->request() );
 
 			// Error handling
 			$wc_order = wc_get_order( $order_id );
@@ -61,29 +60,28 @@ class DIBS_Post_Checkout {
 					$this->charge_failed( $wc_order );
 				}
 			} else {
-				$this->charge_failed( $order );
+				$this->charge_failed( $wc_order );
 			}
 		} // End if().
 	}
 
 	public function dibs_order_canceled( $order_id ) {
-		//Get the order information
-		$order = new DIBS_Get_WC_Cart();
-		$body  = $order->get_order_cart( $order_id );
-
-		//Check if dibs was used to make the order
+		// Get the order information
+		// $order = new DIBS_Get_WC_Cart();
+		// $body  = $order->get_order_cart( $order_id );
+		// Check if dibs was used to make the order
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
 
-			//Get paymentID from order meta and set endpoint
-			$payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
-
+			// Get paymentID from order meta and set endpoint
+			// $payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
 			// Add the suffix to the endpoint
-			$endpoint_suffix = 'payments/' . $payment_id . '/cancels';
-
+			// $endpoint_suffix = 'payments/' . $payment_id . '/cancels';
 			// Make the request
-			$request = new DIBS_Requests();
-			$request = $request->make_request( 'POST', $body, $endpoint_suffix );
+			// $request = new DIBS_Requests();
+			// $request = $request->make_request( 'POST', $body, $endpoint_suffix );
+			$request = new DIBS_Requests_Cancel_Order( $order_id );
+			$request = json_decode( $request->request() );
 
 			$wc_order = wc_get_order( $order_id );
 

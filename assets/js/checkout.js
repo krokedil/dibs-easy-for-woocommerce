@@ -8,7 +8,7 @@
             
     $( document ).ready( function() {
         if ("dibs_easy" === $("input[name='payment_method']:checked").val() ) {
-
+            removeStandardOrderNote();
             addressChangedListener();
             paymentCompletedListener();
         }
@@ -63,13 +63,15 @@
 
     function DIBS_Payment_Success(paymentId) {
         if (x === 0) {
+            $('body').addClass( 'dibs-checkout-processing' );
+            /*
             $('body').block({
-                message: "",
+                message: wc_dibs_easy.dibs_process_order_text,
                 baseZ: 99999,
                 overlayCSS:
                     {
                         background: "#fff",
-                        opacity: 0.6
+                        opacity: 0.6,
                     },
                 css: {
                     padding:        "20px",
@@ -77,10 +79,13 @@
                     textAlign:      "center",
                     color:          "#555",
                     backgroundColor:"#fff",
-                    cursor:         "wait",
+                    cursor:         "null",
                     lineHeight:		"24px",
+                    border:          "1px solid rgb(170, 170, 170)"
                 }
             });
+            */
+           $( 'body' ).append( $( '<div class="dibs-modal"><div class="dibs-modal-content">' + wc_dibs_easy.dibs_process_order_text + '</div></div>' ) );
             $.ajax(
 	            wc_dibs_easy.get_order_data_url,
 	            {
@@ -144,6 +149,7 @@
                         }
                         $('input#ship-to-different-address-checkbox').prop('checked', true);
                         $("#place_order").trigger("submit");
+                        $('form.woocommerce-checkout').addClass( 'processing' );
 					},
 					error: function (data) {
 					},
@@ -311,5 +317,10 @@
 	        update_checkout();
         }
     });
+
+    // Removes the standard order note from the DOM
+    function removeStandardOrderNote() {
+        $('#dibs-hidden #order_comments_field').remove();
+    }
 
 }(jQuery));
