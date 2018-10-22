@@ -21,7 +21,7 @@ class DIBS_Requests2 {
 		return $get_header->get();
 	}
 	public function request_body() {
-		die( 'function Collector_Checkout_Requests::request_body() must be over-ridden in a sub-class.' );
+		die( 'function DIBS_Requests::request_body() must be over-ridden in a sub-class.' );
 	}
 	public function get_error_message( $response ) {
 		if ( is_wp_error( $response ) ) {
@@ -30,10 +30,9 @@ class DIBS_Requests2 {
 
 		$response_body = wp_remote_retrieve_body( $response );
 		$errors        = new WP_Error();
-		foreach ( $response_body->errors as $key => $value ) {
-			$errors->add( 'dibs_easy', $value );
-		}
-		DIBS_Easy::log( 'DIBS Error Response: ' . json_encode( $response_body ) );
+		$errors->add( 'dibs_easy', $response_body );
+		
+		DIBS_Easy::log( 'DIBS Error Response: ' . stripslashes_deep( json_encode( $response_body ) ) );
 		return $errors;
 	}
 }
