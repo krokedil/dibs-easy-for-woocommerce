@@ -35,7 +35,7 @@ class DIBS_Requests_Items {
 			$product    = wc_get_product( $cart_item['product_id'] );
 			$product_id = $cart_item['product_id'];
 		}
-
+		
 		return array(
 			'reference'        => self::get_sku( $product, $product_id ),
 			'name'             => $product->get_title(),
@@ -44,8 +44,8 @@ class DIBS_Requests_Items {
 			'unitPrice'        => intval( round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) / $cart_item['quantity'], 2 ) * 100 ),
 			'taxRate'          => intval( round( $cart_item['line_tax'] / $cart_item['line_total'], 2 ) * 10000 ),
 			'taxAmount'        => intval( round( $cart_item['line_tax'], 2 ) * 100 ),
-			'grossTotalAmount' => intval( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 ),
-			'netTotalAmount'   => intval( $cart_item['line_total'] * 100 ),
+			'grossTotalAmount' => intval( round( $cart_item['line_total'] + $cart_item['line_tax'], 2 ) * 100 ),
+			'netTotalAmount'   => intval( round( $cart_item['line_total'], 2 )  * 100 ),
 		);
 	}
 
@@ -59,7 +59,7 @@ class DIBS_Requests_Items {
 			'taxRate'          => intval( round( $fee->tax / $fee->amount, 2 ) * 10000 ),
 			'taxAmount'        => intval( round( $fee->tax, 2 ) * 100 ),
 			'grossTotalAmount' => intval( round( $fee->amount + $fee->tax, 2 ) * 100 ),
-			'netTotalAmount'   => intval( ( $fee->amount - $fee->tax ) * 100 ),
+			'netTotalAmount'   => intval( round( $fee->amount - $fee->tax, 2 ) * 100 ),
 		);
 	}
 
