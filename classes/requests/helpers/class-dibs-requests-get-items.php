@@ -35,24 +35,24 @@ class DIBS_Requests_Items {
 			$product    = wc_get_product( $cart_item['product_id'] );
 			$product_id = $cart_item['product_id'];
 		}
-		
+
 		return array(
 			'reference'        => self::get_sku( $product, $product_id ),
-			'name'             => $product->get_title(),
+			'name'             => wc_dibs_clean_name( $product->get_title() ),
 			'quantity'         => $cart_item['quantity'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) / $cart_item['quantity'], 2 ) * 100 ),
 			'taxRate'          => intval( round( $cart_item['line_tax'] / $cart_item['line_total'], 2 ) * 10000 ),
 			'taxAmount'        => intval( round( $cart_item['line_tax'], 2 ) * 100 ),
 			'grossTotalAmount' => intval( round( $cart_item['line_total'] + $cart_item['line_tax'], 2 ) * 100 ),
-			'netTotalAmount'   => intval( round( $cart_item['line_total'], 2 )  * 100 ),
+			'netTotalAmount'   => intval( round( $cart_item['line_total'], 2 ) * 100 ),
 		);
 	}
 
 	public static function get_fees( $fee ) {
 		return array(
 			'reference'        => $fee->id,
-			'name'             => $fee->name,
+			'name'             => wc_dibs_clean_name( $fee->name ),
 			'quantity'         => 1,
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => $fee->amount * 100,
@@ -74,7 +74,7 @@ class DIBS_Requests_Items {
 					if ( $method->cost > 0 ) {
 						return array(
 							'reference'        => '1',
-							'name'             => $method->label,
+							'name'             => wc_dibs_clean_name( $method->label ),
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 							'unitPrice'        => round( $method->cost + array_sum( $method->taxes ), 2 ) * 100,
@@ -86,7 +86,7 @@ class DIBS_Requests_Items {
 					} else {
 						return array(
 							'reference'        => '1',
-							'name'             => $method->label,
+							'name'             => wc_dibs_clean_name( $method->label ),
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 							'unitPrice'        => 0,
