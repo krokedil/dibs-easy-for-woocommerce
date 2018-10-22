@@ -164,7 +164,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				// Load stylesheet for the checkout page
 				wp_register_style(
 					'dibs_style',
-					plugin_dir_url( __FILE__ ) . '/assets/css/style.css'
+					plugins_url( '/assets/css/style.css', __FILE__ ),
+					array(),
+					WC_DIBS_VERSION
 				);
 				wp_enqueue_style( 'dibs_style' );
 			}
