@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 4.9.8
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.4.6
+Tested WooCommerce up to: 3.4.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,11 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2018.10.22    - version 1.5.1 =
+* Tweak			- Add plugin version number when enqueuing style.css file.
+* Fix			- Fixed rounding issue that could cause order total mismatch between DIBS & Woo and by that generate double orders in Woo.
+* Fix			- Fix PHP notice in get_error_message function.
 
 = 2018.10.19    - version 1.5.0 =
 * Tweak			- Rewrite of request classes used for communication between Woo and DIBS.
