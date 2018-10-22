@@ -56,6 +56,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2018.10.22    - version 1.5.2 =
+* Tweak			- Update _cart_hash in Woo order in filter woocommerce_create_order (to avoid double orders).
+* Fix			- Added function to filter order line names (to remove invalid characters in DIBS system).
+
 = 2018.10.22    - version 1.5.1 =
 * Tweak			- Add plugin version number when enqueuing style.css file.
 * Fix			- Fixed rounding issue that could cause order total mismatch between DIBS & Woo and by that generate double orders in Woo.
