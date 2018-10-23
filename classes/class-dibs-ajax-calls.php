@@ -227,7 +227,10 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	// Helper function to prepare the local order before processing the order form
 	public static function prepare_local_order_before_form_processing( $order_id, $payment_id ) {
 		// Update cart hash
-		update_post_meta( $order_id, '_cart_hash', md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
+		$cart_hash	= md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total );
+		update_post_meta( $order_id, '_cart_hash', $cart_hash );
+		DIBS_Easy::log('Saving DIBS _cart_hash (in prepare_local_order_before_form_processing) ' . $cart_hash . ' in order id ' . $order_id );
+
 		// Set the paymentID as a meta value to be used later for reference
 		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		// Order ready for processing

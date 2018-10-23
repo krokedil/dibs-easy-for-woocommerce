@@ -181,12 +181,12 @@ function wc_dibs_get_order_id() {
 		$order_id = $order->get_id();
 		// Set the order id as a session variable
 		WC()->session->set( 'dibs_incomplete_order', $order_id );
-		$order->update_status( 'dibs-incomplete' );
+		// $order->update_status( 'dibs-incomplete' );
 		$order->save();
 	} else {
 		$order_id = WC()->session->get( 'dibs_incomplete_order' );
 		$order    = wc_get_order( $order_id );
-		//$order->update_status( 'dibs-incomplete' );
+		// $order->update_status( 'dibs-incomplete' );
 		$order->save();
 	}
 
@@ -199,3 +199,10 @@ function wc_dibs_get_private_key() {
 	$private_key   = $testmode ? $dibs_settings['dibs_test_checkout_key'] : $dibs_settings['dibs_checkout_key'];
 	return $private_key;
 }
+
+function wc_dibs_clean_name( $name ) {
+	$name = preg_replace( '/[^!#$%()*+,-.\/:;=?@\[\]\\\^_`{}|~a-zA-Z0-9åäöüÅÄÖÜ\s]+/i', '', $name );
+
+	return $name;
+}
+
