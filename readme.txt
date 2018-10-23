@@ -56,6 +56,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2018.10.23    - version 1.5.3 =
+* Fix			- Fixed issue where first shipping method always was set as order shipping in some stores.
+
 = 2018.10.22    - version 1.5.2 =
 * Tweak			- Update _cart_hash in Woo order in filter woocommerce_create_order (to avoid double orders).
 * Fix			- Added function to filter order line names (to remove invalid characters in DIBS system).
