@@ -35,7 +35,7 @@ class DIBS_Requests_Items {
 			$product    = wc_get_product( $cart_item['product_id'] );
 			$product_id = $cart_item['product_id'];
 		}
-
+		
 		return array(
 			'reference'        => self::get_sku( $product, $product_id ),
 			'name'             => wc_dibs_clean_name( $product->get_title() ),
