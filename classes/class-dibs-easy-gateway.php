@@ -29,10 +29,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			'refunds',
 		);
 		if ( is_checkout() ) {
-			// Check if paymentId is set, if it is then populate the fields
+			// Check if paymentId is set, check if order is ok.
 			if ( isset( $_GET['paymentId'] ) ) {
 				add_action( 'woocommerce_before_checkout_form', array( $this, 'dibs_get_field_values' ) );
-				add_filter( 'woocommerce_checkout_get_value', array( $this, 'dibs_populate_fields' ), 10, 2 );
 			}
 		}
 
