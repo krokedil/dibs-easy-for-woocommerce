@@ -56,6 +56,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2018.10.xx    - version 1.5.4 =
+* Tweak			- Improved messaging and handling of order status if order activate & cancel request was denied from DIBS.
+* Fix			- Don't try to send shipping item row if no shipping is available. Caused Easy Checkout not to be rendered.
+
 = 2018.10.23    - version 1.5.3 =
 * Fix			- Fixed issue where first shipping method always was set as order shipping in some stores.
 
