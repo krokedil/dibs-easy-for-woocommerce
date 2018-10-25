@@ -256,7 +256,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 */
 	public static function ajax_on_checkout_error() {
 
-		/*
+		
 		$order_id        = WC()->session->get( 'dibs_incomplete_order' );
 		$order           = wc_get_order( $order_id );
 		$dibs_order_data = WC()->session->get( 'dibs_order_data' );
@@ -296,8 +296,8 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		// Save order totals
 		$order->calculate_totals();
 		$order->save();
-		*/
-
+		
+		/*
 		$create_order = new DIBS_Create_Local_Order_Fallback();
 		// Create the order.
 		$order    = $create_order->create_order();
@@ -334,7 +334,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 		// Update the DIBS Order with the Order ID
 		$create_order->update_order_reference_in_dibs( $order->get_order_number() );
-
+		
 		// Add order note
 		if ( ! empty( $_POST['error_message'] ) ) { // Input var okay.
 			$error_message = 'Error message: ' . sanitize_text_field( trim( $_POST['error_message'] ) );
@@ -343,7 +343,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 		$note = sprintf( __( 'This order was made as a fallback due to an error in the checkout (%s). Please verify the order with DIBS.', 'dibs-easy-for-woocommerce' ), $error_message );
 		$order->add_order_note( $note );
-
+		*/
 		$redirect_url = wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) );
 		$redirect_url = add_query_arg(
 			array(
