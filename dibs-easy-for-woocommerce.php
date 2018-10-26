@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_VERSION', '1.5.3' );
+define( 'WC_DIBS_EASY_VERSION', '1.5.3' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -147,7 +147,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				}
 
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
-				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_VERSION );
+				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_EASY_VERSION );
 				wp_localize_script(
 					'checkout', 'wc_dibs_easy', array(
 						'dibs_payment_id'                  => $dibs_payment_id,
@@ -169,7 +169,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					'dibs_style',
 					plugins_url( '/assets/css/style.css', __FILE__ ),
 					array(),
-					WC_DIBS_VERSION
+					WC_DIBS_EASY_VERSION
 				);
 				wp_enqueue_style( 'dibs_style' );
 			}
