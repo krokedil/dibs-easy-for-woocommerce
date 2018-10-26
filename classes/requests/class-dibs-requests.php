@@ -27,8 +27,12 @@ class DIBS_Requests2 {
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
-
+		
 		$response_body = wp_remote_retrieve_body( $response );
+		if( empty( $response_body ) ) {
+			$response_body = 'Response code ' . $response['response']['code'] . '. Message: ' . $response['response']['message'];
+		}
+
 		$errors        = new WP_Error();
 		$errors->add( 'dibs_easy', $response_body );
 		

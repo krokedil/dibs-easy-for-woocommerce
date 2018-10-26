@@ -13,15 +13,15 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 
 		$response = wp_remote_request( $request_url, $this->get_request_args() );
 		if ( is_wp_error( $response ) ) {
-			$this->get_error_message( $response );
-			return 'ERROR';
+			return $this->get_error_message( $response );
+			//return 'ERROR';
 		}
 
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
 			return wp_remote_retrieve_body( $response );
 		} else {
-			$this->get_error_message( $response );
-			return wp_remote_retrieve_body( $response );
+			return json_encode( $this->get_error_message( $response ) );
+			//return wp_remote_retrieve_body( $response );
 		}
 	}
 
