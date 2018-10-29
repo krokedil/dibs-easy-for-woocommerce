@@ -10,8 +10,8 @@ class DIBS_Requests_Update_DIBS_Order_Reference extends DIBS_Requests2 {
 	public function __construct( $payment_id, $order_id ) {
 		$this->payment_id 	= $payment_id;
 		$this->order_id   	= $order_id;
-		$order 				= wc_get_order( $order_id );
-		$this->order_number = $order->get_order_number();
+		
+		$this->order_number = $this->get_order_number( $order_id );
 
 		parent::__construct();
 	}
@@ -49,5 +49,26 @@ class DIBS_Requests_Update_DIBS_Order_Reference extends DIBS_Requests2 {
 			'reference'   => $this->order_number,
 			'checkoutUrl' => wc_get_checkout_url(),
 		);
+	}
+
+	public function get_order_number( $order_id ) {
+		$order = wc_get_order( $order_id );
+		if( is_object( $order ) ) {
+			// Make sure to run Sequential Order numbers if plugin exsists
+			if ( class_exists( 'WC_Seq_Order_Number_Pro' ) ) {
+				$sequential = new WC_Seq_Order_Number_Pro;
+				$sequential->set_sequential_order_number( $order_id );
+				$reference = $sequential->get_order_number( $order->get_order_number(), $order );
+			} elseif ( class_exists( 'WC_Seq_Order_Number' ) ) {
+				$sequential = new WC_Seq_Order_Number;
+				$sequential->set_sequential_order_number( $order_id, get_post( $order_id ) );
+				$reference = $sequential->get_order_number( $order->get_order_number(), $order );
+			} else {
+				$reference = $order->get_order_number();
+			}
+		} else {
+			$reference = $order_id;
+		}
+		return $reference;
 	}
 }

@@ -55,7 +55,7 @@ class DIBS_Post_Checkout {
 					}
 				} elseif ( array_key_exists( 'code', $request ) && '1001' == $request->code ) { // Response with error code for overcharged order
 					$message = 'Payment overcharged';
-					$this->charge_failed( $wc_order, false, $message );
+					$this->charge_failed( $wc_order, false, $request->message );
 				} else {
 					$this->charge_failed( $wc_order );
 				}
@@ -82,13 +82,13 @@ class DIBS_Post_Checkout {
 			// $request = $request->make_request( 'POST', $body, $endpoint_suffix );
 			$request = new DIBS_Requests_Cancel_Order( $order_id );
 			$request = json_decode( $request->request() );
-
+			
 			$wc_order = wc_get_order( $order_id );
 
 			if ( null === $request ) {
 				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in DIBS', 'dibs-easy-for-woocommerce' ) ) );
 			} else {
-				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS', 'dibs-easy-for-woocommerce' ) ) );
+				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS: %s', 'dibs-easy-for-woocommerce' ), $request->message ) );
 			}
 		}
 	}

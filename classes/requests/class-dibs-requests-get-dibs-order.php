@@ -15,6 +15,9 @@ class DIBS_Requests_Get_DIBS_Order extends DIBS_Requests2 {
 		$request_url = $this->endpoint . 'payments/' . $this->payment_id;
 
 		$response = wp_remote_request( $request_url, $this->get_request_args() );
+
+		DIBS_Easy::log( 'DIBS GET Order response (' . $request_url . '): ' . stripslashes_deep( json_encode( $response ) ) );
+
 		if ( is_wp_error( $response ) ) {
 			$this->get_error_message( $response );
 			return 'ERROR';

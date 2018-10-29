@@ -21,7 +21,10 @@ class DIBS_Requests_Items {
 
 		// Get cart shipping
 		if ( WC()->cart->needs_shipping() ) {
-			$items[] = self::get_shipping();
+			$shipping = self::get_shipping();
+			if ( null !== $shipping ) {
+				$items[] = $shipping;
+			}
 		}
 
 		return $items;
@@ -35,7 +38,7 @@ class DIBS_Requests_Items {
 			$product    = wc_get_product( $cart_item['product_id'] );
 			$product_id = $cart_item['product_id'];
 		}
-		
+
 		return array(
 			'reference'        => self::get_sku( $product, $product_id ),
 			'name'             => wc_dibs_clean_name( $product->get_title() ),
