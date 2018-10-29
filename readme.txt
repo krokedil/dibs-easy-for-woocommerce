@@ -56,9 +56,14 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
-= 2018.10.xx    - version 1.5.4 =
+= 2018.10.29    - version 1.5.4 =
 * Tweak			- Improved messaging and handling of order status if order activate & cancel request was denied from DIBS.
+* Tweak			- Change plugin version constant name to WC_DIBS_EASY_VERSION (conflicted with D2 plugin).
+* Tweak			- Add get_order_number function and check for Sequential order numbers plugin features.
+* Fix			- Improved error message handling in communication with DIBS.
 * Fix			- Don't try to send shipping item row if no shipping is available. Caused Easy Checkout not to be rendered.
+* Fix			- Extended wc_dibs_clean_name to allow ØÆøæ. Caused Easy Checkout not to be rendered.
+* Fix			- Revert ajax_on_checkout_error function to better handle order completion when regular Woo checkout submission fails.
 
 = 2018.10.23    - version 1.5.3 =
 * Fix			- Fixed issue where first shipping method always was set as order shipping in some stores.
