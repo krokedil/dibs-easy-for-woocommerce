@@ -130,7 +130,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 			$request = $request->request();
 			if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
-				$order->update_status( 'pending' );
 				update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
 				
 				if('CARD' == $request->payment->paymentDetails->paymentType ) {
