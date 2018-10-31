@@ -42,7 +42,11 @@ class DIBS_OSF {
 				$request = $request->request();
 				if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
 					update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
-					update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
+
+					if('CARD' == $request->payment->paymentDetails->paymentType ) {
+						update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
+					}
+					
 					$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 					$order->payment_complete( $payment_id );
 					WC()->cart->empty_cart();
