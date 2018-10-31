@@ -27,8 +27,7 @@ class DIBS_Requests_Cancel_Order extends DIBS_Requests2 {
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
 			return wp_remote_retrieve_body( $response );
 		} else {
-			$this->get_error_message( $response );
-			return wp_remote_retrieve_body( $response );
+			return json_encode( $this->get_error_message( $response ) );
 			//return 'ERROR';
 		}
 	}
