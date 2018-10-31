@@ -77,9 +77,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Check if amount equals total order
 		$order = wc_get_order( $order_id );
 		if ( $amount == $order->get_total() ) {
-			// Get the order information
-			// $cart = new DIBS_Get_WC_Cart();
-			// $body = $cart->get_order_cart( $order_id );
 			$request = new DIBS_Request_Refund_Order( $order_id );
 			$request = json_decode( $request->request() );
 
@@ -177,18 +174,12 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			WC()->session->set( 'dibs_order_data', $this->checkout_fields );
 
 			$this->prepare_cart_before_form_processing( $this->checkout_fields->payment->consumer->shippingAddress->country );
-			// $this->prepare_local_order_before_form_processing( $order_id, $payment_id );
 		} else {
 			// Payment is not ok (no reservedAmount). Possibly a card without enough funds or a canceled order from 3DSecure window.
 			// Redirect the customer to checkout page but change the param paymentId to dibs-payment-id.
 			// By doing this the WC form will not be submitted, instead the Easy iframe will be displayed again.
-			/*
-			$order_id = WC()->session->get( 'dibs_incomplete_order' );
-			$order    = wc_get_order( $order_id );
-			if ( is_object( $order ) ) {
-				$order->add_order_note( sprintf( __( 'There was a problem with Payment ID %s. Customer redirected back to checkout page to finalize purchase again.', 'dibs-easy-for-woocommerce' ), $payment_id ) );
-			}
-			*/
+			// @todo - log this event in DIBS log
+
 			$redirect_url = add_query_arg( 'dibs-payment-id', $payment_id, trailingslashit( wc_get_checkout_url() ) );
 			wp_redirect( $redirect_url );
 			exit;
@@ -205,15 +196,4 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		}
 	}
 
-	// Helper function to prepare the local order before processing the order form
-	public function prepare_local_order_before_form_processing( $order_id, $payment_id ) {
-		// Update cart hash
-		update_post_meta( $order_id, '_cart_hash', md5( json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total ) );
-		// Set the paymentID as a meta value to be used later for reference
-		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
-		// Order ready for processing
-		WC()->session->set( 'order_awaiting_payment', $order_id );
-		// $order = wc_get_order( $order_id );
-		// $order->update_status( 'pending' );
-	}
 }//end class
