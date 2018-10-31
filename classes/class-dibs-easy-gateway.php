@@ -145,10 +145,10 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
 			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
 			//$payment_id = WC()->session->get( 'dibs_payment_id' );
-			// $request    = new DIBS_Requests();
+			//$request    = new DIBS_Requests();
 			// $request    = $request->get_order_fields( $payment_id );
-			//$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
-			//$request = $request->request();
+			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
+			$request = $request->request();
 
 			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 			$request = $request->request();
@@ -185,7 +185,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$request               = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$this->checkout_fields = $request->request();
 
-		$order_id = WC()->session->get( 'dibs_incomplete_order' );
+		//$order_id = WC()->session->get( 'dibs_incomplete_order' );
 
 		// Check payment status
 		if ( key_exists( 'reservedAmount', $this->checkout_fields->payment->summary ) ) {
@@ -204,11 +204,13 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			// Payment is not ok (no reservedAmount). Possibly a card without enough funds or a canceled order from 3DSecure window.
 			// Redirect the customer to checkout page but change the param paymentId to dibs-payment-id.
 			// By doing this the WC form will not be submitted, instead the Easy iframe will be displayed again.
+			/*
 			$order_id = WC()->session->get( 'dibs_incomplete_order' );
 			$order    = wc_get_order( $order_id );
 			if ( is_object( $order ) ) {
 				$order->add_order_note( sprintf( __( 'There was a problem with Payment ID %s. Customer redirected back to checkout page to finalize purchase again.', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 			}
+			*/
 			$redirect_url = add_query_arg( 'dibs-payment-id', $payment_id, trailingslashit( wc_get_checkout_url() ) );
 			wp_redirect( $redirect_url );
 			exit;

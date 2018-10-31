@@ -88,11 +88,12 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
 		// Update DIBS with Woo order number 
+		/*
 		$order_id = wc_dibs_get_order_id();
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 		$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
 		$request = $request->request();
-
+		*/
 		// Get customer data from Collector
 		$country   = dibs_get_iso_2_country( $_REQUEST['address']['countryCode'] );
 		$post_code = $_REQUEST['address']['postalCode'];
@@ -146,7 +147,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		$request  = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$response = $request->request();
 		
-		$order_id = WC()->session->get( 'dibs_incomplete_order' );
+		//$order_id = WC()->session->get( 'dibs_incomplete_order' );
 		
 		
 		if ( is_wp_error( $response ) || empty( $response ) ) {
@@ -156,8 +157,8 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			} else {
 				$message = 'Empty response from DIBS.';
 			}
-			$order = wc_get_order( $order_id );
-			$order->add_order_note( sprintf( __( 'Something went wrong when connecting to DIBS during checkout completion. Error message: %s. Please check your DIBS backoffice to control the order.', 'dibs-easy-for-woocommerce' ), $message ) );
+			//$order = wc_get_order( $order_id );
+			//$order->add_order_note( sprintf( __( 'Something went wrong when connecting to DIBS during checkout completion. Error message: %s. Please check your DIBS backoffice to control the order.', 'dibs-easy-for-woocommerce' ), $message ) );
 			wp_send_json_error( $message );
 			wp_die();
 		} else {
@@ -178,7 +179,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			WC()->session->set( 'dibs_order_data', $response );
 
 			self::prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
-			self::prepare_local_order_before_form_processing( $order_id, $payment_id );
+			//self::prepare_local_order_before_form_processing( $order_id, $payment_id );
 			wp_send_json_success( $response );
 			wp_die();
 		}
@@ -256,7 +257,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 */
 	public static function ajax_on_checkout_error() {
 
-		
+		/*
 		$order_id        = WC()->session->get( 'dibs_incomplete_order' );
 		$order           = wc_get_order( $order_id );
 		$dibs_order_data = WC()->session->get( 'dibs_order_data' );
@@ -296,8 +297,8 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		// Save order totals
 		$order->calculate_totals();
 		$order->save();
+		*/
 		
-		/*
 		$create_order = new DIBS_Create_Local_Order_Fallback();
 		// Create the order.
 		$order    = $create_order->create_order();
@@ -343,7 +344,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 		$note = sprintf( __( 'This order was made as a fallback due to an error in the checkout (%s). Please verify the order with DIBS.', 'dibs-easy-for-woocommerce' ), $error_message );
 		$order->add_order_note( $note );
-		*/
+		
 		$redirect_url = wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) );
 		$redirect_url = add_query_arg(
 			array(
