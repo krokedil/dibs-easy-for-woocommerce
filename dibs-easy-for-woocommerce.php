@@ -8,7 +8,7 @@
  * Plugin Name:             DIBS Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:                 1.5.4
+ * Version:                 1.5.5
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.5.4' );
+define( 'WC_DIBS_EASY_VERSION', '1.5.5' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -67,7 +67,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 		// Include the classes and enqueue the scripts.
 		public function init() {
-			include_once plugin_basename( 'classes/class-dibs-get-wc-cart.php' );
 			include_once plugin_basename( 'classes/class-dibs-ajax-calls.php' );
 			include_once plugin_basename( 'classes/class-dibs-post-checkout.php' );
 			include_once plugin_basename( 'classes/class-dibs-order-submission-failure.php' );
@@ -99,7 +98,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
 			$this->init_gateway();
-			include_once plugin_basename( 'classes/class-dibs-requests.php' );
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );

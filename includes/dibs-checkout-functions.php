@@ -144,14 +144,6 @@ function wc_dibs_get_payment_id() {
 	} else {
 		WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
 
-		// $order_id = wc_dibs_get_order_id();
-		// Get the datastring containing the cart data
-		// $get_cart   = new DIBS_Get_WC_Cart();
-		// $datastring = $get_cart->create_cart( $order_id );
-		// Make the request
-		// $request = new DIBS_Requests();
-		// $endpoint_sufix = 'payments/';
-		// $request = $request->make_request( 'POST', $datastring, $endpoint_sufix );
 		$request = new DIBS_Requests_Create_DIBS_Order();
 		$request = json_decode( $request->request() );
 		if ( array_key_exists( 'paymentId', $request ) ) {

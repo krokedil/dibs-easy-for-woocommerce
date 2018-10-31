@@ -14,6 +14,7 @@ class DIBS_Requests_Order {
 			'shipping'  => array(
 				'costSpecified' => true,
 			),
+			'reference' => '1',
 		);
 	}
 

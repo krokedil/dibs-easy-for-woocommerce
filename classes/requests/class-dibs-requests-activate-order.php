@@ -46,7 +46,7 @@ class DIBS_Requests_Activate_Order extends DIBS_Requests2 {
 	public function request_body() {
 		$order = wc_get_order( $this->order_id );
 		return array(
-			'amount'     => $order->get_total() * 100,
+			'amount'     => intval( round( $order->get_total(), 2)  * 100 ),
 			'orderItems' => DIBS_Requests_Get_Order_Items::get_items( $this->order_id ),
 		);
 	}

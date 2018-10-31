@@ -17,20 +17,10 @@ class DIBS_Post_Checkout {
 	}
 
 	public function dibs_order_completed( $order_id ) {
-		// Get the order information
-		// $order = new DIBS_Get_WC_Cart();
-		// $body  = $order->get_order_cart( $order_id );
 		// Check if dibs was used to make the order
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
 
-			// Get paymentID from order meta and set endpoint
-			// $payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
-			// Add the suffix to the endpoint
-			// $endpoint_suffix = 'payments/' . $payment_id . '/charges';
-			// Make the request
-			// $request = new DIBS_Requests();
-			// $request = $request->make_request( 'POST', $body, $endpoint_suffix );
 			$request = new DIBS_Requests_Activate_Order( $order_id );
 			$request = json_decode( $request->request() );
 
@@ -66,20 +56,10 @@ class DIBS_Post_Checkout {
 	}
 
 	public function dibs_order_canceled( $order_id ) {
-		// Get the order information
-		// $order = new DIBS_Get_WC_Cart();
-		// $body  = $order->get_order_cart( $order_id );
 		// Check if dibs was used to make the order
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
 
-			// Get paymentID from order meta and set endpoint
-			// $payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
-			// Add the suffix to the endpoint
-			// $endpoint_suffix = 'payments/' . $payment_id . '/cancels';
-			// Make the request
-			// $request = new DIBS_Requests();
-			// $request = $request->make_request( 'POST', $body, $endpoint_suffix );
 			$request = new DIBS_Requests_Cancel_Order( $order_id );
 			$request = json_decode( $request->request() );
 			
@@ -88,7 +68,14 @@ class DIBS_Post_Checkout {
 			if ( null === $request ) {
 				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in DIBS', 'dibs-easy-for-woocommerce' ) ) );
 			} else {
-				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS: %s', 'dibs-easy-for-woocommerce' ), $request->message ) );
+				if( array_key_exists( 'errors', $request ) ) {
+					$message = json_encode($request->errors);
+				} elseif(  array_key_exists( 'message', $request ) ) {
+					$message = json_encode($request->message);
+				} else {
+					$message = json_encode($request);
+				}
+				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 			}
 		}
 	}

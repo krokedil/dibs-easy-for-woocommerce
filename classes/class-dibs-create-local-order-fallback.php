@@ -44,26 +44,48 @@ class DIBS_Create_Local_Order_Fallback {
 		}
 	}
 
+
+	/**
+	 * Add shipping lines to the order.
+	 *
+	 * @param WC_Order $order                   Order Instance.
+	 * @param array    $chosen_shipping_methods Chosen shipping methods.
+	 * @param array    $packages                Packages.
+	 */
 	public function add_order_shipping( $order ) {
-		if ( ! defined( 'WOOCOMMERCE_CART' ) ) {
-			define( 'WOOCOMMERCE_CART', true );
-		}
-			$order_id              = $order->get_id();
-			$this_shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
-			WC()->cart->calculate_shipping();
-			// Store shipping for all packages.
-		foreach ( WC()->shipping->get_packages() as $package_key => $package ) {
-			if ( isset( $package['rates'][ $this_shipping_methods[ $package_key ] ] ) ) {
-				$item_id = $order->add_shipping( $package['rates'][ $this_shipping_methods[ $package_key ] ] );
-				if ( ! $item_id ) {
-					DIBS_Easy::log( 'Error: Unable to add shipping item in Create Local Order Fallback.' );
-					throw new Exception( __( 'Error: Unable to add shipping item. Please try again.', 'woocommerce' ) );
+		$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
+		$packages = WC()->shipping->get_packages();
+		foreach ( $packages as $package_key => $package ) {
+			if ( isset( $chosen_shipping_methods[ $package_key ], $package['rates'][ $chosen_shipping_methods[ $package_key ] ] ) ) {
+				$shipping_rate            = $package['rates'][ $chosen_shipping_methods[ $package_key ] ];
+				$item                     = new WC_Order_Item_Shipping();
+				$item->legacy_package_key = $package_key; // @deprecated For legacy actions.
+				$item->set_props(
+					array(
+						'method_title' => $shipping_rate->label,
+						'method_id'    => $shipping_rate->method_id,
+						'instance_id'  => $shipping_rate->instance_id,
+						'total'        => wc_format_decimal( $shipping_rate->cost ),
+						'taxes'        => array(
+							'total' => $shipping_rate->taxes,
+						),
+					)
+				);
+				foreach ( $shipping_rate->get_meta_data() as $key => $value ) {
+					$item->add_meta_data( $key, $value, true );
 				}
-				// Allows plugins to add order item meta to shipping.
-				do_action( 'woocommerce_add_shipping_order_item', $order_id, $item_id, $package_key );
+				/**
+				 * Action hook to adjust item before save.
+				 *
+				 * @since 3.0.0
+				 */
+				do_action( 'woocommerce_checkout_create_order_shipping_item', $item, $package_key, $package, $order );
+				// Add item to order and save.
+				$order->add_item( $item );
 			}
 		}
 	}
+	
 
 	public function add_order_tax_rows( $order ) {
 		// Store tax rows.
@@ -106,7 +128,6 @@ class DIBS_Create_Local_Order_Fallback {
 		update_post_meta( $order_id, '_billing_first_name', ( 'person' === $type ) ? $customer->firstName : $customer->contactDetails->firstName );
 		update_post_meta( $order_id, '_billing_last_name', ( 'person' === $type ) ? $customer->lastName : $customer->contactDetails->lastName );
 		update_post_meta( $order_id, '_billing_address_1', $dibs_order->payment->consumer->shippingAddress->addressLine1 );
-		update_post_meta( $order_id, '_billing_address_2', $dibs_order->payment->consumer->shippingAddress->addressLine2 );
 		update_post_meta( $order_id, '_billing_city', $dibs_order->payment->consumer->shippingAddress->city );
 		update_post_meta( $order_id, '_billing_postcode', $dibs_order->payment->consumer->shippingAddress->postalCode );
 		update_post_meta( $order_id, '_billing_country', dibs_get_iso_2_country( $dibs_order->payment->consumer->shippingAddress->country ) );
@@ -115,7 +136,6 @@ class DIBS_Create_Local_Order_Fallback {
 		update_post_meta( $order_id, '_shipping_first_name', ( 'person' === $type ) ? $customer->firstName : $customer->contactDetails->firstName );
 		update_post_meta( $order_id, '_shipping_last_name', ( 'person' === $type ) ? $customer->lastName : $customer->contactDetails->firstName );
 		update_post_meta( $order_id, '_shipping_address_1', $dibs_order->payment->consumer->shippingAddress->addressLine1 );
-		update_post_meta( $order_id, '_shipping_address_2', $dibs_order->payment->consumer->shippingAddress->addressLine2 );
 		update_post_meta( $order_id, '_shipping_city', $dibs_order->payment->consumer->shippingAddress->city );
 		update_post_meta( $order_id, '_shipping_postcode', $dibs_order->payment->consumer->shippingAddress->postalCode );
 		update_post_meta( $order_id, '_shipping_country', dibs_get_iso_2_country( $dibs_order->payment->consumer->shippingAddress->country ) );
@@ -123,6 +143,11 @@ class DIBS_Create_Local_Order_Fallback {
 		if ( 'company' === $type ) {
 			update_post_meta( $order_id, '_billing_company', $customer->name );
 			update_post_meta( $order_id, '_shipping_company', $customer->name );
+		}
+
+		if ( isset( $dibs_order->payment->consumer->shippingAddress->addressLine2 ) ) {
+			update_post_meta( $order_id, '_billing_address_2', $dibs_order->payment->consumer->shippingAddress->addressLine2 );
+			update_post_meta( $order_id, '_shipping_address_2', $dibs_order->payment->consumer->shippingAddress->addressLine2 );
 		}
 
 		update_post_meta( $order_id, '_created_via_dibs_fallback', 'yes' );
