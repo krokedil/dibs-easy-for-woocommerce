@@ -56,6 +56,12 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2018.10.31    - version 1.5.5 =
+* Tweak			- Change so WC order is created after DIBS payment reservation is created.
+* Tweak			- Code cleaning.
+* Tweak			- Return detailed error message as order note if Cancel order doesn’t work.
+* Fix			- Avoids creation of double orders in some stores.
+
 = 2018.10.29    - version 1.5.4 =
 * Tweak			- Improved messaging and handling of order status if order activate & cancel request was denied from DIBS.
 * Tweak			- Change plugin version constant name to WC_DIBS_EASY_VERSION (conflicted with D2 plugin).
