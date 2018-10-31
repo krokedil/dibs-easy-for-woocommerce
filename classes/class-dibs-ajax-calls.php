@@ -46,7 +46,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_totals();
 
-		// $order_id   = WC()->session->get( 'dibs_incomplete_order' );
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 
 		// Check that the DIBS paymentId session is still valid
@@ -85,13 +84,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
-		// Update DIBS with Woo order number 
-		/*
-		$order_id = wc_dibs_get_order_id();
-		$payment_id = WC()->session->get( 'dibs_payment_id' );
-		$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
-		$request = $request->request();
-		*/
 		// Get customer data from Collector
 		$country   = dibs_get_iso_2_country( $_REQUEST['address']['countryCode'] );
 		$post_code = $_REQUEST['address']['postalCode'];
@@ -143,9 +135,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		$request  = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$response = $request->request();
 		
-		//$order_id = WC()->session->get( 'dibs_incomplete_order' );
-		
-		
 		if ( is_wp_error( $response ) || empty( $response ) ) {
 			// Something went wrong
 			if ( is_wp_error( $response ) ) {
@@ -153,8 +142,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			} else {
 				$message = 'Empty response from DIBS.';
 			}
-			//$order = wc_get_order( $order_id );
-			//$order->add_order_note( sprintf( __( 'Something went wrong when connecting to DIBS during checkout completion. Error message: %s. Please check your DIBS backoffice to control the order.', 'dibs-easy-for-woocommerce' ), $message ) );
+			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
 			wp_die();
 		} else {
@@ -175,7 +163,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			WC()->session->set( 'dibs_order_data', $response );
 
 			self::prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
-			//self::prepare_local_order_before_form_processing( $order_id, $payment_id );
 			wp_send_json_success( $response );
 			wp_die();
 		}
@@ -252,48 +239,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 * Handles WooCommerce checkout error (if checkout submission fails), after DIBS order has already been created.
 	 */
 	public static function ajax_on_checkout_error() {
-
-		/*
-		$order_id        = WC()->session->get( 'dibs_incomplete_order' );
-		$order           = wc_get_order( $order_id );
-		$dibs_order_data = WC()->session->get( 'dibs_order_data' );
-
-		// Error message
-		if ( ! empty( $_POST['error_message'] ) ) { // Input var okay.
-			$error_message = 'Error message: ' . sanitize_text_field( trim( $_POST['error_message'] ) );
-		} else {
-			$error_message = 'Error message could not be retreived';
-		}
-
-		// Add customer data to order
-		self::helper_add_customer_data_to_local_order( $order, $dibs_order_data );
-
-		// Add payment method to order
-		self::add_order_payment_method( $order );
-
-		// Add order items
-		self::helper_add_items_to_local_order( $order_id );
-
-		// Add order fees.
-		self::helper_add_order_fees( $order );
-
-		// Add order shipping.
-		self::helper_add_order_shipping( $order );
-
-		// Add order taxes.
-		self::helper_add_order_tax_rows( $order );
-
-		// Store coupons.
-		self::helper_add_order_coupons( $order );
-
-		// Add an order note to inform merchant that the order has been finalized via a fallback routine.
-		$note = sprintf( __( 'This order was made as a fallback due to an error in the checkout (%s). Please verify the order with DIBS.', 'dibs-easy-for-woocommerce' ), $error_message );
-			$order->add_order_note( $note );
-
-		// Save order totals
-		$order->calculate_totals();
-		$order->save();
-		*/
 		
 		$create_order = new DIBS_Create_Local_Order_Fallback();
 		// Create the order.
