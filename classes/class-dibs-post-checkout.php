@@ -68,7 +68,14 @@ class DIBS_Post_Checkout {
 			if ( null === $request ) {
 				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in DIBS', 'dibs-easy-for-woocommerce' ) ) );
 			} else {
-				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS: %s', 'dibs-easy-for-woocommerce' ), $request->message ) );
+				if( array_key_exists( 'errors', $request ) ) {
+					$message = json_encode($request->errors);
+				} elseif(  array_key_exists( 'message', $request ) ) {
+					$message = json_encode($request->message);
+				} else {
+					$message = json_encode($request);
+				}
+				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 			}
 		}
 	}

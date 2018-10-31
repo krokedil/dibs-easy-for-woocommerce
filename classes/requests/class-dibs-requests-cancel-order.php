@@ -27,8 +27,8 @@ class DIBS_Requests_Cancel_Order extends DIBS_Requests2 {
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
 			return wp_remote_retrieve_body( $response );
 		} else {
-			return json_encode( $this->get_error_message( $response ) );
-			//return 'ERROR';
+			$this->get_error_message( $response );
+			return wp_remote_retrieve_body( $response );
 		}
 	}
 
@@ -45,7 +45,7 @@ class DIBS_Requests_Cancel_Order extends DIBS_Requests2 {
 	public function request_body() {
 		$order = wc_get_order( $this->order_id );
 		return array(
-			'amount'     => $order->get_total() * 100,
+			'amount'     => intval( round( $order->get_total(), 2)  * 100 ),
 			'orderItems' => DIBS_Requests_Get_Order_Items::get_items( $this->order_id ),
 		);
 	}
