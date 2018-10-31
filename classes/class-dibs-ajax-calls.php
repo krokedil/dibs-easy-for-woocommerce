@@ -119,8 +119,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	}
 
 
-
-
 	public static function get_order_data() {
 
 		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
@@ -208,26 +206,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 	}
 
-	// Helper function to prepare the local order before processing the order form
-	public static function prepare_local_order_before_form_processing( $order_id, $payment_id ) {
-		// Update cart hash
-		$cart_hash	= md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total );
-		update_post_meta( $order_id, '_cart_hash', $cart_hash );
-		DIBS_Easy::log('Saving DIBS _cart_hash (in prepare_local_order_before_form_processing) ' . $cart_hash . ' in order id ' . $order_id );
-
-		// Set the paymentID as a meta value to be used later for reference
-		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
-		// Order ready for processing
-		WC()->session->set( 'order_awaiting_payment', $order_id );
-		$order = wc_get_order( $order_id );
-		$order->update_status( 'pending' );
-	}
-
-	// Function called if a ajax call does not receive the expected result
-	public static function fail_ajax_call( $order, $message = 'Failed to create an order with DIBS' ) {
-		$order->add_order_note( sprintf( __( '%s', 'dibs-easy-for-woocommerce' ), $message ) );
-		return $message;
-	}
 
 	public static function dibs_add_customer_order_note() {
 		WC()->session->set( 'dibs_customer_order_note', $_POST['order_note'] );
@@ -297,172 +275,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		wp_send_json_success( array( 'redirect' => $redirect_url ) );
 		wp_die();
 	}
-
-	/**
-	 * Adds order items to ongoing order.
-	 *
-	 * @param  integer $local_order_id WooCommerce order ID.
-	 * @throws Exception PHP Exception.
-	 */
-	public static function helper_add_items_to_local_order( $order_id ) {
-		$local_order = wc_get_order( $order_id );
-		// Remove items as to stop the item lines from being duplicated.
-		$local_order->remove_order_items();
-		foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) { // Store the line items to the new/resumed order.
-			$item_id = $local_order->add_product(
-				$values['data'], $values['quantity'], array(
-					'variation' => $values['variation'],
-					'totals'    => array(
-						'subtotal'     => $values['line_subtotal'],
-						'subtotal_tax' => $values['line_subtotal_tax'],
-						'total'        => $values['line_total'],
-						'tax'          => $values['line_tax'],
-						'tax_data'     => $values['line_tax_data'],
-					),
-				)
-			);
-			if ( ! $item_id ) {
-				throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 525 ) );
-			}
-			do_action( 'woocommerce_add_order_item_meta', $item_id, $values, $cart_item_key ); // Allow plugins to add order item meta.
-		}
-	}
-
-	/**
-	 * Adds order fees to local order.
-	 *
-	 * @since  1.1.0
-	 * @access public
-	 *
-	 * @param  object $order Local WC order.
-	 *
-	 * @throws Exception PHP Exception.
-	 */
-	public static function helper_add_order_fees( $order ) {
-		$order_id = $order->get_id();
-		foreach ( WC()->cart->get_fees() as $fee_key => $fee ) {
-			$item_id = $order->add_fee( $fee );
-			if ( ! $item_id ) {
-				throw new Exception( __( 'Error: Unable to create order. Please try again.', 'woocommerce' ) );
-			}
-			// Allow plugins to add order item meta to fees.
-			do_action( 'woocommerce_add_order_fee_meta', $order_id, $item_id, $fee, $fee_key );
-		}
-	}
-
-	/**
-	 * Adds order shipping to local order.
-	 *
-	 * @since  1.1.0
-	 * @access public
-	 *
-	 * @param  object $order Local WC order.
-	 *
-	 * @throws Exception PHP Exception.
-	 * @internal param object $klarna_order Klarna order.
-	 */
-	public static function helper_add_order_shipping( $order ) {
-		if ( ! defined( 'WOOCOMMERCE_CART' ) ) {
-			define( 'WOOCOMMERCE_CART', true );
-		}
-		$order_id              = $order->get_id();
-		$this_shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
-		WC()->cart->calculate_shipping();
-		// Store shipping for all packages.
-		foreach ( WC()->shipping->get_packages() as $package_key => $package ) {
-			if ( isset( $package['rates'][ $this_shipping_methods[ $package_key ] ] ) ) {
-				$item_id = $order->add_shipping( $package['rates'][ $this_shipping_methods[ $package_key ] ] );
-				if ( ! $item_id ) {
-					throw new Exception( __( 'Error: Unable to add shipping item. Please try again.', 'woocommerce' ) );
-				}
-				// Allows plugins to add order item meta to shipping.
-				do_action( 'woocommerce_add_shipping_order_item', $order_id, $item_id, $package_key );
-			}
-		}
-	}
-
-	/**
-	 * Adds order tax rows to local order.
-	 *
-	 * @since  1.1.0
-	 * @param  object $order Local WC order.
-	 *
-	 * @throws Exception PHP Exception.
-	 */
-	public static function helper_add_order_tax_rows( $order ) {
-		// Store tax rows.
-		foreach ( array_keys( WC()->cart->taxes + WC()->cart->shipping_taxes ) as $tax_rate_id ) {
-			if ( $tax_rate_id && ! $order->add_tax( $tax_rate_id, WC()->cart->get_tax_amount( $tax_rate_id ), WC()->cart->get_shipping_tax_amount( $tax_rate_id ) ) && apply_filters( 'woocommerce_cart_remove_taxes_zero_rate_id', 'zero-rated' ) !== $tax_rate_id ) {
-				throw new Exception( sprintf( __( 'Error %d: Unable to create order. Please try again.', 'woocommerce' ), 405 ) );
-			}
-		}
-	}
-
-	/**
-	 * Adds order coupons to local order.
-	 *
-	 * @since  1.1.0
-	 * @access public
-	 *
-	 * @param  object $order Local WC order.
-	 *
-	 * @throws Exception PHP Exception.
-	 */
-	public static function helper_add_order_coupons( $order ) {
-		foreach ( WC()->cart->get_coupons() as $code => $coupon ) {
-			if ( ! $order->add_coupon( $code, WC()->cart->get_coupon_discount_amount( $code ) ) ) {
-				throw new Exception( __( 'Error: Unable to create order. Please try again.', 'woocommerce' ) );
-			}
-		}
-	}
-
-	/**
-	 * Adds payment method to local order.
-	 *
-	 * @since  1.1.0
-	 * @access public
-	 */
-	public static function add_order_payment_method( $order ) {
-		$available_gateways = WC()->payment_gateways->payment_gateways();
-		$payment_method     = $available_gateways['dibs_easy'];
-		$order->set_payment_method( $payment_method );
-	}
-
-	/**
-	 * Adds customer data to WooCommerce order.
-	 *
-	 * @since  1.1.0
-	 * @param integer $order_id         WooCommerce order ID.
-	 * @param array   $dibs_order_data  Customer data returned by DIBS.
-	 */
-	public static function helper_add_customer_data_to_local_order( $order, $dibs_order_data ) {
-		$order_id   = $order->get_id();
-		$first_name = (string) $dibs_order_data->payment->consumer->privatePerson->firstName;
-		$last_name  = (string) $dibs_order_data->payment->consumer->privatePerson->lastName;
-		$email      = (string) $dibs_order_data->payment->consumer->privatePerson->email;
-		$country    = (string) $dibs_order_data->payment->consumer->shippingAddress->country;
-		$address    = (string) $dibs_order_data->payment->consumer->shippingAddress->addressLine1;
-		$city       = (string) $dibs_order_data->payment->consumer->shippingAddress->city;
-		$postcode   = (string) $dibs_order_data->payment->consumer->shippingAddress->postalCode;
-		$phone      = (string) $dibs_order_data->payment->consumer->privatePerson->phoneNumber->number;
-
-		update_post_meta( $order_id, '_billing_first_name', $first_name );
-		update_post_meta( $order_id, '_billing_last_name', $last_name );
-		update_post_meta( $order_id, '_billing_address_1', $address );
-		update_post_meta( $order_id, '_billing_city', $city );
-		update_post_meta( $order_id, '_billing_postcode', $postcode );
-		update_post_meta( $order_id, '_billing_country', $country );
-		update_post_meta( $order_id, '_billing_phone', $phone );
-		update_post_meta( $order_id, '_billing_email', $email );
-
-		update_post_meta( $order_id, '_shipping_first_name', $first_name );
-		update_post_meta( $order_id, '_shipping_last_name', $last_name );
-		update_post_meta( $order_id, '_shipping_address_1', $address );
-		update_post_meta( $order_id, '_shipping_city', $city );
-		update_post_meta( $order_id, '_shipping_postcode', $postcode );
-		update_post_meta( $order_id, '_shipping_country', $country );
-	}
-
 
 }
 
