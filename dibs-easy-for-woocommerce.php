@@ -67,7 +67,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 		// Include the classes and enqueue the scripts.
 		public function init() {
-			include_once plugin_basename( 'classes/class-dibs-get-wc-cart.php' );
 			include_once plugin_basename( 'classes/class-dibs-ajax-calls.php' );
 			include_once plugin_basename( 'classes/class-dibs-post-checkout.php' );
 			include_once plugin_basename( 'classes/class-dibs-order-submission-failure.php' );
@@ -99,7 +98,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
 			$this->init_gateway();
-			include_once plugin_basename( 'classes/class-dibs-requests.php' );
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
