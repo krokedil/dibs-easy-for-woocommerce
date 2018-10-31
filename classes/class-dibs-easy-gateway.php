@@ -109,24 +109,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$order->add_order_note( sprintf( __( 'DIBS Easy currently only supports full refunds, for a partial refund use the DIBS backend system', 'dibs-easy-for-woocommerce' ) ) );
 			return false;
 		}
-
-		/*
-		// Get paymentID from order meta and set endpoint
-		$charge_id = get_post_meta( $order_id, '_dibs_charge_id' )[0];
-
-		// Add the sufix to the endpoint
-		$endpoint_sufix = 'charges/' . $charge_id . '/refunds';
-
-		// Make the request
-		$request = new DIBS_Requests();
-		$request = $request->make_request( 'POST', $body, $endpoint_sufix );
-		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
-			$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
-			return true;
-		} else {
-			return false;
-		}
-		*/
 	}
 	public function dibs_add_body_class( $class ) {
 		if ( is_checkout() ) {
@@ -144,9 +126,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 		if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
 			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
-			//$payment_id = WC()->session->get( 'dibs_payment_id' );
-			//$request    = new DIBS_Requests();
-			// $request    = $request->get_order_fields( $payment_id );
+			
 			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
 			$request = $request->request();
 
@@ -180,8 +160,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Get the payment ID
 		$payment_id = $_GET['paymentId'];
 
-		// $request               = new DIBS_Requests();
-		// $this->checkout_fields = $request->get_order_fields( $payment_id );
 		$request               = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$this->checkout_fields = $request->request();
 

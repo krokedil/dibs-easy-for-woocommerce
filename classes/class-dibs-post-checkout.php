@@ -24,13 +24,6 @@ class DIBS_Post_Checkout {
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
 
-			// Get paymentID from order meta and set endpoint
-			// $payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
-			// Add the suffix to the endpoint
-			// $endpoint_suffix = 'payments/' . $payment_id . '/charges';
-			// Make the request
-			// $request = new DIBS_Requests();
-			// $request = $request->make_request( 'POST', $body, $endpoint_suffix );
 			$request = new DIBS_Requests_Activate_Order( $order_id );
 			$request = json_decode( $request->request() );
 
@@ -73,13 +66,6 @@ class DIBS_Post_Checkout {
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
 
-			// Get paymentID from order meta and set endpoint
-			// $payment_id = get_post_meta( $order_id, '_dibs_payment_id' )[0];
-			// Add the suffix to the endpoint
-			// $endpoint_suffix = 'payments/' . $payment_id . '/cancels';
-			// Make the request
-			// $request = new DIBS_Requests();
-			// $request = $request->make_request( 'POST', $body, $endpoint_suffix );
 			$request = new DIBS_Requests_Cancel_Order( $order_id );
 			$request = json_decode( $request->request() );
 			

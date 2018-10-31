@@ -57,8 +57,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			wp_die();
 		}
 
-		// $request = new DIBS_Requests();
-		// $response = $request->update_dibs_order( $order_id, $payment_id );
 		$request  = new DIBS_Requests_Update_DIBS_Order( $payment_id );
 		$response = $request->request();
 		if ( is_wp_error( $response ) ) {
@@ -142,8 +140,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		$endpoint_sufix = 'payments/' . $payment_id;
 
 		// Make the request
-		// $request  = new DIBS_Requests();
-		// $response = $request->make_request( 'GET', '', $endpoint_sufix );
 		$request  = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$response = $request->request();
 		
