@@ -67,7 +67,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 		// Include the classes and enqueue the scripts.
 		public function init() {
-			include_once plugin_basename( 'classes/class-dibs-get-wc-cart.php' );
 			include_once plugin_basename( 'classes/class-dibs-ajax-calls.php' );
 			include_once plugin_basename( 'classes/class-dibs-post-checkout.php' );
 			include_once plugin_basename( 'classes/class-dibs-order-submission-failure.php' );
