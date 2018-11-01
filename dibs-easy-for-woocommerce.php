@@ -74,6 +74,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
 			include_once plugin_basename( 'classes/class-dibs-templates.php' );
 			include_once plugin_basename( 'classes/class-dibs-create-local-order-fallback.php' );
+			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 
 			include_once plugin_basename( 'includes/dibs-country-converter-functions.php' );
 			include_once plugin_basename( 'includes/dibs-checkout-functions.php' );
@@ -86,6 +87,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-cancel-order.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-refund-order.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-dibs-order.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-requests-charge-subscription.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-bulk-charge-id.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription.php' );
 
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-checkout.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-header.php' );

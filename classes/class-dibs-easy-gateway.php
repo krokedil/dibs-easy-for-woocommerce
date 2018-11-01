@@ -27,6 +27,15 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$this->supports = array(
 			'products',
 			'refunds',
+			'subscriptions',
+			'subscription_cancellation', 
+			'subscription_suspension', 
+			'subscription_reactivation',
+			'subscription_amount_changes',
+			'subscription_date_changes',
+			'subscription_payment_method_change_admin',
+			'subscription_payment_method_change',
+			'multiple_subscriptions',
 		);
 		if ( is_checkout() ) {
 			// Check if paymentId is set, check if order is ok.
@@ -67,7 +76,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	}
 	public function process_payment( $order_id, $retry = false ) {
 		$order = wc_get_order( $order_id );
-
+		
 		return array(
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
@@ -129,7 +138,10 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 			$request = $request->request();
-			if ( key_exists( 'reservedAmount', $request->payment->summary ) ) {
+			if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'id', $request->payment->subscription ) ) {
+
+				do_action( 'dibs_easy_process_payment', $order_id, $request );
+
 				update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
 				
 				if('CARD' == $request->payment->paymentDetails->paymentType ) {
@@ -162,7 +174,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		//$order_id = WC()->session->get( 'dibs_incomplete_order' );
 
 		// Check payment status
-		if ( key_exists( 'reservedAmount', $this->checkout_fields->payment->summary ) ) {
+		if ( key_exists( 'reservedAmount', $this->checkout_fields->payment->summary )  || key_exists( 'id', $this->checkout_fields->payment->subscription ) ) {
 			// Payment is ok, DIBS have reserved an amount
 			// Convert country code from 3 to 2 letters
 			if ( $this->checkout_fields->payment->consumer->shippingAddress->country ) {
