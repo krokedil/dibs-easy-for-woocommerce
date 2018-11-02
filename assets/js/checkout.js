@@ -42,12 +42,26 @@
                                 $( '#shipping_country' ).val( response.responseJSON.data.country );
                                 $( 'input#billing_postcode' ).val( response.responseJSON.data.postCode );
                                 $( 'input#shipping_postcode' ).val( response.responseJSON.data.postCode )
-                                $(document.body).trigger('update_checkout'); 
+                            }
+                            
+                            if( 'yes' == response.responseJSON.data.mustLogin ) {
+                                // Customer might need to login. Inform customer and freeze DIBS checkout.
+                                var $form = $( 'form.checkout' );
+                                $form.prepend( '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-updateOrderReview"><ul class="woocommerce-error" role="alert"><li>' + response.responseJSON.data.mustLoginMessage + '</li></ul></div>' );
+                                dibsCheckout.freezeCheckout();
+                                
+                                var etop = $('form.checkout').offset().top;
+                                $('html, body').animate({
+                                    scrollTop: etop
+                                  }, 1000);
+                            } else {
+                                // All good release checkout and trigger update_checkout event
+                                dibsCheckout.thawCheckout();
+                                $(document.body).trigger('update_checkout');
                             }
                         }
                     }
                 );
-                dibsCheckout.thawCheckout();
             }
         });
     }
