@@ -81,12 +81,26 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 		*/
 		$update_needed = 'yes';
+		$must_login 		= 'no';
+		$must_login_message	= apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. Please log in.', 'woocommerce' ) );
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
 		// Get customer data from Collector
 		$country   = dibs_get_iso_2_country( $_REQUEST['address']['countryCode'] );
 		$post_code = $_REQUEST['address']['postalCode'];
+
+		// If customer is not logged in and this is a subscription purchase - get customer email from DIBS.
+		if( ! is_user_logged_in() && ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) ) {
+			$payment_id = WC()->session->get( 'dibs_payment_id' );
+			$request  	= new DIBS_Requests_Get_DIBS_Order( $payment_id );
+			$response 	= $request->request();
+			$email 		= $response->payment->consumer->privatePerson->email;
+			if( email_exists( $email ) ) {
+				// Email exist in a user account, customer must login.
+				$must_login = 'yes';
+			}
+		}
 
 		if ( $country ) {
 
@@ -110,9 +124,11 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 		}
 		$response = array(
-			'updateNeeded' => $update_needed,
-			'country'      => $country,
-			'postCode'     => $post_code,
+			'updateNeeded' 		=> $update_needed,
+			'country'      		=> $country,
+			'postCode'     		=> $post_code,
+			'mustLogin'     	=> $must_login,
+			'mustLoginMessage'	=> $must_login_message
 		);
 		wp_send_json_success( $response );
 		wp_die();
