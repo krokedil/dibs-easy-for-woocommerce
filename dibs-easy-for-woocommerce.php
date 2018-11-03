@@ -109,8 +109,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			// Save DIBS data (payment id) in WC order
 			add_action( 'woocommerce_new_order', array( $this, 'save_dibs_order_data' ) );
 
-			// Save DIBS data (payment id) in WC order
-			add_filter( 'woocommerce_create_order', array( $this, 'save_cart_hash_to_order' ), 10, 2 );
 		}
 
 		// Include DIBS Gateway if WC_Payment_Gateway exist
@@ -348,28 +346,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 				}
 			}
-		}
-
-		/**
-		 * Saves DIBS data to WooCommerce order as meta field.
-		 *
-		 * @param string $order_id WooCommerce order id.
-		 * @param array    $data  Posted data.
-		 */
-		public function save_cart_hash_to_order( $order_id = null, $data ) {
-			if ( method_exists( WC()->session, 'get' ) ) {
-				
-				if( WC()->session->get( 'order_awaiting_payment' ) ) {
-					$order_id 	= absint( WC()->session->get( 'order_awaiting_payment' ) );
-					$cart_hash	= md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total );
-					DIBS_Easy::log('Saving DIBS _cart_hash (in save_cart_hash_to_order) ' . $cart_hash . ' in order id ' . $order_id );
-					// Update cart hash
-					$order = wc_get_order( $order_id ) ;
-					$order->set_cart_hash( $cart_hash );
-					$order->save();
-				}
-			}
-			return null;
 		}
 
 		
