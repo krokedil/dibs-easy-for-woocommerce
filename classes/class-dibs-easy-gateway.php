@@ -74,9 +74,16 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function init_form_fields() {
 		$this->form_fields = include DIR_NAME . '/includes/dibs-settings.php';
 	}
+
 	public function process_payment( $order_id, $retry = false ) {
 		$order = wc_get_order( $order_id );
-		
+
+		// Save payment type, card details & run $order->payment_complete() if all looks good.
+		if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+			$this->process_dibs_payment_in_order( $order_id );
+		}
+
+		// Redirect customer to thank you page
 		return array(
 			'result'   => 'success',
 			'redirect' => $this->get_return_url( $order ),
@@ -130,30 +137,38 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	}
 	public function dibs_thankyou( $order_id ) {
 		$order = wc_get_order( $order_id );
-		if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
-			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+
+		// Save payment type, card details & run $order->payment_complete() if all looks good.
+		if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+			$this->process_dibs_payment_in_order( $order_id );
+			$order->add_order_note( __( 'Order finalized in thankyou page.', 'dibs-easy-for-woocommerce' ) );
+			WC()->cart->empty_cart();
+		}
+
+		wc_dibs_unset_sessions();
+	}
+
+	public function process_dibs_payment_in_order( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+		$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
+		$request = $request->request();
+
+		$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
+		$request = $request->request();
+		if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'id', $request->payment->subscription ) ) {
+
+			do_action( 'dibs_easy_process_payment', $order_id, $request );
+
+			update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
 			
-			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
-			$request = $request->request();
-
-			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
-			$request = $request->request();
-			if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'id', $request->payment->subscription ) ) {
-
-				do_action( 'dibs_easy_process_payment', $order_id, $request );
-
-				update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
-				
-				if('CARD' == $request->payment->paymentDetails->paymentType ) {
-					update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
-				}
-				
-				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
-				$order->payment_complete( $payment_id );
-				WC()->cart->empty_cart();
+			if('CARD' == $request->payment->paymentDetails->paymentType ) {
+				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
 			}
-
-			wc_dibs_unset_sessions();
+			
+			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
+			$order->payment_complete( $payment_id );
 		}
 	}
 
