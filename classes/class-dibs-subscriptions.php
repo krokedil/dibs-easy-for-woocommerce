@@ -71,10 +71,7 @@ class DIBS_Subscriptions {
 				$order->set_customer_id( apply_filters( 'woocommerce_checkout_customer_id', $customer_id ) );
 				$order->save();
 			}
-			error_log( $order_id . ' wcs_order_contains_subscription' );
-
 		} else {
-			error_log( $order_id . ' DDOES NOT wcs_order_contains_subscription' );
 		}
 	}
 
@@ -191,8 +188,7 @@ class DIBS_Subscriptions {
 
 		$recurring_orders = new DIBS_Request_Get_Subscription_Bulk_Id( $subscription_bulk_id );
 		$recurring_orders = $recurring_orders->request();
-		error_log( '$recurring_orders in check_subscription_status ' . var_export( $recurring_order_status, true ) );
-		$payment_id = null;
+		$payment_id       = null;
 		foreach ( $recurring_orders->page as $recurring_order ) {
 			if ( $recurring_order->subscriptionId == $recurring_token ) {
 				$payment_id = $recurring_order->paymentId;
