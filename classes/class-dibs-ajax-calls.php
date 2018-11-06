@@ -91,7 +91,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		$post_code = $_REQUEST['address']['postalCode'];
 
 		// If customer is not logged in and this is a subscription purchase - get customer email from DIBS.
-		if ( ! is_user_logged_in() && ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) ) {
+		if ( ! is_user_logged_in() && ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
 			$request    = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 			$response   = $request->request();
