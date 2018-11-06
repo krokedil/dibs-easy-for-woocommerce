@@ -253,9 +253,9 @@ class DIBS_Api_Callbacks {
 		$available_gateways = WC()->payment_gateways->payment_gateways();
 		$payment_method     = $available_gateways['dibs_easy'];
 		$order->set_payment_method( $payment_method );
-		$order->add_order_note( __( 'Something went wrong during WooCommerce checkout process. Order created ads a fallback via DIBS Easy API callback. Order product information not available. Please verify the order in DIBS system.', 'dibs-easy-for-woocommerce' ) );
+		$order->add_order_note( __( 'Something went wrong during WooCommerce checkout process. This order was created as a fallback via DIBS Easy API callback. Order product information not available. Please see the order in DIBS system for more information about products and order amount.', 'dibs-easy-for-woocommerce' ) );
 
-		// Make sure to run Sequential Order numbers if plugin exsists
+		// Make sure to run Sequential Order numbers if plugin exsists.
 		if ( class_exists( 'WC_Seq_Order_Number_Pro' ) ) {
 			$sequential = new WC_Seq_Order_Number_Pro();
 			$sequential->set_sequential_order_number( $order_id );
@@ -271,7 +271,7 @@ class DIBS_Api_Callbacks {
 			update_post_meta( $order_id, 'dibs_customer_card', $dibs_order->payment->paymentDetails->cardDetails->maskedPan );
 		}
 
-		$order->add_order_note( sprintf( __( 'Purchase via %s', 'collector-checkout-for-woocommerce' ), wc_collector_get_payment_method_name( $collector_order->data->purchase->paymentMethod ) ) );
+		$order->add_order_note( sprintf( __( 'Purchase via %s', 'dibs-easy-for-woocommerce' ), $dibs_order->payment->paymentDetails->paymentType ) );
 
 		$order->save();
 
