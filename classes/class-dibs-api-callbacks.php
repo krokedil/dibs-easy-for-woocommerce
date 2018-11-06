@@ -40,8 +40,8 @@ class DIBS_Api_Callbacks {
 	}
 
 	public function payment_created_scheduler() {
-		if( isset( $_GET['dibs-payment-created-callback'] ) ) {
-			
+		if ( isset( $_GET['dibs-payment-created-callback'] ) ) {
+
 			$post_body = file_get_contents( 'php://input' );
 			$data      = json_decode( $post_body, true );
 
@@ -67,9 +67,9 @@ class DIBS_Api_Callbacks {
 
 			DIBS_Easy::log( 'No coresponding order ID was found for Payment ID ' . $data['data']['paymentId'] );
 			// Backup order creation
-			if( !empty( $data['data']['paymentId'] ) ) {
+			if ( ! empty( $data['data']['paymentId'] ) ) {
 				// @todo Check webhook API issue before releasing this feature
-				//$this->backup_order_creation( $data['data']['paymentId'] );
+				$this->backup_order_creation( $data['data']['paymentId'] );
 			}
 		} // End if().
 	}
@@ -181,14 +181,14 @@ class DIBS_Api_Callbacks {
 	 * @throws Exception WC_Data_Exception.
 	 */
 	public function backup_order_creation( $payment_id ) {
-		$request 	= new DIBS_Requests_Get_DIBS_Order( $payment_id );
+		$request    = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$dibs_order = $request->request();
-		
+
 		// Process order.
 		$order = $this->process_order( $dibs_order );
-		
+
 		// Send order number to DIBS
-		if( is_object( $order ) ) {
+		if ( is_object( $order ) ) {
 			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order->get_id() );
 			$request = $request->request();
 		}
@@ -203,7 +203,6 @@ class DIBS_Api_Callbacks {
 	 */
 	private function process_order( $dibs_order ) {
 
-
 		if ( array_key_exists( 'name', $dibs_order->payment->consumer->company ) ) {
 			$type     = 'company';
 			$customer = $dibs_order->payment->consumer->company;
@@ -211,18 +210,17 @@ class DIBS_Api_Callbacks {
 			$type     = 'person';
 			$customer = $dibs_order->payment->consumer->privatePerson;
 		}
-		
-		
-		$order = wc_create_order( array('status'=>'failed'));
-		
-		if( is_wp_error( $order ) ) {
-			DIBS_Easy::log('Backup order creation. Error - could not create order. ' . var_export( $order->get_error_message(), true ) );
+
+		$order = wc_create_order( array( 'status' => 'failed' ) );
+
+		if ( is_wp_error( $order ) ) {
+			DIBS_Easy::log( 'Backup order creation. Error - could not create order. ' . var_export( $order->get_error_message(), true ) );
 		} else {
-			DIBS_Easy::log('Backup order creation - order ID - ' . $order->get_id() . ' - created.' );
+			DIBS_Easy::log( 'Backup order creation - order ID - ' . $order->get_id() . ' - created.' );
 		}
-		
+
 		$order_id = $order->get_id();
-		
+
 		update_post_meta( $order_id, '_billing_first_name', ( 'person' === $type ) ? $customer->firstName : $customer->contactDetails->firstName );
 		update_post_meta( $order_id, '_billing_last_name', ( 'person' === $type ) ? $customer->lastName : $customer->contactDetails->lastName );
 		update_post_meta( $order_id, '_billing_address_1', $dibs_order->payment->consumer->shippingAddress->addressLine1 );
@@ -248,36 +246,35 @@ class DIBS_Api_Callbacks {
 			update_post_meta( $order_id, '_shipping_address_2', $dibs_order->payment->consumer->shippingAddress->addressLine2 );
 		}
 
-		
 		$order->set_created_via( 'dibs_easy_api' );
 		$order->set_currency( sanitize_text_field( $dibs_order->payment->orderDetails->currency ) );
 		$order->set_prices_include_tax( 'yes' === get_option( 'woocommerce_prices_include_tax' ) );
-		
+
 		$available_gateways = WC()->payment_gateways->payment_gateways();
-        $payment_method = $available_gateways[ 'dibs_easy' ];
+		$payment_method     = $available_gateways['dibs_easy'];
 		$order->set_payment_method( $payment_method );
 		$order->add_order_note( __( 'Something went wrong during WooCommerce checkout process. Order created ads a fallback via DIBS Easy API callback. Order product information not available. Please verify the order in DIBS system.', 'dibs-easy-for-woocommerce' ) );
-		
+
 		// Make sure to run Sequential Order numbers if plugin exsists
 		if ( class_exists( 'WC_Seq_Order_Number_Pro' ) ) {
-			$sequential = new WC_Seq_Order_Number_Pro;
+			$sequential = new WC_Seq_Order_Number_Pro();
 			$sequential->set_sequential_order_number( $order_id );
 		} elseif ( class_exists( 'WC_Seq_Order_Number' ) ) {
-			$sequential = new WC_Seq_Order_Number;
+			$sequential = new WC_Seq_Order_Number();
 			$sequential->set_sequential_order_number( $order_id, get_post( $order_id ) );
 		}
-		
+
 		update_post_meta( $order_id, 'dibs_payment_type', $dibs_order->payment->paymentDetails->paymentType );
 		update_post_meta( $order_id, '_transaction_id', $dibs_order->payment->paymentId );
-				
-		if('CARD' == $dibs_order->payment->paymentDetails->paymentType ) {
+
+		if ( 'CARD' == $dibs_order->payment->paymentDetails->paymentType ) {
 			update_post_meta( $order_id, 'dibs_customer_card', $dibs_order->payment->paymentDetails->cardDetails->maskedPan );
 		}
 
-		$order->add_order_note( sprintf( __( 'Purchase via %s', 'collector-checkout-for-woocommerce' ), wc_collector_get_payment_method_name($collector_order->data->purchase->paymentMethod ) ) );
+		$order->add_order_note( sprintf( __( 'Purchase via %s', 'collector-checkout-for-woocommerce' ), wc_collector_get_payment_method_name( $collector_order->data->purchase->paymentMethod ) ) );
 
 		$order->save();
-		
+
 		return $order;
 	}
 
