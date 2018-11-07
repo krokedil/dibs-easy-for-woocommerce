@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 4.9.8
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.4.7
+Tested WooCommerce up to: 3.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,16 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2018.11.07    - version 1.6.0 =
+* Feature		- Add support for recurring payments via WooCommerce Subscriptions.
+* Feature		- Create a WC order (with order status Failed) in webhook/API callback from DIBS if DIBS paymentId doesn't exist in any Woo order.
+* Tweak			- Catch and print error message better if update cart fails.
+* Tweak			- Inform existing customer that he/she must login if guest checkout isn't enabled in Woo.
+* Tweak			- Code cleaning.
+* Tweak			- Finalize order in Woo earlier (in process_payment instead of woocommerce_thankyou).
+* Tweak			- Updated POT-file & Swedish translation.
+* Fix			- Don't display DIBS Easy template if cart doesn’t needs_payment().
 
 = 2018.10.31    - version 1.5.5 =
 * Tweak			- Change so WC order is created after DIBS payment reservation is created.

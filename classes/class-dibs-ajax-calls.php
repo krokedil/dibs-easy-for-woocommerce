@@ -80,13 +80,27 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			exit( 'Nonce can not be verified.' );
 		}
 		*/
-		$update_needed = 'yes';
+		$update_needed      = 'yes';
+		$must_login         = 'no';
+		$must_login_message = apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. Please log in.', 'woocommerce' ) );
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
 		// Get customer data from Collector
 		$country   = dibs_get_iso_2_country( $_REQUEST['address']['countryCode'] );
 		$post_code = $_REQUEST['address']['postalCode'];
+
+		// If customer is not logged in and this is a subscription purchase - get customer email from DIBS.
+		if ( ! is_user_logged_in() && ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) {
+			$payment_id = WC()->session->get( 'dibs_payment_id' );
+			$request    = new DIBS_Requests_Get_DIBS_Order( $payment_id );
+			$response   = $request->request();
+			$email      = $response->payment->consumer->privatePerson->email;
+			if ( email_exists( $email ) ) {
+				// Email exist in a user account, customer must login.
+				$must_login = 'yes';
+			}
+		}
 
 		if ( $country ) {
 
@@ -110,9 +124,11 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 		}
 		$response = array(
-			'updateNeeded' => $update_needed,
-			'country'      => $country,
-			'postCode'     => $post_code,
+			'updateNeeded'     => $update_needed,
+			'country'          => $country,
+			'postCode'         => $post_code,
+			'mustLogin'        => $must_login,
+			'mustLoginMessage' => $must_login_message,
 		);
 		wp_send_json_success( $response );
 		wp_die();
@@ -132,7 +148,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		// Make the request
 		$request  = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$response = $request->request();
-		
+
 		if ( is_wp_error( $response ) || empty( $response ) ) {
 			// Something went wrong
 			if ( is_wp_error( $response ) ) {
@@ -217,7 +233,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 * Handles WooCommerce checkout error (if checkout submission fails), after DIBS order has already been created.
 	 */
 	public static function ajax_on_checkout_error() {
-		
+
 		$create_order = new DIBS_Create_Local_Order_Fallback();
 		// Create the order.
 		$order    = $create_order->create_order();
@@ -254,7 +270,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 		// Update the DIBS Order with the Order ID
 		$create_order->update_order_reference_in_dibs( $order->get_order_number() );
-		
+
 		// Add order note
 		if ( ! empty( $_POST['error_message'] ) ) { // Input var okay.
 			$error_message = 'Error message: ' . sanitize_text_field( trim( $_POST['error_message'] ) );
@@ -263,7 +279,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 		$note = sprintf( __( 'This order was made as a fallback due to an error in the checkout (%s). Please verify the order with DIBS.', 'dibs-easy-for-woocommerce' ), $error_message );
 		$order->add_order_note( $note );
-		
+
 		$redirect_url = wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) );
 		$redirect_url = add_query_arg(
 			array(

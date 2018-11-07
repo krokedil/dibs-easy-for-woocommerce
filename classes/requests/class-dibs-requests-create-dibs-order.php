@@ -32,13 +32,14 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 			'body'    => json_encode( $this->request_body() ),
 		);
 		DIBS_Easy::log( 'DIBS Create Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
-		return apply_filters( 'dibs_easy_create_order_args', $request_args );
+		return $request_args;
 	}
 	public function request_body() {
-		return array(
+		$request_args = array(
 			'order'         => DIBS_Requests_Order::get_order(),
 			'checkout'      => DIBS_Requests_Checkout::get_checkout(),
 			'notifications' => DIBS_Requests_Notifications::get_notifications(),
 		);
+		return apply_filters( 'dibs_easy_create_order_args', $request_args );
 	}
 }

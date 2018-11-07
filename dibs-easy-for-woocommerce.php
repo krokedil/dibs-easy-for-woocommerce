@@ -8,7 +8,7 @@
  * Plugin Name:             DIBS Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:                 1.5.5
+ * Version:                 1.6.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -16,7 +16,7 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    3.0.0
- * WC tested up to:         3.4.7
+ * WC tested up to:         3.5.1
  * Copyright:               © 2017-2018 Krokedil Produktionsbyrå AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.5.5' );
+define( 'WC_DIBS_EASY_VERSION', '1.6.0' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -74,6 +74,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
 			include_once plugin_basename( 'classes/class-dibs-templates.php' );
 			include_once plugin_basename( 'classes/class-dibs-create-local-order-fallback.php' );
+			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 
 			include_once plugin_basename( 'includes/dibs-country-converter-functions.php' );
 			include_once plugin_basename( 'includes/dibs-checkout-functions.php' );
@@ -86,6 +87,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-cancel-order.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-refund-order.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-dibs-order.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-requests-charge-subscription.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-bulk-charge-id.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription.php' );
 
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-checkout.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-header.php' );
@@ -105,8 +109,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			// Save DIBS data (payment id) in WC order
 			add_action( 'woocommerce_new_order', array( $this, 'save_dibs_order_data' ) );
 
-			// Save DIBS data (payment id) in WC order
-			add_filter( 'woocommerce_create_order', array( $this, 'save_cart_hash_to_order' ), 10, 2 );
 		}
 
 		// Include DIBS Gateway if WC_Payment_Gateway exist
@@ -334,41 +336,19 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * Saves DIBS data to WooCommerce order as meta field.
 		 *
 		 * @param string $order_id WooCommerce order id.
-		 * @param array    $data  Posted data.
+		 * @param array  $data  Posted data.
 		 */
 		public function save_dibs_order_data( $order_id ) {
 			if ( method_exists( WC()->session, 'get' ) ) {
-				if( WC()->session->get( 'dibs_payment_id' ) ) {
+				if ( WC()->session->get( 'dibs_payment_id' ) ) {
 					$payment_id = WC()->session->get( 'dibs_payment_id' );
-					DIBS_Easy::log('Saving DIBS meta data for payment id ' . WC()->session->get( 'dibs_payment_id' ) . ' in order id ' . $order_id );
+					DIBS_Easy::log( 'Saving DIBS meta data for payment id ' . WC()->session->get( 'dibs_payment_id' ) . ' in order id ' . $order_id );
 					update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 				}
 			}
 		}
 
-		/**
-		 * Saves DIBS data to WooCommerce order as meta field.
-		 *
-		 * @param string $order_id WooCommerce order id.
-		 * @param array    $data  Posted data.
-		 */
-		public function save_cart_hash_to_order( $order_id = null, $data ) {
-			if ( method_exists( WC()->session, 'get' ) ) {
-				
-				if( WC()->session->get( 'order_awaiting_payment' ) ) {
-					$order_id 	= absint( WC()->session->get( 'order_awaiting_payment' ) );
-					$cart_hash	= md5( wp_json_encode( wc_clean( WC()->cart->get_cart_for_session() ) ) . WC()->cart->total );
-					DIBS_Easy::log('Saving DIBS _cart_hash (in save_cart_hash_to_order) ' . $cart_hash . ' in order id ' . $order_id );
-					// Update cart hash
-					$order = wc_get_order( $order_id ) ;
-					$order->set_cart_hash( $cart_hash );
-					$order->save();
-				}
-			}
-			return null;
-		}
 
-		
 	}
 	$dibs_easy = new DIBS_Easy();
 }// End if().
