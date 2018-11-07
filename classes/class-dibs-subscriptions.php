@@ -23,56 +23,11 @@ class DIBS_Subscriptions {
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'show_recurring_token' ) );
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_dibs_recurring_token_update' ), 45, 2 );
 
-		// Maybe create user
-		// @todo - keep working on this or remove it when we get the new order submission flow.
-		// add_action( 'dibs_prepare_local_order_before_form_processing', array( $this, 'maybe_assign_or_create_user' ) );
-		// add_action( 'dibs_easy_process_payment', array( $this, 'maybe_assign_or_create_user' ) );
-		// Charge renewal payment
+		// Charge renewal payment.
 		add_action( 'woocommerce_scheduled_subscription_payment_dibs_easy', array( $this, 'trigger_scheduled_payment' ), 10, 2 );
 
 		add_action( 'wc_dibs_easy_check_subscription_status', array( $this, 'check_subscription_status' ), 10, 2 );
 
-	}
-
-
-
-	/**
-	 * Assigns an order to a user. Needed for Subscriptions.
-	 *
-	 * @param array $order_id The WooCommerce order ID.
-	 * @return array
-	 */
-	public function maybe_assign_or_create_user( $order_id ) {
-		// Check if we have a subscription product. If yes set check if we need to assign or create customer to order.
-		if ( class_exists( 'WC_Subscriptions' ) && wcs_order_contains_subscription( $order_id ) ) {
-			$order = wc_get_order( $order_id );
-
-			if ( email_exists( $order->get_billing_email() ) ) {
-				// Email exist in WP
-				if ( ! $order->get_customer_id() ) {
-					// No customer was assigned to the order - let's set it now.
-					$user        = get_user_by( 'email', $order->get_billing_email() );
-					$customer_id = $user->ID;
-					$order->set_customer_id( apply_filters( 'woocommerce_checkout_customer_id', $customer_id ) );
-					$order->save();
-				}
-			} else {
-				// Email does not exist - lets create the customer
-				// Generate username - force create user name even if get_option( 'woocommerce_registration_generate_username' ) is set to no.
-				$username = sanitize_user( current( explode( '@', $order->get_billing_email() ) ), true );
-				// Ensure username is unique.
-				$append     = 1;
-				$o_username = $username;
-				while ( username_exists( $username ) ) {
-					$username = $o_username . $append;
-					$append++;
-				}
-				$customer_id = wc_create_new_customer( $order->get_billing_email(), $username, wp_generate_password() );
-				$order->set_customer_id( apply_filters( 'woocommerce_checkout_customer_id', $customer_id ) );
-				$order->save();
-			}
-		} else {
-		}
 	}
 
 	/**
