@@ -63,6 +63,7 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * Tweak			- Inform existing customer that he/she must login if guest checkout isn't enabled in Woo.
 * Tweak			- Code cleaning.
 * Tweak			- Finalize order in Woo earlier (in process_payment instead of woocommerce_thankyou).
+* Tweak			- Updated POT-file & Swedish translation.
 * Fix			- Don't display DIBS Easy template if cart doesn’t needs_payment().
 
 = 2018.10.31    - version 1.5.5 =
