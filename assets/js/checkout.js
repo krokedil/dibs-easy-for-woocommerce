@@ -36,7 +36,7 @@
                         },
                         complete: function (response) {
                             console.log('customer_adress_updated ');
-                            console.table( response.responseJSON.data);
+                            console.log( response.responseJSON.data );
                             if( 'yes' == response.responseJSON.data.updateNeeded ) {
                                 $( '#billing_country' ).val( response.responseJSON.data.country );
                                 $( '#shipping_country' ).val( response.responseJSON.data.country );
