@@ -56,6 +56,11 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2018.11.21    - version 1.6.1 =
+* Fix			- Bug fix in logic for user must login message (after customer_adress_updated event has been triggered).
+* Fix			- Extended wc_dibs_clean_name to allow èÈéÉ. Caused Easy Checkout not to be rendered.
+* Fix			- Change console.table to console.log in js-file (potential conflict with IE).
+
 = 2018.11.07    - version 1.6.0 =
 * Feature		- Add support for recurring payments via WooCommerce Subscriptions.
 * Feature		- Create a WC order (with order status Failed) in webhook/API callback from DIBS if DIBS paymentId doesn't exist in any Woo order.
