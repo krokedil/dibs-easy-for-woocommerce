@@ -193,7 +193,7 @@ function wc_dibs_get_private_key() {
 }
 
 function wc_dibs_clean_name( $name ) {
-	$name = preg_replace( '/[^!#$%()*+,-.\/:;=?@\[\]\\\^_`{}|~a-zA-Z0-9åäöüÅÄÖÜØÆøæ\s]+/i', '', $name );
+	$name = preg_replace( '/[^!#$%()*+,-.\/:;=?@\[\]\\\^_`{}|~a-zA-Z0-9åäöüÅÄÖÜØÆøæéÉèÈ\s]+/i', '', $name );
 
 	return $name;
 }
