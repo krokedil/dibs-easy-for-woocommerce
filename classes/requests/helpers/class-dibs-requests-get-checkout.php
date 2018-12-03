@@ -14,7 +14,7 @@ class DIBS_Requests_Checkout {
 			),
 		);
 		if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
-			$checkout['ShippingCountries'] = self::get_shipping_countries();
+			$checkout['shipping']['countries'] = self::get_shipping_countries();
 		}
 		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
 		$allowed_customer_types = ( isset( $dibs_settings['allowed_customer_types'] ) ) ? $dibs_settings['allowed_customer_types'] : 'B2C';
@@ -43,19 +43,14 @@ class DIBS_Requests_Checkout {
 	public static function get_shipping_countries() {
 		$converted_countries      = array();
 		$supported_dibs_countries = dibs_get_supported_countries();
-		// Add shipping countries
+		// Add shipping countries.
 		$wc_countries = new WC_Countries();
 		$countries    = array_keys( $wc_countries->get_allowed_countries() );
-		$i            = 0;
+
 		foreach ( $countries as $country ) {
 			$converted_country = dibs_get_iso_3_country( $country );
 			if ( in_array( $converted_country, $supported_dibs_countries ) ) {
 				$converted_countries[] = array( 'countryCode' => $converted_country );
-				$i++;
-				// DIBS only allow 5 countries
-				if ( $i == 5 ) {
-					break;
-				}
 			}
 		}
 		return $converted_countries;

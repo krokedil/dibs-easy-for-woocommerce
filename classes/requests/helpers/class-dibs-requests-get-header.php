@@ -5,9 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class DIBS_Requests_Header extends DIBS_Requests2 {
 	public function get() {
 		$formatted_request_header = array(
-			'Content-type'  => 'application/json',
-			'Accept'        => 'application/json',
-			'Authorization' => $this->key,
+			'Content-type'        => 'application/json',
+			'Accept'              => 'application/json',
+			'Authorization'       => $this->key,
+			'commercePlatformTag' => 'WooEasyKrokedil',
 		);
 		return $formatted_request_header;
 	}

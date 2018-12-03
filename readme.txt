@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 4.9.8
+Tested up to: 5.0
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.5.1
+Tested WooCommerce up to: 3.5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,13 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2018.12.03    - version 1.6.2 =
+* Tweak			- Added WooEasyKrokedil as commercePlatformTag in header sent to DIBS.
+* Tweak			- Plugin WordPress 5.0 compatible.
+* Fix			- Updated how available shipping countries are sent to DIBS to reflect DIBS API changes.
+* Fix			- Do not limit number of shipping countries to 5. No limits in DIBS API anymore. 
+* Fix			- Improved handling of allowed characters in product names sent to DIBS. Also added unicode handler.
 
 = 2018.11.21    - version 1.6.1 =
 * Fix			- Bug fix in logic for user must login message (after customer_adress_updated event has been triggered).
