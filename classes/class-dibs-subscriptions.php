@@ -96,7 +96,7 @@ class DIBS_Subscriptions {
 		$create_order_response = new DIBS_Request_Charge_Subscription( $order_id );
 		$create_order_response = $create_order_response->request();
 
-		if ( ! empty( $create_order_response->bulkId ) ) {
+		if ( ! is_wp_error( $create_order_response ) && ! empty( $create_order_response->bulkId ) ) {
 			// We got a bulkId in response. Save it in the renewal order and make a new request to DIBS to get the status and ID of the transaction
 			update_post_meta( $order_id, '_dibs_recurring_bulk_id', $create_order_response->bulkId );
 
@@ -125,6 +125,8 @@ class DIBS_Subscriptions {
 				WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $renewal_order );
 				$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with DIBS. Error code: %1$s. Message: %2$s', 'dibs-easy-for-woocommerce' ), 'fel', $create_order_response->bulkId ) );
 			}
+		} else {
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with DIBS. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $create_order_response ) ) );
 		}
 
 		// error_log('$create_order_response ' . var_export($create_order_response, true));
