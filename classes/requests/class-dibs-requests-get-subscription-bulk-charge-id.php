@@ -12,22 +12,22 @@ class DIBS_Request_Get_Subscription_Bulk_Id extends DIBS_Requests2 {
 	}
 
 	public function request() {
-		$request_url = $this->endpoint . 'subscriptions/charges/' . $this->bulk_id;
+		$request_url  = $this->endpoint . 'subscriptions/charges/' . $this->bulk_id;
 		$request_args = $this->get_request_args();
-		DIBS_Easy::log( 'DIBS Get Subscription Bulk Charge ID args ('. $request_url . '): ' . stripslashes_deep( json_encode( $request_args ) ) );
+		DIBS_Easy::log( 'DIBS Get Subscription Bulk Charge ID args (' . $request_url . '): ' . stripslashes_deep( json_encode( $request_args ) ) );
 
 		$response = wp_remote_request( $request_url, $this->get_request_args() );
 		if ( is_wp_error( $response ) ) {
-			$this->get_error_message( $response );
-			return 'ERROR';
+			return $this->get_error_message( $response );
+			// return 'ERROR';
 		}
 
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
 			DIBS_Easy::log( 'DIBS  Get Subscription Bulk Charge ID response: ' . stripslashes_deep( json_encode( $response ) ) );
 			return json_decode( wp_remote_retrieve_body( $response ) );
 		} else {
-			$this->get_error_message( $response );
-			return 'ERROR';
+			return $this->get_error_message( $response );
+			// return 'ERROR';
 		}
 	}
 

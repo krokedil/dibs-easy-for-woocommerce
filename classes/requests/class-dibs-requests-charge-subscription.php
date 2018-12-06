@@ -10,7 +10,7 @@ class DIBS_Request_Charge_Subscription extends DIBS_Requests2 {
 	public function __construct( $order_id ) {
 		parent::__construct();
 
-		$this->order_id 		= $order_id;
+		$this->order_id = $order_id;
 	}
 
 	public function request() {
@@ -19,16 +19,16 @@ class DIBS_Request_Charge_Subscription extends DIBS_Requests2 {
 
 		$response = wp_remote_request( $request_url, $this->get_request_args() );
 		if ( is_wp_error( $response ) ) {
-			$this->get_error_message( $response );
-			return 'ERROR';
+			return $this->get_error_message( $response );
+			// return 'ERROR';
 		}
 
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
 			DIBS_Easy::log( 'DIBS Charge subscription request response: ' . stripslashes_deep( json_encode( $response ) ) );
 			return json_decode( wp_remote_retrieve_body( $response ) );
 		} else {
-			$this->get_error_message( $response );
-			return 'ERROR';
+			return $this->get_error_message( $response );
+			// return 'ERROR';
 		}
 	}
 
@@ -55,14 +55,14 @@ class DIBS_Request_Charge_Subscription extends DIBS_Requests2 {
 			update_post_meta( $this->order_id, '_dibs_recurring_token', $recurring_token );
 		}
 
-		$body = array();
-		$body['externalBulkChargeId'] = $order->get_order_number();
-		$body['subscriptions'][0]['subscriptionId'] = $recurring_token;
-		$body['subscriptions'][0]['order']['items'] = DIBS_Requests_Get_Order_Items::get_items( $this->order_id );
+		$body                                        = array();
+		$body['externalBulkChargeId']                = $order->get_order_number();
+		$body['subscriptions'][0]['subscriptionId']  = $recurring_token;
+		$body['subscriptions'][0]['order']['items']  = DIBS_Requests_Get_Order_Items::get_items( $this->order_id );
 		$body['subscriptions'][0]['order']['amount'] = $order->get_total() * 100;
-		$body['subscriptions'][0]['order']['currency'] = $order->get_currency();
+		$body['subscriptions'][0]['order']['currency']  = $order->get_currency();
 		$body['subscriptions'][0]['order']['reference'] = $order->get_order_number();
-		
+
 		return $body;
 	}
 }
