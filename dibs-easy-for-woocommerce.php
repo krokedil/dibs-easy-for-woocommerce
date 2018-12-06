@@ -67,6 +67,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 		// Include the classes and enqueue the scripts.
 		public function init() {
+
+			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
+				return;
+			}
+
 			include_once plugin_basename( 'classes/class-dibs-ajax-calls.php' );
 			include_once plugin_basename( 'classes/class-dibs-post-checkout.php' );
 			include_once plugin_basename( 'classes/class-dibs-order-submission-failure.php' );
