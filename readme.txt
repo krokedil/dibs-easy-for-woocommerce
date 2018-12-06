@@ -56,6 +56,12 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2018.12.06    - version 1.6.3 =
+* Tweak			- Improved error messaging in failed subscription renewal process.
+* Fix			- Send cart item unit price excl vat to DIBS.
+* Fix			- Fix netTotalAmount on fees sent to DIBS.
+* Fix			- Don’t run plugin if WooCommerce isn’t activated.
+
 = 2018.12.03    - version 1.6.2 =
 * Tweak			- Added WooEasyKrokedil as commercePlatformTag in header sent to DIBS.
 * Tweak			- Plugin WordPress 5.0 compatible.
