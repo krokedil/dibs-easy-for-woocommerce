@@ -17,22 +17,23 @@ class DIBS_Requests_Update_DIBS_Order extends DIBS_Requests2 {
 		$response = wp_remote_request( $request_url, $this->get_request_args() );
 		if ( is_wp_error( $response ) ) {
 			return $this->get_error_message( $response );
-			//return 'ERROR';
+			// return 'ERROR';
 		}
 
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
 			return 'SUCCESS';
 		} else {
 			return $this->get_error_message( $response );
-			//return 'ERROR';
+			// return 'ERROR';
 		}
 	}
 
 	public function get_request_args() {
 		$request_args = array(
-			'headers' => $this->request_headers(),
-			'method'  => 'PUT',
-			'body'    => json_encode( $this->request_body() ),
+			'headers'    => $this->request_headers(),
+			'user-agent' => $this->request_user_agent(),
+			'method'     => 'PUT',
+			'body'       => json_encode( $this->request_body() ),
 		);
 		DIBS_Easy::log( 'DIBS Update Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 

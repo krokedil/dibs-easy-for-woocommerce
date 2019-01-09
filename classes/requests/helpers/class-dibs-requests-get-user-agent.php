@@ -1,0 +1,10 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+class DIBS_Requests_User_Agent extends DIBS_Requests2 {
+	public function get() {
+		$user_agent = apply_filters( 'dibs_easy_http_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . idn_to_ascii( get_bloginfo( 'url' ) ) ) . ' - Easy plugin version:' . WC_DIBS_EASY_VERSION . ' - PHP Version: ' . phpversion() . ' - Krokedil';
+		return $user_agent;
+	}
+}

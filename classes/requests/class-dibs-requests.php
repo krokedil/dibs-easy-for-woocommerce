@@ -20,6 +20,10 @@ class DIBS_Requests2 {
 		$get_header = new DIBS_Requests_Header();
 		return $get_header->get();
 	}
+	public function request_user_agent() {
+		$get_user_agent = new DIBS_Requests_User_Agent();
+		return $get_user_agent->get();
+	}
 	public function request_body() {
 		die( 'function DIBS_Requests::request_body() must be over-ridden in a sub-class.' );
 	}
