@@ -15,7 +15,7 @@ class DIBS_Requests_Activate_Order extends DIBS_Requests2 {
 
 	public function request() {
 
-		$order       = wc_get_order( $order_id );
+		$order       = wc_get_order( $this->order_id );
 		$payment_id  = $order->get_transaction_id();
 		$request_url = $this->endpoint . 'payments/' . $payment_id . '/charges';
 		$response    = wp_remote_request( $request_url, $this->get_request_args() );
