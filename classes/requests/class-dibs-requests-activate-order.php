@@ -14,11 +14,12 @@ class DIBS_Requests_Activate_Order extends DIBS_Requests2 {
 	}
 
 	public function request() {
-		$payment_id = get_post_meta( $this->order_id, '_dibs_payment_id', true );
 
+		$order       = wc_get_order( $order_id );
+		$payment_id  = $order->get_transaction_id();
 		$request_url = $this->endpoint . 'payments/' . $payment_id . '/charges';
+		$response    = wp_remote_request( $request_url, $this->get_request_args() );
 
-		$response = wp_remote_request( $request_url, $this->get_request_args() );
 		if ( is_wp_error( $response ) ) {
 			$this->get_error_message( $response );
 			return 'ERROR';
