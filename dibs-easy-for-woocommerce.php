@@ -8,7 +8,7 @@
  * Plugin Name:             DIBS Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:                 1.6.3
+ * Version:                 1.6.4
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -16,8 +16,8 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    3.0.0
- * WC tested up to:         3.5.2
- * Copyright:               © 2017-2018 Krokedil Produktionsbyrå AB.
+ * WC tested up to:         3.5.4
+ * Copyright:               © 2017-2019 Krokedil Produktionsbyrå AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.6.3' );
+define( 'WC_DIBS_EASY_VERSION', '1.6.4' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -98,6 +98,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-checkout.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-header.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-user-agent.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-items.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order-items.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order.php' );
@@ -154,7 +155,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
 				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_EASY_VERSION );
 				wp_localize_script(
-					'checkout', 'wc_dibs_easy', array(
+					'checkout',
+					'wc_dibs_easy',
+					array(
 						'dibs_payment_id'                  => $dibs_payment_id,
 						'paymentId'                        => $paymentId,
 						'checkout_initiated'               => $checkout_initiated,
@@ -212,7 +215,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				$show_in_admin_status_list = false;
 			} */
 			register_post_status(
-				'wc-dibs-incomplete', array(
+				'wc-dibs-incomplete',
+				array(
 					'label'                     => 'DIBS incomplete',
 					'public'                    => false,
 					'exclude_from_search'       => false,
@@ -347,7 +351,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( method_exists( WC()->session, 'get' ) ) {
 				if ( WC()->session->get( 'dibs_payment_id' ) ) {
 					$payment_id = WC()->session->get( 'dibs_payment_id' );
-					DIBS_Easy::log( 'Saving DIBS meta data for payment id ' . WC()->session->get( 'dibs_payment_id' ) . ' in order id ' . $order_id );
+					self::log( 'Saving DIBS meta data for payment id ' . WC()->session->get( 'dibs_payment_id' ) . ' in order id ' . $order_id );
 					update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 				}
 			}

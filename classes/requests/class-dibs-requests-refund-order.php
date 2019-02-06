@@ -35,9 +35,10 @@ class DIBS_Request_Refund_Order extends DIBS_Requests2 {
 
 	public function get_request_args() {
 		$request_args = array(
-			'headers' => $this->request_headers(),
-			'method'  => 'POST',
-			'body'    => json_encode( $this->request_body() ),
+			'headers'    => $this->request_headers(),
+			'user-agent' => $this->request_user_agent(),
+			'method'     => 'POST',
+			'body'       => json_encode( $this->request_body() ),
 		);
 		DIBS_Easy::log( 'DIBS Refund Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 		return apply_filters( 'dibs_easy_refund_order_args', $request_args );

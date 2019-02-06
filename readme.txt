@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.0
+Tested up to: 5.0.3
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.5.2
+Tested WooCommerce up to: 3.5.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,12 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2018.02.06    - version 1.6.4 =
+* Tweak         - Template update - hide checkout if user not valid (not logged in & gest checkout is disabled).
+* Tweak         - Add custom user-agent in requests to DIBS.
+* Tweak         - Use $order->get_transaction_id() instead of _dibs_payment_id in charge request to DIBS.
+* Fix           - Improved user agent info for domains with å ä ö (could cause error in DIBS system).
 
 = 2018.12.06    - version 1.6.3 =
 * Tweak			- Improved error messaging in failed subscription renewal process.

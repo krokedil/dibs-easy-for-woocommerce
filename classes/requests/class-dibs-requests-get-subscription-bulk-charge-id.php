@@ -33,8 +33,9 @@ class DIBS_Request_Get_Subscription_Bulk_Id extends DIBS_Requests2 {
 
 	public function get_request_args() {
 		$request_args = array(
-			'headers' => $this->request_headers(),
-			'method'  => 'GET',
+			'headers'    => $this->request_headers(),
+			'user-agent' => $this->request_user_agent(),
+			'method'     => 'GET',
 		);
 		return $request_args;
 	}

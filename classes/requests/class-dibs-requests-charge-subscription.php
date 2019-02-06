@@ -34,9 +34,10 @@ class DIBS_Request_Charge_Subscription extends DIBS_Requests2 {
 
 	public function get_request_args() {
 		$request_args = array(
-			'headers' => $this->request_headers(),
-			'method'  => 'POST',
-			'body'    => json_encode( $this->request_body() ),
+			'headers'    => $this->request_headers(),
+			'user-agent' => $this->request_user_agent(),
+			'method'     => 'POST',
+			'body'       => json_encode( $this->request_body() ),
 		);
 		DIBS_Easy::log( 'DIBS Charge Subscription request args: ' . json_encode( $request_args ) );
 		return apply_filters( 'dibs_easy_charge_subscription_args', $request_args );

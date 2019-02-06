@@ -33,8 +33,9 @@ class DIBS_Requests_Get_Subscription extends DIBS_Requests2 {
 
 	public function get_request_args() {
 		$request_args = array(
-			'headers' => $this->request_headers(),
-			'method'  => 'GET',
+			'headers'    => $this->request_headers(),
+			'user-agent' => $this->request_user_agent(),
+			'method'     => 'GET',
 		);
 		DIBS_Easy::log( 'DIBS Get Subscription request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 

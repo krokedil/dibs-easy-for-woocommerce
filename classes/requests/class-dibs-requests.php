@@ -20,6 +20,10 @@ class DIBS_Requests2 {
 		$get_header = new DIBS_Requests_Header();
 		return $get_header->get();
 	}
+	public function request_user_agent() {
+		$get_user_agent = new DIBS_Requests_User_Agent();
+		return $get_user_agent->get();
+	}
 	public function request_body() {
 		die( 'function DIBS_Requests::request_body() must be over-ridden in a sub-class.' );
 	}
@@ -27,15 +31,15 @@ class DIBS_Requests2 {
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
-		
+
 		$response_body = wp_remote_retrieve_body( $response );
-		if( empty( $response_body ) ) {
+		if ( empty( $response_body ) ) {
 			$response_body = 'Response code ' . $response['response']['code'] . '. Message: ' . $response['response']['message'];
 		}
 
-		$errors        = new WP_Error();
+		$errors = new WP_Error();
 		$errors->add( 'dibs_easy', $response_body );
-		
+
 		DIBS_Easy::log( 'DIBS Error Response: ' . stripslashes_deep( json_encode( $response_body ) ) );
 		return $errors;
 	}
