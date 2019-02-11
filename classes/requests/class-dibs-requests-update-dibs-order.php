@@ -13,8 +13,7 @@ class DIBS_Requests_Update_DIBS_Order extends DIBS_Requests2 {
 
 	public function request() {
 		$request_url = $this->endpoint . 'payments/' . $this->payment_id . '/orderitems';
-
-		$response = wp_remote_request( $request_url, $this->get_request_args() );
+		$response    = wp_remote_request( $request_url, $this->get_request_args() );
 		if ( is_wp_error( $response ) ) {
 			return $this->get_error_message( $response );
 			// return 'ERROR';
