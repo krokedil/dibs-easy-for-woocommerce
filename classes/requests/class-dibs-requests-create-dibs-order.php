@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 
