@@ -89,6 +89,41 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			'redirect' => $this->get_return_url( $order ),
 		);
 	}
+
+
+	public function maybe_add_invoice_fee( $order_id ) {
+		// Add invoice fee to order
+		$order = wc_get_order( $order_id );
+		if ( 'INVOICE' == get_post_meta( $order_id, 'dibs_payment_type' )[0] ) {
+			$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+			if ( ! empty( $dibs_settings['dibs_invoice_fee'] ) && isset( $dibs_settings['dibs_invoice_fee'] ) ) {
+				$invoice_fee_id = $dibs_settings['dibs_invoice_fee'];
+				$invoice_fee    = wc_get_product( $invoice_fee_id );
+
+				$fee      = new WC_Order_Item_Fee();
+				$fee_args = array(
+					'name'  => $invoice_fee->get_name(),
+					'total' => $invoice_fee->get_regular_price(),
+				);
+
+				$fee->set_props( $fee_args );
+				if ( 'none' == $invoice_fee->get_tax_status() ) {
+					$tax_amount = '0';
+					$fee->set_total_tax( $tax_amount );
+					$fee->set_tax_status( $invoice_fee->get_tax_status() );
+				} else {
+					$fee->set_tax_class( $invoice_fee->get_tax_class() );
+				}
+
+				$order->add_item( $fee );
+				$order->calculate_totals();
+				$order->save();
+			}
+		}
+	}
+
+
+
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		// Check if amount equals total order
 		$order = wc_get_order( $order_id );
@@ -148,6 +183,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		wc_dibs_unset_sessions();
 	}
 
+
 	public function process_dibs_payment_in_order( $order_id ) {
 		$order = wc_get_order( $order_id );
 
@@ -170,6 +206,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 			$order->payment_complete( $payment_id );
 		}
+		$this->maybe_add_invoice_fee( $order_id );
 	}
 
 

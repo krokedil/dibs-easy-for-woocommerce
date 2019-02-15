@@ -10,8 +10,7 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 
 	public function request() {
 		$request_url = $this->endpoint . 'payments';
-
-		$response = wp_remote_request( $request_url, $this->get_request_args() );
+		$response    = wp_remote_request( $request_url, $this->get_request_args() );
 		if ( is_wp_error( $response ) ) {
 			return $this->get_error_message( $response );
 			// return 'ERROR';
@@ -37,9 +36,10 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 	}
 	public function request_body() {
 		$request_args = array(
-			'order'         => DIBS_Requests_Order::get_order(),
-			'checkout'      => DIBS_Requests_Checkout::get_checkout(),
-			'notifications' => DIBS_Requests_Notifications::get_notifications(),
+			'order'          => DIBS_Requests_Order::get_order(),
+			'checkout'       => DIBS_Requests_Checkout::get_checkout(),
+			'notifications'  => DIBS_Requests_Notifications::get_notifications(),
+			'paymentMethods' => DIBS_Requests_Payment_Methods::get_invoice_fees(),
 		);
 		return apply_filters( 'dibs_easy_create_order_args', $request_args );
 	}
