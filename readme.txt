@@ -56,7 +56,11 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
-= 2018.02.06    - version 1.6.4 =
+= 2019.02.19    - version 1.7.0 =
+* Feature       - Functionality for adding invoice fee to order.
+* Tweak         - Send correct product name to DIBS for variable products.
+
+= 2019.02.06    - version 1.6.4 =
 * Tweak         - Template update - hide checkout if user not valid (not logged in & gest checkout is disabled).
 * Tweak         - Add custom user-agent in requests to DIBS.
 * Tweak         - Use $order->get_transaction_id() instead of _dibs_payment_id in charge request to DIBS.
