@@ -94,30 +94,32 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function maybe_add_invoice_fee( $order_id ) {
 		// Add invoice fee to order
 		$order = wc_get_order( $order_id );
-		if ( 'INVOICE' == get_post_meta( $order_id, 'dibs_payment_type' )[0] ) {
+		if ( 'INVOICE' == get_post_meta( $order_id, 'dibs_payment_type', true ) ) {
 			$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-			if ( ! empty( $dibs_settings['dibs_invoice_fee'] ) && isset( $dibs_settings['dibs_invoice_fee'] ) ) {
+			if ( isset( $dibs_settings['dibs_invoice_fee'] ) && ! empty( $dibs_settings['dibs_invoice_fee'] ) ) {
 				$invoice_fee_id = $dibs_settings['dibs_invoice_fee'];
 				$invoice_fee    = wc_get_product( $invoice_fee_id );
 
-				$fee      = new WC_Order_Item_Fee();
-				$fee_args = array(
-					'name'  => $invoice_fee->get_name(),
-					'total' => $invoice_fee->get_regular_price(),
-				);
+				if ( is_object( $invoice_fee ) ) {
+					$fee      = new WC_Order_Item_Fee();
+					$fee_args = array(
+						'name'  => $invoice_fee->get_name(),
+						'total' => $invoice_fee->get_regular_price(),
+					);
 
-				$fee->set_props( $fee_args );
-				if ( 'none' == $invoice_fee->get_tax_status() ) {
-					$tax_amount = '0';
-					$fee->set_total_tax( $tax_amount );
-					$fee->set_tax_status( $invoice_fee->get_tax_status() );
-				} else {
-					$fee->set_tax_class( $invoice_fee->get_tax_class() );
+					$fee->set_props( $fee_args );
+					if ( 'none' == $invoice_fee->get_tax_status() ) {
+						$tax_amount = '0';
+						$fee->set_total_tax( $tax_amount );
+						$fee->set_tax_status( $invoice_fee->get_tax_status() );
+					} else {
+						$fee->set_tax_class( $invoice_fee->get_tax_class() );
+					}
+
+					$order->add_item( $fee );
+					$order->calculate_totals();
+					$order->save();
 				}
-
-				$order->add_item( $fee );
-				$order->calculate_totals();
-				$order->save();
 			}
 		}
 	}
