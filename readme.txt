@@ -56,6 +56,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.02.19    - version 1.7.1 =
+* Fix           - Version number bump. One file not comitted properly to wp.org in version 1.7.0.
+
 = 2019.02.19    - version 1.7.0 =
 * Feature       - Functionality for adding invoice fee to order.
 * Tweak         - Send correct product name to DIBS for variable products.
