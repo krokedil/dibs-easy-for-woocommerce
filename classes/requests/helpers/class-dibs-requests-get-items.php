@@ -41,7 +41,7 @@ class DIBS_Requests_Items {
 
 		return array(
 			'reference'        => self::get_sku( $product, $product_id ),
-			'name'             => wc_dibs_clean_name( $product->get_title() ),
+			'name'             => wc_dibs_clean_name( $product->get_name() ),
 			'quantity'         => $cart_item['quantity'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( $cart_item['line_total'] / $cart_item['quantity'], 2 ) * 100 ),
