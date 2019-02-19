@@ -38,11 +38,10 @@ class DIBS_Requests_Items {
 			$product    = wc_get_product( $cart_item['product_id'] );
 			$product_id = $cart_item['product_id'];
 		}
-		$item_name = wc_get_product( $product_id );
 
 		return array(
 			'reference'        => self::get_sku( $product, $product_id ),
-			'name'             => wc_dibs_clean_name( $item_name->get_name() ),
+			'name'             => wc_dibs_clean_name( $product->get_name() ),
 			'quantity'         => $cart_item['quantity'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( $cart_item['line_total'] / $cart_item['quantity'], 2 ) * 100 ),
