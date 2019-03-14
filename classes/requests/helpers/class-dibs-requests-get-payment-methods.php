@@ -8,10 +8,10 @@ class DIBS_Requests_Payment_Methods {
 		$dibs_settings  = get_option( 'woocommerce_dibs_easy_settings' );
 		$invoice_fee_id = $dibs_settings['dibs_invoice_fee'];
 		if ( $invoice_fee_id ) {
-			$product       = wc_get_product( $invoice_fee_id );
-			$regular_price = $product->get_regular_price();
-			$tax_data      = self::get_tax_data( $product );
-			$regular_price = intval( round( $product->get_regular_price(), 2 ) * 100 );
+			$product        = wc_get_product( $invoice_fee_id );
+			$price_excl_tax = wc_get_price_excluding_tax( $product );
+			$tax_data       = self::get_tax_data( $product );
+
 			$invoice_items = array(
 				'name' => 'easyinvoice',
 				'fee'  => array(
@@ -19,11 +19,11 @@ class DIBS_Requests_Payment_Methods {
 					'name'             => wc_dibs_clean_name( $product->get_name() ),
 					'quantity'         => 1,
 					'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-					'unitPrice'        => $regular_price,
-					'taxRate'          => $tax_data['tax_rate'],
-					'taxAmount'        => $tax_data['tax_amount'],
-					'grossTotalAmount' => $regular_price + $tax_data['tax_amount'],
-					'netTotalAmount'   => $regular_price,
+					'unitPrice'        => intval( round( $price_excl_tax, 2 ) * 100 ),
+					'taxRate'          => intval( round( $tax_data['tax_rate'], 2 ) * 100 ),
+					'taxAmount'        => intval( round( $tax_data['tax_amount'], 2 ) * 100 ),
+					'grossTotalAmount' => intval( round( $price_excl_tax + $tax_data['tax_amount'], 2 ) * 100 ),
+					'netTotalAmount'   => intval( round( $price_excl_tax, 2 ) * 100 ),
 				),
 			);
 			$items         = array();
@@ -38,8 +38,8 @@ class DIBS_Requests_Payment_Methods {
 		$_vat      = array_shift( $tmp_rates );
 		$item_tax  = array();
 		if ( $product->is_taxable() && isset( $_vat['rate'] ) ) {
-			$item_tax['tax_rate']   = intval( round( $_vat['rate'] ) * 100 );
-			$item_tax['tax_amount'] = intval( round( ( $_vat['rate'] * 0.01 ) * $product->get_regular_price(), 2 ) * 100 );
+			$item_tax['tax_rate']   = $_vat['rate'];
+			$item_tax['tax_amount'] = ( $_vat['rate'] * 0.01 ) * wc_get_price_excluding_tax( $product );
 		} else {
 			$item_tax['tax_rate']   = 0;
 			$item_tax['tax_amount'] = 0;

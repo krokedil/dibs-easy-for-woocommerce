@@ -104,7 +104,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 					$fee      = new WC_Order_Item_Fee();
 					$fee_args = array(
 						'name'  => $invoice_fee->get_name(),
-						'total' => $invoice_fee->get_regular_price(),
+						'total' => wc_get_price_excluding_tax( $invoice_fee ),
 					);
 
 					$fee->set_props( $fee_args );
