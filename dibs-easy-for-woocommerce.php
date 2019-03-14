@@ -193,7 +193,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			$plugin_links = array(
 				'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=dibs_easy' ) . '">' . __( 'Settings', 'dibs-easy-for-woocommerce' ) . '</a>',
-				'<a href="http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/">' . __( 'Docs', 'dibs-easy-for-woocommerce' ) . '</a>',
+				'<a href="https://docs.krokedil.com/collection/197-dibs-easy">' . __( 'Docs', 'dibs-easy-for-woocommerce' ) . '</a>',
 				'<a href="https://krokedil.se/support/">' . __( 'Support', 'dibs-easy-for-woocommerce' ) . '</a>',
 			);
 			return array_merge( $plugin_links, $links );
