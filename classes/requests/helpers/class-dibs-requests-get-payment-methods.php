@@ -6,7 +6,8 @@ class DIBS_Requests_Payment_Methods {
 
 	public static function get_invoice_fees() {
 		$dibs_settings  = get_option( 'woocommerce_dibs_easy_settings' );
-		$invoice_fee_id = $dibs_settings['dibs_invoice_fee'];
+		$invoice_fee_id = isset( $dibs_settings['dibs_invoice_fee'] ) ? $dibs_settings['dibs_invoice_fee'] : '';
+		$items          = array();
 		if ( $invoice_fee_id ) {
 			$product        = wc_get_product( $invoice_fee_id );
 			$price_excl_tax = wc_get_price_excluding_tax( $product );
@@ -26,7 +27,6 @@ class DIBS_Requests_Payment_Methods {
 					'netTotalAmount'   => intval( round( $price_excl_tax, 2 ) * 100 ),
 				),
 			);
-			$items         = array();
 			$items[]       = $invoice_items;
 		}
 		return $items;
