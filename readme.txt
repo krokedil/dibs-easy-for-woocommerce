@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 5.1.1
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.5.6
+Tested WooCommerce up to: 3.5.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,11 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.03.26    - version 1.7.3 =
+* Tweak         - Added payment gateway icon.
+* Tweak         - Added filter wc_dibs_easy_icon_html so payment gateway icon can be customized.
+* Fix           - Fixed PHP notices in get_invoice_fees() function.
 
 = 2019.03.14    - version 1.7.2 =
 * Tweak         - Updated URL to docs.
