@@ -51,6 +51,18 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Get gateway icon.
+	 *
+	 * @return string
+	 */
+	public function get_icon() {
+		$icon_src   = 'https://cdn.dibspayment.com/logo/checkout/combo/horiz/DIBS_checkout_kombo_horizontal_04.png';
+		$icon_width = '145';
+		$icon_html  = '<img src="' . $icon_src . '" alt="DIBS - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
+		return apply_filters( 'wc_dibs_easy_icon_html', $icon_html );
+	}
+
+	/**
 	 * Checks if method should be available.
 	 *
 	 * @return bool
@@ -195,7 +207,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$request = $request->request();
-		if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'id', $request->payment->subscription ) ) {
+		if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'chargedAmount', $request->payment->summary ) || key_exists( 'id', $request->payment->subscription ) ) {
 
 			do_action( 'dibs_easy_process_payment', $order_id, $request );
 
