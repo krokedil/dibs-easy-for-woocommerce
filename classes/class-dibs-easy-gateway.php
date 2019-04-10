@@ -207,7 +207,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$request = $request->request();
-		if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'id', $request->payment->subscription ) ) {
+		if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'chargedAmount', $request->payment->summary ) || key_exists( 'id', $request->payment->subscription ) ) {
 
 			do_action( 'dibs_easy_process_payment', $order_id, $request );
 
