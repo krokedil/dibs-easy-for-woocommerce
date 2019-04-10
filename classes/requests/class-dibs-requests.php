@@ -9,16 +9,16 @@ class DIBS_Requests2 {
 
 	public function __construct() {
 		$dibs_settings  = get_option( 'woocommerce_dibs_easy_settings' );
-		$testmode       = 'yes' === $dibs_settings['test_mode'];
-		$this->key      = $testmode ? $dibs_settings['dibs_test_key'] : $dibs_settings['dibs_live_key'];
-		$this->endpoint = $testmode ? DIBS_API_TEST_ENDPOINT : DIBS_API_LIVE_ENDPOINT;
+		$this->testmode = 'yes' === $dibs_settings['test_mode'];
+		$this->key      = $this->testmode ? $dibs_settings['dibs_test_key'] : $dibs_settings['dibs_live_key'];
+		$this->endpoint = $this->testmode ? DIBS_API_TEST_ENDPOINT : DIBS_API_LIVE_ENDPOINT;
 	}
 	public function request() {
 		die( 'function DIBS_Requests::request() must be over-ridden in a sub-class.' );
 	}
-	public function request_headers() {
+	public function request_headers( $order_id = null ) {
 		$get_header = new DIBS_Requests_Header();
-		return $get_header->get();
+		return $get_header->get( $order_id );
 	}
 	public function request_user_agent() {
 		$get_user_agent = new DIBS_Requests_User_Agent();

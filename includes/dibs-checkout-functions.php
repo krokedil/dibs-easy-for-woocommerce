@@ -12,7 +12,7 @@ function wc_dibs_show_snippet() {
 	$locale      = wc_dibs_get_locale();
 
 	if ( ! is_array( $payment_id ) ) {
-	?>
+		?>
 	<div id="dibs-complete-checkout"></div>
 	<script type="text/javascript">
 		var checkoutOptions = {
@@ -24,7 +24,7 @@ function wc_dibs_show_snippet() {
 		var dibsCheckout = new Dibs.Checkout(checkoutOptions);
 		console.log(checkoutOptions);
 	</script>
-	<?php
+		<?php
 	} else {
 		?>
 		<ul class="woocommerce-error" role="alert">
@@ -189,7 +189,7 @@ function wc_dibs_get_private_key() {
 	$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 	$testmode      = 'yes' === $dibs_settings['test_mode'];
 	$private_key   = $testmode ? $dibs_settings['dibs_test_checkout_key'] : $dibs_settings['dibs_checkout_key'];
-	return $private_key;
+	return apply_filters( 'dibs_easy_request_checkout_key', $private_key, $testmode );
 }
 
 function wc_dibs_clean_name( $name ) {
