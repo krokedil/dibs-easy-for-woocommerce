@@ -56,6 +56,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.04.10    - version 1.7.4 =
+* Tweak         - Added filters dibs_easy_request_checkout_key & dibs_easy_request_secret_key to be able to modify merchant ID sent to DIBS.
+* Fix           - Added check for chargedAmount when completing payment in Woo. Fixes so order status is set to Processing with Swish payments.
+
 = 2019.03.26    - version 1.7.3 =
 * Tweak         - Added payment gateway icon.
 * Tweak         - Added filter wc_dibs_easy_icon_html so payment gateway icon can be customized.
