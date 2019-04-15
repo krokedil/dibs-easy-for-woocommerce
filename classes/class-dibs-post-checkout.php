@@ -17,15 +17,25 @@ class DIBS_Post_Checkout {
 	}
 
 	public function dibs_order_completed( $order_id ) {
+
+		$wc_order = wc_get_order( $order_id );
+
 		// Check if dibs was used to make the order
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
+
+			$payment_type = get_post_meta( $order_id, 'dibs_payment_type', true );
+			if ( 'A2A' === $payment_type ) {
+				// This is a account to account purchase (like Swish). No activation is needed/possible.
+				$dibs_payment_method = get_post_meta( $order_id, 'dibs_payment_method', true );
+				$wc_order->add_order_note( sprintf( __( 'No charge needed in DIBS system since %s is a account to account payment.', 'dibs-easy-for-woocommerce' ), $dibs_payment_method ) );
+				return;
+			}
 
 			$request = new DIBS_Requests_Activate_Order( $order_id );
 			$request = json_decode( $request->request() );
 
 			// Error handling
-			$wc_order = wc_get_order( $order_id );
 			if ( null != $request ) {
 				if ( array_key_exists( 'chargeId', $request ) ) { // Payment success
 					$wc_order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'dibs-easy-for-woocommerce' ), $request->chargeId ) );

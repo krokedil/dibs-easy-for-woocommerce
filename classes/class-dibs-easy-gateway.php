@@ -212,12 +212,17 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			do_action( 'dibs_easy_process_payment', $order_id, $request );
 
 			update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
+			update_post_meta( $order_id, 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
 
 			if ( 'CARD' == $request->payment->paymentDetails->paymentType ) {
 				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
 			}
 
-			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
+			if ( 'A2A' === $request->payment->paymentDetails->paymentType ) {
+				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentMethod ) );
+			} else {
+				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
+			}
 			$order->payment_complete( $payment_id );
 		}
 		$this->maybe_add_invoice_fee( $order_id );
