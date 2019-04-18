@@ -10,6 +10,7 @@
         if ("dibs_easy" === $("input[name='payment_method']:checked").val() ) {
             removeStandardOrderNote();
             addressChangedListener();
+            paymentInitializedListener();
             paymentCompletedListener();
         }
     });
@@ -63,6 +64,15 @@
                     }
                 );
             }
+        });
+    }
+
+    // When customer clicks Pay button in Easy. Before redirect to 3DSecure.
+    function paymentInitializedListener() {
+        dibsCheckout.on('pay-initialized', function(response) {
+            $(document.body).trigger('dibs_pay_initialized');
+            console.log('dibs_pay_initialized');
+            dibsCheckout.send('payment-order-finalized', true);
         });
     }
 
