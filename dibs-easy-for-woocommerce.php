@@ -153,6 +153,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					$checkout_initiated = 'no';
 				}
 
+				$standard_woo_checkout_fields = array( 'billing_first_name', 'billing_last_name', 'billing_address_1', 'billing_address_2', 'billing_postcode', 'billing_city', 'billing_phone', 'billing_email', 'billing_state', 'billing_country', 'billing_company', 'shipping_first_name', 'shipping_last_name', 'shipping_address_1', 'shipping_address_2', 'shipping_postcode', 'shipping_city', 'shipping_state', 'shipping_country', 'shipping_company', 'terms', 'account_username', 'account_password' );
+
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
 				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_EASY_VERSION );
 				wp_localize_script(
@@ -162,7 +164,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 						'dibs_payment_id'                  => $dibs_payment_id,
 						'paymentId'                        => $paymentId,
 						'checkout_initiated'               => $checkout_initiated,
+						'standard_woo_checkout_fields'     => $standard_woo_checkout_fields,
 						'dibs_process_order_text'          => __( 'Please wait while we process your order...', 'dibs-easy-for-woocommerce' ),
+						'required_fields_text'             => __( 'Please fill in all required checkout fields.', 'dibs-easy-for-woocommerce' ),
 						'update_checkout_url'              => WC_AJAX::get_endpoint( 'update_checkout' ),
 						'customer_adress_updated_url'      => WC_AJAX::get_endpoint( 'customer_adress_updated' ),
 						'get_order_data_url'               => WC_AJAX::get_endpoint( 'get_order_data' ),

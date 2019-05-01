@@ -1,5 +1,225 @@
-(function ($) {
-    'use strict';
+jQuery(function($) {
+    const dibs_wc = {
+        bodyEl: $('body'),
+
+        // Payment method
+        paymentMethodEl: $('input[name="payment_method"]'),
+		paymentMethod: '',
+        
+        // Extra checkout fields.
+		blocked: false,
+		extraFieldsSelectorText: 'div#dibs-extra-checkout-fields input[type="text"], div#dibs-extra-checkout-fields input[type="password"], div#dibs-extra-checkout-fields textarea, div#dibs-extra-checkout-fields input[type="email"], div#dibs-extra-checkout-fields input[type="tel"]',
+		extraFieldsSelectorNonText: 'div#dibs-extra-checkout-fields select, div#dibs-extra-checkout-fields input[type="radio"], div#dibs-extra-checkout-fields input[type="checkbox"], div#dibs-extra-checkout-fields input.checkout-date-picker, input#terms input[type="checkbox"]',
+
+        /*
+		 * Document ready function. 
+		 * Runs on the $(document).ready event.
+		 */
+		documentReady: function() {
+			dibs_wc.DibsFreeze();
+			
+			// Extra checkout fields.
+			dibs_wc.setFormFieldValues();
+			dibs_wc.checkFormData();
+			dibs_wc.moveExtraCheckoutFields();
+			$('#order_comments').val( localStorage.getItem( 'dibs_wc_order_comment' ) );
+        },
+        
+        /*
+		 * Check if DIBS Easy is the selected gateway.
+		 */
+		DibsIsSelected: function() {
+			if (dibs_wc.paymentMethodEl.length > 0) {
+				dibs_wc.paymentMethod = dibs_wc.paymentMethodEl.filter(':checked').val();
+				if( 'dibs_easy' === dibs_wc.paymentMethod ) {
+					return true;
+				}
+			} 
+			return false;
+        },
+
+        /**
+		 * Updates the order comment local storage.
+		 */
+		updateOrderComment: function() {
+			let val = $('#order_comments').val();
+			localStorage.setItem( 'dibs_wc_order_comment', val );
+		},
+
+        /*
+		 * Locks the iFrame. 
+		 */
+		DibsFreeze: function() {
+			dibsCheckout.freezeCheckout();
+		},
+
+        /*
+		 * Unlocks the iFrame. 
+		 */
+		DibsResume: function() {
+			if ( ! dibs_wc.blocked ) {
+				dibsCheckout.thawCheckout();
+			}
+		},
+        
+        /**
+		 * Checks for form Data on the page, and sets the checkout fields session storage.
+		 */
+		checkFormData: function() {
+			let form = $('form[name="checkout"] input, form[name="checkout"] select, textarea');
+            let requiredFields = [];
+            let fieldData = {};
+            // Get all form fields.
+            for ( i = 0; i < form.length; i++ ) { 
+                // Check if the form has a name set.
+                if ( form[i]['name'] !== '' ) {
+                    let name    = form[i]['name'];
+                    let field = $('*[name="' + name + '"]');
+                    let required = ( $('p#' + name + '_field').hasClass('validate-required') ? true : false );
+                    // Only keep track of non standard WooCommerce checkout fields
+                    if ($.inArray(name, wc_dibs_easy.standard_woo_checkout_fields) == '-1' && name.indexOf('[qty]') < 0 && name.indexOf( 'shipping_method' ) < 0 && name.indexOf( 'payment_method' ) < 0 ) {
+                        // Only keep track of required fields for validation.
+                        if ( required === true ) {
+                            requiredFields.push(name);
+                        }
+                        // Get the value from the field.
+                        let value = '';
+                        if( field.is(':checkbox') ) {
+                            if( field.is(':checked') ) {
+                                value = form[i].value;
+                            }
+                        } else if( field.is(':radio') ) {
+                            if( field.is(':checked') ) {
+                                value = $( 'input[name="' + name + '"]:checked').val();
+                            }
+                        } else {
+                            value = form[i].value
+                        }
+                        // Set field data with values.
+                        fieldData[name] = value;
+                    }
+                }
+            }
+            sessionStorage.setItem( 'DIBSRequiredFields', JSON.stringify( requiredFields ) );
+            sessionStorage.setItem( 'DIBSFieldData', JSON.stringify( fieldData ) );
+            dibs_wc.validateRequiredFields();
+        },
+        
+        /**
+		 * Validates the required fields, checks if they have a value set.
+		 */
+		validateRequiredFields: function() {
+			// Get data from session storage.
+			let requiredFields = JSON.parse( sessionStorage.getItem( 'DIBSRequiredFields' ) );
+			let fieldData = JSON.parse( sessionStorage.getItem( 'DIBSFieldData' ) );
+			// Check if all data is set for required fields.
+			let allValid = true;
+			for( i = 0; i < requiredFields.length; i++ ) {
+				fieldName = requiredFields[i];
+				if ( '' === fieldData[fieldName] ) {
+					allValid = false;
+				}
+			}
+			dibs_wc.maybeFreezeIframe( allValid );
+        },
+        
+        /**
+		 * Maybe freezes the iframe to prevent anyone from completing the order before filling in all required fields.
+		 * 
+		 * @param {boolean} allValid 
+		 */
+		maybeFreezeIframe: function( allValid ) {
+			if ( true === allValid ) {
+				dibs_wc.blocked = false;
+				$('#dibs-required-fields-notice').remove();
+				dibs_wc.DibsResume();
+			} else 	if( ! $('#dibs-required-fields-notice').length ) { // Only if we dont have an error message already.
+				dibs_wc.blocked = true;
+				dibs_wc.maybePrintValidationMessage();
+				dibs_wc.DibsFreeze();
+			}
+        },
+        
+        /**
+		 * Maybe prints the validation error message.
+		 */
+		maybePrintValidationMessage: function() {
+			if ( true === dibs_wc.blocked && ! $('#dibs-required-fields-notice').length ) {
+				$('form.checkout').prepend( '<div id="dibs-required-fields-notice" class="woocommerce-NoticeGroup woocommerce-NoticeGroup-updateOrderReview"><ul class="woocommerce-error" role="alert"><li>' +  wc_dibs_easy.required_fields_text + '</li></ul></div>' );
+				var etop = $('form.checkout').offset().top;
+				$('html, body').animate({
+					scrollTop: etop
+				}, 1000);
+			}
+		},
+
+        /**
+		 * Sets the form fields values from the session storage.
+		 */
+		setFormFieldValues: function() {
+			let form_data = JSON.parse( sessionStorage.getItem( 'DIBSFieldData' ) );
+			$.each( form_data, function( name, value ) {
+				let field = $('*[name="' + name + '"]');
+				let saved_value = value;
+				// Check if field is a checkbox
+				if( field.is(':checkbox') ) {
+					if( saved_value !== '' ) {
+						field.prop('checked', true);
+					}
+				} else if( field.is(':radio') ) {
+					for ( x = 0; x < field.length; x++ ) {
+						if( field[x].value === value ) {
+							$(field[x]).prop('checked', true);
+						}
+					}
+				} else {
+					field.val( saved_value );
+				}
+
+			});
+        },
+
+        /**
+		 * Moves all non standard fields to the extra checkout fields.
+		 */
+		moveExtraCheckoutFields: function() {
+			// Move order comments.
+			$('.woocommerce-additional-fields').appendTo('#dibs-extra-checkout-fields');
+
+			let form = $('form[name="checkout"] input, form[name="checkout"] select, textarea');
+			for ( i = 0; i < form.length; i++ ) {
+				let name = form[i]['name'];
+				// Check if this is a standard field.
+				if ( $.inArray( name, wc_dibs_easy.standard_woo_checkout_fields ) === -1 ) {
+					// This is not a standard Woo field, move to our div.
+					$('p#' + name + '_field').appendTo('#dibs-extra-checkout-fields');
+				}
+			}
+		},
+        
+        /*
+		 * Initiates the script and sets the triggers for the functions.
+		 */
+		init: function() {
+            console.log('init 1');
+			// Check if DIBS Easy is the selected payment method before we do anything.
+			if( dibs_wc.DibsIsSelected() ) {
+                console.log('init 2');
+
+                $(document).ready( dibs_wc.documentReady() );
+
+                // Catch changes to order notes.
+				dibs_wc.bodyEl.on('change', '#order_comments', dibs_wc.updateOrderComment);
+
+				// Extra checkout fields.
+				dibs_wc.bodyEl.on('blur', dibs_wc.extraFieldsSelectorText, dibs_wc.checkFormData);
+				dibs_wc.bodyEl.on('change', dibs_wc.extraFieldsSelectorNonText, dibs_wc.checkFormData);
+				dibs_wc.bodyEl.on('click', 'input#terms', dibs_wc.checkFormData);
+
+			}
+		},
+    }
+    dibs_wc.init();
 
     var i = 0;
     var x = 0;
@@ -8,7 +228,6 @@
             
     $( document ).ready( function() {
         if ("dibs_easy" === $("input[name='payment_method']:checked").val() ) {
-            removeStandardOrderNote();
             addressChangedListener();
             paymentInitializedListener();
             paymentCompletedListener();
@@ -343,8 +562,17 @@
     });
 
     // Removes the standard order note from the DOM
+    /*
     function removeStandardOrderNote() {
         $('#dibs-hidden #order_comments_field').remove();
     }
+    */
 
-}(jQuery));
+    // Send an updated cart to DIBS after the checkout has been updated in Woo
+    $(document).on('blur', function () {
+        if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
+	        update_checkout();
+        }
+    });
+
+});

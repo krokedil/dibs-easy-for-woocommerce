@@ -35,18 +35,6 @@ function wc_dibs_show_snippet() {
 	}
 }
 
-
-/**
- * Shows Customer order notes in DIBS Easy Checkout page.
- */
-function wc_dibs_show_customer_order_notes() {
-
-	if ( apply_filters( 'woocommerce_enable_order_notes_field', true ) ) {
-		$form_field = WC()->checkout()->get_checkout_fields( 'order' );
-		woocommerce_form_field( 'order_comments', $form_field['order_comments'] );
-	}
-}
-
 /**
  * Shows select another payment method button in DIBS Checkout page.
  */
@@ -65,24 +53,6 @@ function wc_dibs_show_another_gateway_button() {
 		</p>
 		<?php
 	}
-}
-
-/**
- * Add WooCommerce checkout form fields to checkout page.
- * These fields are hidden from the customer but needed for
- * when the checkout form is being submitted.
- */
-function wc_dibs_add_woocommerce_checkout_form_fields() {
-
-	echo '<div id="dibs-hidden" style="display:none;">';
-		do_action( 'woocommerce_checkout_billing' );
-		do_action( 'woocommerce_checkout_shipping' );
-		$order_button_text = __( 'Pay for order', 'woocommerce' );
-		echo apply_filters( 'woocommerce_pay_order_button_html', '<button type="submit" class="button alt" id="place_order" value="' . esc_attr( $order_button_text ) . '" data-value="' . esc_attr( $order_button_text ) . '">' . esc_html( $order_button_text ) . '</button>' );
-		echo '<input type="checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" name="terms"' . checked( apply_filters( 'woocommerce_terms_is_checked_default', isset( $_POST['terms'] ) ), true ) . ' id="terms" />';
-		wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce' );
-		echo '<input style="display:none" type="radio" name="payment_method" value="dibs_easy" checked="checked"/>';
-	echo '</div>';
 }
 
 /**
