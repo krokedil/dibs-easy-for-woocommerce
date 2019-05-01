@@ -17,35 +17,49 @@ class DIBS_Post_Checkout {
 	}
 
 	public function dibs_order_completed( $order_id ) {
+
+		$wc_order = wc_get_order( $order_id );
+
 		// Check if dibs was used to make the order
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
 
+			// Bail if we already have charged the order once in DIBS system.
+			if ( get_post_meta( $order_id, '_dibs_charge_id', true ) ) {
+				return;
+			}
+
+			$payment_type = get_post_meta( $order_id, 'dibs_payment_type', true );
+			if ( 'A2A' === $payment_type ) {
+				// This is a account to account purchase (like Swish). No activation is needed/possible.
+				$dibs_payment_method = get_post_meta( $order_id, 'dibs_payment_method', true );
+				$wc_order->add_order_note( sprintf( __( 'No charge needed in DIBS system since %s is a account to account payment.', 'dibs-easy-for-woocommerce' ), $dibs_payment_method ) );
+				return;
+			}
+
 			$request = new DIBS_Requests_Activate_Order( $order_id );
 			$request = json_decode( $request->request() );
 
-			// Error handling
-			$wc_order = wc_get_order( $order_id );
+			// Error handling.
 			if ( null != $request ) {
 				if ( array_key_exists( 'chargeId', $request ) ) { // Payment success
 					$wc_order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'dibs-easy-for-woocommerce' ), $request->chargeId ) );
 
 					update_post_meta( $order_id, '_dibs_charge_id', $request->chargeId );
-				} elseif ( array_key_exists( 'errors', $request ) ) { // Response with errors
-					if ( array_key_exists( 'instance', $request->errors ) && 'cannot be null' === $request->errors->instance[0] ) { // If return is empty
-						$this->charge_failed( $wc_order, true );
+				} elseif ( array_key_exists( 'errors', $request ) ) { // Response with errors.
+					if ( array_key_exists( 'instance', $request->errors ) ) { // If return is empty.
+						$message = $request->errors->instance[0];
+					} elseif ( array_key_exists( 'amount', $request->errors ) ) { // If total amount is wrong.
+						$message = $request->errors->amount[0];
+					} else {
+						$message = wp_json_encode( $request->errors );
 					}
-					if ( array_key_exists( 'amount', $request->errors ) && 'Amount must be greater than 0' === $request->errors->amount[0] ) { // If total amount equals 0
-						$message = 'Total amount equal 0';
-						$this->charge_failed( $wc_order, true, $message );
-					}
-					if ( array_key_exists( 'amount', $request->errors ) && 'Amount dosen\'t match sum of orderitems' === $request->errors->amount[0] ) { // If the total amount does not equal the line items total
-						$message = 'Order total amount does not match the order items';
-						$this->charge_failed( $wc_order, true, $message );
-					}
-				} elseif ( array_key_exists( 'code', $request ) && '1001' == $request->code ) { // Response with error code for overcharged order
-					$message = 'Payment overcharged';
-					$this->charge_failed( $wc_order, false, $request->message );
+
+					$this->charge_failed( $wc_order, true, $message );
+
+				} elseif ( array_key_exists( 'code', $request ) && '1001' == $request->code ) { // Response with error code for overcharged order.
+					update_post_meta( $order_id, '_dibs_charge_id', 'Charge error: ' . $request->code );
+					$this->charge_failed( $wc_order, true, $request->message );
 				} else {
 					$this->charge_failed( $wc_order );
 				}
@@ -62,18 +76,18 @@ class DIBS_Post_Checkout {
 
 			$request = new DIBS_Requests_Cancel_Order( $order_id );
 			$request = json_decode( $request->request() );
-			
+
 			$wc_order = wc_get_order( $order_id );
 
 			if ( null === $request ) {
 				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in DIBS', 'dibs-easy-for-woocommerce' ) ) );
 			} else {
-				if( array_key_exists( 'errors', $request ) ) {
-					$message = json_encode($request->errors);
-				} elseif(  array_key_exists( 'message', $request ) ) {
-					$message = json_encode($request->message);
+				if ( array_key_exists( 'errors', $request ) ) {
+					$message = json_encode( $request->errors );
+				} elseif ( array_key_exists( 'message', $request ) ) {
+					$message = json_encode( $request->message );
 				} else {
-					$message = json_encode($request);
+					$message = json_encode( $request );
 				}
 				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 			}
@@ -84,7 +98,7 @@ class DIBS_Post_Checkout {
 	public function charge_failed( $order, $fail = true, $message = 'Payment failed in DIBS' ) {
 		$order->add_order_note( sprintf( __( 'DIBS Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 		if ( true === $fail ) {
-			$order->update_status( 'processing' );
+			$order->update_status( apply_filters( 'dibs_easy_failed_charge_status', 'on-hold', $order ) );
 			$order->save();
 		}
 	}

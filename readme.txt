@@ -56,6 +56,15 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.05.01    - version 1.7.5 =
+* Tweak         - Added listener for pay-initialized + added JS event dibs_pay_initialized.
+* Tweak         - Change callback listener for order from payment.reservation.created to payment.checkout.completed webhook (because of Swish intoduction).
+* Tweak         - Order management: Don't try to make a charge request if payment_type is A2A (Swish and other account 2 account purchases).
+* Tweak         - Order management: Don't try to charge if we already have a charge ID.
+* Tweak         - Order management: Make sure we add an order note if charge fails.
+* Tweak         - Order management: Set order status to On hold if charge fails (the first time). If trying to activate the order again, Woo order status will be set to Completed.
+* Tweak         - Order management: Added filter dibs_easy_failed_charge_status so other plugins can change the status the Woo order is set to if charge request fails.
+
 = 2019.04.10    - version 1.7.4 =
 * Tweak         - Added filters dibs_easy_request_checkout_key & dibs_easy_request_secret_key to be able to modify merchant ID sent to DIBS.
 * Fix           - Added check for chargedAmount when completing payment in Woo. Fixes so order status is set to Processing with Swish payments.
