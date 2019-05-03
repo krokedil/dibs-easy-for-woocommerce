@@ -184,10 +184,8 @@ jQuery(function($) {
 		 * Initiates the script and sets the triggers for the functions.
 		 */
 		init: function() {
-            console.log('init 1');
 			// Check if DIBS Easy is the selected payment method before we do anything.
 			if( dibs_wc.DibsIsSelected() ) {
-                console.log('init 2');
 
                 $(document).ready( dibs_wc.documentReady() );
 
