@@ -212,7 +212,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$request = $request->request();
-		if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'chargedAmount', $request->payment->summary ) || key_exists( 'id', $request->payment->subscription ) ) {
+
+		if ( isset( $request->payment->summary->reservedAmount ) || $request->payment->summary->chargedAmount || isset( $request->payment->subscription->id ) ) {
 
 			do_action( 'dibs_easy_process_payment', $order_id, $request );
 
@@ -249,7 +250,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		// $order_id = WC()->session->get( 'dibs_incomplete_order' );
 		// Check payment status
-		if ( key_exists( 'reservedAmount', $this->checkout_fields->payment->summary ) || key_exists( 'id', $this->checkout_fields->payment->subscription ) ) {
+		if ( isset( $this->checkout_fields->payment->summary->reservedAmount ) || isset( $this->checkout_fields->payment->summary->chargedAmount ) || isset( $this->checkout_fields->payment->subscription->id ) ) {
 			// Payment is ok, DIBS have reserved an amount
 			// Convert country code from 3 to 2 letters
 			if ( $this->checkout_fields->payment->consumer->shippingAddress->country ) {
