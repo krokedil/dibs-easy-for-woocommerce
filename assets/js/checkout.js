@@ -16,13 +16,14 @@ jQuery(function($) {
 		 * Runs on the $(document).ready event.
 		 */
 		documentReady: function() {
-			dibs_wc.DibsFreeze();
+			//dibs_wc.DibsFreeze();
 			
 			// Extra checkout fields.
 			dibs_wc.setFormFieldValues();
 			dibs_wc.checkFormData();
-			dibs_wc.moveExtraCheckoutFields();
-			$('#order_comments').val( sessionStorage.getItem( 'dibs_wc_order_comment' ) );
+            dibs_wc.moveExtraCheckoutFields();
+            let fieldData = JSON.parse( sessionStorage.getItem( 'DIBSFieldData' ) );
+            $('#order_comments').val( fieldData.order_comments );
         },
         
         /*
@@ -37,14 +38,6 @@ jQuery(function($) {
 			} 
 			return false;
         },
-
-        /**
-		 * Updates the order comment local storage.
-		 */
-		updateOrderComment: function() {
-			let val = $('#order_comments').val();
-			sessionStorage.setItem( 'dibs_wc_order_comment', val );
-		},
 
         /*
 		 * Locks the iFrame. 
@@ -119,14 +112,16 @@ jQuery(function($) {
 					allValid = false;
 				}
             }
-            dibs_wc.maybePrintValidationMessage( allValid );
+            if( false === allValid ) {
+                dibs_wc.printValidationMessage();
+            }
             return allValid;
         },
         
         /**
-		 * Maybe prints the validation error message.
+		 * Print the validation error message.
 		 */
-		maybePrintValidationMessage: function() {
+		printValidationMessage: function() {
 			if ( ! $('#dibs-required-fields-notice').length ) {
 				$('form.checkout').prepend( '<div id="dibs-required-fields-notice" class="woocommerce-NoticeGroup woocommerce-NoticeGroup-updateOrderReview"><ul class="woocommerce-error" role="alert"><li>' +  wc_dibs_easy.required_fields_text + '</li></ul></div>' );
 				var etop = $('form.checkout').offset().top;
@@ -188,9 +183,6 @@ jQuery(function($) {
 			if( dibs_wc.DibsIsSelected() ) {
 
                 $(document).ready( dibs_wc.documentReady() );
-
-                // Catch changes to order notes.
-				dibs_wc.bodyEl.on('change', '#order_comments', dibs_wc.updateOrderComment);
 
 				// Extra checkout fields.
 				dibs_wc.bodyEl.on('blur', dibs_wc.extraFieldsSelectorText, dibs_wc.checkFormData);

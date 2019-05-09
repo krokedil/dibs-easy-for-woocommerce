@@ -197,7 +197,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Clear sessionStorage.
 		echo '<script>sessionStorage.removeItem("DIBSRequiredFields")</script>';
 		echo '<script>sessionStorage.removeItem("DIBSFieldData")</script>';
-		echo '<script>sessionStorage.removeItem("dibs_wc_order_comment")</script>';
 
 		// Unset sessions.
 		wc_dibs_unset_sessions();
