@@ -363,7 +363,7 @@ jQuery(function($) {
                             $("form.checkout #terms").prop("checked", true);
                         }
                         $('input#ship-to-different-address-checkbox').prop('checked', true);
-                        //$("#place_order").trigger("submit");
+                        $('form.woocommerce-checkout').append( '<input type="hidden" id="dibs_payment_id" name="dibs_payment_id" value="' + paymentId + '" />' )
                         $('form[name="checkout"]').submit();
                         $('form.woocommerce-checkout').addClass( 'processing' );
 					},
