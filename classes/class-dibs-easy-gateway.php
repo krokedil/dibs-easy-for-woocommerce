@@ -37,12 +37,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			'subscription_payment_method_change',
 			'multiple_subscriptions',
 		);
-		if ( is_checkout() ) {
-			// Check if paymentId is set, check if order is ok.
-			if ( isset( $_GET['paymentId'] ) ) {
-				add_action( 'woocommerce_before_checkout_form', array( $this, 'dibs_get_field_values' ) );
-			}
-		}
 
 		// Add class if DIBS Easy is set as the default gateway
 		add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
@@ -194,6 +188,11 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			WC()->cart->empty_cart();
 		}
 
+		// Clear sessionStorage.
+		echo '<script>sessionStorage.removeItem("DIBSRequiredFields")</script>';
+		echo '<script>sessionStorage.removeItem("DIBSFieldData")</script>';
+
+		// Unset sessions.
 		wc_dibs_unset_sessions();
 	}
 
@@ -207,7 +206,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$request = $request->request();
-		if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'chargedAmount', $request->payment->summary ) || key_exists( 'id', $request->payment->subscription ) ) {
+
+		if ( isset( $request->payment->summary->reservedAmount ) || $request->payment->summary->chargedAmount || isset( $request->payment->subscription->id ) ) {
 
 			do_action( 'dibs_easy_process_payment', $order_id, $request );
 
@@ -231,39 +231,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 	public function maybe_delete_dibs_sessions( $order_id ) {
 		wc_dibs_unset_sessions();
-	}
-
-
-	public function dibs_get_field_values() {
-
-		// Get the payment ID
-		$payment_id = $_GET['paymentId'];
-
-		$request               = new DIBS_Requests_Get_DIBS_Order( $payment_id );
-		$this->checkout_fields = $request->request();
-
-		// $order_id = WC()->session->get( 'dibs_incomplete_order' );
-		// Check payment status
-		if ( key_exists( 'reservedAmount', $this->checkout_fields->payment->summary ) || key_exists( 'id', $this->checkout_fields->payment->subscription ) ) {
-			// Payment is ok, DIBS have reserved an amount
-			// Convert country code from 3 to 2 letters
-			if ( $this->checkout_fields->payment->consumer->shippingAddress->country ) {
-				$this->checkout_fields->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $this->checkout_fields->payment->consumer->shippingAddress->country );
-			}
-
-			// Store the order data in a session. We might need it if form processing in Woo fails
-			WC()->session->set( 'dibs_order_data', $this->checkout_fields );
-
-			$this->prepare_cart_before_form_processing( $this->checkout_fields->payment->consumer->shippingAddress->country );
-		} else {
-			// Payment is not ok (no reservedAmount). Possibly a card without enough funds or a canceled order from 3DSecure window.
-			// Redirect the customer to checkout page but change the param paymentId to dibs-payment-id.
-			// By doing this the WC form will not be submitted, instead the Easy iframe will be displayed again.
-			// @todo - log this event in DIBS log
-			$redirect_url = add_query_arg( 'dibs-payment-id', $payment_id, trailingslashit( wc_get_checkout_url() ) );
-			wp_redirect( $redirect_url );
-			exit;
-		}
 	}
 
 	/**
