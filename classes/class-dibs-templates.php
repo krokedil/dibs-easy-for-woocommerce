@@ -38,9 +38,9 @@ class DIBS_Templates {
 
 		// Template hooks.
 		add_action( 'wc_dibs_before_checkout_form', 'wc_dibs_calculate_totals', 1 );
-		add_action( 'wc_dibs_after_order_review', 'wc_dibs_show_customer_order_notes', 10 );
+		add_action( 'wc_dibs_after_order_review', array( $this, 'add_extra_checkout_fields' ), 10 );
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_show_another_gateway_button', 20 );
-		add_action( 'wc_dibs_after_order_review', 'wc_dibs_add_woocommerce_checkout_form_fields', 30 );
+		add_action( 'wc_dibs_after_snippet', array( $this, 'add_wc_form' ), 10 );
 	}
 
 	/**
@@ -100,6 +100,34 @@ class DIBS_Templates {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Adds the WC form and other fields to the checkout page.
+	 *
+	 * @return void
+	 */
+	public function add_wc_form() {
+		?>
+		<div aria-hidden="true" id="dibs-wc-form" style="position:absolute; top:0; left:-99999px;">
+			<?php do_action( 'woocommerce_checkout_billing' ); ?>
+			<?php do_action( 'woocommerce_checkout_shipping' ); ?>
+			<?php wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce' ); ?>
+			<input id="payment_method_dibs_easy" type="radio" class="input-radio" name="payment_method" value="dibs_easy" checked="checked" />
+		</div>
+		<?php
+	}
+
+	/**
+	 * Adds the extra checkout field div to the checkout page.
+	 *
+	 * @return void
+	 */
+	public function add_extra_checkout_fields() {
+		?>
+		<div id="dibs-extra-checkout-fields">
+		</div>
+		<?php
 	}
 }
 

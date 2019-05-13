@@ -8,7 +8,7 @@
  * Plugin Name:             DIBS Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:                 1.7.5
+ * Version:                 1.8.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -16,7 +16,7 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    3.0.0
- * WC tested up to:         3.5.7
+ * WC tested up to:         3.6.2
  * Copyright:               © 2017-2019 Krokedil Produktionsbyrå AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.7.5' );
+define( 'WC_DIBS_EASY_VERSION', '1.8.0' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -154,6 +154,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					$checkout_initiated = 'no';
 				}
 
+				$standard_woo_checkout_fields = array( 'billing_first_name', 'billing_last_name', 'billing_address_1', 'billing_address_2', 'billing_postcode', 'billing_city', 'billing_phone', 'billing_email', 'billing_state', 'billing_country', 'billing_company', 'shipping_first_name', 'shipping_last_name', 'shipping_address_1', 'shipping_address_2', 'shipping_postcode', 'shipping_city', 'shipping_state', 'shipping_country', 'shipping_company', 'terms', 'account_username', 'account_password' );
+
 				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
 				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_EASY_VERSION );
 				wp_localize_script(
@@ -163,7 +165,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 						'dibs_payment_id'                  => $dibs_payment_id,
 						'paymentId'                        => $paymentId,
 						'checkout_initiated'               => $checkout_initiated,
+						'standard_woo_checkout_fields'     => $standard_woo_checkout_fields,
 						'dibs_process_order_text'          => __( 'Please wait while we process your order...', 'dibs-easy-for-woocommerce' ),
+						'required_fields_text'             => __( 'Please fill in all required checkout fields.', 'dibs-easy-for-woocommerce' ),
 						'update_checkout_url'              => WC_AJAX::get_endpoint( 'update_checkout' ),
 						'customer_adress_updated_url'      => WC_AJAX::get_endpoint( 'customer_adress_updated' ),
 						'get_order_data_url'               => WC_AJAX::get_endpoint( 'get_order_data' ),

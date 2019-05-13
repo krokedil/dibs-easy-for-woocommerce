@@ -18,12 +18,11 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-			'update_checkout'              => true,
-			'customer_adress_updated'      => true,
-			'get_order_data'               => true,
-			'dibs_add_customer_order_note' => true,
-			'change_payment_method'        => true,
-			'ajax_on_checkout_error'       => true,
+			'update_checkout'         => true,
+			'customer_adress_updated' => true,
+			'get_order_data'          => true,
+			'change_payment_method'   => true,
+			'ajax_on_checkout_error'  => true,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -166,13 +165,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 				$response->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $response->payment->consumer->shippingAddress->country );
 			}
 
-			// Maybe add customer order note
-			if ( null != WC()->session->get( 'dibs_customer_order_note' ) ) {
-				$response->order_note = WC()->session->get( 'dibs_customer_order_note' );
-			} else {
-				$response->order_note = '';
-			}
-
 			// Store the order data in a sesstion. We might need it if form processing in Woo fails
 			WC()->session->set( 'dibs_order_data', $response );
 
@@ -220,13 +212,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			WC()->customer->save();
 			WC()->cart->calculate_totals();
 		}
-	}
-
-
-	public static function dibs_add_customer_order_note() {
-		WC()->session->set( 'dibs_customer_order_note', $_POST['order_note'] );
-		wp_send_json_success( $_POST['order_note'] );
-		wp_die();
 	}
 
 	/**
@@ -285,7 +270,8 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			array(
 				'dibs-osf' => 'true',
 				'order-id' => $order_id,
-			), $redirect_url
+			),
+			$redirect_url
 		);
 
 		wp_send_json_success( array( 'redirect' => $redirect_url ) );
