@@ -172,6 +172,7 @@
                             $("form.checkout #terms").prop("checked", true);
                         }
                         $('input#ship-to-different-address-checkbox').prop('checked', true);
+                        $('form.woocommerce-checkout').append( '<input type="hidden" id="dibs_payment_id" name="dibs_payment_id" value="' + paymentId + '" />' )
                         $("#place_order").trigger("submit");
                         $('form.woocommerce-checkout').addClass( 'processing' );
 					},
