@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 5.2
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.6.2
+Tested WooCommerce up to: 3.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.05.17    - version 1.8.1 =
+* Tweak         - Logging improvements during checkout form submission.
 
 = 2019.05.13    - version 1.8.0 =
 * Feature       - Added support for extra checkout field validation (checkout form fields outside of Easy checkout). Read more about it here: https://docs.krokedil.com/article/277-dibs-easy-extra-checkout-fields
