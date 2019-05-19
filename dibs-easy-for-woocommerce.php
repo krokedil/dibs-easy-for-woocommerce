@@ -203,55 +203,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			return $methods;
 		}
 
-		// Add custom order status
-		public function register_dibs_incomplete_order_status() {
-			/*
-			 Add this later with Debug option
-			if ( 'yes' == $this->debug ) {
-				$show_in_admin_status_list = true;
-			} else {
-				$show_in_admin_status_list = false;
-			} */
-			register_post_status(
-				'wc-dibs-incomplete',
-				array(
-					'label'                     => 'DIBS incomplete',
-					'public'                    => false,
-					'exclude_from_search'       => false,
-					'show_in_admin_all_list'    => false,
-					'show_in_admin_status_list' => false,
-					'label_count'               => _n_noop( 'DIBS incomplete <span class="count">(%s)</span>', 'DIBS incomplete <span class="count">(%s)</span>' ),
-				)
-			);
-		}
-		public function dibs_incomplete_payment_complete( $order_statuses ) {
-			$order_statuses[] = 'dibs-incomplete';
-			return $order_statuses;
-		}
 
-		public function add_dibs_incomplete_to_order_statuses( $order_statuses ) {
-			// Add this status only if not in account page (so it doesn't show in My Account list of orders)
-			if ( ! is_account_page() ) {
-				$order_statuses['wc-dibs-incomplete'] = 'Incomplete DIBS Easy order';
-			}
-			return $order_statuses;
-		}
 
-		public function wc_add_dibs_incomplete_email_actions( $email_actions ) {
-			$email_actions[] = 'woocommerce_order_status_dibs-incomplete_to_processing';
-			return $email_actions;
-		}
-
-		public function wc_dibs_incomplete_trigger( $order_id ) {
-			$dibs_mailer = WC()->mailer();
-			$dibs_mails  = $dibs_mailer->get_emails();
-			foreach ( $dibs_mails as $dibs_mail ) {
-				$order = new WC_Order( $order_id );
-				if ( 'new_order' == $dibs_mail->id || 'customer_processing_order' == $dibs_mail->id ) {
-					$dibs_mail->trigger( $order->id );
-				}
-			}
-		}
 
 		public function jk_remove_sticky_checkout() {
 			wp_dequeue_script( 'storefront-sticky-payment' );
