@@ -44,18 +44,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 		public function __construct() {
 			$this->dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+			$this->checkout_flow = ( isset( $this->dibs_settings['checkout_flow'] ) ) ? $this->dibs_settings['checkout_flow'] : 'embedded';
 			add_action( 'woocommerce_email_after_order_table', array( $this, 'email_extra_information' ), 10, 3 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
-			define( 'DIR_NAME', dirname( __FILE__ ) );
-
-			// Remove the storefront sticky checkout.
-			add_action( 'wp_enqueue_scripts', array( $this, 'jk_remove_sticky_checkout' ), 99 );
-
-			// Cart page error notice
-			add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
-			// Checkout fields process
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'unrequire_fields' ), 99 );
-			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'unrequire_posted_data' ), 99 );
 		}
 		// Include the classes and enqueue the scripts.
 		public function init() {
@@ -63,13 +54,16 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
+			if ( 'embedded' === $this->checkout_flow ) {
+				include_once plugin_basename( 'classes/class-dibs-templates.php' );
+			}
 
 			include_once plugin_basename( 'classes/class-dibs-ajax-calls.php' );
 			include_once plugin_basename( 'classes/class-dibs-post-checkout.php' );
 			include_once plugin_basename( 'classes/class-dibs-order-submission-failure.php' );
 			include_once plugin_basename( 'classes/class-dibs-admin-notices.php' );
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
-			include_once plugin_basename( 'classes/class-dibs-templates.php' );
+
 			include_once plugin_basename( 'classes/class-dibs-create-local-order-fallback.php' );
 			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 
@@ -102,12 +96,23 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			$this->init_gateway();
 
-			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 
-			// Save DIBS data (payment id) in WC order
-			// add_action( 'woocommerce_new_order', array( $this, 'save_dibs_order_data' ), );
-			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_dibs_order_data' ), 10, 2 );
+			if ( 'embedded' === $this->checkout_flow ) {
+				// Save DIBS data (payment id) in WC order
+				add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_dibs_order_data' ), 10, 2 );
+
+				add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
+
+				// Remove the storefront sticky checkout.
+				add_action( 'wp_enqueue_scripts', array( $this, 'jk_remove_sticky_checkout' ), 99 );
+
+				// Cart page error notice
+				add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
+				// Checkout fields process
+				add_filter( 'woocommerce_checkout_fields', array( $this, 'unrequire_fields' ), 99 );
+				add_filter( 'woocommerce_checkout_posted_data', array( $this, 'unrequire_posted_data' ), 99 );
+			}
 
 		}
 

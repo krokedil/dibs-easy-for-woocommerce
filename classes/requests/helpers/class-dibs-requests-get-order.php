@@ -4,18 +4,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 class DIBS_Requests_Order {
 
-	public static function get_order() {
-		$items = DIBS_Requests_Items::get_items();
+	public static function get_order( $checkout_flow = 'embedded', $order_id = null ) {
+		if ( 'embedded' === $checkout_flow ) {
+			$items = DIBS_Requests_Items::get_items();
 
-		return array(
-			'items'     => $items,
-			'amount'    => self::get_order_total( $items ),
-			'currency'  => get_woocommerce_currency(),
-			'shipping'  => array(
-				'costSpecified' => true,
-			),
-			'reference' => '1',
-		);
+			return array(
+				'items'     => $items,
+				'amount'    => self::get_order_total( $items ),
+				'currency'  => get_woocommerce_currency(),
+				'shipping'  => array(
+					'costSpecified' => true,
+				),
+				'reference' => '1',
+			);
+		} else {
+			$items = DIBS_Requests_Get_Order_Items::get_items( $order_id );
+			$order = wc_get_order( $order_id );
+			return array(
+				'items'     => $items,
+				'amount'    => intval( round( $order->get_total(), 2 ) * 100 ),
+				'currency'  => $order->get_order_currency(),
+				'reference' => $order->get_order_number(),
+			);
+		}
 	}
 
 	public static function get_order_total( $items ) {

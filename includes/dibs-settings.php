@@ -94,5 +94,17 @@ return apply_filters(
 			'default'     => '',
 			'desc_tip'    => false,
 		),
+		'checkout_flow'          => array(
+			'title'       => __( 'Checkout flow', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'select',
+			'options'     => array(
+				'embedded' => __( 'Embedded', 'dibs-easy-for-woocommerce' ),
+				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
+				'modal'    => __( 'Modal', 'dibs-easy-for-woocommerce' ),
+			),
+			'description' => __( 'Select how Easy should be integrated in WooCommerce.', 'dibs-easy-for-woocommerce' ),
+			'default'     => 'embedded',
+			'desc_tip'    => false,
+		),
 	)
 );
