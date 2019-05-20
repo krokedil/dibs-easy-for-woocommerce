@@ -100,6 +100,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			$request = new DIBS_Requests_Create_DIBS_Order( $this->checkout_flow, $order_id );
 			$request = json_decode( $request->request() );
 			if ( array_key_exists( 'hostedPaymentPageUrl', $request ) ) {
+				$order->add_order_note( __( 'Customer redirected to DIBS payment page.', 'dibs-easy-for-woocommerce' ) );
+				update_post_meta( $order_id, '_dibs_payment_id', $request->paymentId );
 				// Redirect customer to DIBS payment page.
 				return array(
 					'result'   => 'success',
@@ -194,27 +196,29 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		return $class;
 	}
 	public function dibs_thankyou( $order_id ) {
-
-		// Bail if the checkout flow isn't set to embedd.
-		if ( 'embedded' !== $this->checkout_flow ) {
-			return;
-		}
-
 		$order = wc_get_order( $order_id );
 
-		// Save payment type, card details & run $order->payment_complete() if all looks good.
-		if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-			$this->process_dibs_payment_in_order( $order_id );
-			$order->add_order_note( __( 'Order finalized in thankyou page.', 'dibs-easy-for-woocommerce' ) );
-			WC()->cart->empty_cart();
+		// Embedded or redirect checkout flow.
+		if ( 'embedded' === $this->checkout_flow ) {
+			// Save payment type, card details & run $order->payment_complete() if all looks good.
+			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+				$this->process_dibs_payment_in_order( $order_id );
+				$order->add_order_note( __( 'Order finalized in thankyou page.', 'dibs-easy-for-woocommerce' ) );
+				WC()->cart->empty_cart();
+			}
+
+			// Clear sessionStorage.
+			echo '<script>sessionStorage.removeItem("DIBSRequiredFields")</script>';
+			echo '<script>sessionStorage.removeItem("DIBSFieldData")</script>';
+
+			// Unset sessions.
+			wc_dibs_unset_sessions();
+		} else {
+			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+				$this->process_dibs_payment_in_order( $order_id );
+			}
 		}
 
-		// Clear sessionStorage.
-		echo '<script>sessionStorage.removeItem("DIBSRequiredFields")</script>';
-		echo '<script>sessionStorage.removeItem("DIBSFieldData")</script>';
-
-		// Unset sessions.
-		wc_dibs_unset_sessions();
 	}
 
 	public function process_dibs_payment_in_order( $order_id ) {
@@ -244,8 +248,18 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 			}
 			$order->payment_complete( $payment_id );
+		} else {
+			// Purchase not finalized in DIBS.
+			// If this is a redirect checkout flow let's redirect the customer to cart page.
+			if ( 'embedded' !== $this->checkout_flow ) {
+				wp_safe_redirect( html_entity_decode( $order->get_cancel_order_url() ) );
+				exit;
+			}
 		}
-		$this->maybe_add_invoice_fee( $order_id );
+
+		if ( 'embedded' === $this->checkout_flow ) {
+			$this->maybe_add_invoice_fee( $order_id );
+		}
 	}
 
 	public function maybe_delete_dibs_sessions( $order_id ) {

@@ -73,10 +73,30 @@ class DIBS_Requests_Checkout {
 		$consumer['shippingAddress']['postalCode']   = $order->get_shipping_postcode();
 		$consumer['shippingAddress']['city']         = $order->get_shipping_city();
 		$consumer['shippingAddress']['country']      = dibs_get_iso_3_country( $order->get_shipping_country() );
-		$consumer['phoneNumber']['prefix']           = '+47';
-		$consumer['phoneNumber']['number']           = $order->get_billing_phone();
+		$consumer['phoneNumber']['prefix']           = self::get_phone_prefix( $order );
+		$consumer['phoneNumber']['number']           = self::get_phone_number( $order );
 		$consumer['privatePerson']['firstName']      = $order->get_shipping_first_name();
 		$consumer['privatePerson']['lastName']       = $order->get_shipping_last_name();
 		return $consumer;
+	}
+
+	public static function get_phone_prefix( $order ) {
+		$prefix = null;
+		if ( substr( $order->get_billing_phone(), 0, 1 ) == '+' ) {
+			$prefix = substr( $order->get_billing_phone(), 0, 3 );
+		} else {
+			$prefix = dibs_get_phone_prefix_for_country( $order->get_shipping_country() );
+		}
+		return $prefix;
+	}
+
+	public static function get_phone_number( $order ) {
+		$phone_number = null;
+		if ( substr( $order->get_billing_phone(), 0, 1 ) == '+' ) {
+			$phone_number = substr( $order->get_billing_phone(), count( self::get_phone_prefix( $order ) ) );
+		} else {
+			$phone_number = $order->get_billing_phone();
+		}
+		return $phone_number;
 	}
 }

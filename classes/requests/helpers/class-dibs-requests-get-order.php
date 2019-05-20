@@ -23,7 +23,7 @@ class DIBS_Requests_Order {
 			return array(
 				'items'     => $items,
 				'amount'    => intval( round( $order->get_total(), 2 ) * 100 ),
-				'currency'  => $order->get_order_currency(),
+				'currency'  => $order->get_currency(),
 				'reference' => $order->get_order_number(),
 			);
 		}
