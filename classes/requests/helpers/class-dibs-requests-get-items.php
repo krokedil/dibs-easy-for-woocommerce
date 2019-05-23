@@ -54,7 +54,7 @@ class DIBS_Requests_Items {
 
 	public static function get_fees( $fee ) {
 		return array(
-			'reference'        => $fee->id,
+			'reference'        => 'fee|' . $fee->id,
 			'name'             => wc_dibs_clean_name( $fee->name ),
 			'quantity'         => 1,
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -76,7 +76,7 @@ class DIBS_Requests_Items {
 				if ( $chosen_shipping === $method->id ) {
 					if ( $method->cost > 0 ) {
 						return array(
-							'reference'        => '1',
+							'reference'        => 'shipping|' . $method->id,
 							'name'             => wc_dibs_clean_name( $method->label ),
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -88,7 +88,7 @@ class DIBS_Requests_Items {
 						);
 					} else {
 						return array(
-							'reference'        => '1',
+							'reference'        => 'shipping|' . $method->id,
 							'name'             => wc_dibs_clean_name( $method->label ),
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),

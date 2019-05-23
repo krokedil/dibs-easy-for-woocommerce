@@ -155,6 +155,9 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			} else {
 				$message = 'Empty response from DIBS.';
 			}
+
+			DIBS_Easy::log( 'Confirmation page rendered for DIBS payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . var_export( $message, true ) );
+
 			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
 			wp_die();
@@ -167,6 +170,8 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 			// Store the order data in a sesstion. We might need it if form processing in Woo fails
 			WC()->session->set( 'dibs_order_data', $response );
+
+			DIBS_Easy::log( 'Confirmation page rendered and checkout form about to be submitted for DIBS payment ID ' . $payment_id );
 
 			self::prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
 			wp_send_json_success( $response );
