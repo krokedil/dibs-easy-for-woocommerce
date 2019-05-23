@@ -56,6 +56,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.05.23    - version 1.8.3 =
+* Fix           - Redirect customer to order received page during payment-completed event if paymentID already exist in an order.
+* Fix           - Save paymentID as post meta _dibs_payment_id in backup_order_creation.
+
 = 2019.05.23    - version 1.8.2 =
 * Enhancement   - Create order lines in backup order creation process. Makes it possible to trigger payment_complete() even if something goes wrong during regular checkout process.
 * Fix           - Avoid division by zero in tax rate calculation.
