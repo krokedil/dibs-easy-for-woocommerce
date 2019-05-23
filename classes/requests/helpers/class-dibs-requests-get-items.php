@@ -45,7 +45,7 @@ class DIBS_Requests_Items {
 			'quantity'         => $cart_item['quantity'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( $cart_item['line_total'] / $cart_item['quantity'], 2 ) * 100 ),
-			'taxRate'          => self::get_item_tax_rate( $cart_item, $product ),
+			'taxRate'          => intval( round( $cart_item['line_tax'] / $cart_item['line_total'], 2 ) * 10000 ),
 			'taxAmount'        => intval( round( $cart_item['line_tax'], 2 ) * 100 ),
 			'grossTotalAmount' => intval( round( $cart_item['line_total'] + $cart_item['line_tax'], 2 ) * 100 ),
 			'netTotalAmount'   => intval( round( $cart_item['line_total'], 2 ) * 100 ),
@@ -54,7 +54,7 @@ class DIBS_Requests_Items {
 
 	public static function get_fees( $fee ) {
 		return array(
-			'reference'        => $fee->id,
+			'reference'        => 'fee|' . $fee->id,
 			'name'             => wc_dibs_clean_name( $fee->name ),
 			'quantity'         => 1,
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -76,7 +76,7 @@ class DIBS_Requests_Items {
 				if ( $chosen_shipping === $method->id ) {
 					if ( $method->cost > 0 ) {
 						return array(
-							'reference'        => '1',
+							'reference'        => 'shipping|' . $method->id,
 							'name'             => wc_dibs_clean_name( $method->label ),
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -88,7 +88,7 @@ class DIBS_Requests_Items {
 						);
 					} else {
 						return array(
-							'reference'        => '1',
+							'reference'        => 'shipping|' . $method->id,
 							'name'             => wc_dibs_clean_name( $method->label ),
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -111,33 +111,5 @@ class DIBS_Requests_Items {
 			$part_number = $product->get_id();
 		}
 		return substr( $part_number, 0, 32 );
-	}
-
-	/**
-	 * Calculate item tax percentage.
-	 *
-	 * @since  1.8.2
-	 * @access public
-	 *
-	 * @param  array  $cart_item Cart item.
-	 * @param  object $product   Product object.
-	 *
-	 * @return integer $item_tax_rate Item tax percentage formatted for DIBS.
-	 */
-	public static function get_item_tax_rate( $cart_item, $product ) {
-		if ( $product->is_taxable() && $cart_item['line_subtotal_tax'] > 0 ) {
-			// Calculate tax rate.
-			$_tax      = new WC_Tax();
-			$tmp_rates = $_tax->get_rates( $product->get_tax_class() );
-			$vat       = array_shift( $tmp_rates );
-			if ( isset( $vat['rate'] ) ) {
-				$item_tax_rate = round( $vat['rate'] * 100 );
-			} else {
-				$item_tax_rate = 0;
-			}
-		} else {
-			$item_tax_rate = 0;
-		}
-		return round( $item_tax_rate );
 	}
 }
