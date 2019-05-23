@@ -2,7 +2,7 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.2
+Tested up to: 5.2.1
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
 Tested WooCommerce up to: 3.6.3
@@ -55,6 +55,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.05.23    - version 1.8.2 =
+* Enhancement   - Create order lines in backup order creation process. Makes it possible to trigger payment_complete() even if something goes wrong during regular checkout process.
+* Fix           - Avoid division by zero in tax rate calculation.
 
 = 2019.05.17    - version 1.8.1 =
 * Tweak         - Logging improvements during checkout form submission.
