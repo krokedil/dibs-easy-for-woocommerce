@@ -100,7 +100,6 @@ return apply_filters(
 			'options'     => array(
 				'embedded' => __( 'Embedded', 'dibs-easy-for-woocommerce' ),
 				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
-				'modal'    => __( 'Modal', 'dibs-easy-for-woocommerce' ),
 			),
 			'description' => __( 'Select how Easy should be integrated in WooCommerce.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'embedded',
