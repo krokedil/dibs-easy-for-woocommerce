@@ -40,7 +40,7 @@ class DIBS_OSF {
 
 				$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 				$request = $request->request();
-				if ( key_exists( 'reservedAmount', $request->payment->summary ) || key_exists( 'chargedAmount', $request->payment->summary ) ) {
+				if ( isset( $request->payment->summary->reservedAmount ) || isset( $request->payment->summary->chargedAmount ) || isset( $request->payment->subscription->id ) ) {
 					update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
 
 					if ( 'CARD' == $request->payment->paymentDetails->paymentType ) {

@@ -144,6 +144,36 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		// Set the endpoint sufix
 		$endpoint_sufix = 'payments/' . $payment_id;
 
+		// Prevent duplicate orders if payment complete event is triggered twice or if order already exist in Woo (via webhook).
+		$query          = new WC_Order_Query(
+			array(
+				'limit'          => -1,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'return'         => 'ids',
+				'payment_method' => 'dibs_easy',
+				'date_created'   => '>' . ( time() - DAY_IN_SECONDS ),
+			)
+		);
+		$orders         = $query->get_orders();
+		$order_id_match = null;
+		foreach ( $orders as $order_id ) {
+			$order_payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+			if ( strtolower( $order_payment_id ) === strtolower( $payment_id ) ) {
+				$order_id_match = $order_id;
+				break;
+			}
+		}
+		// _dibs_payment_id already exist in an order. Let's redirect the customer to the thankyou page for that order.
+		if ( $order_id_match ) {
+			DIBS_Easy::log( 'Confirmation page rendered but _dibs_payment_id already exist in this order: ' . $order_id_match );
+			$order    = wc_get_order( $order_id_match );
+			$location = $order->get_checkout_order_received_url();
+			DIBS_Easy::log( '$location: ' . $location );
+			wp_send_json_error( array( 'redirect' => $location ) );
+			wp_die();
+		}
+
 		// Make the request
 		$request  = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$response = $request->request();
