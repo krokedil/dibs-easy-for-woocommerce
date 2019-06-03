@@ -4,15 +4,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 class DIBS_Requests_Checkout {
 
-	public static function get_checkout() {
+	public static function get_checkout( $checkout_flow = 'embedded', $order_id = null ) {
 		$checkout = array(
-			'url'      => wc_get_checkout_url(),
 			'termsUrl' => wc_get_page_permalink( 'terms' ),
-			'shipping' => array(
-				'countries'                   => array(),
-				'merchantHandlesShippingCost' => true,
-			),
 		);
+		if ( 'embedded' === $checkout_flow ) {
+			$checkout['url']                                     = wc_get_checkout_url();
+			$checkout['shipping']['countries']                   = array();
+			$checkout['shipping']['merchantHandlesShippingCost'] = true;
+		} else {
+			$order                                   = wc_get_order( $order_id );
+			$checkout['returnUrl']                   = $order->get_checkout_order_received_url();
+			$checkout['integrationType']             = 'HostedPaymentPage';
+			$checkout['merchantHandlesConsumerData'] = true;
+			$checkout['shipping']['countries']       = array();
+			$checkout['shipping']['merchantHandlesShippingCost'] = false;
+			$checkout['consumer']                                = self::get_consumer_address( $order );
+		}
+
 		if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
 			$checkout['shipping']['countries'] = self::get_shipping_countries();
 		}
@@ -54,5 +63,40 @@ class DIBS_Requests_Checkout {
 			}
 		}
 		return $converted_countries;
+	}
+
+	public static function get_consumer_address( $order ) {
+		$consumer                                    = array();
+		$consumer['email']                           = $order->get_billing_email();
+		$consumer['shippingAddress']['addressLine1'] = $order->get_billing_address_1();
+		$consumer['shippingAddress']['addressLine2'] = $order->get_billing_address_2();
+		$consumer['shippingAddress']['postalCode']   = $order->get_billing_postcode();
+		$consumer['shippingAddress']['city']         = $order->get_billing_city();
+		$consumer['shippingAddress']['country']      = dibs_get_iso_3_country( $order->get_billing_country() );
+		$consumer['phoneNumber']['prefix']           = self::get_phone_prefix( $order );
+		$consumer['phoneNumber']['number']           = self::get_phone_number( $order );
+		$consumer['privatePerson']['firstName']      = $order->get_billing_first_name();
+		$consumer['privatePerson']['lastName']       = $order->get_billing_last_name();
+		return $consumer;
+	}
+
+	public static function get_phone_prefix( $order ) {
+		$prefix = null;
+		if ( substr( $order->get_billing_phone(), 0, 1 ) == '+' ) {
+			$prefix = substr( $order->get_billing_phone(), 0, 3 );
+		} else {
+			$prefix = dibs_get_phone_prefix_for_country( $order->get_billing_country() );
+		}
+		return $prefix;
+	}
+
+	public static function get_phone_number( $order ) {
+		$phone_number = null;
+		if ( substr( $order->get_billing_phone(), 0, 1 ) == '+' ) {
+			$phone_number = substr( $order->get_billing_phone(), count( self::get_phone_prefix( $order ) ) );
+		} else {
+			$phone_number = $order->get_billing_phone();
+		}
+		return $phone_number;
 	}
 }

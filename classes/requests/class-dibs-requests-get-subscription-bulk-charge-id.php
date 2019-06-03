@@ -5,9 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class DIBS_Request_Get_Subscription_Bulk_Id extends DIBS_Requests2 {
 
 	public $bulk_id;
+	public $order_id;
 
-	public function __construct( $bulk_id ) {
-		$this->bulk_id = $bulk_id;
+	public function __construct( $bulk_id, $order_id ) {
+		$this->bulk_id  = $bulk_id;
+		$this->order_id = $order_id;
 		parent::__construct();
 	}
 
@@ -33,7 +35,7 @@ class DIBS_Request_Get_Subscription_Bulk_Id extends DIBS_Requests2 {
 
 	public function get_request_args() {
 		$request_args = array(
-			'headers'    => $this->request_headers(),
+			'headers'    => $this->request_headers( $this->order_id ),
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'GET',
 		);

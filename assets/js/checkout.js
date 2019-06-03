@@ -316,7 +316,11 @@ jQuery(function($) {
 	                success: function (data) {
                         console.log(data);
                         if( false === data.success ) {
+                            console.log( 'PaymentID already exist in order' );
                             console.log( data );
+                            if( data.data.redirect ) {
+                                window.location.href = data.data.redirect;
+                            }
                         } else {
 
                             $("form.checkout #billing_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
@@ -356,16 +360,16 @@ jQuery(function($) {
                                 $("form.checkout #shipping_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
                             }
 
-                        }
-                        
-                        // Check Terms checkbox, if it exists
-                        if ($("form.checkout #terms").length > 0) {
-                            $("form.checkout #terms").prop("checked", true);
-                        }
-                        $('input#ship-to-different-address-checkbox').prop('checked', true);
-                        $('form.woocommerce-checkout').append( '<input type="hidden" id="dibs_payment_id" name="dibs_payment_id" value="' + paymentId + '" />' )
-                        $('form[name="checkout"]').submit();
-                        $('form.woocommerce-checkout').addClass( 'processing' );
+                            // Check Terms checkbox, if it exists
+                            if ($("form.checkout #terms").length > 0) {
+                                $("form.checkout #terms").prop("checked", true);
+                            }
+                            $('input#ship-to-different-address-checkbox').prop('checked', true);
+                            $('form.woocommerce-checkout').append( '<input type="hidden" id="dibs_payment_id" name="dibs_payment_id" value="' + paymentId + '" />' )
+                            $('form[name="checkout"]').submit();
+                            $('form.woocommerce-checkout').addClass( 'processing' );
+
+                        } 
 					},
 					error: function (data) {
 					},

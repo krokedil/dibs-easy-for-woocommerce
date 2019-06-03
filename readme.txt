@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 5.2.1
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.6.3
+Tested WooCommerce up to: 3.6.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,17 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.06.03    - version 1.9.0 =
+* Feature       - Introduce redirect to DIBS hosted payment window checkout flow. Can be changed in settings under "Checkout flow".
+* Tweak         - Remove custom order status functionality (not used anymore).
+* Fix           - Tweaks to API requests so that filter dibs_easy_request_secret_key can be used throughout the entire order process.
+* Fix           - Limit product names to 128 characters sent to DIBS.
+
+= 2019.05.23    - version 1.8.3 =
+* Fix           - Redirect customer to order received page during payment-completed event if paymentID already exist in an order.
+* Fix           - Save paymentID as post meta _dibs_payment_id in backup_order_creation.
+* Fix           - Fix PHP warning in order submission failure.
 
 = 2019.05.23    - version 1.8.2 =
 * Enhancement   - Create order lines in backup order creation process. Makes it possible to trigger payment_complete() even if something goes wrong during regular checkout process.

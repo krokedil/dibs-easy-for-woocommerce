@@ -8,7 +8,7 @@
  * Plugin Name:             DIBS Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:                 1.8.2
+ * Version:                 1.9.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -16,7 +16,7 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    3.0.0
- * WC tested up to:         3.6.3
+ * WC tested up to:         3.6.4
  * Copyright:               © 2017-2019 Krokedil Produktionsbyrå AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.8.2' );
+define( 'WC_DIBS_EASY_VERSION', '1.9.0' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -44,26 +44,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 		public function __construct() {
 			$this->dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+			$this->checkout_flow = ( isset( $this->dibs_settings['checkout_flow'] ) ) ? $this->dibs_settings['checkout_flow'] : 'embedded';
 			add_action( 'woocommerce_email_after_order_table', array( $this, 'email_extra_information' ), 10, 3 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
-			define( 'DIR_NAME', dirname( __FILE__ ) );
-			// Register custom order status
-			add_action( 'init', array( $this, 'register_dibs_incomplete_order_status' ) );
-			add_filter( 'wc_order_statuses', array( $this, 'add_dibs_incomplete_to_order_statuses' ) );
-			add_filter( 'woocommerce_valid_order_statuses_for_payment_complete', array( $this, 'dibs_incomplete_payment_complete' ) );
-			add_filter( 'woocommerce_valid_order_statuses_for_payment', array( $this, 'dibs_incomplete_payment_complete' ) );
-			// Send mails with the custom order status
-			add_filter( 'woocommerce_email_actions', array( $this, 'wc_add_dibs_incomplete_email_actions' ) );
-			add_action( 'woocommerce_order_status_dibs-incomplete_to_processing_notification', array( $this, 'wc_dibs_incomplete_trigger' ) );
-
-			// Remove the storefront sticky checkout.
-			add_action( 'wp_enqueue_scripts', array( $this, 'jk_remove_sticky_checkout' ), 99 );
-
-			// Cart page error notice
-			add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
-			// Checkout fields process
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'unrequire_fields' ), 99 );
-			add_filter( 'woocommerce_checkout_posted_data', array( $this, 'unrequire_posted_data' ), 99 );
 		}
 		// Include the classes and enqueue the scripts.
 		public function init() {
@@ -71,13 +54,16 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
+			if ( 'embedded' === $this->checkout_flow ) {
+				include_once plugin_basename( 'classes/class-dibs-templates.php' );
+			}
 
 			include_once plugin_basename( 'classes/class-dibs-ajax-calls.php' );
 			include_once plugin_basename( 'classes/class-dibs-post-checkout.php' );
 			include_once plugin_basename( 'classes/class-dibs-order-submission-failure.php' );
 			include_once plugin_basename( 'classes/class-dibs-admin-notices.php' );
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
-			include_once plugin_basename( 'classes/class-dibs-templates.php' );
+
 			include_once plugin_basename( 'classes/class-dibs-create-local-order-fallback.php' );
 			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 
@@ -110,12 +96,23 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			$this->init_gateway();
 
-			add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 
-			// Save DIBS data (payment id) in WC order
-			// add_action( 'woocommerce_new_order', array( $this, 'save_dibs_order_data' ), );
-			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_dibs_order_data' ), 10, 2 );
+			if ( 'embedded' === $this->checkout_flow ) {
+				// Save DIBS data (payment id) in WC order
+				add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_dibs_order_data' ), 10, 2 );
+
+				add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
+
+				// Remove the storefront sticky checkout.
+				add_action( 'wp_enqueue_scripts', array( $this, 'jk_remove_sticky_checkout' ), 99 );
+
+				// Cart page error notice
+				add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
+				// Checkout fields process
+				add_filter( 'woocommerce_checkout_fields', array( $this, 'unrequire_fields' ), 99 );
+				add_filter( 'woocommerce_checkout_posted_data', array( $this, 'unrequire_posted_data' ), 99 );
+			}
 
 		}
 
@@ -211,55 +208,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			return $methods;
 		}
 
-		// Add custom order status
-		public function register_dibs_incomplete_order_status() {
-			/*
-			 Add this later with Debug option
-			if ( 'yes' == $this->debug ) {
-				$show_in_admin_status_list = true;
-			} else {
-				$show_in_admin_status_list = false;
-			} */
-			register_post_status(
-				'wc-dibs-incomplete',
-				array(
-					'label'                     => 'DIBS incomplete',
-					'public'                    => false,
-					'exclude_from_search'       => false,
-					'show_in_admin_all_list'    => false,
-					'show_in_admin_status_list' => false,
-					'label_count'               => _n_noop( 'DIBS incomplete <span class="count">(%s)</span>', 'DIBS incomplete <span class="count">(%s)</span>' ),
-				)
-			);
-		}
-		public function dibs_incomplete_payment_complete( $order_statuses ) {
-			$order_statuses[] = 'dibs-incomplete';
-			return $order_statuses;
-		}
 
-		public function add_dibs_incomplete_to_order_statuses( $order_statuses ) {
-			// Add this status only if not in account page (so it doesn't show in My Account list of orders)
-			if ( ! is_account_page() ) {
-				$order_statuses['wc-dibs-incomplete'] = 'Incomplete DIBS Easy order';
-			}
-			return $order_statuses;
-		}
 
-		public function wc_add_dibs_incomplete_email_actions( $email_actions ) {
-			$email_actions[] = 'woocommerce_order_status_dibs-incomplete_to_processing';
-			return $email_actions;
-		}
-
-		public function wc_dibs_incomplete_trigger( $order_id ) {
-			$dibs_mailer = WC()->mailer();
-			$dibs_mails  = $dibs_mailer->get_emails();
-			foreach ( $dibs_mails as $dibs_mail ) {
-				$order = new WC_Order( $order_id );
-				if ( 'new_order' == $dibs_mail->id || 'customer_processing_order' == $dibs_mail->id ) {
-					$dibs_mail->trigger( $order->id );
-				}
-			}
-		}
 
 		public function jk_remove_sticky_checkout() {
 			wp_dequeue_script( 'storefront-sticky-payment' );

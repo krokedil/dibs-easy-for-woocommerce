@@ -165,6 +165,7 @@ function wc_dibs_get_private_key() {
 function wc_dibs_clean_name( $name ) {
 	$regex = '/[^!#$%()*+,-.\/:;=?@\[\]\\\^_`{}|~a-zA-Z0-9\x{00A1}-\x{00AC}\x{00AE}-\x{00FF}\x{0100}-\x{017F}\x{0180}-\x{024F}\x{0250}-\x{02AF}\x{02B0}-\x{02FF}\x{0300}-\x{036F}\s]+/u';
 	$name  = preg_replace( $regex, '', $name );
-	return $name;
+
+	return substr( $name, 0, 128 );
 }
 

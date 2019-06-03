@@ -287,7 +287,7 @@ class DIBS_Api_Callbacks {
 		}
 
 		update_post_meta( $order_id, 'dibs_payment_type', $dibs_order->payment->paymentDetails->paymentType );
-		update_post_meta( $order_id, '_transaction_id', $dibs_order->payment->paymentId );
+		update_post_meta( $order_id, '_dibs_payment_id', $dibs_order->payment->paymentId );
 
 		if ( 'CARD' == $dibs_order->payment->paymentDetails->paymentType ) {
 			update_post_meta( $order_id, 'dibs_customer_card', $dibs_order->payment->paymentDetails->cardDetails->maskedPan );
@@ -302,7 +302,7 @@ class DIBS_Api_Callbacks {
 		$order->save();
 
 		if ( isset( $dibs_order->payment->summary->reservedAmount ) || isset( $dibs_order->payment->summary->chargedAmount ) || isset( $dibs_order->payment->subscription->id ) ) {
-			$order->payment_complete( $payment_id );
+			$order->payment_complete( $dibs_order->payment->paymentId );
 		}
 
 		if ( (int) round( $order->get_total() * 100 ) !== (int) $dibs_checkout_completed_order['data']['order']['amount']['amount'] ) {
