@@ -238,7 +238,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$request    = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
 		$request    = $request->request();
 
-		$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
+		$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
 		$request = $request->request();
 
 		if ( isset( $request->payment->summary->reservedAmount ) || isset( $request->payment->summary->chargedAmount ) || isset( $request->payment->subscription->id ) ) {

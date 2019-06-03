@@ -38,7 +38,7 @@ class DIBS_OSF {
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
 				$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
 
-				$request = new DIBS_Requests_Get_DIBS_Order( $payment_id );
+				$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
 				$request = $request->request();
 				if ( isset( $request->payment->summary->reservedAmount ) || isset( $request->payment->summary->chargedAmount ) || isset( $request->payment->subscription->id ) ) {
 					update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );

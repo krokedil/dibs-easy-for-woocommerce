@@ -5,9 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class DIBS_Requests_Get_DIBS_Order extends DIBS_Requests2 {
 
 	public $payment_id;
+	public $order_id;
 
-	public function __construct( $payment_id ) {
+	public function __construct( $payment_id, $order_id = null ) {
 		$this->payment_id = $payment_id;
+		$this->order_id   = $order_id;
 		parent::__construct();
 	}
 
@@ -33,7 +35,7 @@ class DIBS_Requests_Get_DIBS_Order extends DIBS_Requests2 {
 
 	public function get_request_args() {
 		$request_args = array(
-			'headers'    => $this->request_headers(),
+			'headers'    => $this->request_headers( $this->order_id ),
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'GET',
 		);
