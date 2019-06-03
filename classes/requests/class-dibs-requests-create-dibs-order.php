@@ -29,7 +29,7 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 
 	public function get_request_args() {
 		$request_args = array(
-			'headers'    => $this->request_headers(),
+			'headers'    => $this->request_headers( $this->order_id ),
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'POST',
 			'body'       => json_encode( $this->request_body() ),
