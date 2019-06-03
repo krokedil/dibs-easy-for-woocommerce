@@ -68,15 +68,15 @@ class DIBS_Requests_Checkout {
 	public static function get_consumer_address( $order ) {
 		$consumer                                    = array();
 		$consumer['email']                           = $order->get_billing_email();
-		$consumer['shippingAddress']['addressLine1'] = $order->get_shipping_address_1();
-		$consumer['shippingAddress']['addressLine2'] = $order->get_shipping_address_2();
-		$consumer['shippingAddress']['postalCode']   = $order->get_shipping_postcode();
-		$consumer['shippingAddress']['city']         = $order->get_shipping_city();
-		$consumer['shippingAddress']['country']      = dibs_get_iso_3_country( $order->get_shipping_country() );
+		$consumer['shippingAddress']['addressLine1'] = $order->get_billing_address_1();
+		$consumer['shippingAddress']['addressLine2'] = $order->get_billing_address_2();
+		$consumer['shippingAddress']['postalCode']   = $order->get_billing_postcode();
+		$consumer['shippingAddress']['city']         = $order->get_billing_city();
+		$consumer['shippingAddress']['country']      = dibs_get_iso_3_country( $order->get_billing_country() );
 		$consumer['phoneNumber']['prefix']           = self::get_phone_prefix( $order );
 		$consumer['phoneNumber']['number']           = self::get_phone_number( $order );
-		$consumer['privatePerson']['firstName']      = $order->get_shipping_first_name();
-		$consumer['privatePerson']['lastName']       = $order->get_shipping_last_name();
+		$consumer['privatePerson']['firstName']      = $order->get_billing_first_name();
+		$consumer['privatePerson']['lastName']       = $order->get_billing_last_name();
 		return $consumer;
 	}
 
@@ -85,7 +85,7 @@ class DIBS_Requests_Checkout {
 		if ( substr( $order->get_billing_phone(), 0, 1 ) == '+' ) {
 			$prefix = substr( $order->get_billing_phone(), 0, 3 );
 		} else {
-			$prefix = dibs_get_phone_prefix_for_country( $order->get_shipping_country() );
+			$prefix = dibs_get_phone_prefix_for_country( $order->get_billing_country() );
 		}
 		return $prefix;
 	}
