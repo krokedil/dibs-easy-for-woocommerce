@@ -57,7 +57,7 @@ class DIBS_Subscriptions {
 		if ( isset( $dibs_order->payment->subscription->id ) ) {
 			update_post_meta( $order_id, '_dibs_recurring_token', $dibs_order->payment->subscription->id );
 
-			$dibs_subscription = new DIBS_Requests_Get_Subscription( $dibs_order->payment->subscription->id );
+			$dibs_subscription = new DIBS_Requests_Get_Subscription( $dibs_order->payment->subscription->id, $order_id );
 			$request           = $dibs_subscription->request();
 			if ( 'CARD' == $request->paymentDetails->paymentType ) {
 				update_post_meta( $order_id, 'dibs_payment_type', $request->paymentDetails->paymentType );
@@ -100,7 +100,7 @@ class DIBS_Subscriptions {
 			// We got a bulkId in response. Save it in the renewal order and make a new request to DIBS to get the status and ID of the transaction
 			update_post_meta( $order_id, '_dibs_recurring_bulk_id', $create_order_response->bulkId );
 
-			$recurring_orders = new DIBS_Request_Get_Subscription_Bulk_Id( $create_order_response->bulkId );
+			$recurring_orders = new DIBS_Request_Get_Subscription_Bulk_Id( $create_order_response->bulkId, $order_id );
 			$recurring_orders = $recurring_orders->request();
 
 			$payment_id = null;
@@ -143,7 +143,7 @@ class DIBS_Subscriptions {
 		// $payment_id       = $order->get_transaction_id();
 		$recurring_token = get_post_meta( $order_id, '_dibs_recurring_token', true );
 
-		$recurring_orders = new DIBS_Request_Get_Subscription_Bulk_Id( $subscription_bulk_id );
+		$recurring_orders = new DIBS_Request_Get_Subscription_Bulk_Id( $subscription_bulk_id, $order_id );
 		$recurring_orders = $recurring_orders->request();
 		$payment_id       = null;
 		foreach ( $recurring_orders->page as $recurring_order ) {
@@ -189,7 +189,7 @@ class DIBS_Subscriptions {
 					?>
 				</div>
 			</div>
-		<?php
+			<?php
 		}
 	}
 

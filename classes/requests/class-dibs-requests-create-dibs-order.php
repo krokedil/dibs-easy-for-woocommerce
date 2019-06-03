@@ -4,8 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 
-	public function __construct() {
+	public function __construct( $checkout_flow = 'embedded', $order_id = null ) {
 		parent::__construct();
+		$this->checkout_flow = $checkout_flow;
+		$this->order_id      = $order_id;
 	}
 
 	public function request() {
@@ -27,7 +29,7 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 
 	public function get_request_args() {
 		$request_args = array(
-			'headers'    => $this->request_headers(),
+			'headers'    => $this->request_headers( $this->order_id ),
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'POST',
 			'body'       => json_encode( $this->request_body() ),
@@ -37,11 +39,13 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 	}
 	public function request_body() {
 		$request_args = array(
-			'order'          => DIBS_Requests_Order::get_order(),
-			'checkout'       => DIBS_Requests_Checkout::get_checkout(),
-			'notifications'  => DIBS_Requests_Notifications::get_notifications(),
-			'paymentMethods' => DIBS_Requests_Payment_Methods::get_invoice_fees(),
+			'order'         => DIBS_Requests_Order::get_order( $this->checkout_flow, $this->order_id ),
+			'checkout'      => DIBS_Requests_Checkout::get_checkout( $this->checkout_flow, $this->order_id ),
+			'notifications' => DIBS_Requests_Notifications::get_notifications(),
 		);
+		if ( 'embedded' === $this->checkout_flow ) {
+			$request_args['paymentMethods'] = DIBS_Requests_Payment_Methods::get_invoice_fees();
+		}
 		return apply_filters( 'dibs_easy_create_order_args', $request_args );
 	}
 }

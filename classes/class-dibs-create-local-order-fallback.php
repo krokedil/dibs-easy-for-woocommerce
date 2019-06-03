@@ -12,7 +12,9 @@ class DIBS_Create_Local_Order_Fallback {
 			$order->remove_order_items();
 		foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) { // Store the line items to the new/resumed order.
 			$item_id = $order->add_product(
-				$values['data'], $values['quantity'], array(
+				$values['data'],
+				$values['quantity'],
+				array(
 					'variation' => $values['variation'],
 					'totals'    => array(
 						'subtotal'     => $values['line_subtotal'],
@@ -54,7 +56,7 @@ class DIBS_Create_Local_Order_Fallback {
 	 */
 	public function add_order_shipping( $order ) {
 		$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
-		$packages = WC()->shipping->get_packages();
+		$packages                = WC()->shipping->get_packages();
 		foreach ( $packages as $package_key => $package ) {
 			if ( isset( $chosen_shipping_methods[ $package_key ], $package['rates'][ $chosen_shipping_methods[ $package_key ] ] ) ) {
 				$shipping_rate            = $package['rates'][ $chosen_shipping_methods[ $package_key ] ];
@@ -85,7 +87,7 @@ class DIBS_Create_Local_Order_Fallback {
 			}
 		}
 	}
-	
+
 
 	public function add_order_tax_rows( $order ) {
 		// Store tax rows.
@@ -114,7 +116,7 @@ class DIBS_Create_Local_Order_Fallback {
 		$order_id      = $order->get_id();
 		$customer_data = array();
 
-		$dibs_order = new DIBS_Requests_Get_DIBS_Order( WC()->session->get( 'dibs_payment_id' ) );
+		$dibs_order = new DIBS_Requests_Get_DIBS_Order( WC()->session->get( 'dibs_payment_id' ), $order_id );
 		$dibs_order = $dibs_order->request();
 
 		if ( array_key_exists( 'name', $dibs_order->payment->consumer->company ) ) {
