@@ -112,11 +112,11 @@ class DIBS_Create_Local_Order_Fallback {
 		$payment_method     = $available_gateways['dibs_easy'];
 		$order->set_payment_method( $payment_method );
 	}
-	public function add_customer_data_to_local_order( $order ) {
+	public function add_customer_data_to_local_order( $order, $payment_id ) {
 		$order_id      = $order->get_id();
 		$customer_data = array();
 
-		$dibs_order = new DIBS_Requests_Get_DIBS_Order( WC()->session->get( 'dibs_payment_id' ), $order_id );
+		$dibs_order = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
 		$dibs_order = $dibs_order->request();
 
 		if ( array_key_exists( 'name', $dibs_order->payment->consumer->company ) ) {
@@ -163,7 +163,7 @@ class DIBS_Create_Local_Order_Fallback {
 
 	// Update the DIBS Order with the Order ID
 	public function update_order_reference_in_dibs( $order_number ) {
-		$request = new DIBS_Requests_Update_DIBS_Order_Reference( WC()->session->get( 'dibs_payment_id' ), $order_number );
+		$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_number );
 		$request->request();
 	}
 }
