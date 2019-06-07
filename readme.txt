@@ -56,6 +56,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.06.07    - version 1.9.1 =
+* Fix           - Save _dibs_payment_id correct on orders created via checkout error sequence.
+
 = 2019.06.03    - version 1.9.0 =
 * Feature       - Introduce redirect to DIBS hosted payment window checkout flow. Can be changed in settings under "Checkout flow".
 * Tweak         - Remove custom order status functionality (not used anymore).

@@ -253,6 +253,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 * Handles WooCommerce checkout error (if checkout submission fails), after DIBS order has already been created.
 	 */
 	public static function ajax_on_checkout_error() {
+		$payment_id = WC()->session->get( 'dibs_payment_id' );
 
 		$create_order = new DIBS_Create_Local_Order_Fallback();
 		// Create the order.
@@ -270,7 +271,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		// Add coupons to order.
 		$create_order->add_order_coupons( $order );
 		// Add customer to order.
-		$create_order->add_customer_data_to_local_order( $order );
+		$create_order->add_customer_data_to_local_order( $order, $payment_id );
 		// Add payment method
 		$create_order->add_order_payment_method( $order );
 
@@ -289,7 +290,10 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		$create_order->calculate_order_totals( $order );
 
 		// Update the DIBS Order with the Order ID
-		$create_order->update_order_reference_in_dibs( $order->get_order_number() );
+		$create_order->update_order_reference_in_dibs( $order->get_order_number(), $payment_id );
+
+		// Add DIBS Payment ID to order.
+		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 
 		// Add order note
 		if ( ! empty( $_POST['error_message'] ) ) { // Input var okay.
