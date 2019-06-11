@@ -300,7 +300,9 @@ jQuery(function($) {
             //DIBS_Payment_Success(response.paymentId);
             var redirectUrl = sessionStorage.getItem( 'DIBSRedirectUrl' );
             console.log(redirectUrl);
-            window.location.href = redirectUrl;
+            if( redirectUrl ) {
+                window.location.href = redirectUrl;
+            }
         });
     }
 
