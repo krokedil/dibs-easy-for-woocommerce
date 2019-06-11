@@ -156,7 +156,7 @@ class DIBS_Api_Callbacks {
 
 		// Check order total and compare it with Woo
 		$woo_order_total  = intval( round( $order->get_total() ) * 100 );
-		$dibs_order_total = $dibs_order['data']['amount']['amount'];
+		$dibs_order_total = $dibs_order['data']['order']['amount']['amount'];
 
 		if ( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
 			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and DIBS order total do not match. DIBS order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
