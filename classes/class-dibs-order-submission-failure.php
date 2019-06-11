@@ -42,6 +42,7 @@ class DIBS_OSF {
 				$request = $request->request();
 				if ( isset( $request->payment->summary->reservedAmount ) || isset( $request->payment->summary->chargedAmount ) || isset( $request->payment->subscription->id ) ) {
 					update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
+					update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 
 					if ( 'CARD' == $request->payment->paymentDetails->paymentType ) {
 						update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );

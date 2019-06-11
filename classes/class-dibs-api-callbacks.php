@@ -138,6 +138,7 @@ class DIBS_Api_Callbacks {
 	 */
 	public function set_order_status( $order, $data ) {
 		if ( $data['data']['paymentId'] ) {
+			update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 			$order->payment_complete( $data['data']['paymentId'] );
 			$order->add_order_note( 'Payment via DIBS Easy. Order status updated via API callback. Payment ID: ' . sanitize_key( $data['data']['paymentId'] ) );
 			DIBS_Easy::log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
@@ -288,6 +289,7 @@ class DIBS_Api_Callbacks {
 
 		update_post_meta( $order_id, 'dibs_payment_type', $dibs_order->payment->paymentDetails->paymentType );
 		update_post_meta( $order_id, '_dibs_payment_id', $dibs_order->payment->paymentId );
+		update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 
 		if ( 'CARD' == $dibs_order->payment->paymentDetails->paymentType ) {
 			update_post_meta( $order_id, 'dibs_customer_card', $dibs_order->payment->paymentDetails->cardDetails->maskedPan );
