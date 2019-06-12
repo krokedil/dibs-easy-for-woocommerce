@@ -24,6 +24,11 @@ class DIBS_Post_Checkout {
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
 
+			// Bail if the order hasn't been paid in DIBS yet.
+			if ( empty( get_post_meta( $order_id, '_dibs_date_paid', true ) ) ) {
+				return;
+			}
+
 			// Bail if we already have charged the order once in DIBS system.
 			if ( get_post_meta( $order_id, '_dibs_charge_id', true ) ) {
 				return;
@@ -74,8 +79,8 @@ class DIBS_Post_Checkout {
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 		if ( 'dibs_easy' === $gateway_used ) {
 
-			// Don't do this if the order is being rejected in pending flow.
-			if ( empty( get_post_meta( $order_id, '_wc_klarna_pending_to_cancelled', true ) ) ) {
+			// Don't do this if the order hasn't been paid in DIBS.
+			if ( empty( get_post_meta( $order_id, '_dibs_date_paid', true ) ) ) {
 				return;
 			}
 
