@@ -109,9 +109,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 				// Cart page error notice
 				add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
-				// Checkout fields process
-				add_filter( 'woocommerce_checkout_fields', array( $this, 'unrequire_fields' ), 99 );
-				add_filter( 'woocommerce_checkout_posted_data', array( $this, 'unrequire_posted_data' ), 99 );
 			}
 
 		}

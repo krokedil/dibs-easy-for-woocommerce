@@ -115,6 +115,7 @@ class DIBS_Subscriptions {
 
 				if ( 'Succeeded' == $recurring_order->status ) {
 					WC_Subscriptions_Manager::process_subscription_payments_on_order( $renewal_order );
+					update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 					$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with DIBS. DIBS order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 					$renewal_order->payment_complete( $payment_id );
 				} else {
@@ -157,6 +158,7 @@ class DIBS_Subscriptions {
 
 			if ( 'Succeeded' == $recurring_order->status ) {
 				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order );
+				update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 				$order->add_order_note( sprintf( __( 'Subscription payment made with DIBS. DIBS order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 				$order->payment_complete( $payment_id );
 			} else {

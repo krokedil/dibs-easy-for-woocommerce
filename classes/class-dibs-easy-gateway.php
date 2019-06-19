@@ -90,10 +90,14 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
 				$this->process_dibs_payment_in_order( $order_id );
 
-				// Redirect customer to thank you page
+				// Add #dibseasy hash to checkout url so we can respond to DIBS that payment can proceed and be finalized in DIBS system.
+				$response = array(
+					'return_url' => $this->get_return_url( $order ),
+					'time'       => time(),
+				);
 				return array(
 					'result'   => 'success',
-					'redirect' => $this->get_return_url( $order ),
+					'redirect' => wc_get_checkout_url() . '#dibseasy=' . base64_encode( wp_json_encode( $response ) ),
 				);
 			}
 		} else {
@@ -247,6 +251,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 			update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
 			update_post_meta( $order_id, 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
+			update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 
 			if ( 'CARD' == $request->payment->paymentDetails->paymentType ) {
 				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );

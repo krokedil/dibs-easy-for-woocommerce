@@ -166,12 +166,14 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 		// _dibs_payment_id already exist in an order. Let's redirect the customer to the thankyou page for that order.
 		if ( $order_id_match ) {
-			DIBS_Easy::log( 'Confirmation page rendered but _dibs_payment_id already exist in this order: ' . $order_id_match );
-			$order    = wc_get_order( $order_id_match );
-			$location = $order->get_checkout_order_received_url();
-			DIBS_Easy::log( '$location: ' . $location );
-			wp_send_json_error( array( 'redirect' => $location ) );
-			wp_die();
+			$order = wc_get_order( $order_id_match );
+			if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+				DIBS_Easy::log( 'Confirmation page rendered but _dibs_payment_id already exist in this order: ' . $order_id_match );
+				$location = $order->get_checkout_order_received_url();
+				DIBS_Easy::log( '$location: ' . $location );
+				wp_send_json_error( array( 'redirect' => $location ) );
+				wp_die();
+			}
 		}
 
 		// Make the request
