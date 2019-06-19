@@ -173,7 +173,29 @@ jQuery(function($) {
 					$('p#' + name + '_field').appendTo('#dibs-extra-checkout-fields');
 				}
 			}
-		},
+        },
+        
+        /**
+		 * Handle hashchange triggered when Woo order is created.
+		 */
+        handleHashChange : function(event){
+			console.log('hashchange');
+			var currentHash = location.hash;
+			var splittedHash = currentHash.split("=");
+            console.log(splittedHash[0]);
+            console.log(splittedHash[1]);
+            if(splittedHash[0] === "#dibseasy"){
+                var response = JSON.parse( atob( splittedHash[1] ) );
+                window.dibsRedirectUrl = response.redirect_url;
+                console.log('response.return_url');
+                console.log(response.return_url);
+                sessionStorage.setItem( 'DIBSRedirectUrl', response.return_url );
+
+                $('form.checkout').removeClass( 'processing' ).unblock();
+
+				dibsCheckout.send('payment-order-finalized', true);
+            }
+        },
         
         /*
 		 * Initiates the script and sets the triggers for the functions.
@@ -187,7 +209,8 @@ jQuery(function($) {
 				// Extra checkout fields.
 				dibs_wc.bodyEl.on('blur', dibs_wc.extraFieldsSelectorText, dibs_wc.checkFormData);
 				dibs_wc.bodyEl.on('change', dibs_wc.extraFieldsSelectorNonText, dibs_wc.checkFormData);
-				dibs_wc.bodyEl.on('click', 'input#terms', dibs_wc.checkFormData);
+                dibs_wc.bodyEl.on('click', 'input#terms', dibs_wc.checkFormData);
+                window.addEventListener("hashchange", dibs_wc.handleHashChange);
 
 			}
 		},
@@ -264,8 +287,8 @@ jQuery(function($) {
         dibsCheckout.on('pay-initialized', function(response) {
             $(document.body).trigger('dibs_pay_initialized');
             console.log('dibs_pay_initialized');
-            var allFieldsValid = dibs_wc.validateRequiredFields();
-            dibsCheckout.send('payment-order-finalized', allFieldsValid);
+            console.log(response);
+            processWooCheckout(response);
         });
     }
 
@@ -274,111 +297,94 @@ jQuery(function($) {
         dibsCheckout.on('payment-completed', function (response) {
             console.log('payment-completed');
             console.log(response.paymentId);
-            DIBS_Payment_Success(response.paymentId);
+            //DIBS_Payment_Success(response.paymentId);
+            var redirectUrl = sessionStorage.getItem( 'DIBSRedirectUrl' );
+            console.log(redirectUrl);
+            if( redirectUrl ) {
+                window.location.href = redirectUrl;
+            }
         });
     }
 
-    function DIBS_Payment_Success(paymentId) {
-        if (x === 0) {
-            $('body').addClass( 'dibs-checkout-processing' );
-            /*
-            $('body').block({
-                message: wc_dibs_easy.dibs_process_order_text,
-                baseZ: 99999,
-                overlayCSS:
-                    {
-                        background: "#fff",
-                        opacity: 0.6,
-                    },
-                css: {
-                    padding:        "20px",
-                    zindex:         "9999999",
-                    textAlign:      "center",
-                    color:          "#555",
-                    backgroundColor:"#fff",
-                    cursor:         "null",
-                    lineHeight:		"24px",
-                    border:          "1px solid rgb(170, 170, 170)"
-                }
-            });
-            */
-           $( 'body' ).append( $( '<div class="dibs-modal"><div class="dibs-modal-content">' + wc_dibs_easy.dibs_process_order_text + '</div></div>' ) );
-            $.ajax(
-	            wc_dibs_easy.get_order_data_url,
-	            {
-	                type: "POST",
-	                dataType: "json",
-	                async: true,
-	                data: {
-                        action:		'payment_success',
-                        'paymentId': paymentId
-	                },
-	                success: function (data) {
-                        console.log(data);
-                        if( false === data.success ) {
-                            console.log( 'PaymentID already exist in order' );
-                            console.log( data );
-                            if( data.data.redirect ) {
-                                window.location.href = data.data.redirect;
-                            }
+    function processWooCheckout(paymentId) {
+
+        // $('body').addClass( 'dibs-checkout-processing' );
+        // $( 'body' ).append( $( '<div class="dibs-modal"><div class="dibs-modal-content">' + wc_dibs_easy.dibs_process_order_text + '</div></div>' ) );
+        $.ajax(
+            wc_dibs_easy.get_order_data_url,
+            {
+                type: "POST",
+                dataType: "json",
+                async: true,
+                data: {
+                    action:		'payment_success',
+                    'paymentId': paymentId
+                },
+                success: function (data) {
+                    console.log(data);
+                    if( false === data.success ) {
+                        console.log( 'PaymentID already exist in order' );
+                        console.log( data );
+                        if( data.data.redirect ) {
+                            window.location.href = data.data.redirect;
+                        }
+                    } else {
+
+                        $("form.checkout #billing_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
+                        $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
+                        $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
+                        $("form.checkout #billing_country").val(data.data.payment.consumer.shippingAddress.country);
+                        
+                        $("form.checkout #shipping_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
+                        $("form.checkout #shipping_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
+                        $("form.checkout #shipping_city").val(data.data.payment.consumer.shippingAddress.city);
+                        $("form.checkout #shipping_country").val(data.data.payment.consumer.shippingAddress.country);
+
+                        if(data.data.payment.consumer.company.name != null) {
+                            // B2B purchase
+                            $("form.checkout #billing_company").val(data.data.payment.consumer.company.name);
+                            $("form.checkout #shipping_company").val(data.data.payment.consumer.company.name);
+                            $("form.checkout #billing_first_name").val(data.data.payment.consumer.company.contactDetails.firstName);
+                            $("form.checkout #billing_last_name").val(data.data.payment.consumer.company.contactDetails.lastName);
+                            $("form.checkout #shipping_first_name").val(data.data.payment.consumer.company.contactDetails.firstName);
+                            $("form.checkout #shipping_last_name").val(data.data.payment.consumer.company.contactDetails.lastName);
+                            $("form.checkout #billing_email").val(data.data.payment.consumer.company.contactDetails.email);
+                            $("form.checkout #billing_phone").val(data.data.payment.consumer.company.contactDetails.phoneNumber.prefix + data.data.payment.consumer.company.contactDetails.phoneNumber.number);
                         } else {
+                            // B2C purchase
+                            $("form.checkout #billing_company").val('');
+                            $("form.checkout #shipping_company").val('');
+                            $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
+                            $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
+                            $("form.checkout #shipping_first_name").val(data.data.payment.consumer.privatePerson.firstName);
+                            $("form.checkout #shipping_last_name").val(data.data.payment.consumer.privatePerson.lastName);
+                            $("form.checkout #billing_email").val(data.data.payment.consumer.privatePerson.email);
+                            $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number);
+                        }
+                        
+                        if(data.data.payment.consumer.shippingAddress.addressLine2 != null) {
+                            $("form.checkout #billing_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
+                            $("form.checkout #shipping_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
+                        }
 
-                            $("form.checkout #billing_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
-                            $("form.checkout #billing_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
-                            $("form.checkout #billing_city").val(data.data.payment.consumer.shippingAddress.city);
-                            $("form.checkout #billing_country").val(data.data.payment.consumer.shippingAddress.country);
-                            
-                            $("form.checkout #shipping_address_1").val(data.data.payment.consumer.shippingAddress.addressLine1);
-                            $("form.checkout #shipping_postcode").val(data.data.payment.consumer.shippingAddress.postalCode);
-                            $("form.checkout #shipping_city").val(data.data.payment.consumer.shippingAddress.city);
-                            $("form.checkout #shipping_country").val(data.data.payment.consumer.shippingAddress.country);
+                        // Check Terms checkbox, if it exists
+                        if ($("form.checkout #terms").length > 0) {
+                            $("form.checkout #terms").prop("checked", true);
+                        }
+                        $('input#ship-to-different-address-checkbox').prop('checked', true);
+                        $('form.woocommerce-checkout').append( '<input type="hidden" id="dibs_payment_id" name="dibs_payment_id" value="' + paymentId + '" />' )
+                        $('form[name="checkout"]').submit();
+                        $('form.woocommerce-checkout').addClass( 'processing' );
 
-                            if(data.data.payment.consumer.company.name != null) {
-                                // B2B purchase
-                                $("form.checkout #billing_company").val(data.data.payment.consumer.company.name);
-                                $("form.checkout #shipping_company").val(data.data.payment.consumer.company.name);
-                                $("form.checkout #billing_first_name").val(data.data.payment.consumer.company.contactDetails.firstName);
-                                $("form.checkout #billing_last_name").val(data.data.payment.consumer.company.contactDetails.lastName);
-                                $("form.checkout #shipping_first_name").val(data.data.payment.consumer.company.contactDetails.firstName);
-                                $("form.checkout #shipping_last_name").val(data.data.payment.consumer.company.contactDetails.lastName);
-                                $("form.checkout #billing_email").val(data.data.payment.consumer.company.contactDetails.email);
-                                $("form.checkout #billing_phone").val(data.data.payment.consumer.company.contactDetails.phoneNumber.prefix + data.data.payment.consumer.company.contactDetails.phoneNumber.number);
-                            } else {
-                                // B2C purchase
-                                $("form.checkout #billing_company").val('');
-                                $("form.checkout #shipping_company").val('');
-                                $("form.checkout #billing_first_name").val(data.data.payment.consumer.privatePerson.firstName);
-                                $("form.checkout #billing_last_name").val(data.data.payment.consumer.privatePerson.lastName);
-                                $("form.checkout #shipping_first_name").val(data.data.payment.consumer.privatePerson.firstName);
-                                $("form.checkout #shipping_last_name").val(data.data.payment.consumer.privatePerson.lastName);
-                                $("form.checkout #billing_email").val(data.data.payment.consumer.privatePerson.email);
-                                $("form.checkout #billing_phone").val(data.data.payment.consumer.privatePerson.phoneNumber.prefix + data.data.payment.consumer.privatePerson.phoneNumber.number);
-                            }
-                            
-                            if(data.data.payment.consumer.shippingAddress.addressLine2 != null) {
-                                $("form.checkout #billing_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
-                                $("form.checkout #shipping_address_2").val(data.data.payment.consumer.shippingAddress.addressLine2);
-                            }
-
-                            // Check Terms checkbox, if it exists
-                            if ($("form.checkout #terms").length > 0) {
-                                $("form.checkout #terms").prop("checked", true);
-                            }
-                            $('input#ship-to-different-address-checkbox').prop('checked', true);
-                            $('form.woocommerce-checkout').append( '<input type="hidden" id="dibs_payment_id" name="dibs_payment_id" value="' + paymentId + '" />' )
-                            $('form[name="checkout"]').submit();
-                            $('form.woocommerce-checkout').addClass( 'processing' );
-
-                        } 
-					},
-					error: function (data) {
-					},
-					complete: function (data) {
-					}
-	            }
-	        );
-            x = 1;
-        }
+                    } 
+                },
+                error: function (data) {
+                },
+                complete: function (data) {
+                }
+            }
+        );
+       
     }
 
     // Update DIBS Easy checkout (after Woo updated_checkout)
@@ -479,7 +485,8 @@ jQuery(function($) {
     // When WooCommerce checkout submission fails
 	$(document).on("checkout_error", function () {
 		if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
-			var error_message = $( ".woocommerce-NoticeGroup-checkout" ).text();
+            /*
+            var error_message = $( ".woocommerce-NoticeGroup-checkout" ).text();
 			$.ajax(
 	            wc_dibs_easy.ajax_on_checkout_error_url,
 	            {
@@ -500,8 +507,10 @@ jQuery(function($) {
 						window.location.href = data.responseJSON.data.redirect;
 					}
 	            }
-	        );
-			
+            );
+            */
+           console.log('responded with payment-order-finalized false');
+           dibsCheckout.send('payment-order-finalized', false);
 		}
     });
     

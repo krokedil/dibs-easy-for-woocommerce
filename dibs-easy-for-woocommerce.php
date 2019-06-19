@@ -8,7 +8,7 @@
  * Plugin Name:             DIBS Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:                 1.9.1
+ * Version:                 1.10.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.9.1' );
+define( 'WC_DIBS_EASY_VERSION', '1.10.0' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -109,9 +109,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 				// Cart page error notice
 				add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
-				// Checkout fields process
-				add_filter( 'woocommerce_checkout_fields', array( $this, 'unrequire_fields' ), 99 );
-				add_filter( 'woocommerce_checkout_posted_data', array( $this, 'unrequire_posted_data' ), 99 );
 			}
 
 		}

@@ -2,7 +2,7 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.2.1
+Tested up to: 5.2.2
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
 Tested WooCommerce up to: 3.6.4
@@ -55,6 +55,11 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.06.19    - version 1.10.0 =
+* Tweak         - Changed logic for embedded checkout flow. Order now created on pay-initialized event (when customer clicks pay button), before redirect to 3DSecure. WooCommerce now handle the validation logic.
+* Tweak         - Order management improvments. Don't try to make activate/cancel request to DIBS if order hasn't the correct status in Woo.
+* Fix           - Fix in order totals comparison check, in check_order_status function during callback from DIBS.
 
 = 2019.06.07    - version 1.9.1 =
 * Fix           - Save _dibs_payment_id correct on orders created via checkout error sequence.
