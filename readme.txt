@@ -58,7 +58,7 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 = 2019.06.19    - version 1.10.0 =
 * Tweak         - Changed logic for embedded checkout flow. Order now created on pay-initialized event (when customer clicks pay button), before redirect to 3DSecure. WooCommerce now handle the validation logic.
-* Tweak         - Order management improvments. Don't try to make activate/cancel request to DIBS if order hasn't the correct status in Woo.
+* Tweak         - Order management improvements. Don't try to make activate/cancel request to DIBS if order hasn't the correct status in Woo.
 * Fix           - Fix in order totals comparison check, in check_order_status function during callback from DIBS.
 
 = 2019.06.07    - version 1.9.1 =
