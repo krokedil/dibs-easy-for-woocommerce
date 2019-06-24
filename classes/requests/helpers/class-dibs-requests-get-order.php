@@ -22,7 +22,7 @@ class DIBS_Requests_Order {
 			$order = wc_get_order( $order_id );
 			return array(
 				'items'     => $items,
-				'amount'    => intval( round( $order->get_total(), 2 ) * 100 ),
+				'amount'    => intval( round( $order->get_total() * 100, 2 ) ),
 				'currency'  => $order->get_currency(),
 				'reference' => $order->get_order_number(),
 			);
