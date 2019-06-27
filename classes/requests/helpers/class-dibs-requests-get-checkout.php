@@ -95,7 +95,7 @@ class DIBS_Requests_Checkout {
 		if ( substr( $order->get_billing_phone(), 0, 1 ) == '+' ) {
 			$phone_number = substr( $order->get_billing_phone(), count( self::get_phone_prefix( $order ) ) );
 		} else {
-			$phone_number = $order->get_billing_phone();
+			$phone_number = str_replace( '-', '', $order->get_billing_phone() );
 		}
 		return $phone_number;
 	}
