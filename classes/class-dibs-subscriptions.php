@@ -162,7 +162,7 @@ class DIBS_Subscriptions {
 				$order->add_order_note( sprintf( __( 'Subscription payment made with DIBS. DIBS order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 				$order->payment_complete( $payment_id );
 			} else {
-				$order->add_order_note( sprintf( __( 'Payment status not correct for subscription. Status: %s', 'dibs-easy-for-woocommerce' ), $recurring_order->status ) );
+				$order->add_order_note( sprintf( __( 'Payment status not correct for subscription. Status: %1$s. Message: %2$s', 'dibs-easy-for-woocommerce' ), $recurring_order->status, $recurring_order->message ) );
 				WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $order );
 			}
 		} else {
