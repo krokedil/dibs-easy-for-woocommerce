@@ -105,12 +105,14 @@ jQuery(function($) {
 			let requiredFields = JSON.parse( sessionStorage.getItem( 'DIBSRequiredFields' ) );
 			let fieldData = JSON.parse( sessionStorage.getItem( 'DIBSFieldData' ) );
 			// Check if all data is set for required fields.
-			let allValid = true;
-			for( i = 0; i < requiredFields.length; i++ ) {
-				fieldName = requiredFields[i];
-				if ( '' === fieldData[fieldName] ) {
-					allValid = false;
-				}
+            let allValid = true;
+            if( requiredFields !== null ) {
+                for( i = 0; i < requiredFields.length; i++ ) {
+                    fieldName = requiredFields[i];
+                    if ( '' === fieldData[fieldName] ) {
+                        allValid = false;
+                    }
+                }
             }
             if( false === allValid ) {
                 dibs_wc.printValidationMessage();
@@ -135,26 +137,28 @@ jQuery(function($) {
 		 * Sets the form fields values from the session storage.
 		 */
 		setFormFieldValues: function() {
-			let form_data = JSON.parse( sessionStorage.getItem( 'DIBSFieldData' ) );
-			$.each( form_data, function( name, value ) {
-				let field = $('*[name="' + name + '"]');
-				let saved_value = value;
-				// Check if field is a checkbox
-				if( field.is(':checkbox') ) {
-					if( saved_value !== '' ) {
-						field.prop('checked', true);
-					}
-				} else if( field.is(':radio') ) {
-					for ( x = 0; x < field.length; x++ ) {
-						if( field[x].value === value ) {
-							$(field[x]).prop('checked', true);
-						}
-					}
-				} else {
-					field.val( saved_value );
-				}
+            let form_data = JSON.parse( sessionStorage.getItem( 'DIBSFieldData' ) );
+            if( form_data !== null ) {
+                $.each( form_data, function( name, value ) {
+                    let field = $('*[name="' + name + '"]');
+                    let saved_value = value;
+                    // Check if field is a checkbox
+                    if( field.is(':checkbox') ) {
+                        if( saved_value !== '' ) {
+                            field.prop('checked', true);
+                        }
+                    } else if( field.is(':radio') ) {
+                        for ( x = 0; x < field.length; x++ ) {
+                            if( field[x].value === value ) {
+                                $(field[x]).prop('checked', true);
+                            }
+                        }
+                    } else {
+                        field.val( saved_value );
+                    }
 
-			});
+                });
+            }
         },
 
         /**
