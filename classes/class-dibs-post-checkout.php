@@ -62,9 +62,10 @@ class DIBS_Post_Checkout {
 
 					$this->charge_failed( $wc_order, true, $message );
 
-				} elseif ( array_key_exists( 'code', $request ) && '1001' == $request->code ) { // Response with error code for overcharged order.
-					update_post_meta( $order_id, '_dibs_charge_id', 'Charge error: ' . $request->code );
-					$this->charge_failed( $wc_order, true, $request->message );
+				} elseif ( array_key_exists( 'code', $request ) && '1001' == $request->code ) { // Set order as completed if order has already been charged.
+					update_post_meta( $order_id, '_dibs_charge_id', 'Payment has already been charged in DIBS' );
+					$wc_order->update_status( 'completed' );
+					$wc_order->save();
 				} else {
 					$this->charge_failed( $wc_order );
 				}
