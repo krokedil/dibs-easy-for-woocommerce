@@ -38,7 +38,7 @@ class DIBS_Subscriptions {
 	 */
 	public function maybe_add_subscription( $request_args ) {
 		// Check if we have a subscription product. If yes set recurring field.
-		if ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) {
+		if ( class_exists( 'WC_Subscriptions_Cart' ) && ( wcs_cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
 			$request_args['subscription'] = array(
 				'endDate'  => date( 'Y-m-d\TH:i', strtotime( '+150 year' ) ),
 				'interval' => 0,
