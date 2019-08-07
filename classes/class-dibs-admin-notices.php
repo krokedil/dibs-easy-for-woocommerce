@@ -16,8 +16,9 @@ class DIBS_Easy_Admin_Notices {
 	 * DIBS_Easy_Admin_Notices constructor.
 	 */
 	public function __construct() {
-		$dibs_easy_settings = get_option( 'woocommerce_dibs_easy_settings' );
-		$this->enabled           = $dibs_easy_settings['enabled'];
+		$dibs_easy_settings  = get_option( 'woocommerce_dibs_easy_settings' );
+		$this->enabled       = $dibs_easy_settings['enabled'];
+		$this->checkout_flow = $dibs_easy_settings['checkout_flow'];
 		add_action( 'admin_init', array( $this, 'check_settings' ) );
 	}
 	public function check_settings() {
@@ -41,7 +42,7 @@ class DIBS_Easy_Admin_Notices {
 		// Terms page
 		if ( ! wc_get_page_id( 'terms' ) || wc_get_page_id( 'terms' ) < 0 ) {
 			echo '<div class="notice notice-error">';
-			echo '<p>' . sprintf(__( 'You need to <a href="%s" target="_blank">specify a terms page</a> in WooCommerce Settings to be able to use DIBS Easy.', 'dibs-easy-for-woocommerce' ), 'https://docs.woocommerce.com/document/configuring-woocommerce-settings/#section-14') . '</p>';
+			echo '<p>' . sprintf( __( 'You need to <a href="%s" target="_blank">specify a terms page</a> in WooCommerce Settings to be able to use DIBS Easy.', 'dibs-easy-for-woocommerce' ), 'https://docs.woocommerce.com/document/configuring-woocommerce-settings/#section-14' ) . '</p>';
 			echo '</div>';
 		}
 	}
@@ -64,7 +65,7 @@ class DIBS_Easy_Admin_Notices {
 	 * Check how account creation is set.
 	 */
 	public function check_account() {
-		if ( 'yes' !== $this->enabled ) {
+		if ( 'yes' !== $this->enabled || 'embedded' !== $this->checkout_flow ) {
 			return;
 		}
 		// Account page - username.
@@ -81,4 +82,4 @@ class DIBS_Easy_Admin_Notices {
 		}
 	}
 }
-$wc_dibs_easy_admin_notices = new DIBS_Easy_Admin_Notices;
+$wc_dibs_easy_admin_notices = new DIBS_Easy_Admin_Notices();

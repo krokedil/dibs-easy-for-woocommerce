@@ -38,7 +38,7 @@ class DIBS_Subscriptions {
 	 */
 	public function maybe_add_subscription( $request_args ) {
 		// Check if we have a subscription product. If yes set recurring field.
-		if ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) {
+		if ( class_exists( 'WC_Subscriptions_Cart' ) && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
 			$request_args['subscription'] = array(
 				'endDate'  => date( 'Y-m-d\TH:i', strtotime( '+150 year' ) ),
 				'interval' => 0,
@@ -66,8 +66,8 @@ class DIBS_Subscriptions {
 
 			// This function is run after WCS has created the subscription order.
 			// Let's add the _dibs_recurring_token to the subscription as well.
-			if ( class_exists( 'WC_Subscription' ) && wcs_order_contains_subscription( $wc_order ) ) {
-				$subcriptions = wcs_get_subscriptions_for_order( $order_id );
+			if ( wcs_order_contains_subscription( $wc_order, array( 'parent', 'renewal', 'resubscribe', 'switch' ) ) || wcs_is_subscription( $wc_order ) ) {
+				$subcriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 				foreach ( $subcriptions as $subcription ) {
 					update_post_meta( $subcription->get_id(), '_dibs_recurring_token', $dibs_order->payment->subscription->id );
 				}
@@ -162,7 +162,7 @@ class DIBS_Subscriptions {
 				$order->add_order_note( sprintf( __( 'Subscription payment made with DIBS. DIBS order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 				$order->payment_complete( $payment_id );
 			} else {
-				$order->add_order_note( sprintf( __( 'Payment status not correct for subscription. Status: %s', 'dibs-easy-for-woocommerce' ), $recurring_order->status ) );
+				$order->add_order_note( sprintf( __( 'Payment status not correct for subscription. Status: %1$s. Message: %2$s', 'dibs-easy-for-woocommerce' ), $recurring_order->status, $recurring_order->message ) );
 				WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $order );
 			}
 		} else {
