@@ -56,6 +56,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.08.07    - version 1.10.2 =
+* Fix           - Avoid notices/headers already sent issue in admin notice if plugin settings doesn't exist yet.
+
 = 2019.08.07    - version 1.10.1 =
 * Tweak         - Added message to order note if recurring payment fails.
 * Tweak         - Only display admin notice about recommended account settings if Embedded is the selected checkout flow.

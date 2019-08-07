@@ -16,9 +16,9 @@ class DIBS_Easy_Admin_Notices {
 	 * DIBS_Easy_Admin_Notices constructor.
 	 */
 	public function __construct() {
-		$dibs_easy_settings  = get_option( 'woocommerce_dibs_easy_settings' );
-		$this->enabled       = $dibs_easy_settings['enabled'];
-		$this->checkout_flow = $dibs_easy_settings['checkout_flow'];
+		$this->settings      = get_option( 'woocommerce_dibs_easy_settings' );
+		$this->enabled       = ( isset( $this->settings['enabled'] ) ) ? $this->settings['enabled'] : '';
+		$this->checkout_flow = ( isset( $this->settings['checkout_flow'] ) ) ? $this->settings['checkout_flow'] : 'embedded';
 		add_action( 'admin_init', array( $this, 'check_settings' ) );
 	}
 	public function check_settings() {
