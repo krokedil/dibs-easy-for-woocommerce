@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 5.2.2
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.6.4
+Tested WooCommerce up to: 3.6.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,16 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.08.07    - version 1.10.1 =
+* Tweak         - Added message to order note if recurring payment fails.
+* Tweak         - Only display admin notice about recommended account settings if Embedded is the selected checkout flow.
+* Fix           - Updating nonce correctly on update_checkout. This could cause issues finalizing order if logging in on checkout page.
+* Fix           - Create new subscription id in DIBS if customer use Easy as payment method on manual renewal (for example if the card did expire for the old subscription id).
+* Fix           - Remove - from phone numbers sent to DIBS.
+* Fix           - Avoid rounding issues (on prices sent to DIBS) that can happen occationally.
+* Fix           - Prevent looping through null to stop JS errors (in handling of extra checkout fields logic).
+
 
 = 2019.06.19    - version 1.10.0 =
 * Tweak         - Changed logic for embedded checkout flow. Order now created on pay-initialized event (when customer clicks pay button), before redirect to 3DSecure. WooCommerce now handle the validation logic.
