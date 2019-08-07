@@ -112,7 +112,9 @@ class DIBS_Templates {
 		<div aria-hidden="true" id="dibs-wc-form" style="position:absolute; top:0; left:-99999px;">
 			<?php do_action( 'woocommerce_checkout_billing' ); ?>
 			<?php do_action( 'woocommerce_checkout_shipping' ); ?>
-			<?php wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce' ); ?>
+			<div id="dibs-nonce-wrapper">
+				<?php wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce' ); ?>
+			</div>
 			<input id="payment_method_dibs_easy" type="radio" class="input-radio" name="payment_method" value="dibs_easy" checked="checked" />
 		</div>
 		<?php
