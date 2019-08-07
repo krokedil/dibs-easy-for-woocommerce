@@ -63,7 +63,10 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			wp_send_json_error( $return );
 			wp_die();
 		} else {
-			wp_send_json_success( $response );
+			wp_send_json_success(array(
+				'dibs_response' => $response,
+				'nonce' 		=> wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce', true, false ),
+			));
 			wp_die();
 		}
 

@@ -405,6 +405,8 @@ jQuery(function($) {
                     },
                     success: function(response) {
                         if (true === response.success) {
+                            nonce = response.data.nonce;
+                            $('#dibs-nonce-wrapper').html(nonce); // Updates the nonce used on checkout
                             console.log('update checkout success');
                             dibsCheckout.thawCheckout();
                             
