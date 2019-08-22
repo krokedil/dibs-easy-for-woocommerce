@@ -68,7 +68,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		}
 
 		if ( is_checkout() ) {
-			// If we can't retrieve a set of credentials, disable KCO.
+			// If we can't retrieve a set of credentials, disable DIBS Easy.
 			if ( ! in_array( get_woocommerce_currency(), array( 'DKK', 'NOK', 'SEK' ) ) ) {
 				return false;
 			}
@@ -239,8 +239,12 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
-		$request    = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
-		$request    = $request->request();
+
+		// Update order number in DIBS system if this is the embedded checkout flow.
+		if ( 'embedded' === $this->checkout_flow ) {
+			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
+			$request = $request->request();
+		}
 
 		$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
 		$request = $request->request();

@@ -22,7 +22,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			'customer_adress_updated' => true,
 			'get_order_data'          => true,
 			'change_payment_method'   => true,
-			'ajax_on_checkout_error'  => true,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -63,10 +62,12 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			wp_send_json_error( $return );
 			wp_die();
 		} else {
-			wp_send_json_success(array(
-				'dibs_response' => $response,
-				'nonce' 		=> wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce', true, false ),
-			));
+			wp_send_json_success(
+				array(
+					'dibs_response' => $response,
+					'nonce'         => wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce', true, false ),
+				)
+			);
 			wp_die();
 		}
 
@@ -252,74 +253,6 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			WC()->customer->save();
 			WC()->cart->calculate_totals();
 		}
-	}
-
-	/**
-	 * Handles WooCommerce checkout error (if checkout submission fails), after DIBS order has already been created.
-	 */
-	public static function ajax_on_checkout_error() {
-		$payment_id = WC()->session->get( 'dibs_payment_id' );
-
-		$create_order = new DIBS_Create_Local_Order_Fallback();
-		// Create the order.
-		$order    = $create_order->create_order();
-		$order_id = $order->get_id();
-
-		// Add items to order.
-		$create_order->add_items_to_local_order( $order );
-		// Add fees to order.
-		$create_order->add_order_fees( $order );
-		// Add shipping to order.
-		$create_order->add_order_shipping( $order );
-		// Add tax rows to order.
-		$create_order->add_order_tax_rows( $order );
-		// Add coupons to order.
-		$create_order->add_order_coupons( $order );
-		// Add customer to order.
-		$create_order->add_customer_data_to_local_order( $order, $payment_id );
-		// Add payment method
-		$create_order->add_order_payment_method( $order );
-
-		// Make sure to run Sequential Order numbers if plugin exsists
-		// @Todo - Se i we can run action woocommerce_checkout_update_order_meta in this process
-		// so Sequential order numbers and other plugins can do their stuff themselves
-		if ( class_exists( 'WC_Seq_Order_Number_Pro' ) ) {
-			$sequential = new WC_Seq_Order_Number_Pro();
-			$sequential->set_sequential_order_number( $order_id );
-		} elseif ( class_exists( 'WC_Seq_Order_Number' ) ) {
-			$sequential = new WC_Seq_Order_Number();
-			$sequential->set_sequential_order_number( $order_id, get_post( $order_id ) );
-		}
-
-		// Calculate order totals
-		$create_order->calculate_order_totals( $order );
-
-		// Update the DIBS Order with the Order ID
-		$create_order->update_order_reference_in_dibs( $order->get_order_number(), $payment_id );
-
-		// Add DIBS Payment ID to order.
-		update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
-
-		// Add order note
-		if ( ! empty( $_POST['error_message'] ) ) { // Input var okay.
-			$error_message = 'Error message: ' . sanitize_text_field( trim( $_POST['error_message'] ) );
-		} else {
-			$error_message = 'Error message could not be retreived';
-		}
-		$note = sprintf( __( 'This order was made as a fallback due to an error in the checkout (%s). Please verify the order with DIBS.', 'dibs-easy-for-woocommerce' ), $error_message );
-		$order->add_order_note( $note );
-
-		$redirect_url = wc_get_endpoint_url( 'order-received', '', wc_get_page_permalink( 'checkout' ) );
-		$redirect_url = add_query_arg(
-			array(
-				'dibs-osf' => 'true',
-				'order-id' => $order_id,
-			),
-			$redirect_url
-		);
-
-		wp_send_json_success( array( 'redirect' => $redirect_url ) );
-		wp_die();
 	}
 
 }

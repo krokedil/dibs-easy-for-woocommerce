@@ -491,30 +491,6 @@ jQuery(function($) {
     // When WooCommerce checkout submission fails
 	$(document).on("checkout_error", function () {
 		if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
-            /*
-            var error_message = $( ".woocommerce-NoticeGroup-checkout" ).text();
-			$.ajax(
-	            wc_dibs_easy.ajax_on_checkout_error_url,
-	            {
-	                type: "POST",
-	                dataType: "json",
-	                async: true,
-	                data: {
-                        action:		"dibs_on_checkout_error",
-                        error_message: error_message,
-	                },
-	                success: function (data) {
-					},
-					error: function (data) {
-					},
-					complete: function (data) {
-						console.log('dibs checkout error');
-						console.log(data.responseJSON);
-						window.location.href = data.responseJSON.data.redirect;
-					}
-	            }
-            );
-            */
            console.log('responded with payment-order-finalized false');
            dibsCheckout.send('payment-order-finalized', false);
 		}

@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 5.2.2
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.6.5
+Tested WooCommerce up to: 3.7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,12 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.08.22    - version 1.10.3 =
+* Tweak         - Remove checkout_error order creation code. Not used anymore (since of version 1.10.0).
+* Tweak         - Dont send web hooks to DIBS if host is local.
+* Fix           - Don't try to update order reference in DIBS (in process_dibs_payment_in_order()) if the checkout flow is Redirect.
+* Fix           - Improved set_order_status() function in API callback. Save _dibs_date_paid, dibs_payment_type & dibs_payment_method.
 
 = 2019.08.07    - version 1.10.2 =
 * Fix           - Avoid notices/headers already sent issue in admin notice if plugin settings doesn't exist yet.
