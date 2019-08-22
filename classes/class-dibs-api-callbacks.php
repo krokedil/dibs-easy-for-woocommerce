@@ -116,15 +116,17 @@ class DIBS_Api_Callbacks {
 	 *
 	 * @throws Exception WC_Data_Exception.
 	 */
-	public function check_order_status( $data, $order_id ) {
+	public function check_order_status( $data, $order_id, $payment_id = null ) {
 		$order = wc_get_order( $order_id );
 
 		if ( is_object( $order ) ) {
-			// Check order status
+			// Check order status.
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+
+				// Check so order totals match.
 				$order_totals_match = $this->check_order_totals( $order, $data );
 
-				// Set order status in Woo
+				// Set order status in Woo if order totals match.
 				if ( true === $order_totals_match ) {
 					$this->set_order_status( $order, $data );
 				}
@@ -138,10 +140,19 @@ class DIBS_Api_Callbacks {
 	 */
 	public function set_order_status( $order, $data ) {
 		if ( $data['data']['paymentId'] ) {
-			update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
+
+			// Get DIBS Payment meta and save it in the order.
+			$request  = new DIBS_Requests_Get_DIBS_Order( $data['data']['paymentId'] );
+			$response = $request->request();
+			if ( is_wp_error( $response ) || empty( $response ) ) {
+				update_post_meta( $order->get_id(), 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
+				update_post_meta( $order->get_id(), 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
+			}
+			update_post_meta( $order->get_id(), '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 			$order->payment_complete( $data['data']['paymentId'] );
 			$order->add_order_note( 'Payment via DIBS Easy. Order status updated via API callback. Payment ID: ' . sanitize_key( $data['data']['paymentId'] ) );
 			DIBS_Easy::log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
+
 		} else {
 
 			// DIBS_Easy::log('Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to On hold.');
