@@ -56,6 +56,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.08.22    - version 1.10.4 =
+* Fix           - Remove including of file class-dibs-create-local-order-callback.php (file was removed in 1.10.3).
+
 = 2019.08.22    - version 1.10.3 =
 * Tweak         - Remove checkout_error order creation code. Not used anymore (since of version 1.10.0).
 * Tweak         - Don't send web hooks to DIBS if host is local.
