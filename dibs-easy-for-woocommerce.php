@@ -167,7 +167,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 						'get_order_data_url'               => WC_AJAX::get_endpoint( 'get_order_data' ),
 						'dibs_add_customer_order_note_url' => WC_AJAX::get_endpoint( 'dibs_add_customer_order_note' ),
 						'change_payment_method_url'        => WC_AJAX::get_endpoint( 'change_payment_method' ),
-						'ajax_on_checkout_error_url'       => WC_AJAX::get_endpoint( 'ajax_on_checkout_error' ),
 					)
 				);
 				wp_enqueue_script( 'checkout' );
