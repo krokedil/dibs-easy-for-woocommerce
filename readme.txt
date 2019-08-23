@@ -56,9 +56,12 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.08.22    - version 1.10.4 =
+* Fix           - Remove including of file class-dibs-create-local-order-callback.php (file was removed in 1.10.3).
+
 = 2019.08.22    - version 1.10.3 =
 * Tweak         - Remove checkout_error order creation code. Not used anymore (since of version 1.10.0).
-* Tweak         - Dont send web hooks to DIBS if host is local.
+* Tweak         - Don't send web hooks to DIBS if host is local.
 * Fix           - Don't try to update order reference in DIBS (in process_dibs_payment_in_order()) if the checkout flow is Redirect.
 * Fix           - Improved set_order_status() function in API callback. Save _dibs_date_paid, dibs_payment_type & dibs_payment_method.
 
