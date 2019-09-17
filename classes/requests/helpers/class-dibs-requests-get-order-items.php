@@ -39,11 +39,11 @@ class DIBS_Requests_Get_Order_Items {
 			'name'             => wc_dibs_clean_name( $product->get_name() ),
 			'quantity'         => $order_item['qty'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => intval( round( ( $order_item->get_total() / $order_item['qty'] ) * 100, 2 ) ),
-			'taxRate'          => intval( round( ( $order_item->get_total_tax() / $order_item->get_total() ) * 100, 2 ) ),
-			'taxAmount'        => intval( round( $order_item->get_total_tax() * 100, 2 ) ),
-			'grossTotalAmount' => intval( round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100, 2 ) ),
-			'netTotalAmount'   => intval( round( $order_item->get_total() * 100, 2 ) ),
+			'unitPrice'        => intval( round( ( $order_item->get_total() / $order_item['qty'] ) * 100 ) ),
+			'taxRate'          => intval( round( ( $order_item->get_total_tax() / $order_item->get_total() ) * 100 ) ),
+			'taxAmount'        => intval( round( $order_item->get_total_tax() * 100 ) ),
+			'grossTotalAmount' => intval( round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ) ),
+			'netTotalAmount'   => intval( round( $order_item->get_total() * 100 ) ),
 		);
 	}
 
@@ -53,11 +53,11 @@ class DIBS_Requests_Get_Order_Items {
 			'name'             => wc_dibs_clean_name( $order_fee->get_name() ),
 			'quantity'         => '1',
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => intval( round( $order_fee->get_total() * 100, 2 ) ),
-			'taxRate'          => intval( round( ( $order_fee->get_total_tax() / $order_fee->get_total() ) * 10000, 2 ) ),
-			'taxAmount'        => intval( round( $order_fee->get_total_tax() * 100, 2 ) ),
-			'grossTotalAmount' => intval( round( ( $order_fee->get_total() + $order_fee->get_total_tax() ) * 100, 2 ) ),
-			'netTotalAmount'   => intval( round( $order_fee->get_total() * 100, 2 ) ),
+			'unitPrice'        => intval( round( $order_fee->get_total() * 100 ) ),
+			'taxRate'          => intval( round( ( $order_fee->get_total_tax() / $order_fee->get_total() ) * 10000 ) ),
+			'taxAmount'        => intval( round( $order_fee->get_total_tax() * 100 ) ),
+			'grossTotalAmount' => intval( round( ( $order_fee->get_total() + $order_fee->get_total_tax() ) * 100 ) ),
+			'netTotalAmount'   => intval( round( $order_fee->get_total() * 100 ) ),
 		);
 	}
 
@@ -72,11 +72,11 @@ class DIBS_Requests_Get_Order_Items {
 			'name'             => wc_dibs_clean_name( $shipping_method->get_method_title() ),
 			'quantity'         => '1',
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total() * 100, 2 ) ),
-			'taxRate'          => ( $free_shipping ) ? 0 : intval( round( ( $shipping_method->get_total_tax() / $shipping_method->get_total() ) * 10000, 2 ) ),
-			'taxAmount'        => ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total_tax() * 100, 2 ) ),
-			'grossTotalAmount' => ( $free_shipping ) ? 0 : intval( round( ( $shipping_method->get_total() + $shipping_method->get_total_tax() ) * 100, 2 ) ),
-			'netTotalAmount'   => ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total() * 100, 2 ) ),
+			'unitPrice'        => ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total() * 100 ) ),
+			'taxRate'          => ( $free_shipping ) ? 0 : intval( round( ( $shipping_method->get_total_tax() / $shipping_method->get_total() ) * 10000 ) ),
+			'taxAmount'        => ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total_tax() * 100 ) ),
+			'grossTotalAmount' => ( $free_shipping ) ? 0 : intval( round( ( $shipping_method->get_total() + $shipping_method->get_total_tax() ) * 100 ) ),
+			'netTotalAmount'   => ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total() * 100 ) ),
 		);
 	}
 
