@@ -2,7 +2,7 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.2.2
+Tested up to: 5.2.3
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
 Tested WooCommerce up to: 3.7.0
@@ -55,6 +55,10 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.09.18    - version 1.10.5 =
+* Fix           - Rounding fix in order item prices sent to DIBS with redirect checkout flow.
+* Fix           - Rounding fix in order total sent to DIBS in order management requests.
 
 = 2019.08.22    - version 1.10.4 =
 * Fix           - Remove including of file class-dibs-create-local-order-callback.php (file was removed in 1.10.3).
