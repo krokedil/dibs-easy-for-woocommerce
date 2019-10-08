@@ -36,7 +36,6 @@ function dibs_get_supported_countries() {
 }
 
 function dibs_get_phone_prefix_for_country( $country = false ) {
-	error_log( '$country ' . $country );
 	$result   = '';
 	$prefixes = dibs_get_all_prefixes();
 	$result   = $prefixes[ $country ];

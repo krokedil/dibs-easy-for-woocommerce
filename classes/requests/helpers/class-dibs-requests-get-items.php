@@ -44,10 +44,10 @@ class DIBS_Requests_Items {
 			'name'             => wc_dibs_clean_name( $product->get_name() ),
 			'quantity'         => $cart_item['quantity'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => intval( round( ( $cart_item['line_total'] / $cart_item['quantity'] ) * 100, 2 ) ),
+			'unitPrice'        => intval( round( ( $cart_item['line_total'] / $cart_item['quantity'] ) * 100 ) ),
 			'taxRate'          => self::get_item_tax_rate( $cart_item, $product ),
 			'taxAmount'        => intval( round( $cart_item['line_tax'] * 100, 2 ) ),
-			'grossTotalAmount' => intval( round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100, 2 ) ),
+			'grossTotalAmount' => intval( round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 ) ),
 			'netTotalAmount'   => intval( round( $cart_item['line_total'] * 100, 2 ) ),
 		);
 	}
@@ -61,8 +61,8 @@ class DIBS_Requests_Items {
 			'unitPrice'        => intval( round( $fee->amount * 100, 2 ) ),
 			'taxRate'          => intval( round( ( $fee->tax / $fee->amount ) * 10000, 2 ) ),
 			'taxAmount'        => intval( round( $fee->tax * 100, 2 ) ),
-			'grossTotalAmount' => intval( round( ( $fee->amount + $fee->tax ) * 100, 2 ) ),
-			'netTotalAmount'   => intval( round( $fee->amount * 100, 2 ) ),
+			'grossTotalAmount' => intval( round( ( $fee->amount + $fee->tax ) * 100 ) ),
+			'netTotalAmount'   => intval( round( $fee->amount * 100 ) ),
 		);
 	}
 
@@ -80,11 +80,11 @@ class DIBS_Requests_Items {
 							'name'             => wc_dibs_clean_name( $method->label ),
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-							'unitPrice'        => intval( round( $method->cost * 100, 2 ) ),
+							'unitPrice'        => intval( round( $method->cost * 100 ) ),
 							'taxRate'          => intval( round( ( array_sum( $method->taxes ) / $method->cost ) * 10000, 2 ) ),
-							'taxAmount'        => intval( round( array_sum( $method->taxes ) * 100, 2 ) ),
-							'grossTotalAmount' => intval( round( ( $method->cost + array_sum( $method->taxes ) ) * 100, 2 ) ),
-							'netTotalAmount'   => intval( round( $method->cost * 100, 2 ) ),
+							'taxAmount'        => intval( round( array_sum( $method->taxes ) * 100 ) ),
+							'grossTotalAmount' => intval( round( ( $method->cost + array_sum( $method->taxes ) ) * 100 ) ),
+							'netTotalAmount'   => intval( round( $method->cost * 100 ) ),
 						);
 					} else {
 						return array(

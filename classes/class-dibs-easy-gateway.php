@@ -110,7 +110,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				update_post_meta( $order_id, '_dibs_payment_id', $response->paymentId );
 				return array(
 					'result'   => 'success',
-					'redirect' => $response->hostedPaymentPageUrl,
+					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response->hostedPaymentPageUrl ),
 				);
 			} else {
 				// Something else went wrong.

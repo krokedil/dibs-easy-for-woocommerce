@@ -8,7 +8,7 @@
  * Plugin Name:             DIBS Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:                 1.10.5
+ * Version:                 1.11.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.10.5' );
+define( 'WC_DIBS_EASY_VERSION', '1.11.0' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -80,6 +80,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-charge-subscription.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-bulk-charge-id.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-by-external-reference.php' );
 
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-checkout.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-header.php' );
@@ -214,11 +215,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			$order_id     = $order->get_id();
 			$gateway_used = get_post_meta( $order_id, '_payment_method', true );
 			if ( 'dibs_easy' == $gateway_used ) {
-				$payment_id    = get_post_meta( $order_id, '_dibs_payment_id', true );
-				$customer_card = get_post_meta( $order_id, 'dibs_customer_card', true );
-				$payment_type  = get_post_meta( $order_id, 'dibs_payment_type', true );
-				$order_date    = wc_format_datetime( $order->get_date_created() );
-				$dibs_settings = $this->dibs_settings;
+				$payment_id     = get_post_meta( $order_id, '_dibs_payment_id', true );
+				$customer_card  = get_post_meta( $order_id, 'dibs_customer_card', true );
+				$payment_method = get_post_meta( $order_id, 'dibs_payment_method', true );
+				$order_date     = wc_format_datetime( $order->get_date_created() );
+				$dibs_settings  = $this->dibs_settings;
 
 				if ( $dibs_settings['email_text'] ) {
 						echo wpautop( wptexturize( $dibs_settings['email_text'] ) );
@@ -229,8 +230,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				if ( $payment_id ) {
 					echo wpautop( wptexturize( __( 'DIBS Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) );
 				}
-				if ( $payment_type ) {
-					echo wpautop( wptexturize( __( 'Payment type: ', 'dibs-easy-for-woocommerce' ) . $payment_type ) );
+				if ( $payment_method ) {
+					echo wpautop( wptexturize( __( 'Payment method: ', 'dibs-easy-for-woocommerce' ) . $payment_method ) );
 				}
 				if ( $customer_card ) {
 					echo wpautop( wptexturize( __( 'Customer card: ', 'dibs-easy-for-woocommerce' ) . $customer_card ) );

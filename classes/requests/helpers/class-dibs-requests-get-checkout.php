@@ -75,8 +75,14 @@ class DIBS_Requests_Checkout {
 		$consumer['shippingAddress']['country']      = dibs_get_iso_3_country( $order->get_billing_country() );
 		$consumer['phoneNumber']['prefix']           = self::get_phone_prefix( $order );
 		$consumer['phoneNumber']['number']           = self::get_phone_number( $order );
-		$consumer['privatePerson']['firstName']      = $order->get_billing_first_name();
-		$consumer['privatePerson']['lastName']       = $order->get_billing_last_name();
+		if ( $order->get_billing_company() ) {
+			$consumer['company']['name']                 = $order->get_billing_company();
+			$consumer['company']['contact']['firstName'] = $order->get_billing_first_name();
+			$consumer['company']['contact']['lastName']  = $order->get_billing_last_name();
+		} else {
+			$consumer['privatePerson']['firstName'] = $order->get_billing_first_name();
+			$consumer['privatePerson']['lastName']  = $order->get_billing_last_name();
+		}
 		return $consumer;
 	}
 
