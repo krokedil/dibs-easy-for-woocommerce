@@ -86,11 +86,45 @@ class DIBS_Subscriptions {
 	public function trigger_scheduled_payment( $renewal_total, $renewal_order ) {
 		$order_id = $renewal_order->get_id();
 
-		// Get recurring token
+		// Get recurring token.
 		$recurring_token = get_post_meta( $order_id, '_dibs_recurring_token', true );
+
+		// If _dibs_recurring_token is missing.
 		if ( empty( $recurring_token ) ) {
-			$recurring_token = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_dibs_recurring_token', true );
-			update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
+			// Try getting it from parent order.
+			$parent_order_recurring_token = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_dibs_recurring_token', true );
+			if ( ! empty( $parent_order_recurring_token ) ) {
+				$recurring_token = $parent_order_recurring_token;
+				update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
+			} else {
+				// Try to get recurring token from old D2 _dibs_ticket.
+				$dibs_ticket = get_post_meta( $order_id, '_dibs_ticket', true );
+				if ( empty( $dibs_ticket ) ) {
+					// Try to get recurring token from old D2 _dibs_ticket parent order.
+					$dibs_ticket = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_dibs_ticket', true );
+				}
+				if ( ! empty( $dibs_ticket ) ) {
+					// We got a _dibs_ticket - try to getting the subscription via the externalreference request.
+					$subscription_request = new DIBS_Request_Get_Subscription_By_External_Reference( $dibs_ticket, $order_id );
+					$response             = $subscription_request->request();
+
+					if ( ! is_wp_error( $response ) && ! empty( $response->subscriptionId ) ) {
+						// All good, save the subscription ID as _dibs_recurring_token.
+						$subcriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
+						foreach ( $subcriptions as $subcription ) {
+							update_post_meta( $subcription->get_id(), '_dibs_recurring_token', $response->subscriptionId );
+							$subcription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to DIBS. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response->subscriptionId ) );
+						}
+						if ( 'CARD' === $response->paymentDetails->paymentType ) {
+							// Save card data in renewal order.
+							update_post_meta( $order_id, 'dibs_payment_type', $response->paymentDetails->paymentType );
+							update_post_meta( $order_id, 'dibs_customer_card', $response->paymentDetails->cardDetails->maskedPan );
+						}
+					} else {
+						$renewal_order->add_order_note( sprintf( __( 'Error during DIBS_Request_Get_Subscription_By_External_Reference: %s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response ) ) );
+					}
+				}
+			}
 		}
 
 		$create_order_response = new DIBS_Request_Charge_Subscription( $order_id );
