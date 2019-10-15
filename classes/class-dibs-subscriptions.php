@@ -109,7 +109,9 @@ class DIBS_Subscriptions {
 					$response             = $subscription_request->request();
 
 					if ( ! is_wp_error( $response ) && ! empty( $response->subscriptionId ) ) {
-						// All good, save the subscription ID as _dibs_recurring_token.
+
+						// All good, save the subscription ID as _dibs_recurring_token in the renewal order and in the subscription.
+						update_post_meta( $order_id, '_dibs_recurring_token', $response->subscriptionId );
 						$subcriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 						foreach ( $subcriptions as $subcription ) {
 							update_post_meta( $subcription->get_id(), '_dibs_recurring_token', $response->subscriptionId );
