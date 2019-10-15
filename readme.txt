@@ -56,6 +56,9 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.10.08    - version 1.11.1 =
+* Fix           - Remove including of file that doesn't exist in plugin. Caused error.
+
 = 2019.10.08    - version 1.11.0 =
 * Feature       - Add language support for redirect checkout flow.
 * Feature       - Added support for B2B purchases with redirect flow.
