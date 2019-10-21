@@ -167,7 +167,7 @@ class DIBS_Api_Callbacks {
 		$order_totals_match = true;
 
 		// Check order total and compare it with Woo
-		$woo_order_total  = intval( round( $order->get_total() ) * 100 );
+		$woo_order_total  = intval( round( $order->get_total() * 100 ) );
 		$dibs_order_total = $dibs_order['data']['order']['amount']['amount'];
 
 		if ( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
