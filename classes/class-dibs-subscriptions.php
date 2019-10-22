@@ -109,12 +109,12 @@ class DIBS_Subscriptions {
 					$response             = $subscription_request->request();
 
 					if ( ! is_wp_error( $response ) && ! empty( $response->subscriptionId ) ) {
-
 						// All good, save the subscription ID as _dibs_recurring_token in the renewal order and in the subscription.
-						update_post_meta( $order_id, '_dibs_recurring_token', $response->subscriptionId );
+						$recurring_token = $response->subscriptionId;
+						update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
 						$subcriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 						foreach ( $subcriptions as $subcription ) {
-							update_post_meta( $subcription->get_id(), '_dibs_recurring_token', $response->subscriptionId );
+							update_post_meta( $subcription->get_id(), '_dibs_recurring_token', $recurring_token );
 							$subcription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to DIBS. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response->subscriptionId ) );
 						}
 						if ( 'CARD' === $response->paymentDetails->paymentType ) {
