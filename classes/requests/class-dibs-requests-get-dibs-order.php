@@ -21,15 +21,15 @@ class DIBS_Requests_Get_DIBS_Order extends DIBS_Requests2 {
 		DIBS_Easy::log( 'DIBS GET Order response (' . $request_url . '): ' . stripslashes_deep( json_encode( $response ) ) );
 
 		if ( is_wp_error( $response ) ) {
-			$this->get_error_message( $response );
-			return 'ERROR';
+			return $this->get_error_message( $response );
+			// return 'ERROR';
 		}
 
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
 			return json_decode( wp_remote_retrieve_body( $response ) );
 		} else {
-			$this->get_error_message( $response );
-			return 'ERROR';
+			return $this->get_error_message( $response );
+			// return 'ERROR';
 		}
 	}
 
