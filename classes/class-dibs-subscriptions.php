@@ -84,13 +84,50 @@ class DIBS_Subscriptions {
 	 * @param object $renewal_order The WooCommerce order for the renewal.
 	 */
 	public function trigger_scheduled_payment( $renewal_total, $renewal_order ) {
-		$order_id = $renewal_order->get_id();
+		$order_id      = $renewal_order->get_id();
+		$subscriptions = wcs_get_subscriptions_for_renewal_order( $order_id );
 
-		// Get recurring token
+		// Get recurring token.
 		$recurring_token = get_post_meta( $order_id, '_dibs_recurring_token', true );
+
+		// If _dibs_recurring_token is missing.
 		if ( empty( $recurring_token ) ) {
-			$recurring_token = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_dibs_recurring_token', true );
-			update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
+			// Try getting it from parent order.
+			$parent_order_recurring_token = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_dibs_recurring_token', true );
+			if ( ! empty( $parent_order_recurring_token ) ) {
+				$recurring_token = $parent_order_recurring_token;
+				update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
+			} else {
+				// Try to get recurring token from old D2 _dibs_ticket.
+				$dibs_ticket = get_post_meta( $order_id, '_dibs_ticket', true );
+				if ( empty( $dibs_ticket ) ) {
+					// Try to get recurring token from old D2 _dibs_ticket parent order.
+					$dibs_ticket = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_dibs_ticket', true );
+				}
+				if ( ! empty( $dibs_ticket ) ) {
+					// We got a _dibs_ticket - try to getting the subscription via the externalreference request.
+					$subscription_request = new DIBS_Request_Get_Subscription_By_External_Reference( $dibs_ticket, $order_id );
+					$response             = $subscription_request->request();
+
+					if ( ! is_wp_error( $response ) && ! empty( $response->subscriptionId ) ) {
+						// All good, save the subscription ID as _dibs_recurring_token in the renewal order and in the subscription.
+						$recurring_token = $response->subscriptionId;
+						update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
+						// $subcriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
+						foreach ( $subcriptions as $subcription ) {
+							update_post_meta( $subcription->get_id(), '_dibs_recurring_token', $recurring_token );
+							$subcription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to DIBS. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response->subscriptionId ) );
+						}
+						if ( 'CARD' === $response->paymentDetails->paymentType ) {
+							// Save card data in renewal order.
+							update_post_meta( $order_id, 'dibs_payment_type', $response->paymentDetails->paymentType );
+							update_post_meta( $order_id, 'dibs_customer_card', $response->paymentDetails->cardDetails->maskedPan );
+						}
+					} else {
+						$renewal_order->add_order_note( sprintf( __( 'Error during DIBS_Request_Get_Subscription_By_External_Reference: %s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response ) ) );
+					}
+				}
+			}
 		}
 
 		$create_order_response = new DIBS_Request_Charge_Subscription( $order_id );
@@ -114,23 +151,31 @@ class DIBS_Subscriptions {
 			if ( ! empty( $payment_id ) ) {
 
 				if ( 'Succeeded' == $recurring_order->status ) {
-					WC_Subscriptions_Manager::process_subscription_payments_on_order( $renewal_order );
+					// All good. Update the renewal order with an order note and run payment_complete on all subscriptions.
 					update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 					$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with DIBS. DIBS order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
-					$renewal_order->payment_complete( $payment_id );
+
+					foreach ( $subscriptions as $subscription ) {
+						$subscription->payment_complete( $payment_id );
+					}
 				} else {
+					// Payment status not available yet. Schedule new check in 1 minute.
 					$renewal_order->add_order_note( sprintf( __( 'Payment status not available: Scheduling payment status check to be triggered in 1 minute.', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 					wp_schedule_single_event( time() + 60, 'wc_dibs_easy_check_subscription_status', array( $order_id, $create_order_response->bulkId ) );
 				}
 			} else {
-				WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $renewal_order );
+				// Something is wrong. Run payment_failed on all subscriptions.
 				$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with DIBS. Error code: %1$s. Message: %2$s', 'dibs-easy-for-woocommerce' ), 'fel', $create_order_response->bulkId ) );
+				foreach ( $subscriptions as $subscription ) {
+					$subscription->payment_failed();
+				}
 			}
 		} else {
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with DIBS. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $create_order_response ) ) );
+			foreach ( $subscriptions as $subscription ) {
+				$subscription->payment_failed();
+			}
 		}
-
-		// error_log('$create_order_response ' . var_export($create_order_response, true));
 	}
 
 	/**
@@ -140,7 +185,8 @@ class DIBS_Subscriptions {
 	 * @param object $renewal_order The WooCommerce order for the renewal.
 	 */
 	public function check_subscription_status( $order_id, $subscription_bulk_id ) {
-		$order = wc_get_order( $order_id );
+		$order         = wc_get_order( $order_id );
+		$subscriptions = wcs_get_subscriptions_for_renewal_order( $order_id );
 		// $payment_id       = $order->get_transaction_id();
 		$recurring_token = get_post_meta( $order_id, '_dibs_recurring_token', true );
 
@@ -157,16 +203,25 @@ class DIBS_Subscriptions {
 		if ( ! empty( $payment_id ) ) {
 
 			if ( 'Succeeded' == $recurring_order->status ) {
-				WC_Subscriptions_Manager::process_subscription_payments_on_order( $order );
+
+				// All good. Update the renewal order with an order note and run payment_complete on all subscriptions.
 				update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 				$order->add_order_note( sprintf( __( 'Subscription payment made with DIBS. DIBS order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
-				$order->payment_complete( $payment_id );
+
+				foreach ( $subscriptions as $subscription ) {
+					$subscription->payment_complete( $payment_id );
+				}
 			} else {
 				$order->add_order_note( sprintf( __( 'Payment status not correct for subscription. Status: %1$s. Message: %2$s', 'dibs-easy-for-woocommerce' ), $recurring_order->status, $recurring_order->message ) );
-				WC_Subscriptions_Manager::process_subscription_payment_failure_on_order( $order );
+				foreach ( $subscriptions as $subscription ) {
+					$subscription->payment_failed();
+				}
 			}
 		} else {
 			$order->add_order_note( sprintf( __( 'Subscription payment failed with DIBS during scheduled request. No paymentId found in response', 'dibs-easy-for-woocommerce' ), 'fel' ) );
+			foreach ( $subscriptions as $subscription ) {
+				$subscription->payment_failed();
+			}
 		}
 	}
 
