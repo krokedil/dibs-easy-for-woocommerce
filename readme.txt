@@ -56,6 +56,18 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2019.10.08    - version 1.11.1 =
+* Fix           - Remove including of file that doesn't exist in plugin. Caused error.
+
+= 2019.10.08    - version 1.11.0 =
+* Feature       - Add language support for redirect checkout flow.
+* Feature       - Added support for B2B purchases with redirect flow.
+* Tweak         - Send payment_method instead of payment_type in order confirmation emails.
+* Fix           - Make sure WooCommerce Subscriptions plugin exist before trying to save DIBS subscription id to subscriptions.
+* Fix           - Rounding fix in order item prices sent to DIBS with embedded checkout flow.
+* Fix           - Rounding fix in order total sent to DIBS with redirect checkout flow.
+* Fix           - Send correct item taxRate to DIBS for redirect checkout flow and order management requests.
+
 = 2019.09.18    - version 1.10.5 =
 * Fix           - Rounding fix in order item prices sent to DIBS with redirect checkout flow.
 * Fix           - Rounding fix in order total sent to DIBS in order management requests.
