@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.2.3
+Tested up to: 5.2.4
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.7.0
+Tested WooCommerce up to: 3.8.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,12 @@ For help setting up and configuring DIBS Easy for WooCommerce please refer to ou
 * This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.11.12    - version 1.12.0 =
+* Feature       - Add support for getting DIBS subscription ID from externalreference (support for D2 to Easy subscription transfer).
+* Tweak         - Updated subscription renewal payment logic to work with newer versions of WooCommerce Subscriptions.
+* Fix           - Rounding fix in check order totals function.
+* Fix           - Save DIBS payment method to order when it is finalized in the fallback sequence (can happen when customer not navigates back to store after Swish/Vipps purchase).
 
 = 2019.10.08    - version 1.11.1 =
 * Fix           - Remove including of file that doesn't exist in plugin. Caused error.
