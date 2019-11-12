@@ -144,9 +144,11 @@ class DIBS_Api_Callbacks {
 			// Get DIBS Payment meta and save it in the order.
 			$request  = new DIBS_Requests_Get_DIBS_Order( $data['data']['paymentId'] );
 			$response = $request->request();
-			if ( is_wp_error( $response ) || empty( $response ) ) {
-				update_post_meta( $order->get_id(), 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
-				update_post_meta( $order->get_id(), 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
+			if ( is_wp_error( $response ) ) {
+				$order->add_order_note( sprintf( __( 'Failed trying to receive the order from DIBS. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response->get_error_message() ) ) );
+			} else {
+				update_post_meta( $order->get_id(), 'dibs_payment_type', $response->payment->paymentDetails->paymentType );
+				update_post_meta( $order->get_id(), 'dibs_payment_method', $response->payment->paymentDetails->paymentMethod );
 			}
 			update_post_meta( $order->get_id(), '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 			$order->payment_complete( $data['data']['paymentId'] );
@@ -167,7 +169,7 @@ class DIBS_Api_Callbacks {
 		$order_totals_match = true;
 
 		// Check order total and compare it with Woo
-		$woo_order_total  = intval( round( $order->get_total() ) * 100 );
+		$woo_order_total  = intval( round( $order->get_total() * 100 ) );
 		$dibs_order_total = $dibs_order['data']['order']['amount']['amount'];
 
 		if ( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
