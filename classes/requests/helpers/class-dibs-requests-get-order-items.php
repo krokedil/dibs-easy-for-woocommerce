@@ -66,9 +66,14 @@ class DIBS_Requests_Get_Order_Items {
 		if ( 0 === intval( $shipping_method->get_total() ) ) {
 			$free_shipping = true;
 		}
+		if ( null !== $shipping_method->get_instance_id() ) {
+			$shipping_reference = 'shipping|' . $shipping_method->get_method_id() . ':' . $shipping_method->get_instance_id();
+		} else {
+			$shipping_reference = 'shipping|' . $shipping_method->get_method_id();
+		}
 
 		return array(
-			'reference'        => 'shipping|' . $shipping_method->get_method_id() . ':' . $shipping_method->get_instance_id(),
+			'reference'        => $shipping_reference,
 			'name'             => wc_dibs_clean_name( $shipping_method->get_method_title() ),
 			'quantity'         => '1',
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
