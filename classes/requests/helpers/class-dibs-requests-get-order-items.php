@@ -68,7 +68,7 @@ class DIBS_Requests_Get_Order_Items {
 		}
 
 		return array(
-			'reference'        => 'Shipping',
+			'reference'        => 'shipping|' . $shipping_method->get_method_id() . ':' . $shipping_method->get_instance_id(),
 			'name'             => wc_dibs_clean_name( $shipping_method->get_method_title() ),
 			'quantity'         => '1',
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
