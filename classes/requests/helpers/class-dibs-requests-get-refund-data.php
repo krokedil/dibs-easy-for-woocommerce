@@ -155,7 +155,7 @@ class DIBS_Requests_Get_Refund_Data {
 			}
 
 			$free_shipping = false;
-			if ( 0 === intval( $shipping_item->get_total() ) ) {
+			if ( 0 === intval( $shipping_item->get_total() + $shipping_item->get_total_tax() ) ) {
 				$free_shipping = true;
 			}
 
