@@ -147,12 +147,25 @@ class DIBS_Requests_Get_Refund_Data {
 	private static function get_refunded_shipping( $order_id, $refunded_shipping_data ) {
 		foreach ( $refunded_shipping_data as $shipping_item ) {
 			$original_order = wc_get_order( $order_id );
-			$free_shipping  = false;
+			foreach ( $original_order->get_items( 'shipping' ) as $original_order_shipping ) {
+				if ( $shipping_item->get_name() == $original_order_shipping->get_name() ) {
+					// Found product match, continue.
+					break;
+				}
+			}
+
+			$free_shipping = false;
 			if ( 0 === intval( $shipping_item->get_total() ) ) {
 				$free_shipping = true;
 			}
 
-			$reference          = 'Shipping';
+			$shipping_reference = 'Shipping';
+			if ( null !== $shipping_item->get_instance_id() ) {
+				$shipping_reference = 'shipping|' . $shipping_item->get_method_id() . ':' . $shipping_item->get_instance_id();
+			} else {
+				$shipping_reference = 'shipping|' . $shipping_item->get_method_id();
+			}
+
 			$name               = wc_dibs_clean_name( $shipping_item->get_name() );
 			$quantity           = '1';
 			$unit               = __( 'pcs', 'dibs-easy-for-woocommerce' );
@@ -163,7 +176,7 @@ class DIBS_Requests_Get_Refund_Data {
 			$net_total_amount   = ( $free_shipping ) ? 0 : intval( round( $shipping_item->get_total() * 100 ) );
 
 			$refunded_shipping = array(
-				'reference'        => $reference,
+				'reference'        => $shipping_reference,
 				'name'             => $name,
 				'quantity'         => abs( $quantity ),
 				'unit'             => $unit,
@@ -187,8 +200,33 @@ class DIBS_Requests_Get_Refund_Data {
 	 */
 	private static function get_refunded_fees( $order_id, $refunded_fees_data ) {
 		foreach ( $refunded_fees_data as $fee_item ) {
+			$original_order = wc_get_order( $order_id );
+			foreach ( $original_order->get_items( 'fee' ) as $original_order_fee ) {
+				if ( $fee_item->get_name() == $original_order_fee->get_name() ) {
+					// Found product match, continue.
+					break;
+				}
+			}
 
-			$reference          = 'Fee';
+			$fee_reference    = 'Fee';
+			$invoice_fee_name = '';
+			$dibs_settings    = get_option( 'woocommerce_dibs_easy_settings' );
+			$invoice_fee_id   = isset( $dibs_settings['dibs_invoice_fee'] ) ? $dibs_settings['dibs_invoice_fee'] : '';
+
+			if ( $invoice_fee_id ) {
+				$_product         = wc_get_product( $invoice_fee_id );
+				$invoice_fee_name = $_product->get_name();
+			}
+
+			// Check if the refunded fee is the invoice fee.
+			if ( $invoice_fee_name === $fee_item->get_name() ) {
+				$fee_reference = self::get_sku( $_product, $_product->get_id() );
+			} else {
+				// Format the fee name so it match the same fee in Collector.
+				$fee_name      = str_replace( ' ', '-', strtolower( $fee_item->get_name() ) );
+				$fee_reference = 'fee|' . $fee_name;
+			}
+
 			$name               = wc_dibs_clean_name( $fee_item->get_name() );
 			$quantity           = '1';
 			$unit               = __( 'pcs', 'dibs-easy-for-woocommerce' );
@@ -199,7 +237,7 @@ class DIBS_Requests_Get_Refund_Data {
 			$net_total_amount   = intval( round( $fee_item->get_total() * 100 ) );
 
 			$refunded_fees = array(
-				'reference'        => $reference,
+				'reference'        => $fee_reference,
 				'name'             => $name,
 				'quantity'         => abs( $quantity ),
 				'unit'             => $unit,
@@ -214,5 +252,19 @@ class DIBS_Requests_Get_Refund_Data {
 		}
 	}
 
-
+	/**
+	 * Get sku
+	 *
+	 * @param WC_Product $product The invoice fee product.
+	 * @param int        $invoice_fee_id The invoice fee product id.
+	 * @return string
+	 */
+	public static function get_sku( $product, $invoice_fee_id ) {
+		if ( get_post_meta( $invoice_fee_id, '_sku', true ) !== '' ) {
+			$part_number = $product->get_sku();
+		} else {
+			$part_number = $product->get_id();
+		}
+		return substr( $part_number, 0, 32 );
+	}
 }
