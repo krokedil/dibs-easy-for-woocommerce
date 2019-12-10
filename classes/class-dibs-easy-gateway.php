@@ -164,39 +164,19 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-		// Check if amount equals total order
 		$order = wc_get_order( $order_id );
-		if ( $amount == $order->get_total() ) {
-			$request = new DIBS_Request_Refund_Order( $order_id );
-			$request = json_decode( $request->request() );
 
-			if ( array_key_exists( 'refundId', $request ) ) { // Payment success
-				$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
-				return true;
-			} else {
-				return false;
-			}
+		$request = new DIBS_Request_Refund_Order( $order_id );
+		$request = json_decode( $request->request() );
+
+		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
+			$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
+			return true;
 		} else {
-			/*
-			$body = array(
-				'amount' => intval( $amount ),
-				'orderItems' => array(
-					'reference'         => 'Refund',
-					'name'              => 'Refund',
-					'quantity'          => 1,
-					'unit'              => '1',
-					'unitPrice'         => intval( $amount ),
-					'taxRate'           => 0,
-					'taxAmount'         => 0,
-					'grossTotalAmount'  => intval( $amount ),
-					'netTotalAmount'    => intval( $amount ),
-				),
-			);
-			*/
-			$order->add_order_note( sprintf( __( 'DIBS Easy currently only supports full refunds, for a partial refund use the DIBS backend system', 'dibs-easy-for-woocommerce' ) ) );
 			return false;
 		}
 	}
+
 	public function dibs_add_body_class( $class ) {
 		if ( is_checkout() ) {
 			$available_payment_gateways = WC()->payment_gateways->get_available_payment_gateways();

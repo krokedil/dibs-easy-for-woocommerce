@@ -4,6 +4,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class DIBS_Requests_Get_Order_Items {
+	/**
+	 * DIBS Settings
+	 *
+	 * @var mixed
+	 */
+	// public static $dibs_settings;
+
 	public static function get_items( $order_id ) {
 		$order = wc_get_order( $order_id );
 		$items = array();
@@ -48,8 +55,27 @@ class DIBS_Requests_Get_Order_Items {
 	}
 
 	public static function get_fees( $order_fee ) {
+		$fee_reference    = 'Fee';
+		$invoice_fee_name = '';
+		$dibs_settings    = get_option( 'woocommerce_dibs_easy_settings' );
+		$invoice_fee_id   = isset( $dibs_settings['dibs_invoice_fee'] ) ? $dibs_settings['dibs_invoice_fee'] : '';
+
+		if ( $invoice_fee_id ) {
+			$_product         = wc_get_product( $invoice_fee_id );
+			$invoice_fee_name = $_product->get_name();
+		}
+
+		// Check if the refunded fee is the invoice fee.
+		if ( $invoice_fee_name === $order_fee->get_name() ) {
+			$fee_reference = self::get_sku( $_product, $_product->get_id() );
+		} else {
+			// Format the fee name so it match the same fee in Collector.
+			$fee_name      = str_replace( ' ', '-', strtolower( $order_fee->get_name() ) );
+			$fee_reference = 'fee|' . $fee_name;
+		}
+
 		return array(
-			'reference'        => 'Fee',
+			'reference'        => $fee_reference,
 			'name'             => wc_dibs_clean_name( $order_fee->get_name() ),
 			'quantity'         => '1',
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),

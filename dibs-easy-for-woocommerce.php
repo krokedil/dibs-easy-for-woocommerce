@@ -90,6 +90,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-notifications.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-payment-methods.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-refund-data.php' );
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
