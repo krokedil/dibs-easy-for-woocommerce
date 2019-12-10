@@ -12,7 +12,7 @@ jQuery(function($) {
 		extraFieldsSelectorNonText: 'div#dibs-extra-checkout-fields select, div#dibs-extra-checkout-fields input[type="radio"], div#dibs-extra-checkout-fields input[type="checkbox"], div#dibs-extra-checkout-fields input.checkout-date-picker, input#terms input[type="checkbox"]',
 
         // Dibs processing order.
-        dibsOrderProcessing = false,
+        dibsOrderProcessing: false,
 
         /*
 		 * Document ready function. 
