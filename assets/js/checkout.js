@@ -203,7 +203,6 @@ jQuery(function($) {
 
 				dibsCheckout.send('payment-order-finalized', true);
             }
-            dibs_wc.dibsOrderProcessing = false;
         },
         
         /*
@@ -464,10 +463,10 @@ jQuery(function($) {
             }
         );
     });
-    
+
     // When payment method is changed
-    if ( true !== dibs_wc.dibsOrderProcessing ) {
-        $(document).on("change", "input[name='payment_method']", function (event) {
+    $(document).on("change", "input[name='payment_method']", function (event) {
+        if ( true !== dibs_wc.dibsOrderProcessing ) {
             if ( "dibs_easy" === $("input[name='payment_method']:checked").val() ) {	
                 $.ajax(
                     wc_dibs_easy.change_payment_method_url,
@@ -492,8 +491,8 @@ jQuery(function($) {
                     }
                 );
             }
-        });
-    }
+        }
+    });
     
     // When WooCommerce checkout submission fails
 	$(document).on("checkout_error", function () {
