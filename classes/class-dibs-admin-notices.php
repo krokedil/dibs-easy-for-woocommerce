@@ -42,7 +42,7 @@ class DIBS_Easy_Admin_Notices {
 		// Terms page
 		if ( ! wc_get_page_id( 'terms' ) || wc_get_page_id( 'terms' ) < 0 ) {
 			echo '<div class="notice notice-error">';
-			echo '<p>' . sprintf( __( 'You need to <a href="%s" target="_blank">specify a terms page</a> in WooCommerce Settings to be able to use DIBS Easy.', 'dibs-easy-for-woocommerce' ), 'https://docs.woocommerce.com/document/configuring-woocommerce-settings/#section-14' ) . '</p>';
+			echo '<p>' . sprintf( __( 'You need to <a href="%s" target="_blank">specify a terms page</a> in WooCommerce Settings to be able to use Nets Easy.', 'dibs-easy-for-woocommerce' ), 'https://docs.woocommerce.com/document/configuring-woocommerce-settings/#section-14' ) . '</p>';
 			echo '</div>';
 		}
 	}
@@ -56,7 +56,7 @@ class DIBS_Easy_Admin_Notices {
 		}
 		if ( ! is_ssl() ) {
 			echo '<div class="notice notice-error">';
-			echo '<p>' . esc_html( __( 'You need to enable and configure https to be able to use DIBS Easy.', 'dibs-easy-for-woocommerce' ) ) . '</p>';
+			echo '<p>' . esc_html( __( 'You need to enable and configure https to be able to use Nets Easy.', 'dibs-easy-for-woocommerce' ) ) . '</p>';
 			echo '</div>';
 		}
 	}
@@ -71,13 +71,13 @@ class DIBS_Easy_Admin_Notices {
 		// Account page - username.
 		if ( 'yes' === get_option( 'woocommerce_enable_signup_and_login_from_checkout' ) && 'no' === get_option( 'woocommerce_registration_generate_username' ) ) {
 			echo '<div class="notice notice-error">';
-			echo '<p>' . sprintf( __( 'To be able to use DIBS Easy correctly you need to tick the checkbox <i>When creating an account, automatically generate a username from the customer\'s email address</i> when having the <i>Allow customers to create an account during checkout</i> setting activated. This can be changed in the <a href="%s">Accounts & Privacy tab</a>.', 'dibs-easy-for-woocommerce' ), admin_url( 'admin.php?page=wc-settings&tab=account' ) ) . '</p>';
+			echo '<p>' . sprintf( __( 'To be able to use Nets Easy correctly you need to tick the checkbox <i>When creating an account, automatically generate a username from the customer\'s email address</i> when having the <i>Allow customers to create an account during checkout</i> setting activated. This can be changed in the <a href="%s">Accounts & Privacy tab</a>.', 'dibs-easy-for-woocommerce' ), admin_url( 'admin.php?page=wc-settings&tab=account' ) ) . '</p>';
 			echo '</div>';
 		}
 		// Account page - password.
 		if ( 'yes' === get_option( 'woocommerce_enable_signup_and_login_from_checkout' ) && 'no' === get_option( 'woocommerce_registration_generate_password' ) ) {
 			echo '<div class="notice notice-error">';
-			echo '<p>' . sprintf( __( 'To be able to use DIBS Easy correctly you need to tick the checkbox <i>When creating an account, automatically generate an account password</i> when having the <i>Allow customers to create an account during checkout</i> setting activated. This can be changed in the <a href="%s">Accounts & Privacy tab</a>.', 'dibs-easy-for-woocommerce' ), admin_url( 'admin.php?page=wc-settings&tab=account' ) ) . '</p>';
+			echo '<p>' . sprintf( __( 'To be able to use Nets Easy correctly you need to tick the checkbox <i>When creating an account, automatically generate an account password</i> when having the <i>Allow customers to create an account during checkout</i> setting activated. This can be changed in the <a href="%s">Accounts & Privacy tab</a>.', 'dibs-easy-for-woocommerce' ), admin_url( 'admin.php?page=wc-settings&tab=account' ) ) . '</p>';
 			echo '</div>';
 		}
 	}

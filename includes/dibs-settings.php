@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Settings for DIBS Easy
+ * Settings for Nets Easy
  */
 
 return apply_filters(
@@ -13,47 +13,47 @@ return apply_filters(
 		'enabled'                      => array(
 			'title'   => __( 'Enable/Disable', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable DIBS Easy', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Nets Easy', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'title'                        => array(
 			'title'       => __( 'Title', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'This is the title that the user sees on the checkout page for DIBS Easy.', 'dibs-easy-for-woocommerce' ),
-			'default'     => __( 'DIBS Easy', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'This is the title that the user sees on the checkout page for Nets Easy.', 'dibs-easy-for-woocommerce' ),
+			'default'     => __( 'Nets Easy', 'dibs-easy-for-woocommerce' ),
 		),
 		'dibs_live_key'                => array(
 			'title'       => __( 'Live Secret key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter your DIBS Easy live key', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter your Nets Easy live key', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
 		'dibs_checkout_key'            => array(
 			'title'       => __( 'Live Checkout key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter your DIBS Easy Checkout key', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter your Nets Easy Checkout key', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
 		'dibs_test_key'                => array(
 			'title'       => __( 'Test Secret key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter your DIBS Easy Test key if you want to run in test mode.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter your Nets Easy Test key if you want to run in test mode.', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
 		'dibs_test_checkout_key'       => array(
 			'title'       => __( 'Test Checkout key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter your DIBS Easy Test checkout key', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter your Nets Easy Test checkout key', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
 		'test_mode'                    => array(
 			'title'   => __( 'Test mode', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Test mode for DIBS Easy', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Test mode for Nets Easy', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'allowed_customer_types'       => array(
@@ -84,7 +84,7 @@ return apply_filters(
 		'debug_mode'                   => array(
 			'title'   => __( 'Debug mode', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Debug mode for DIBS Easy', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Debug mode for Nets Easy', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'dibs_invoice_fee'             => array(
@@ -101,7 +101,7 @@ return apply_filters(
 				'embedded' => __( 'Embedded', 'dibs-easy-for-woocommerce' ),
 				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
 			),
-			'description' => __( 'Select how Easy should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by DIBS.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Select how Easy should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nets.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'embedded',
 			'desc_tip'    => false,
 		),

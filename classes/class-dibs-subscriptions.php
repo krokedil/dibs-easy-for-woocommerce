@@ -116,7 +116,7 @@ class DIBS_Subscriptions {
 						// $subcriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 						foreach ( $subcriptions as $subcription ) {
 							update_post_meta( $subcription->get_id(), '_dibs_recurring_token', $recurring_token );
-							$subcription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to DIBS. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response->subscriptionId ) );
+							$subcription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response->subscriptionId ) );
 						}
 						if ( 'CARD' === $response->paymentDetails->paymentType ) {
 							// Save card data in renewal order.
@@ -153,7 +153,7 @@ class DIBS_Subscriptions {
 				if ( 'Succeeded' == $recurring_order->status ) {
 					// All good. Update the renewal order with an order note and run payment_complete on all subscriptions.
 					update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
-					$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with DIBS. DIBS order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
+					$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Nets order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 
 					foreach ( $subscriptions as $subscription ) {
 						$subscription->payment_complete( $payment_id );
@@ -165,13 +165,13 @@ class DIBS_Subscriptions {
 				}
 			} else {
 				// Something is wrong. Run payment_failed on all subscriptions.
-				$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with DIBS. Error code: %1$s. Message: %2$s', 'dibs-easy-for-woocommerce' ), 'fel', $create_order_response->bulkId ) );
+				$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error code: %1$s. Message: %2$s', 'dibs-easy-for-woocommerce' ), 'fel', $create_order_response->bulkId ) );
 				foreach ( $subscriptions as $subscription ) {
 					$subscription->payment_failed();
 				}
 			}
 		} else {
-			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with DIBS. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $create_order_response ) ) );
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $create_order_response ) ) );
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_failed();
 			}
@@ -206,7 +206,7 @@ class DIBS_Subscriptions {
 
 				// All good. Update the renewal order with an order note and run payment_complete on all subscriptions.
 				update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
-				$order->add_order_note( sprintf( __( 'Subscription payment made with DIBS. DIBS order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
+				$order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Nets order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
 
 				foreach ( $subscriptions as $subscription ) {
 					$subscription->payment_complete( $payment_id );
@@ -218,7 +218,7 @@ class DIBS_Subscriptions {
 				}
 			}
 		} else {
-			$order->add_order_note( sprintf( __( 'Subscription payment failed with DIBS during scheduled request. No paymentId found in response', 'dibs-easy-for-woocommerce' ), 'fel' ) );
+			$order->add_order_note( sprintf( __( 'Subscription payment failed with Nets during scheduled request. No paymentId found in response', 'dibs-easy-for-woocommerce' ), 'fel' ) );
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_failed();
 			}
@@ -231,7 +231,7 @@ class DIBS_Subscriptions {
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
 					<?php
-						echo '<p><strong>' . __( 'DIBS recurring token' ) . ':</strong>' . get_post_meta( $order->id, '_dibs_recurring_token', true ) . '</p>';
+						echo '<p><strong>' . __( 'Nets recurring token' ) . ':</strong>' . get_post_meta( $order->id, '_dibs_recurring_token', true ) . '</p>';
 					?>
 				</div>
 				<div class="edit_address">
@@ -239,7 +239,7 @@ class DIBS_Subscriptions {
 						woocommerce_wp_text_input(
 							array(
 								'id'            => '_dibs_recurring_token',
-								'label'         => __( 'DIBS recurring token' ),
+								'label'         => __( 'Nets recurring token' ),
 								'wrapper_class' => '_billing_company_field',
 							)
 						);

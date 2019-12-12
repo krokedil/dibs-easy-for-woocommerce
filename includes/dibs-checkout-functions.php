@@ -28,7 +28,7 @@ function wc_dibs_show_snippet() {
 	} else {
 		?>
 		<ul class="woocommerce-error" role="alert">
-			<li><?php _e( 'DIBS API Error: ' . $payment_id['error_message'] ); ?></li>
+			<li><?php _e( 'Nets API Error: ' . $payment_id['error_message'] ); ?></li>
 		</ul>
 		<?php
 		// echo 'DIBS API Error: ' . $payment_id['error_message'];
@@ -127,7 +127,7 @@ function wc_dibs_get_payment_id() {
 			foreach ( $request->errors as $error ) {
 				$error_message = $error[0];
 			}
-			echo( "<script>console.log('DIBS error: " . $error_message . "');</script>" );
+			echo( "<script>console.log('Nets error: " . $error_message . "');</script>" );
 			return array(
 				'result'        => false,
 				'error_message' => $error_message,

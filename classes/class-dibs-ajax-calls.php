@@ -188,10 +188,10 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			if ( is_wp_error( $response ) ) {
 				$message = $response->get_error_message();
 			} else {
-				$message = 'Empty response from DIBS.';
+				$message = 'Empty response from Nets.';
 			}
 
-			DIBS_Easy::log( 'Confirmation page rendered for DIBS payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . var_export( $message, true ) );
+			DIBS_Easy::log( 'Confirmation page rendered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . var_export( $message, true ) );
 
 			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
@@ -206,7 +206,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			// Store the order data in a sesstion. We might need it if form processing in Woo fails
 			WC()->session->set( 'dibs_order_data', $response );
 
-			DIBS_Easy::log( 'Confirmation page rendered and checkout form about to be submitted for DIBS payment ID ' . $payment_id );
+			DIBS_Easy::log( 'Confirmation page rendered and checkout form about to be submitted for Nets payment ID ' . $payment_id );
 
 			self::prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
 			wp_send_json_success( $response );

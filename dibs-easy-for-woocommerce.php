@@ -5,9 +5,9 @@
  * @package WC_Dibs_Easy
  *
  * @wordpress-plugin
- * Plugin Name:             DIBS Easy for WooCommerce
+ * Plugin Name:             Nets Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
- * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
+ * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
  * Version:                 1.12.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
@@ -228,7 +228,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					echo wpautop( wptexturize( __( 'Order date: ', 'dibs-easy-for-woocommerce' ) . $order_date ) );
 				}
 				if ( $payment_id ) {
-					echo wpautop( wptexturize( __( 'DIBS Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) );
+					echo wpautop( wptexturize( __( 'Nets Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) );
 				}
 				if ( $payment_method ) {
 					echo wpautop( wptexturize( __( 'Payment method: ', 'dibs-easy-for-woocommerce' ) . $payment_method ) );
@@ -241,7 +241,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 		public function add_error_notice_to_cart_page() {
 			if ( isset( $_GET['dibs-payment-id'] ) ) {
-				wc_print_notice( __( 'There was a problem paying with DIBS.', 'dibs-easy-for-woocommerce' ), 'error' );
+				wc_print_notice( __( 'There was a problem paying with Nets.', 'dibs-easy-for-woocommerce' ), 'error' );
 			}
 		}
 
@@ -301,7 +301,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		public function save_dibs_order_data( $order_id, $data ) {
 			$payment_id = $_POST['dibs_payment_id'];
-			self::log( 'Saving DIBS meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
+			self::log( 'Saving Nets meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
 			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		}
 	}
