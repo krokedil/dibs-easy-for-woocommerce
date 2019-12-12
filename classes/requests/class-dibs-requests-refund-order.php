@@ -47,8 +47,8 @@ class DIBS_Request_Refund_Order extends DIBS_Requests2 {
 	public function request_body() {
 		$order = wc_get_order( $this->order_id );
 		return array(
-			'amount'     => intval( round( $order->get_total() * 100 ) ),
-			'orderItems' => DIBS_Requests_Get_Order_Items::get_items( $this->order_id ),
+			'amount'     => DIBS_Requests_Get_Refund_Data::get_total_refund_amount( $this->order_id ),
+			'orderItems' => DIBS_Requests_Get_Refund_Data::get_refund_data( $this->order_id ),
 		);
 	}
 }

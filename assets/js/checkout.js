@@ -11,6 +11,9 @@ jQuery(function($) {
 		extraFieldsSelectorText: 'div#dibs-extra-checkout-fields input[type="text"], div#dibs-extra-checkout-fields input[type="password"], div#dibs-extra-checkout-fields textarea, div#dibs-extra-checkout-fields input[type="email"], div#dibs-extra-checkout-fields input[type="tel"]',
 		extraFieldsSelectorNonText: 'div#dibs-extra-checkout-fields select, div#dibs-extra-checkout-fields input[type="radio"], div#dibs-extra-checkout-fields input[type="checkbox"], div#dibs-extra-checkout-fields input.checkout-date-picker, input#terms input[type="checkbox"]',
 
+        // Dibs processing order.
+        dibsOrderProcessing: false,
+
         /*
 		 * Document ready function. 
 		 * Runs on the $(document).ready event.
@@ -183,9 +186,10 @@ jQuery(function($) {
 		 * Handle hashchange triggered when Woo order is created.
 		 */
         handleHashChange : function(event){
+            dibs_wc.dibsOrderProcessing = true;
 			console.log('hashchange');
 			var currentHash = location.hash;
-			var splittedHash = currentHash.split("=");
+            var splittedHash = currentHash.split("=");
             console.log(splittedHash[0]);
             console.log(splittedHash[1]);
             if(splittedHash[0] === "#dibseasy"){
@@ -459,34 +463,36 @@ jQuery(function($) {
             }
         );
     });
-    
+
     // When payment method is changed
     $(document).on("change", "input[name='payment_method']", function (event) {
-        if ( "dibs_easy" === $("input[name='payment_method']:checked").val() ) {	
-            $.ajax(
-                wc_dibs_easy.change_payment_method_url,
-                {
-                    type: "POST",
-                    dataType: "json",
-                    async: true,
-                    data: {
-                        action:		"dibs_change_payment_method",
-                        dibs_easy 	: true
-                    },
-                    success: function (data) {
-                    },
-                    error: function (data) {
-                    },
-                    complete: function (data) {
-                        console.log('Change payment method sucess');
-                        console.log(data.responseJSON.data.redirect);
-                        $('body').removeClass('dibs-deselected');
-                        window.location.href = data.responseJSON.data.redirect;
+        if ( true !== dibs_wc.dibsOrderProcessing ) {
+            if ( "dibs_easy" === $("input[name='payment_method']:checked").val() ) {	
+                $.ajax(
+                    wc_dibs_easy.change_payment_method_url,
+                    {
+                        type: "POST",
+                        dataType: "json",
+                        async: true,
+                        data: {
+                            action:		"dibs_change_payment_method",
+                            dibs_easy 	: true
+                        },
+                        success: function (data) {
+                        },
+                        error: function (data) {
+                        },
+                        complete: function (data) {
+                            console.log('Change payment method sucess');
+                            console.log(data.responseJSON.data.redirect);
+                            $('body').removeClass('dibs-deselected');
+                            window.location.href = data.responseJSON.data.redirect;
+                        }
                     }
-                }
-            );
+                );
+            }
         }
-	});
+    });
     
     // When WooCommerce checkout submission fails
 	$(document).on("checkout_error", function () {

@@ -83,13 +83,13 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			exit( 'Nonce can not be verified.' );
 		}
 		*/
-		$update_needed      = 'yes';
+		$update_needed      = 'no';
 		$must_login         = 'no';
 		$must_login_message = apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. Please log in.', 'woocommerce' ) );
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
-		// Get customer data from Collector
+		// Get customer data from DIBS
 		$country   = dibs_get_iso_2_country( $_REQUEST['address']['countryCode'] );
 		$post_code = $_REQUEST['address']['postalCode'];
 
@@ -106,13 +106,12 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 
 		if ( $country ) {
-
-			// If country is changed then we need to trigger an cart update in the Collector Checkout
+			// If country is changed then we need to trigger an cart update in the DIBS Easy Checkout
 			if ( WC()->customer->get_billing_country() !== $country ) {
 				$update_needed = 'yes';
 			}
 
-			// If country is changed then we need to trigger an cart update in the Collector Checkout
+			// If country is changed then we need to trigger an cart update in the DIBS Easy Checkout
 			if ( WC()->customer->get_shipping_postcode() !== $post_code ) {
 				$update_needed = 'yes';
 			}
@@ -189,10 +188,10 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			if ( is_wp_error( $response ) ) {
 				$message = $response->get_error_message();
 			} else {
-				$message = 'Empty response from DIBS.';
+				$message = 'Empty response from Nets.';
 			}
 
-			DIBS_Easy::log( 'Confirmation page rendered for DIBS payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . var_export( $message, true ) );
+			DIBS_Easy::log( 'Confirmation page rendered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . var_export( $message, true ) );
 
 			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
@@ -207,7 +206,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			// Store the order data in a sesstion. We might need it if form processing in Woo fails
 			WC()->session->set( 'dibs_order_data', $response );
 
-			DIBS_Easy::log( 'Confirmation page rendered and checkout form about to be submitted for DIBS payment ID ' . $payment_id );
+			DIBS_Easy::log( 'Confirmation page rendered and checkout form about to be submitted for Nets payment ID ' . $payment_id );
 
 			self::prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
 			wp_send_json_success( $response );

@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class DIBS_Requests_Checkout {
 
 	public static function get_checkout( $checkout_flow = 'embedded', $order_id = null ) {
+		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+
 		$checkout = array(
 			'termsUrl' => wc_get_page_permalink( 'terms' ),
 		);
@@ -12,6 +14,9 @@ class DIBS_Requests_Checkout {
 			$checkout['url']                                     = wc_get_checkout_url();
 			$checkout['shipping']['countries']                   = array();
 			$checkout['shipping']['merchantHandlesShippingCost'] = true;
+
+			$complete_payment_button_text                                       = ( isset( $dibs_settings['complete_payment_button_text'] ) ) ? $dibs_settings['complete_payment_button_text'] : 'subscribe';
+			$checkout['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
 		} else {
 			$order                                   = wc_get_order( $order_id );
 			$checkout['returnUrl']                   = $order->get_checkout_order_received_url();
@@ -25,7 +30,6 @@ class DIBS_Requests_Checkout {
 		if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
 			$checkout['shipping']['countries'] = self::get_shipping_countries();
 		}
-		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
 		$allowed_customer_types = ( isset( $dibs_settings['allowed_customer_types'] ) ) ? $dibs_settings['allowed_customer_types'] : 'B2C';
 		switch ( $allowed_customer_types ) {
 			case 'B2C':

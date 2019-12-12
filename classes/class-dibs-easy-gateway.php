@@ -10,9 +10,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function __construct() {
 		$this->id = 'dibs_easy';
 
-		$this->method_title = __( 'DIBS Easy', 'dibs-easy-for-woocommerce' );
+		$this->method_title = __( 'Nets Easy', 'dibs-easy-for-woocommerce' );
 
-		$this->method_description = __( 'DIBS Easy Payment for checkout', 'dibs-easy-for-woocommerce' );
+		$this->method_description = __( 'Nets Easy Payment for checkout', 'dibs-easy-for-woocommerce' );
 
 		// Load the form fields.
 		$this->init_form_fields();
@@ -53,7 +53,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function get_icon() {
 		$icon_src   = 'https://cdn.dibspayment.com/logo/checkout/combo/horiz/DIBS_checkout_kombo_horizontal_04.png';
 		$icon_width = '145';
-		$icon_html  = '<img src="' . $icon_src . '" alt="DIBS - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
+		$icon_html  = '<img src="' . $icon_src . '" alt="Nets - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
 		return apply_filters( 'wc_dibs_easy_icon_html', $icon_html );
 	}
 
@@ -106,7 +106,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
-				$order->add_order_note( __( 'Customer redirected to DIBS payment page.', 'dibs-easy-for-woocommerce' ) );
+				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
 				update_post_meta( $order_id, '_dibs_payment_id', $response->paymentId );
 				return array(
 					'result'   => 'success',
@@ -122,7 +122,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 						$error_message = json_decode( $error_message );
 					}
 				} else {
-					$error_message = __( 'An error occured during communication with DIBS. Please try again.', 'dibs-easy-for-woocommerce' );
+					$error_message = __( 'An error occured during communication with Nets. Please try again.', 'dibs-easy-for-woocommerce' );
 				}
 				wc_add_notice( sprintf( __( '%s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $error_message ) ), 'error' );
 				return false;
@@ -164,39 +164,19 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-		// Check if amount equals total order
 		$order = wc_get_order( $order_id );
-		if ( $amount == $order->get_total() ) {
-			$request = new DIBS_Request_Refund_Order( $order_id );
-			$request = json_decode( $request->request() );
 
-			if ( array_key_exists( 'refundId', $request ) ) { // Payment success
-				$order->add_order_note( sprintf( __( 'Refund made in DIBS with charge ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
-				return true;
-			} else {
-				return false;
-			}
+		$request = new DIBS_Request_Refund_Order( $order_id );
+		$request = json_decode( $request->request() );
+
+		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
+			$order->add_order_note( sprintf( __( 'Refund made in Nets with charge ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
+			return true;
 		} else {
-			/*
-			$body = array(
-				'amount' => intval( $amount ),
-				'orderItems' => array(
-					'reference'         => 'Refund',
-					'name'              => 'Refund',
-					'quantity'          => 1,
-					'unit'              => '1',
-					'unitPrice'         => intval( $amount ),
-					'taxRate'           => 0,
-					'taxAmount'         => 0,
-					'grossTotalAmount'  => intval( $amount ),
-					'netTotalAmount'    => intval( $amount ),
-				),
-			);
-			*/
-			$order->add_order_note( sprintf( __( 'DIBS Easy currently only supports full refunds, for a partial refund use the DIBS backend system', 'dibs-easy-for-woocommerce' ) ) );
 			return false;
 		}
 	}
+
 	public function dibs_add_body_class( $class ) {
 		if ( is_checkout() ) {
 			$available_payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
@@ -262,9 +242,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			}
 
 			if ( 'A2A' === $request->payment->paymentDetails->paymentType ) {
-				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentMethod ) );
+				$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentMethod ) );
 			} else {
-				$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
+				$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 			}
 			$order->payment_complete( $payment_id );
 		} else {

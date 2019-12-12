@@ -5,10 +5,10 @@
  * @package WC_Dibs_Easy
  *
  * @wordpress-plugin
- * Plugin Name:             DIBS Easy for WooCommerce
+ * Plugin Name:             Nets Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
- * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">DIBS Easy</a> checkout for WooCommerce.
- * Version:                 1.12.0
+ * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
+ * Version:                 1.13.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -16,7 +16,7 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    3.0.0
- * WC tested up to:         3.8.0
+ * WC tested up to:         3.8.1
  * Copyright:               © 2017-2019 Krokedil Produktionsbyrå AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.12.0' );
+define( 'WC_DIBS_EASY_VERSION', '1.13.0' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -90,6 +90,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-notifications.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-payment-methods.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-refund-data.php' );
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -227,7 +228,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					echo wpautop( wptexturize( __( 'Order date: ', 'dibs-easy-for-woocommerce' ) . $order_date ) );
 				}
 				if ( $payment_id ) {
-					echo wpautop( wptexturize( __( 'DIBS Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) );
+					echo wpautop( wptexturize( __( 'Nets Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) );
 				}
 				if ( $payment_method ) {
 					echo wpautop( wptexturize( __( 'Payment method: ', 'dibs-easy-for-woocommerce' ) . $payment_method ) );
@@ -240,7 +241,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 		public function add_error_notice_to_cart_page() {
 			if ( isset( $_GET['dibs-payment-id'] ) ) {
-				wc_print_notice( __( 'There was a problem paying with DIBS.', 'dibs-easy-for-woocommerce' ), 'error' );
+				wc_print_notice( __( 'There was a problem paying with Nets.', 'dibs-easy-for-woocommerce' ), 'error' );
 			}
 		}
 
@@ -300,7 +301,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		public function save_dibs_order_data( $order_id, $data ) {
 			$payment_id = $_POST['dibs_payment_id'];
-			self::log( 'Saving DIBS meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
+			self::log( 'Saving Nets meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
 			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		}
 	}

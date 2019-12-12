@@ -145,14 +145,14 @@ class DIBS_Api_Callbacks {
 			$request  = new DIBS_Requests_Get_DIBS_Order( $data['data']['paymentId'] );
 			$response = $request->request();
 			if ( is_wp_error( $response ) ) {
-				$order->add_order_note( sprintf( __( 'Failed trying to receive the order from DIBS. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response->get_error_message() ) ) );
+				$order->add_order_note( sprintf( __( 'Failed trying to receive the order from Nets. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response->get_error_message() ) ) );
 			} else {
 				update_post_meta( $order->get_id(), 'dibs_payment_type', $response->payment->paymentDetails->paymentType );
 				update_post_meta( $order->get_id(), 'dibs_payment_method', $response->payment->paymentDetails->paymentMethod );
 			}
 			update_post_meta( $order->get_id(), '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 			$order->payment_complete( $data['data']['paymentId'] );
-			$order->add_order_note( 'Payment via DIBS Easy. Order status updated via API callback. Payment ID: ' . sanitize_key( $data['data']['paymentId'] ) );
+			$order->add_order_note( 'Payment via Nets Easy. Order status updated via API callback. Payment ID: ' . sanitize_key( $data['data']['paymentId'] ) );
 			DIBS_Easy::log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
 
 		} else {
@@ -173,12 +173,12 @@ class DIBS_Api_Callbacks {
 		$dibs_order_total = $dibs_order['data']['order']['amount']['amount'];
 
 		if ( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
-			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and DIBS order total do not match. DIBS order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
-			DIBS_Easy::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. DIBS order total: ' . $dibs_order_total );
+			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
+			DIBS_Easy::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
 			$order_totals_match = false;
 		} elseif ( $dibs_order_total > $woo_order_total && ( $dibs_order_total - $woo_order_total ) > 30 ) {
-			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and DIBS order total do not match. DIBS order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
-			DIBS_Easy::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. DIBS order total: ' . $dibs_order_total );
+			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
+			DIBS_Easy::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
 			$order_totals_match = false;
 		}
 
@@ -289,7 +289,7 @@ class DIBS_Api_Callbacks {
 		$order->set_shipping_tax( self::get_shipping_tax_total( $dibs_checkout_completed_order ) );
 		$order->set_total( $dibs_checkout_completed_order['data']['order']['amount']['amount'] / 100 );
 
-		$order->add_order_note( __( 'Order created via DIBS Easy API callback. Please verify the order in DIBS system.', 'dibs-easy-for-woocommerce' ) );
+		$order->add_order_note( __( 'Order created via Nets Easy API callback. Please verify the order in Nets system.', 'dibs-easy-for-woocommerce' ) );
 
 		// Make sure to run Sequential Order numbers if plugin exsists.
 		if ( class_exists( 'WC_Seq_Order_Number_Pro' ) ) {
@@ -308,9 +308,9 @@ class DIBS_Api_Callbacks {
 			update_post_meta( $order_id, 'dibs_customer_card', $dibs_order->payment->paymentDetails->cardDetails->maskedPan );
 		}
 		if ( 'A2A' === $dibs_order->payment->paymentDetails->paymentType ) {
-			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $dibs_order->payment->paymentId, $dibs_order->payment->paymentDetails->paymentMethod ) );
+			$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $dibs_order->payment->paymentId, $dibs_order->payment->paymentDetails->paymentMethod ) );
 		} else {
-			$order->add_order_note( sprintf( __( 'Order made in DIBS with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $dibs_order->payment->paymentId, $dibs_order->payment->paymentDetails->paymentType ) );
+			$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $dibs_order->payment->paymentId, $dibs_order->payment->paymentDetails->paymentType ) );
 		}
 
 		$order->calculate_totals();
@@ -321,7 +321,7 @@ class DIBS_Api_Callbacks {
 		}
 
 		if ( (int) round( $order->get_total() * 100 ) !== (int) $dibs_checkout_completed_order['data']['order']['amount']['amount'] ) {
-			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review, WooCommerce total and DIBS total do not match. DIBS order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_checkout_completed_order['data']['order']['amount']['amount'] ) );
+			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review, WooCommerce total and Nets total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_checkout_completed_order['data']['order']['amount']['amount'] ) );
 		}
 
 		return $order;
@@ -336,7 +336,7 @@ class DIBS_Api_Callbacks {
 	 * @throws Exception WC_Data_Exception.
 	 */
 	private function process_order_lines( $dibs_checkout_completed_order, $order ) {
-		DIBS_Easy::log( 'Processing order lines (from DIBS order) during backup order creation for DIBS payment ID ' . $dibs_checkout_completed_order['data']['paymentId'] );
+		DIBS_Easy::log( 'Processing order lines (from Nets order) during backup order creation for Nets payment ID ' . $dibs_checkout_completed_order['data']['paymentId'] );
 		foreach ( $dibs_checkout_completed_order['data']['order']['orderItems'] as $cart_item ) {
 
 			if ( strpos( $cart_item['reference'], 'shipping|' ) !== false ) {

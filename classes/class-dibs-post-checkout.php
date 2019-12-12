@@ -38,7 +38,7 @@ class DIBS_Post_Checkout {
 			if ( 'A2A' === $payment_type ) {
 				// This is a account to account purchase (like Swish). No activation is needed/possible.
 				$dibs_payment_method = get_post_meta( $order_id, 'dibs_payment_method', true );
-				$wc_order->add_order_note( sprintf( __( 'No charge needed in DIBS system since %s is a account to account payment.', 'dibs-easy-for-woocommerce' ), $dibs_payment_method ) );
+				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nets system since %s is a account to account payment.', 'dibs-easy-for-woocommerce' ), $dibs_payment_method ) );
 				return;
 			}
 
@@ -48,7 +48,7 @@ class DIBS_Post_Checkout {
 			// Error handling.
 			if ( null != $request ) {
 				if ( array_key_exists( 'chargeId', $request ) ) { // Payment success
-					$wc_order->add_order_note( sprintf( __( 'Payment made in DIBS with charge ID %s', 'dibs-easy-for-woocommerce' ), $request->chargeId ) );
+					$wc_order->add_order_note( sprintf( __( 'Payment made in Nets with charge ID %s', 'dibs-easy-for-woocommerce' ), $request->chargeId ) );
 
 					update_post_meta( $order_id, '_dibs_charge_id', $request->chargeId );
 				} elseif ( array_key_exists( 'errors', $request ) ) { // Response with errors.
@@ -63,7 +63,7 @@ class DIBS_Post_Checkout {
 					$this->charge_failed( $wc_order, true, $message );
 
 				} elseif ( array_key_exists( 'code', $request ) && '1001' == $request->code ) { // Set order as completed if order has already been charged.
-					update_post_meta( $order_id, '_dibs_charge_id', 'Payment has already been charged in DIBS' );
+					update_post_meta( $order_id, '_dibs_charge_id', 'Payment has already been charged in Nets' );
 				} else {
 					$this->charge_failed( $wc_order );
 				}
@@ -89,7 +89,7 @@ class DIBS_Post_Checkout {
 			$wc_order = wc_get_order( $order_id );
 
 			if ( null === $request ) {
-				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in DIBS', 'dibs-easy-for-woocommerce' ) ) );
+				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in Nets', 'dibs-easy-for-woocommerce' ) ) );
 			} else {
 				if ( array_key_exists( 'errors', $request ) ) {
 					$message = json_encode( $request->errors );
@@ -98,14 +98,14 @@ class DIBS_Post_Checkout {
 				} else {
 					$message = json_encode( $request );
 				}
-				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in DIBS: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in Nets: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 			}
 		}
 	}
 
 	// Function to handle a failed order
-	public function charge_failed( $order, $fail = true, $message = 'Payment failed in DIBS' ) {
-		$order->add_order_note( sprintf( __( 'DIBS Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+	public function charge_failed( $order, $fail = true, $message = 'Payment failed in Nets' ) {
+		$order->add_order_note( sprintf( __( 'Nets Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 		if ( true === $fail ) {
 			$order->update_status( apply_filters( 'dibs_easy_failed_charge_status', 'on-hold', $order ) );
 			$order->save();
