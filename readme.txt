@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.2.4
+Tested up to: 5.3.0
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.8.0
+Tested WooCommerce up to: 3.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,15 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2019.12.12    - version 1.13.0 =
+* Feature       - Added support for partial refunds.
+* Feature       - Added setting for selecting the "Complete payment" button text on subscription based payments.
+* Tweak         - Changed plugin name to Nets Easy for WooCommerce.
+* Fix           - Only update WC customer address data in JS event from DIBS if postal code or country have value or is changed.
+* Fix           - Shipping reference not being set correct when activating order.
+* Fix           - Only run function for changing to Easy payment method if no hashChange has been made (checkout process has begun). Caused an issue with Google Tag Manager for WordPress by Thomas Geiger.
+
 
 = 2019.11.12    - version 1.12.0 =
 * Feature       - Add support for getting DIBS subscription ID from externalreference (support for D2 to Easy subscription transfer).
