@@ -1,4 +1,4 @@
-=== DIBS Easy for WooCommerce ===
+=== Nets Easy for WooCommerce ===
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
@@ -11,7 +11,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 
 == DESCRIPTION ==
-DIBS Easy for WooCommerce is a plugin that extends WooCommerce, allowing you to take payments via DIBS new payment method Easy.
+Nets Easy for WooCommerce is a plugin that extends WooCommerce, allowing you to take payments via Nets payment method Easy.
 
 Easy is an exceptionally quick checkout for consumers. A single agreement for all payment methods. These are just some of the benefits to look forward to when choosing our new Easy payment solution for your online store.
 
@@ -24,7 +24,7 @@ https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 *Easy administration* - Track sales in our user-friendly administration portal and get all payments collected in a report. It saves time in account reconsiliation and bookkeeping.
 
 = Get started =
-To get started with DIBS Easy you need to [sign up](http://www.dibs.se/easy-se) for an account.
+To get started with Nets Easy you need to [sign up](http://www.dibs.se/easy-se) for an account.
 
 More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
 
@@ -45,14 +45,14 @@ With a test account, you will see how the Easy administration portal works. In t
 = Which countries does this payment gateway support? =
 Available for merchants in Denmark, Sweden and Norway.
 
-= Where can I find DIBS Easy for WooCommerce documentation? =
-For help setting up and configuring DIBS Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+= Where can I find Nets Easy for WooCommerce documentation? =
+For help setting up and configuring Nets Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
 
 = Are there any specific requirements? =
 * WooCommerce 3.0 or newer is required.
 * PHP 5.6 or higher is required.
 * A SSL Certificate is required.
-* This plugin integrates with DIBS Easy. You need an agreement with DIBS specific to the Easy platform to use this plugin.
+* This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
 
