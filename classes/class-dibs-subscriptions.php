@@ -44,8 +44,69 @@ class DIBS_Subscriptions {
 				'interval' => 0,
 			);
 		}
+
+		// Checks if this is a DIBS subscription payment method change.
+		if ( isset( $_GET['key'] ) && isset( $_GET['change_payment_method'] ) ) {
+			$order_id = wc_get_order_id_by_order_key( sanitize_key( $_GET['key'] ) );
+			if ( $order_id ) {
+				$wc_order = wc_get_order( $order_id );
+				if ( is_object( $wc_order ) && function_exists( 'wcs_order_contains_subscription' ) && function_exists( 'wcs_is_subscription' ) ) {
+					if ( wcs_order_contains_subscription( $wc_order, array( 'parent', 'renewal', 'resubscribe', 'switch' ) ) || wcs_is_subscription( $wc_order ) ) {
+
+						// Modify order lines.
+						$order_items = array();
+						foreach ( $wc_order->get_items() as $item ) {
+							$product = $item->get_product();
+							if ( $item['variation_id'] ) {
+								$product_id = $item['variation_id'];
+							} else {
+								$product_id = $item['product_id'];
+							}
+							$order_items[] = array(
+								'reference'        => self::get_sku( $product, $product_id ),
+								'name'             => $item->get_name(),
+								'quantity'         => $item->get_quantity(),
+								'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
+								'unitPrice'        => 0,
+								'taxRate'          => 0,
+								'taxAmount'        => 0,
+								'grossTotalAmount' => 0,
+								'netTotalAmount'   => 0,
+							);
+						}
+
+						$order_lines           = array(
+							'items'     => $order_items,
+							'amount'    => 0,
+							'currency'  => $wc_order->get_currency(),
+							'reference' => $wc_order->get_order_number(),
+						);
+						$request_args['order'] = $order_lines;
+
+						// Modify return url.
+						$request_args['checkout']['returnUrl'] = $wc_order->get_view_order_url();
+
+						$request_args['subscription'] = array(
+							'endDate'  => date( 'Y-m-d\TH:i', strtotime( '+150 year' ) ),
+							'interval' => 0,
+						);
+					}
+				}
+			}
+		}
+
 		return $request_args;
 	}
+
+	public static function get_sku( $product, $product_id ) {
+		if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
+			$part_number = $product->get_sku();
+		} else {
+			$part_number = $product->get_id();
+		}
+		return substr( $part_number, 0, 32 );
+	}
+
 
 	/**
 	 * Sets the recurring token for the subscription order
