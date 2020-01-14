@@ -84,7 +84,15 @@ class DIBS_Subscriptions {
 						$request_args['order'] = $order_lines;
 
 						// Modify return url.
-						$request_args['checkout']['returnUrl'] = $wc_order->get_view_order_url();
+						$request_args['checkout']['returnUrl'] = add_query_arg(
+							array(
+								'dibs-action'        => 'subs-payment-changed',
+								'wc-subscription-id' => $order_id,
+							),
+							$wc_order->get_view_order_url()
+						);
+
+						unset( $request_args['notifications'] );
 
 						$request_args['subscription'] = array(
 							'endDate'  => date( 'Y-m-d\TH:i', strtotime( '+150 year' ) ),
@@ -291,23 +299,23 @@ class DIBS_Subscriptions {
 			?>
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
-					<?php
-						echo '<p><strong>' . __( 'Nets recurring token' ) . ':</strong>' . get_post_meta( $order->id, '_dibs_recurring_token', true ) . '</p>';
-					?>
+				<?php
+					echo '<p><strong>' . __( 'Nets recurring token' ) . ':</strong>' . get_post_meta( $order->id, '_dibs_recurring_token', true ) . '</p>';
+				?>
 				</div>
 				<div class="edit_address">
-					<?php
-						woocommerce_wp_text_input(
-							array(
-								'id'            => '_dibs_recurring_token',
-								'label'         => __( 'Nets recurring token' ),
-								'wrapper_class' => '_billing_company_field',
-							)
-						);
-					?>
+				<?php
+					woocommerce_wp_text_input(
+						array(
+							'id'            => '_dibs_recurring_token',
+							'label'         => __( 'Nets recurring token' ),
+							'wrapper_class' => '_billing_company_field',
+						)
+					);
+				?>
 				</div>
 			</div>
-			<?php
+				<?php
 		}
 	}
 
