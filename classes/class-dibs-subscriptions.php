@@ -28,6 +28,8 @@ class DIBS_Subscriptions {
 
 		add_action( 'wc_dibs_easy_check_subscription_status', array( $this, 'check_subscription_status' ), 10, 2 );
 
+		add_action( 'init', array( $this, 'dibs_payment_method_changed' ) );
+
 	}
 
 	/**
@@ -104,6 +106,22 @@ class DIBS_Subscriptions {
 		}
 
 		return $request_args;
+	}
+
+	public function dibs_payment_method_changed() {
+		if ( isset( $_GET['dibs-action'] ) && 'subs-payment-changed' === $_GET['dibs-action'] && isset( $_GET['wc-subscription-id'] ) && isset( $_GET['paymentid'] ) ) {
+			$order_id   = $_GET['wc-subscription-id'];
+			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true ); // use paymentid param value instead?
+
+			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
+			$request = $request->request();
+
+			if ( isset( $request->payment->subscription->id ) ) {
+				update_post_meta( $order_id, '_dibs_recurring_token', $request->payment->subscription->id );
+				update_post_meta( $order_id, 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
+				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
+			}
+		}
 	}
 
 	public static function get_sku( $product, $product_id ) {
