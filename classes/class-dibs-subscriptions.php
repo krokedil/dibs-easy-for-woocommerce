@@ -111,15 +111,22 @@ class DIBS_Subscriptions {
 	public function dibs_payment_method_changed() {
 		if ( isset( $_GET['dibs-action'] ) && 'subs-payment-changed' === $_GET['dibs-action'] && isset( $_GET['wc-subscription-id'] ) && isset( $_GET['paymentid'] ) ) {
 			$order_id   = $_GET['wc-subscription-id'];
-			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true ); // use paymentid param value instead?
+			$payment_id = $_GET['paymentid'];
 
 			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
 			$request = $request->request();
 
 			if ( isset( $request->payment->subscription->id ) ) {
-				update_post_meta( $order_id, '_dibs_recurring_token', $request->payment->subscription->id );
-				update_post_meta( $order_id, 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
-				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
+				$old_subscription_id = get_post_meta( $order_id, '_dibs_recurring_token', true );
+				$new_subscription_id = $request->payment->subscription->id;
+
+				if ( $old_subscription_id !== $new_subscription_id ) {
+					update_post_meta( $order_id, '_dibs_recurring_token', $request->payment->subscription->id );
+					update_post_meta( $order_id, 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
+					update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
+				}
+			} else {
+				wc_clear_notices(); // Customer did not finalize the payment method change.
 			}
 		}
 	}
