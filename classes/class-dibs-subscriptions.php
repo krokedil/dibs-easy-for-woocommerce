@@ -318,7 +318,7 @@ class DIBS_Subscriptions {
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
 				<?php
-					echo '<p><strong>' . __( 'Nets recurring token' ) . ':</strong>' . get_post_meta( $order->id, '_dibs_recurring_token', true ) . '</p>';
+					echo '<p><strong>' . esc_html( __( 'Nets recurring token' ) ) . ':</strong>' . esc_html( get_post_meta( $order->get_id(), '_dibs_recurring_token', true ) ) . '</p>';
 				?>
 				</div>
 				<div class="edit_address">
