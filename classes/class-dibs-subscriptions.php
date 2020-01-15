@@ -110,8 +110,8 @@ class DIBS_Subscriptions {
 
 	public function dibs_payment_method_changed() {
 		if ( isset( $_GET['dibs-action'] ) && 'subs-payment-changed' === $_GET['dibs-action'] && isset( $_GET['wc-subscription-id'] ) && isset( $_GET['paymentid'] ) ) {
-			$order_id   = $_GET['wc-subscription-id'];
-			$payment_id = $_GET['paymentid'];
+			$order_id   = sanitize_text_field( wp_unslash( $_GET['wc-subscription-id'] ) );
+			$payment_id = sanitize_text_field( wp_unslash( $_GET['paymentid'] ) );
 
 			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
 			$request = $request->request();
