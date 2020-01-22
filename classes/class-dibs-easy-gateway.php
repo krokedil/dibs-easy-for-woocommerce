@@ -34,6 +34,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			'subscription_reactivation',
 			'subscription_amount_changes',
 			'subscription_date_changes',
+			'subscription_payment_method_change_customer',
 			'subscription_payment_method_change_admin',
 			'subscription_payment_method_change',
 			'multiple_subscriptions',
@@ -85,6 +86,35 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function process_payment( $order_id, $retry = false ) {
 		$order = wc_get_order( $order_id );
 
+		// Subscription payment method change.
+		if ( isset( $_GET['change_payment_method'] ) ) {
+			$request  = new DIBS_Requests_Create_DIBS_Order( 'redirect', $order_id );
+			$response = json_decode( $request->request() );
+			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
+				// All good. Redirect customer to DIBS payment page.
+				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
+				return array(
+					'result'   => 'success',
+					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response->hostedPaymentPageUrl ),
+				);
+			} else {
+				// Something else went wrong.
+				if ( $response->errors ) {
+					foreach ( $response->errors as $error ) {
+						$error_message = $error[0];
+					}
+					if ( $this->is_json( $error_message ) ) {
+						$error_message = json_decode( $error_message );
+					}
+				} else {
+					$error_message = __( 'An error occured during communication with Nets. Please try again.', 'dibs-easy-for-woocommerce' );
+				}
+				wc_add_notice( sprintf( __( '%s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $error_message ) ), 'error' );
+				return false;
+			}
+		}
+
+		// Regular purchase.
 		if ( 'embedded' === $this->checkout_flow ) {
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {

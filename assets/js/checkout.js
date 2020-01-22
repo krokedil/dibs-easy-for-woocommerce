@@ -186,7 +186,6 @@ jQuery(function($) {
 		 * Handle hashchange triggered when Woo order is created.
 		 */
         handleHashChange : function(event){
-            dibs_wc.dibsOrderProcessing = true;
 			console.log('hashchange');
 			var currentHash = location.hash;
             var splittedHash = currentHash.split("=");
@@ -200,7 +199,7 @@ jQuery(function($) {
                 sessionStorage.setItem( 'DIBSRedirectUrl', response.return_url );
 
                 $('form.checkout').removeClass( 'processing' ).unblock();
-
+                dibs_wc.dibsOrderProcessing = false;
 				dibsCheckout.send('payment-order-finalized', true);
             }
         },
@@ -293,6 +292,7 @@ jQuery(function($) {
     // When customer clicks Pay button in Easy. Before redirect to 3DSecure.
     function paymentInitializedListener() {
         dibsCheckout.on('pay-initialized', function(response) {
+            dibs_wc.dibsOrderProcessing = true;
             $(document.body).trigger('dibs_pay_initialized');
             console.log('dibs_pay_initialized');
             console.log(response);
