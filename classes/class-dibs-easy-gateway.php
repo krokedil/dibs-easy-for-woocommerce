@@ -127,7 +127,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				);
 				return array(
 					'result'   => 'success',
-					'redirect' => wc_get_checkout_url() . '#dibseasy=' . base64_encode( wp_json_encode( $response ) ),
+					'redirect' => '#dibseasy=' . base64_encode( wp_json_encode( $response ) ),
 				);
 			}
 		} else {
