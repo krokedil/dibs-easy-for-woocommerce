@@ -142,6 +142,12 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					$paymentId = null;
 				}
 
+				if ( isset( $_GET['paymentFailed'] ) ) {
+					$paymentFailed = $_GET['paymentFailed'];
+				} else {
+					$paymentFailed = null;
+				}
+
 				if ( WC()->session->get( 'dibs_payment_id' ) ) {
 					$checkout_initiated = 'yes';
 				} else {
@@ -158,6 +164,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					array(
 						'dibs_payment_id'                  => $dibs_payment_id,
 						'paymentId'                        => $paymentId,
+						'paymentFailed'                    => $paymentFailed,
 						'checkout_initiated'               => $checkout_initiated,
 						'standard_woo_checkout_fields'     => $standard_woo_checkout_fields,
 						'dibs_process_order_text'          => __( 'Please wait while we process your order...', 'dibs-easy-for-woocommerce' ),
