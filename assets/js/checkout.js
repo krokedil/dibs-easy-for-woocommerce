@@ -397,7 +397,7 @@ jQuery(function($) {
 
     // Update DIBS Easy checkout (after Woo updated_checkout)
     function update_checkout() {
-        if( checkout_initiated == 'yes' && wc_dibs_easy.paymentId == null ) {
+        if( ( checkout_initiated == 'yes' && wc_dibs_easy.paymentId == null ) || ( wc_dibs_easy.paymentId !== null && wc_dibs_easy.paymentFailed !== null ) ) {
             console.log('update checkout');
             $.ajax(
                 wc_dibs_easy.update_checkout_url,

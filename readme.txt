@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 5.3.2
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.8.1
+Tested WooCommerce up to: 3.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,10 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2020.02.05    - version 1.14.0 =
+* Fix           - Modified redirect url set in process_payment function to improve checkout flow for purchases canceled/denied in 3DSecure window.
+* Fix           - Triggering update_checkout if GET params paymentId and PaymentFailed is set. Caused errors with subscription based payments where the nonce had to be updated.
 
 = 2020.01.22    - version 1.13.1 =
 * Tweak         - Added support for changing payment method on a subscription for customers.
