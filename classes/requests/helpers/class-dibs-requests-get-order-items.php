@@ -88,14 +88,23 @@ class DIBS_Requests_Get_Order_Items {
 	}
 
 	public static function get_shipping( $shipping_method ) {
+		$order_id = $shipping_method->get_order_id();
+
 		$free_shipping = false;
 		if ( 0 === intval( $shipping_method->get_total() ) ) {
 			$free_shipping = true;
 		}
-		if ( null !== $shipping_method->get_instance_id() ) {
-			$shipping_reference = 'shipping|' . $shipping_method->get_method_id() . ':' . $shipping_method->get_instance_id();
+
+		$shipping_reference      = 'Shipping';
+		$nets_shipping_reference = get_post_meta( $order_id, 'nets_shipping_reference', true );
+		if ( isset( $nets_shipping_reference ) && ! empty( $nets_shipping_reference ) ) {
+			$shipping_reference = $nets_shipping_reference;
 		} else {
-			$shipping_reference = 'shipping|' . $shipping_method->get_method_id();
+			if ( null !== $shipping_method->get_instance_id() ) {
+				$shipping_reference = 'shipping|' . $shipping_method->get_method_id() . ':' . $shipping_method->get_instance_id();
+			} else {
+				$shipping_reference = 'shipping|' . $shipping_method->get_method_id();
+			}
 		}
 
 		return array(
