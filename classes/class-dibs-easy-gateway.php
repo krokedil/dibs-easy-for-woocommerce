@@ -250,7 +250,9 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
 
-		$this->nets_save_shipping_reference_to_order( $order_id );
+		if ( '' !== $order->get_shipping_method() ) {
+			$this->nets_save_shipping_reference_to_order( $order_id );
+		}
 
 		// Update order number in DIBS system if this is the embedded checkout flow.
 		if ( 'embedded' === $this->checkout_flow ) {
