@@ -164,10 +164,10 @@ class DIBS_Requests_Get_Refund_Data {
 			if ( isset( $nets_shipping_reference ) && ! empty( $nets_shipping_reference ) ) {
 				$shipping_reference = $nets_shipping_reference;
 			} else {
-				if ( null !== $shipping_method->get_instance_id() ) {
-					$shipping_reference = 'shipping|' . $shipping_method->get_method_id() . ':' . $shipping_method->get_instance_id();
+				if ( null !== $shipping_item->get_instance_id() ) {
+					$shipping_reference = 'shipping|' . $shipping_item->get_method_id() . ':' . $shipping_item->get_instance_id();
 				} else {
-					$shipping_reference = 'shipping|' . $shipping_method->get_method_id();
+					$shipping_reference = 'shipping|' . $shipping_item->get_method_id();
 				}
 			}
 
