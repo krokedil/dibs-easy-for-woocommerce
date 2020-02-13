@@ -347,7 +347,10 @@ class DIBS_Subscriptions {
 	public function save_dibs_recurring_token_update( $post_id, $post ) {
 		$order = wc_get_order( $post_id );
 		if ( class_exists( 'WC_Subscriptions' ) && wcs_order_contains_subscription( $order ) && get_post_meta( $post_id, '_dibs_recurring_token' ) ) {
-			update_post_meta( $post_id, '_dibs_recurring_token', wc_clean( $_POST['_dibs_recurring_token'] ) );
+			$dibs_recurring_token = isset( $_POST['_dibs_recurring_token'] ) ? wc_clean( wp_unslash( $_POST['_dibs_recurring_token'] ) ) : '';
+			if ( ! empty( $dibs_recurring_token ) ) {
+				update_post_meta( $post_id, '_dibs_recurring_token', $dibs_recurring_token );
+			}
 		}
 
 	}
