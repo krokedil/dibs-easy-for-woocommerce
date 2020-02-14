@@ -39,6 +39,6 @@ class DIBS_Requests_Update_DIBS_Order extends DIBS_Requests2 {
 		return $request_args;
 	}
 	public function request_body() {
-		return DIBS_Requests_Order::get_order();
+		return apply_filters( 'dibs_easy_update_order_args', DIBS_Requests_Order::get_order() );
 	}
 }
