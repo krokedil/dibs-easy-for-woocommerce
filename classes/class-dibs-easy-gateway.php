@@ -251,7 +251,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
 
 		if ( '' !== $order->get_shipping_method() ) {
-			$this->nets_save_shipping_reference_to_order( $order_id );
+			$this->save_shipping_reference_to_order( $order_id );
 		}
 
 		// Update order number in DIBS system if this is the embedded checkout flow.
@@ -301,14 +301,14 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	 * @param int $order_id order id.
 	 * @return void
 	 */
-	public function nets_save_shipping_reference_to_order( $order_id ) {
+	public function save_shipping_reference_to_order( $order_id ) {
 		$packages        = WC()->shipping->get_packages();
 		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
 		$chosen_shipping = $chosen_methods[0];
 		foreach ( $packages as $i => $package ) {
 			foreach ( $package['rates'] as $method ) {
 				if ( $chosen_shipping === $method->id ) {
-					update_post_meta( $order_id, 'nets_shipping_reference', 'shipping|' . $method->id );
+					update_post_meta( $order_id, '_nets_shipping_reference', 'shipping|' . $method->id );
 				}
 			}
 		}

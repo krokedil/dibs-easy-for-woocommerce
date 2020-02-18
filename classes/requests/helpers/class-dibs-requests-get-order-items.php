@@ -96,7 +96,7 @@ class DIBS_Requests_Get_Order_Items {
 		}
 
 		$shipping_reference      = 'Shipping';
-		$nets_shipping_reference = get_post_meta( $order_id, 'nets_shipping_reference', true );
+		$nets_shipping_reference = get_post_meta( $order_id, '_nets_shipping_reference', true );
 		if ( isset( $nets_shipping_reference ) && ! empty( $nets_shipping_reference ) ) {
 			$shipping_reference = $nets_shipping_reference;
 		} else {
