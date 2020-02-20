@@ -6,8 +6,10 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 
 	public function __construct( $checkout_flow = 'embedded', $order_id = null ) {
 		parent::__construct();
-		$this->checkout_flow = $checkout_flow;
-		$this->order_id      = $order_id;
+		$this->checkout_flow  = $checkout_flow;
+		$this->order_id       = $order_id;
+		$this->settings       = get_option( 'woocommerce_dibs_easy_settings' );
+		$this->invoice_fee_id = isset( $this->settings['dibs_invoice_fee'] ) ? $this->settings['dibs_invoice_fee'] : '';
 	}
 
 	public function request() {
@@ -43,9 +45,11 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 			'checkout'      => DIBS_Requests_Checkout::get_checkout( $this->checkout_flow, $this->order_id ),
 			'notifications' => DIBS_Requests_Notifications::get_notifications(),
 		);
-		if ( 'embedded' === $this->checkout_flow ) {
+
+		if ( $this->invoice_fee_id ) {
 			$request_args['paymentMethods'] = DIBS_Requests_Payment_Methods::get_invoice_fees();
 		}
+
 		return apply_filters( 'dibs_easy_create_order_args', $request_args );
 	}
 }
