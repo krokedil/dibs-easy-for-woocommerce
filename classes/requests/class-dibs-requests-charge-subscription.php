@@ -38,6 +38,7 @@ class DIBS_Request_Charge_Subscription extends DIBS_Requests2 {
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'POST',
 			'body'       => json_encode( $this->request_body() ),
+			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
 		);
 		DIBS_Easy::log( 'DIBS Charge Subscription request args: ' . json_encode( $request_args ) );
 		return apply_filters( 'dibs_easy_charge_subscription_args', $request_args );

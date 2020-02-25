@@ -33,6 +33,7 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'POST',
 			'body'       => json_encode( $this->request_body() ),
+			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
 		);
 		DIBS_Easy::log( 'DIBS Create Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 		return $request_args;

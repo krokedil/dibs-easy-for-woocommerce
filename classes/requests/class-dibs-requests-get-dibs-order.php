@@ -38,6 +38,7 @@ class DIBS_Requests_Get_DIBS_Order extends DIBS_Requests2 {
 			'headers'    => $this->request_headers( $this->order_id ),
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'GET',
+			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
 		);
 		DIBS_Easy::log( 'DIBS Get Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 
