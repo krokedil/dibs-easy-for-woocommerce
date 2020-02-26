@@ -290,9 +290,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			}
 		}
 
-		if ( 'embedded' === $this->checkout_flow ) {
-			$this->maybe_add_invoice_fee( $order_id );
-		}
+		$this->maybe_add_invoice_fee( $order_id );
 	}
 
 	/**
