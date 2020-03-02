@@ -56,6 +56,14 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2020.02.05    - version 1.14.1 =
+* Fix           - Fixed an issue that caused the recurring token to be removed in some cases for subscription orders.
+* Enhancement   - Better support for table rate shipping, and other plugins that changes the shipping reference.
+* Enhancement   - Added a filter to the update order request. *dibs_easy_update_order_args*.
+* Enhancement   - Added a filter to be able to change timeouts for requests. *nets_easy_set_timeout*
+* Feature       - Added possibility to add an invoice fee to the redirect flow.
+
+
 = 2020.02.05    - version 1.14.0 =
 * Fix           - Modified redirect url set in process_payment function to improve checkout flow for purchases canceled/denied in 3DSecure window.
 * Fix           - Triggering update_checkout if GET params paymentId and PaymentFailed is set. Caused errors with subscription based payments where the nonce had to be updated.
