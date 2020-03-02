@@ -61,7 +61,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * Enhancement   - Better support for table rate shipping, and other plugins that changes the shipping reference.
 * Enhancement   - Added a filter to the update order request. *dibs_easy_update_order_args*.
 * Enhancement   - Added a filter to be able to change timeouts for requests. *nets_easy_set_timeout*
-* Feature       - Added possibility to add an invoice fee to the redirect flow.
+* Enhancement   - Added possibility to add an invoice fee to the redirect flow.
 
 
 = 2020.02.05    - version 1.14.0 =
