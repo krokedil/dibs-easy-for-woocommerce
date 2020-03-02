@@ -70,7 +70,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		if ( is_checkout() ) {
 			// If we can't retrieve a set of credentials, disable DIBS Easy.
-			if ( ! in_array( get_woocommerce_currency(), array( 'DKK', 'NOK', 'SEK' ) ) ) {
+			if ( ! in_array( get_woocommerce_currency(), array( 'DKK', 'NOK', 'SEK', 'EUR' ) ) ) {
 				return false;
 			}
 		}

@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 5.3.2
 Stable tag: trunk
 Requires WooCommerce at least: 3.0
-Tested WooCommerce up to: 3.9.1
+Tested WooCommerce up to: 3.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,7 +56,10 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
-= 2020.02.05    - version 1.14.1 =
+= 2020.03.02    - version 1.15.0 =
+* Feature       - Add support for EUR.
+
+= 2020.03.02    - version 1.14.1 =
 * Fix           - Fixed an issue that caused the recurring token to be removed in some cases for subscription orders.
 * Enhancement   - Better support for table rate shipping, and other plugins that changes the shipping reference.
 * Enhancement   - Added a filter to the update order request. *dibs_easy_update_order_args*.
