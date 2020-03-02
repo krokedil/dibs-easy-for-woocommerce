@@ -38,6 +38,7 @@ class DIBS_Request_Get_Subscription_By_External_Reference extends DIBS_Requests2
 			'headers'    => $this->request_headers( $this->order_id ),
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'GET',
+			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
 		);
 		return $request_args;
 	}

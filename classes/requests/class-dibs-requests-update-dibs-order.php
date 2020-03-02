@@ -33,12 +33,13 @@ class DIBS_Requests_Update_DIBS_Order extends DIBS_Requests2 {
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'PUT',
 			'body'       => json_encode( $this->request_body() ),
+			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
 		);
 		DIBS_Easy::log( 'DIBS Update Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
 
 		return $request_args;
 	}
 	public function request_body() {
-		return DIBS_Requests_Order::get_order();
+		return apply_filters( 'dibs_easy_update_order_args', DIBS_Requests_Order::get_order() );
 	}
 }
