@@ -2,9 +2,9 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.3.2
+Tested up to: 5.4.0
 Stable tag: trunk
-Requires WooCommerce at least: 3.0
+Requires WooCommerce at least: 3.5
 Tested WooCommerce up to: 3.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -49,12 +49,16 @@ Available for merchants in Denmark, Sweden and Norway.
 For help setting up and configuring Nets Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
 
 = Are there any specific requirements? =
-* WooCommerce 3.0 or newer is required.
+* WooCommerce 3.5 or newer is required.
 * PHP 5.6 or higher is required.
 * A SSL Certificate is required.
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2020.04.01    - version 1.15.1 =
+* Tweak         - Only register webhook if host is not local (127.0.0.1 or ::1).
+* Fix           - Don't send -> shipping -> countries in request to Nets if redirect checkout flow is used.
 
 = 2020.03.02    - version 1.15.0 =
 * Feature       - Add support for EUR.
