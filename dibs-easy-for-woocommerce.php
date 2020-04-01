@@ -8,15 +8,15 @@
  * Plugin Name:             Nets Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
- * Version:                 1.15.0
+ * Version:                 1.15.1
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
  * Developer URI:           https://krokedil.se/
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
- * WC requires at least:    3.0.0
- * WC tested up to:         3.9.2
+ * WC requires at least:    3.5.0
+ * WC tested up to:         4.0.1
  * Copyright:               © 2017-2020 Krokedil AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.15.0' );
+define( 'WC_DIBS_EASY_VERSION', '1.15.1' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );

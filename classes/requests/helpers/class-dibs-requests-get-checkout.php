@@ -15,6 +15,10 @@ class DIBS_Requests_Checkout {
 			$checkout['shipping']['countries']                   = array();
 			$checkout['shipping']['merchantHandlesShippingCost'] = true;
 
+			if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
+				$checkout['shipping']['countries'] = self::get_shipping_countries();
+			}
+
 			$complete_payment_button_text                                       = ( isset( $dibs_settings['complete_payment_button_text'] ) ) ? $dibs_settings['complete_payment_button_text'] : 'subscribe';
 			$checkout['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
 		} else {
@@ -27,9 +31,6 @@ class DIBS_Requests_Checkout {
 			$checkout['consumer']                                = self::get_consumer_address( $order );
 		}
 
-		if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
-			$checkout['shipping']['countries'] = self::get_shipping_countries();
-		}
 		$allowed_customer_types = ( isset( $dibs_settings['allowed_customer_types'] ) ) ? $dibs_settings['allowed_customer_types'] : 'B2C';
 		switch ( $allowed_customer_types ) {
 			case 'B2C':
