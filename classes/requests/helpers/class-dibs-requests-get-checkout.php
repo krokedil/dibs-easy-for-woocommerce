@@ -13,7 +13,13 @@ class DIBS_Requests_Checkout {
 		if ( 'embedded' === $checkout_flow ) {
 			$checkout['url']                                     = wc_get_checkout_url();
 			$checkout['shipping']['countries']                   = array();
-			$checkout['shipping']['merchantHandlesShippingCost'] = true;
+
+			// If WooCommerce needs an address before calculating shipping, let's set merchantHandlesShippingCost to true.
+			if ( 'yes' === get_option( 'woocommerce_shipping_cost_requires_address' ) ) {
+				$checkout['shipping']['merchantHandlesShippingCost'] = true;
+			} else {
+				$checkout['shipping']['merchantHandlesShippingCost'] = false;
+			}
 
 			if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
 				$checkout['shipping']['countries'] = self::get_shipping_countries();
