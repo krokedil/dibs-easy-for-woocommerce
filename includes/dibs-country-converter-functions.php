@@ -43,5 +43,5 @@ function dibs_get_phone_prefix_for_country( $country = false ) {
 }
 
 function dibs_get_all_prefixes() {
-	return json_decode( '{"SE": "+46", "NO": "+47", "DK": "+45", "FI": "+358"}', true );
+	return include WC()->plugin_path() . '/i18n/phone.php';
 }
