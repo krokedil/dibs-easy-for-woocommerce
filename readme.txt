@@ -5,7 +5,7 @@ Requires at least: 4.7
 Tested up to: 5.4.0
 Stable tag: trunk
 Requires WooCommerce at least: 3.5
-Tested WooCommerce up to: 3.9.2
+Tested WooCommerce up to: 4.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,13 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2020.04.30    - version 1.15.2 =
+* Tweak         - Only set merchantHandlesShippingCost to true if WooCommerce needs an address before calculate shipping (woocommerce_shipping_cost_requires_address = yes).
+* Tweak         - Set postalCode as null in request sent to Nets if we do not have a wc billing postcode.
+* Tweak         - Change product->get_name() to order_item->get_name() in requests sent to Nets.
+* Fix           - Improved phone number prefix handling. Now supports all countries that WooCommerce supports.
+* Fix           - Only try to get a sku from the product (in requests to Nets) if we have an instance of the product object. 
 
 = 2020.04.01    - version 1.15.1 =
 * Tweak         - Only register webhook if host is not local (127.0.0.1 or ::1).

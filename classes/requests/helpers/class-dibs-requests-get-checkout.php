@@ -11,9 +11,15 @@ class DIBS_Requests_Checkout {
 			'termsUrl' => wc_get_page_permalink( 'terms' ),
 		);
 		if ( 'embedded' === $checkout_flow ) {
-			$checkout['url']                                     = wc_get_checkout_url();
-			$checkout['shipping']['countries']                   = array();
-			$checkout['shipping']['merchantHandlesShippingCost'] = true;
+			$checkout['url']                   = wc_get_checkout_url();
+			$checkout['shipping']['countries'] = array();
+
+			// If WooCommerce needs an address before calculating shipping, let's set merchantHandlesShippingCost to true.
+			if ( 'yes' === get_option( 'woocommerce_shipping_cost_requires_address' ) ) {
+				$checkout['shipping']['merchantHandlesShippingCost'] = true;
+			} else {
+				$checkout['shipping']['merchantHandlesShippingCost'] = false;
+			}
 
 			if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
 				$checkout['shipping']['countries'] = self::get_shipping_countries();
@@ -75,7 +81,7 @@ class DIBS_Requests_Checkout {
 		$consumer['email']                           = $order->get_billing_email();
 		$consumer['shippingAddress']['addressLine1'] = $order->get_billing_address_1();
 		$consumer['shippingAddress']['addressLine2'] = $order->get_billing_address_2();
-		$consumer['shippingAddress']['postalCode']   = $order->get_billing_postcode();
+		$consumer['shippingAddress']['postalCode']   = ( ! empty( $order->get_billing_postcode() ) ) ? $order->get_billing_postcode() : null;
 		$consumer['shippingAddress']['city']         = $order->get_billing_city();
 		$consumer['shippingAddress']['country']      = dibs_get_iso_3_country( $order->get_billing_country() );
 		$consumer['phoneNumber']['prefix']           = self::get_phone_prefix( $order );

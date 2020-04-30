@@ -43,7 +43,7 @@ class DIBS_Requests_Get_Order_Items {
 
 		return array(
 			'reference'        => self::get_sku( $product, $product_id ),
-			'name'             => wc_dibs_clean_name( $product->get_name() ),
+			'name'             => wc_dibs_clean_name( $order_item->get_name() ),
 			'quantity'         => $order_item['qty'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( ( $order_item->get_total() / $order_item['qty'] ) * 100 ) ),
@@ -121,11 +121,15 @@ class DIBS_Requests_Get_Order_Items {
 	}
 
 	public static function get_sku( $product, $product_id ) {
-		if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
-			$part_number = $product->get_sku();
+		if ( is_object( $product ) ) {
+			if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
+				$part_number = $product->get_sku();
+			} else {
+				$part_number = $product->get_id();
+			}
+			return substr( $part_number, 0, 32 );
 		} else {
-			$part_number = $product->get_id();
+			return false;
 		}
-		return substr( $part_number, 0, 32 );
 	}
 }
