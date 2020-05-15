@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.4.0
+Tested up to: 5.4.1
 Stable tag: trunk
 Requires WooCommerce at least: 3.5
-Tested WooCommerce up to: 4.0.1
+Tested WooCommerce up to: 4.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2020.05.15    - version 1.16.0 =
+* Tweak         - Removed currency control to determine if Nets Easy payment gatway should be available or not. Note - if needed this logic must be handled by the merchant/store from now on.
 
 = 2020.04.30    - version 1.15.2 =
 * Tweak         - Only set merchantHandlesShippingCost to true if WooCommerce needs an address before calculate shipping (woocommerce_shipping_cost_requires_address = yes).
