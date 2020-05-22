@@ -80,6 +80,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-charge-subscription.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-bulk-charge-id.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-by-external-reference.php' );
 
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-checkout.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-header.php' );
