@@ -264,6 +264,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			update_post_meta( $order_id, 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
 			update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
 
+			$this->maybe_add_invoice_fee( $order_id );
+
 			if ( 'CARD' == $request->payment->paymentDetails->paymentType ) {
 				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
 			}
@@ -282,8 +284,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				exit;
 			}
 		}
-
-		$this->maybe_add_invoice_fee( $order_id );
 	}
 
 	/**
