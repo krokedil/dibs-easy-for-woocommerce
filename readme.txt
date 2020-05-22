@@ -56,6 +56,10 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2020.05.22    - version 1.16.1 =
+* Tweak         - Add invoice fee to WooCommerce order before payment_complete runs.
+* Fix           - Include class-get-subscription-by-external-refernce.php correctly.
+
 = 2020.05.15    - version 1.16.0 =
 * Tweak         - Removed currency control to determine if Nets Easy payment gatway should be available or not. Note - if needed this logic must be handled by the merchant/store from now on.
 
