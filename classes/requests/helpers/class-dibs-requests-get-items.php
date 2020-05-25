@@ -82,8 +82,8 @@ class DIBS_Requests_Items {
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 							'unitPrice'        => intval( round( $method->cost * 100 ) ),
 							'taxRate'          => intval( round( ( array_sum( $method->taxes ) / $method->cost ) * 10000, 2 ) ),
-							'taxAmount'        => intval( round( array_sum( $method->taxes ) * 100 ) ),
-							'grossTotalAmount' => intval( round( ( $method->cost + array_sum( $method->taxes ) ) * 100 ) ),
+							'taxAmount'        => intval( round( array_sum( $method->taxes ) * 100, 2 ) ),
+							'grossTotalAmount' => intval( round( ( $method->cost + array_sum( $method->taxes ) ) * 100, 2 ) ),
 							'netTotalAmount'   => intval( round( $method->cost * 100 ) ),
 						);
 					} else {
