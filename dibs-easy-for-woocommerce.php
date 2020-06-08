@@ -63,6 +63,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-order-submission-failure.php' );
 			include_once plugin_basename( 'classes/class-dibs-admin-notices.php' );
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
+			include_once plugin_basename( 'classes/class-dibs-confirmation.php' );
 
 			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 

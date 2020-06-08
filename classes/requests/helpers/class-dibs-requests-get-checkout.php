@@ -29,7 +29,7 @@ class DIBS_Requests_Checkout {
 			$checkout['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
 		} else {
 			$order                                   = wc_get_order( $order_id );
-			$checkout['returnUrl']                   = $order->get_checkout_order_received_url();
+			$checkout['returnUrl']                   = add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() );
 			$checkout['integrationType']             = 'HostedPaymentPage';
 			$checkout['merchantHandlesConsumerData'] = true;
 			$checkout['shipping']['countries']       = array();
