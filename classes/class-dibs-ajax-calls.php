@@ -171,7 +171,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		if ( $order_id_match ) {
 			$order = wc_get_order( $order_id_match );
 			if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-				DIBS_Easy::log( 'Confirmation page rendered but _dibs_payment_id already exist in this order: ' . $order_id_match );
+				DIBS_Easy::log( 'Process Woo checkout triggered but _dibs_payment_id already exist in this order: ' . $order_id_match );
 				$location = $order->get_checkout_order_received_url();
 				DIBS_Easy::log( '$location: ' . $location );
 				wp_send_json_error( array( 'redirect' => $location ) );
@@ -191,7 +191,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 				$message = 'Empty response from Nets.';
 			}
 
-			DIBS_Easy::log( 'Confirmation page rendered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . var_export( $message, true ) );
+			DIBS_Easy::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . var_export( $message, true ) );
 
 			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
@@ -206,7 +206,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			// Store the order data in a sesstion. We might need it if form processing in Woo fails
 			WC()->session->set( 'dibs_order_data', $response );
 
-			DIBS_Easy::log( 'Confirmation page rendered and checkout form about to be submitted for Nets payment ID ' . $payment_id );
+			DIBS_Easy::log( 'processWooCheckout triggered and checkout form about to be submitted for Nets payment ID ' . $payment_id );
 
 			self::prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
 			wp_send_json_success( $response );
