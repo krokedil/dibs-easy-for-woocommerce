@@ -51,16 +51,19 @@ class DIBS_Confirmation {
 	public function confirm_order() {
 
 		if ( isset( $_GET['easy_confirm'] ) && isset( $_GET['key'] ) ) { // phpcs:ignore
-            $order_id = wc_get_order_id_by_order_key( sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore
+			$order_id = wc_get_order_id_by_order_key( sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore
+			$order    = wc_get_order( $order_id );
+
 			DIBS_Easy::log( $order_id . ': Confirmation endpoint hit for order.' );
 
-			$order = wc_get_order( $order_id );
-			// Confirm, redirect and exit.
-			DIBS_Easy::log( $order_id . ': Confirm the Nets order from the confirmation page.' );
-			wc_dibs_confirm_dibs_order( $order_id );
-			wc_dibs_unset_sessions();
-			header( 'Location:' . $order->get_checkout_order_received_url() );
-			exit;
+			if ( empty( $order->get_date_paid() ) ) {
+
+				DIBS_Easy::log( $order_id . ': Confirm the Nets order from the confirmation page.' );
+
+				// Confirm the order.
+				wc_dibs_confirm_dibs_order( $order_id );
+				wc_dibs_unset_sessions();
+			}
 		}
 	}
 }
