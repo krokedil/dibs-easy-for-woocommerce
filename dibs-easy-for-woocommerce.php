@@ -8,7 +8,7 @@
  * Plugin Name:             Nets Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
- * Version:                 1.16.0
+ * Version:                 1.17.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -16,7 +16,7 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    3.5.0
- * WC tested up to:         4.1.0
+ * WC tested up to:         4.2.2
  * Copyright:               © 2017-2020 Krokedil AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.16.0' );
+define( 'WC_DIBS_EASY_VERSION', '1.17.0' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -63,6 +63,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-order-submission-failure.php' );
 			include_once plugin_basename( 'classes/class-dibs-admin-notices.php' );
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
+			include_once plugin_basename( 'classes/class-dibs-confirmation.php' );
 
 			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 
@@ -80,6 +81,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-charge-subscription.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-bulk-charge-id.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-by-external-reference.php' );
 
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-checkout.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-header.php' );

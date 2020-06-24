@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.4.1
+Tested up to: 5.4.2
 Stable tag: trunk
 Requires WooCommerce at least: 3.5
-Tested WooCommerce up to: 4.1.0
+Tested WooCommerce up to: 4.2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,16 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2020.06.24    - version 1.17.0 =
+* Tweak         - Create confirmation step before redirecting customer to thankyou page. Displays invoice fee correctly in thank you page.
+* Fix           - Make externalBulkChargeId an unique value to be able to try multiple renewal requests for one order.
+* Fix           - Rounding fix in cart shipping calculation.
+* Fix           - Rounding fix in amount in get order class.
+
+= 2020.05.22    - version 1.16.1 =
+* Tweak         - Add invoice fee to WooCommerce order before payment_complete runs.
+* Fix           - Include class-get-subscription-by-external-refernce.php correctly.
 
 = 2020.05.15    - version 1.16.0 =
 * Tweak         - Removed currency control to determine if Nets Easy payment gatway should be available or not. Note - if needed this logic must be handled by the merchant/store from now on.

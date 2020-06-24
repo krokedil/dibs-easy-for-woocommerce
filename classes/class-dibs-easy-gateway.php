@@ -111,11 +111,16 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		if ( 'embedded' === $this->checkout_flow ) {
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-				$this->process_dibs_payment_in_order( $order_id );
+				// wc_dibs_confirm_dibs_order( $order_id );
+
+				// Update order number in DIBS system if this is the embedded checkout flow.
+				$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+				$request    = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
+				$request    = $request->request();
 
 				// Add #dibseasy hash to checkout url so we can respond to DIBS that payment can proceed and be finalized in DIBS system.
 				$response = array(
-					'return_url' => $this->get_return_url( $order ),
+					'return_url' => add_query_arg( 'easy_confirm', 'yes', $this->get_return_url( $order ) ),
 					'time'       => time(),
 				);
 				return array(
@@ -153,39 +158,6 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		}
 	}
 
-	public function maybe_add_invoice_fee( $order_id ) {
-		// Add invoice fee to order
-		$order = wc_get_order( $order_id );
-		if ( 'INVOICE' == get_post_meta( $order_id, 'dibs_payment_type', true ) ) {
-			$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-			if ( isset( $dibs_settings['dibs_invoice_fee'] ) && ! empty( $dibs_settings['dibs_invoice_fee'] ) ) {
-				$invoice_fee_id = $dibs_settings['dibs_invoice_fee'];
-				$invoice_fee    = wc_get_product( $invoice_fee_id );
-
-				if ( is_object( $invoice_fee ) ) {
-					$fee      = new WC_Order_Item_Fee();
-					$fee_args = array(
-						'name'  => $invoice_fee->get_name(),
-						'total' => wc_get_price_excluding_tax( $invoice_fee ),
-					);
-
-					$fee->set_props( $fee_args );
-					if ( 'none' == $invoice_fee->get_tax_status() ) {
-						$tax_amount = '0';
-						$fee->set_total_tax( $tax_amount );
-						$fee->set_tax_status( $invoice_fee->get_tax_status() );
-					} else {
-						$fee->set_tax_class( $invoice_fee->get_tax_class() );
-					}
-
-					$order->add_item( $fee );
-					$order->calculate_totals();
-					$order->save();
-				}
-			}
-		}
-	}
-
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
 
@@ -212,6 +184,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		}
 		return $class;
 	}
+
 	public function dibs_thankyou( $order_id ) {
 		$order = wc_get_order( $order_id );
 
@@ -219,7 +192,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		if ( 'embedded' === $this->checkout_flow ) {
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-				$this->process_dibs_payment_in_order( $order_id );
+				wc_dibs_confirm_dibs_order( $order_id );
 				$order->add_order_note( __( 'Order finalized in thankyou page.', 'dibs-easy-for-woocommerce' ) );
 				WC()->cart->empty_cart();
 			}
@@ -232,77 +205,10 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			wc_dibs_unset_sessions();
 		} else {
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-				$this->process_dibs_payment_in_order( $order_id );
+				wc_dibs_confirm_dibs_order( $order_id );
 			}
 		}
 
-	}
-
-	public function process_dibs_payment_in_order( $order_id ) {
-		$order = wc_get_order( $order_id );
-
-		$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
-
-		if ( '' !== $order->get_shipping_method() ) {
-			$this->save_shipping_reference_to_order( $order_id );
-		}
-
-		// Update order number in DIBS system if this is the embedded checkout flow.
-		if ( 'embedded' === $this->checkout_flow ) {
-			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
-			$request = $request->request();
-		}
-
-		$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
-		$request = $request->request();
-
-		if ( isset( $request->payment->summary->reservedAmount ) || isset( $request->payment->summary->chargedAmount ) || isset( $request->payment->subscription->id ) ) {
-
-			do_action( 'dibs_easy_process_payment', $order_id, $request );
-
-			update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
-			update_post_meta( $order_id, 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
-			update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
-
-			if ( 'CARD' == $request->payment->paymentDetails->paymentType ) {
-				update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
-			}
-
-			if ( 'A2A' === $request->payment->paymentDetails->paymentType ) {
-				$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentMethod ) );
-			} else {
-				$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
-			}
-			$order->payment_complete( $payment_id );
-		} else {
-			// Purchase not finalized in DIBS.
-			// If this is a redirect checkout flow let's redirect the customer to cart page.
-			if ( 'embedded' !== $this->checkout_flow ) {
-				wp_safe_redirect( html_entity_decode( $order->get_cancel_order_url() ) );
-				exit;
-			}
-		}
-
-		$this->maybe_add_invoice_fee( $order_id );
-	}
-
-	/**
-	 * Save shipping reference to Order.
-	 *
-	 * @param int $order_id order id.
-	 * @return void
-	 */
-	public function save_shipping_reference_to_order( $order_id ) {
-		$packages        = WC()->shipping->get_packages();
-		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
-		$chosen_shipping = $chosen_methods[0];
-		foreach ( $packages as $i => $package ) {
-			foreach ( $package['rates'] as $method ) {
-				if ( $chosen_shipping === $method->id ) {
-					update_post_meta( $order_id, '_nets_shipping_reference', 'shipping|' . $method->id );
-				}
-			}
-		}
 	}
 
 	public function maybe_delete_dibs_sessions( $order_id ) {
