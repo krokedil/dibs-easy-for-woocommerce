@@ -58,7 +58,7 @@ class DIBS_Request_Charge_Subscription extends DIBS_Requests2 {
 		}
 
 		$body                                        = array();
-		$body['externalBulkChargeId']                = $order->get_order_number();
+		$body['externalBulkChargeId']                = $order->get_order_number() . '-' . time();
 		$body['subscriptions'][0]['subscriptionId']  = $recurring_token;
 		$body['subscriptions'][0]['order']['items']  = DIBS_Requests_Get_Order_Items::get_items( $this->order_id );
 		$body['subscriptions'][0]['order']['amount'] = $order->get_total() * 100;
