@@ -113,6 +113,11 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
 				// wc_dibs_confirm_dibs_order( $order_id );
 
+				// Update order number in DIBS system if this is the embedded checkout flow.
+				$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+				$request    = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
+				$request    = $request->request();
+
 				// Add #dibseasy hash to checkout url so we can respond to DIBS that payment can proceed and be finalized in DIBS system.
 				$response = array(
 					'return_url' => add_query_arg( 'easy_confirm', 'yes', $this->get_return_url( $order ) ),

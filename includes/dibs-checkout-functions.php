@@ -179,12 +179,6 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		wc_dibs_save_shipping_reference_to_order( $order_id );
 	}
 
-	// Update order number in DIBS system if this is the embedded checkout flow.
-	if ( 'embedded' === $checkout_flow ) {
-		$request = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
-		$request = $request->request();
-	}
-
 	$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
 	$request = $request->request();
 
