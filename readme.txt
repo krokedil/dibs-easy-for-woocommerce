@@ -56,6 +56,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2020.06.29    - version 1.18.0 =
+* Feature		- Added support for German, Polish, French, Dutch, Finnish and Spain locale.
+
 = 2020.06.24    - version 1.17.0 =
 * Tweak         - Create confirmation step before redirecting customer to thankyou page. Displays invoice fee correctly in thank you page.
 * Fix           - Make externalBulkChargeId an unique value to be able to try multiple renewal requests for one order.
