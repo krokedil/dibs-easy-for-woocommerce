@@ -97,6 +97,26 @@ function wc_dibs_get_locale() {
 		case 'da_DK':
 			$language = 'da-DK';
 			break;
+		case 'de_DE':
+			$language = 'de-DE';
+			break;
+		case 'pl_PL':
+			$language = 'pl-PL';
+			break;
+		case 'fi':
+			$language = 'fi-FI';
+			break;
+		case 'fr_FR':
+		case 'fr_BE':
+			$language = 'fr-FR';
+			break;
+		case 'nl_NL':
+		case 'nl_BE':
+			$language = 'nl-NL';
+			break;
+		case 'es_ES':
+			$language = 'es-ES';
+			break;
 		default:
 			$language = 'en-GB';
 	}
