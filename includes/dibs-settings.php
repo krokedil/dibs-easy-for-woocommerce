@@ -105,6 +105,12 @@ return apply_filters(
 			'default'     => 'embedded',
 			'desc_tip'    => false,
 		),
+		'auto_capture'                 => array(
+			'title'   => __( 'Auto capture', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Auto capture feature. If enabled the Nets payment will be captured directly when the order is confirmed in WooCommerce.', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
 		'complete_payment_button_text' => array(
 			'title'       => __( 'Complete payment button text', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'select',

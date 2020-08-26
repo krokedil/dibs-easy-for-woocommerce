@@ -194,6 +194,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	$payment_id    = get_post_meta( $order_id, '_dibs_payment_id', true );
 	$settings      = get_option( 'woocommerce_dibs_easy_settings' );
 	$checkout_flow = ( isset( $settings['checkout_flow'] ) ) ? $settings['checkout_flow'] : 'embedded';
+	$auto_capture  = ( isset( $settings['auto_capture'] ) ) ? $settings['auto_capture'] : 'no';
 
 	if ( '' !== $order->get_shipping_method() ) {
 		wc_dibs_save_shipping_reference_to_order( $order_id );
@@ -222,6 +223,10 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 			$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 		}
 		$order->payment_complete( $payment_id );
+
+		if ( 'yes' === $auto_capture ) {
+			Nets_Easy()->order_management->dibs_order_completed( $order_id );
+		}
 	} else {
 		// Purchase not finalized in DIBS.
 		// If this is a redirect checkout flow let's redirect the customer to cart page.
