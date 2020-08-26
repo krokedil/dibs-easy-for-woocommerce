@@ -169,7 +169,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		// Load the needed JS scripts.
 		public function load_scripts() {
 			wp_enqueue_script( 'jquery' );
-			if ( is_checkout() ) {
+			if ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) {
 				$testmode   = 'yes' === $this->dibs_settings['test_mode'];
 				$script_url = $testmode ? 'https://test.checkout.dibspayment.eu/v1/checkout.js?v=1' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
 
