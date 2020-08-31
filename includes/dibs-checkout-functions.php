@@ -136,7 +136,7 @@ function wc_dibs_get_payment_id() {
 
 		$request = new DIBS_Requests_Create_DIBS_Order();
 		$request = json_decode( $request->request() );
-		if ( array_key_exists( 'paymentId', $request ) ) {
+		if ( isset( $request->paymentId ) ) {
 			WC()->session->set( 'dibs_payment_id', $request->paymentId );
 
 			// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
