@@ -56,6 +56,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2020.09.30    - version 1.19.1 =
+* Fix           - Security update. Block order review area during 3DSecure/Swish/MobilePay/Vipps processing sequence.
+
 = 2020.09.21    - version 1.19.0 =
 * Feature       - Added support for auto-capture (automatically charge payment in nets directly after puchase is completed by customer).
 * Feature       - Added support for order pay link even if embedded checkout flow is selected.
