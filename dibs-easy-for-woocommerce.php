@@ -8,15 +8,15 @@
  * Plugin Name:             Nets Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
- * Version:                 1.18.0
+ * Version:                 1.19.1
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
  * Developer URI:           https://krokedil.se/
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
- * WC requires at least:    3.5.0
- * WC tested up to:         4.2.2
+ * WC requires at least:    3.8.0
+ * WC tested up to:         4.5.2
  * Copyright:               © 2017-2020 Krokedil AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.18.0' );
+define( 'WC_DIBS_EASY_VERSION', '1.19.1' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -37,6 +37,13 @@ define( 'DIBS_API_TEST_ENDPOINT', 'https://test.api.dibspayment.eu/v1/' );
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 	class DIBS_Easy {
+
+		/**
+		 * The reference the *Singleton* instance of this class.
+		 *
+		 * @var $instance
+		 */
+		protected static $instance;
 
 		public static $log = '';
 
@@ -48,6 +55,37 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			add_action( 'woocommerce_email_after_order_table', array( $this, 'email_extra_information' ), 10, 3 );
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 		}
+
+		/**
+		 * Returns the *Singleton* instance of this class.
+		 *
+		 * @return self::$instance The *Singleton* instance.
+		 */
+		public static function get_instance() {
+			if ( null === self::$instance ) {
+				self::$instance = new self();
+			}
+			return self::$instance;
+		}
+		/**
+		 * Private clone method to prevent cloning of the instance of the
+		 * *Singleton* instance.
+		 *
+		 * @return void
+		 */
+		private function __clone() {
+			wc_doing_it_wrong( __FUNCTION__, __( 'Nope' ), '1.0' );
+		}
+		/**
+		 * Private unserialize method to prevent unserializing of the *Singleton*
+		 * instance.
+		 *
+		 * @return void
+		 */
+		private function __wakeup() {
+			wc_doing_it_wrong( __FUNCTION__, __( 'Nope' ), '1.0' );
+		}
+
 		// Include the classes and enqueue the scripts.
 		public function init() {
 
@@ -113,6 +151,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
 			}
 
+			// Set variables for shorthand access to classes.
+			$this->order_management = new DIBS_Post_Checkout();
+
 		}
 
 		// Include DIBS Gateway if WC_Payment_Gateway exist
@@ -128,7 +169,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		// Load the needed JS scripts.
 		public function load_scripts() {
 			wp_enqueue_script( 'jquery' );
-			if ( is_checkout() ) {
+			if ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) {
 				$testmode   = 'yes' === $this->dibs_settings['test_mode'];
 				$script_url = $testmode ? 'https://test.checkout.dibspayment.eu/v1/checkout.js?v=1' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
 
@@ -314,5 +355,16 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		}
 	}
-	$dibs_easy = new DIBS_Easy();
+
+	DIBS_Easy::get_instance();
+	/**
+	 * Main instance DIBS_Easy.
+	 *
+	 * Returns the main instance of DIBS_Easy.
+	 *
+	 * @return DIBS_Easy
+	 */
+	function Nets_Easy() { // phpcs:ignore
+		return DIBS_Easy::get_instance();
+	}
 }// End if().

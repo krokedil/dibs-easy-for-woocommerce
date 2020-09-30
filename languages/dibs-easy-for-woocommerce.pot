@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: DIBS Easy for WooCommerce\n"
-"POT-Creation-Date: 2020-02-25 09:38+0000\n"
+"POT-Creation-Date: 2020-09-21 10:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Niklas Högefjord <info@krokedil.se>\n"
 "Language-Team: Niklas Högefjord <info@krokedil.se>\n"
@@ -21,44 +21,135 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Language: "
 
-#: dibs-easy-for-woocommerce.php:170
+#: dibs-easy-for-woocommerce.php:213
 msgid "Please wait while we process your order..."
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:171
+#: dibs-easy-for-woocommerce.php:214
 msgid "Please fill in all required checkout fields."
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:200
+#: dibs-easy-for-woocommerce.php:243
 msgid "Settings"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:201
+#: dibs-easy-for-woocommerce.php:244
 msgid "Docs"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:202
+#: dibs-easy-for-woocommerce.php:245
 msgid "Support"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:235
+#: dibs-easy-for-woocommerce.php:278
 msgid "Order date: "
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:238
+#: dibs-easy-for-woocommerce.php:281
 msgid "Nets Payment ID: "
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:241
+#: dibs-easy-for-woocommerce.php:284
 msgid "Payment method: "
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:244
+#: dibs-easy-for-woocommerce.php:287
 msgid "Customer card: "
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:251
+#: dibs-easy-for-woocommerce.php:294
 msgid "There was a problem paying with Nets."
+msgstr ""
+
+#: classes/class-dibs-subscriptions.php:71
+#: classes/requests/helpers/class-dibs-requests-get-payment-methods.php:22
+#: classes/requests/helpers/class-dibs-requests-get-order-items.php:48
+#: classes/requests/helpers/class-dibs-requests-get-order-items.php:81
+#: classes/requests/helpers/class-dibs-requests-get-order-items.php:114
+#: classes/requests/helpers/class-dibs-requests-get-items.php:46
+#: classes/requests/helpers/class-dibs-requests-get-items.php:60
+#: classes/requests/helpers/class-dibs-requests-get-items.php:82
+#: classes/requests/helpers/class-dibs-requests-get-items.php:94
+#: classes/requests/helpers/class-dibs-requests-get-refund-data.php:117
+#: classes/requests/helpers/class-dibs-requests-get-refund-data.php:176
+#: classes/requests/helpers/class-dibs-requests-get-refund-data.php:237
+msgid "pcs"
+msgstr ""
+
+#: classes/class-dibs-subscriptions.php:213
+#, php-format
+msgid ""
+"Saved _dibs_recurring_token in subscription by externalreference request to "
+"Nets. Recurring token: %s"
+msgstr ""
+
+#: classes/class-dibs-subscriptions.php:221
+#, php-format
+msgid "Error during DIBS_Request_Get_Subscription_By_External_Reference: %s"
+msgstr ""
+
+#: classes/class-dibs-subscriptions.php:235
+#, php-format
+msgid "Subscription payment made with Nets. Payment ID: %1$s. Charge ID %2$s."
+msgstr ""
+
+#: classes/class-dibs-subscriptions.php:241
+#, php-format
+msgid "Subscription payment failed with Nets. Error message: %1$s."
+msgstr ""
+
+#: classes/class-dibs-subscriptions.php:276
+#, php-format
+msgid "Subscription payment made with Nets. Nets order id: %s"
+msgstr ""
+
+#: classes/class-dibs-subscriptions.php:282
+#, php-format
+msgid ""
+"Payment status not correct for subscription. Status: %1$s. Message: %2$s"
+msgstr ""
+
+#: classes/class-dibs-subscriptions.php:288
+msgid ""
+"Subscription payment failed with Nets during scheduled request. No paymentId "
+"found in response"
+msgstr ""
+
+#: classes/class-dibs-api-callbacks.php:148
+#, php-format
+msgid "Failed trying to receive the order from Nets. Error message: %1$s."
+msgstr ""
+
+#: classes/class-dibs-api-callbacks.php:176
+#: classes/class-dibs-api-callbacks.php:180
+#, php-format
+msgid ""
+"Order needs manual review. WooCommerce order total and Nets order total do "
+"not match. Nets order total: %s."
+msgstr ""
+
+#: classes/class-dibs-api-callbacks.php:292
+msgid ""
+"Order created via Nets Easy API callback. Please verify the order in Nets "
+"system."
+msgstr ""
+
+#. Nets Easy Payment ID.
+#: classes/class-dibs-api-callbacks.php:312
+#: classes/class-dibs-api-callbacks.php:315
+#: includes/dibs-checkout-functions.php:222
+#: includes/dibs-checkout-functions.php:225
+#, php-format
+msgid ""
+"New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. "
+"Awaiting charge."
+msgstr ""
+
+#: classes/class-dibs-api-callbacks.php:326
+#, php-format
+msgid ""
+"Order needs manual review, WooCommerce total and Nets total do not match. "
+"Nets order total: %s."
 msgstr ""
 
 #: classes/class-dibs-admin-notices.php:45
@@ -92,41 +183,6 @@ msgid ""
 "Privacy tab</a>."
 msgstr ""
 
-#: classes/class-dibs-api-callbacks.php:148
-#, php-format
-msgid "Failed trying to receive the order from Nets. Error message: %1$s."
-msgstr ""
-
-#: classes/class-dibs-api-callbacks.php:176
-#: classes/class-dibs-api-callbacks.php:180
-#, php-format
-msgid ""
-"Order needs manual review. WooCommerce order total and Nets order total do "
-"not match. Nets order total: %s."
-msgstr ""
-
-#: classes/class-dibs-api-callbacks.php:292
-msgid ""
-"Order created via Nets Easy API callback. Please verify the order in Nets "
-"system."
-msgstr ""
-
-#: classes/class-dibs-api-callbacks.php:311
-#: classes/class-dibs-api-callbacks.php:313
-#: classes/class-dibs-easy-gateway.php:279
-#: classes/class-dibs-easy-gateway.php:281
-#: classes/class-dibs-order-submission-failure.php:51
-#, php-format
-msgid "Order made in Nets with Payment ID %1$s. Payment type - %2$s."
-msgstr ""
-
-#: classes/class-dibs-api-callbacks.php:324
-#, php-format
-msgid ""
-"Order needs manual review, WooCommerce total and Nets total do not match. "
-"Nets order total: %s."
-msgstr ""
-
 #: classes/class-dibs-easy-gateway.php:13 includes/dibs-settings.php:23
 msgid "Nets Easy"
 msgstr ""
@@ -135,29 +191,36 @@ msgstr ""
 msgid "Nets Easy Payment for checkout"
 msgstr ""
 
-#: classes/class-dibs-easy-gateway.php:95
-#: classes/class-dibs-easy-gateway.php:139
+#: classes/class-dibs-easy-gateway.php:88
+#: classes/class-dibs-easy-gateway.php:137
 msgid "Customer redirected to Nets payment page."
 msgstr ""
 
-#: classes/class-dibs-easy-gateway.php:110
-#: classes/class-dibs-easy-gateway.php:155
+#: classes/class-dibs-easy-gateway.php:103
+#: classes/class-dibs-easy-gateway.php:153
 msgid "An error occured during communication with Nets. Please try again."
 msgstr ""
 
-#: classes/class-dibs-easy-gateway.php:112
-#: classes/class-dibs-easy-gateway.php:157
+#: classes/class-dibs-easy-gateway.php:105
+#: classes/class-dibs-easy-gateway.php:155
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: classes/class-dibs-easy-gateway.php:203
+#. Nets refund ID.
+#: classes/class-dibs-easy-gateway.php:169
 #, php-format
-msgid "Refund made in Nets with charge ID %1$s. Reason: %2$s"
+msgid "Refund made in Nets Easy with refund ID %1$s. Reason: %2$s"
 msgstr ""
 
-#: classes/class-dibs-easy-gateway.php:230
+#: classes/class-dibs-easy-gateway.php:197
 msgid "Order finalized in thankyou page."
+msgstr ""
+
+#: classes/class-dibs-order-submission-failure.php:51
+#, php-format
+msgid ""
+"New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s."
 msgstr ""
 
 #: classes/class-dibs-order-submission-failure.php:56
@@ -172,84 +235,24 @@ msgid ""
 "No charge needed in Nets system since %s is a account to account payment."
 msgstr ""
 
-#: classes/class-dibs-post-checkout.php:51
+#. Nets Charge ID.
+#: classes/class-dibs-post-checkout.php:52
 #, php-format
-msgid "Payment made in Nets with charge ID %s"
+msgid "Payment charged in Nets Easy with charge ID %s"
 msgstr ""
 
-#: classes/class-dibs-post-checkout.php:92
+#: classes/class-dibs-post-checkout.php:93
 msgid "Order has been canceled in Nets"
 msgstr ""
 
-#: classes/class-dibs-post-checkout.php:101
+#: classes/class-dibs-post-checkout.php:102
 #, php-format
 msgid "There was a problem canceling the order in Nets: %s"
 msgstr ""
 
-#: classes/class-dibs-post-checkout.php:108
+#: classes/class-dibs-post-checkout.php:109
 #, php-format
 msgid "Nets Error: %s"
-msgstr ""
-
-#: classes/class-dibs-subscriptions.php:71
-#: classes/requests/helpers/class-dibs-requests-get-items.php:46
-#: classes/requests/helpers/class-dibs-requests-get-items.php:60
-#: classes/requests/helpers/class-dibs-requests-get-items.php:82
-#: classes/requests/helpers/class-dibs-requests-get-items.php:94
-#: classes/requests/helpers/class-dibs-requests-get-order-items.php:48
-#: classes/requests/helpers/class-dibs-requests-get-order-items.php:81
-#: classes/requests/helpers/class-dibs-requests-get-order-items.php:114
-#: classes/requests/helpers/class-dibs-requests-get-payment-methods.php:22
-#: classes/requests/helpers/class-dibs-requests-get-refund-data.php:117
-#: classes/requests/helpers/class-dibs-requests-get-refund-data.php:176
-#: classes/requests/helpers/class-dibs-requests-get-refund-data.php:237
-msgid "pcs"
-msgstr ""
-
-#: classes/class-dibs-subscriptions.php:213
-#, php-format
-msgid ""
-"Saved _dibs_recurring_token in subscription by externalreference request to "
-"Nets. Recurring token: %s"
-msgstr ""
-
-#: classes/class-dibs-subscriptions.php:221
-#, php-format
-msgid "Error during DIBS_Request_Get_Subscription_By_External_Reference: %s"
-msgstr ""
-
-#: classes/class-dibs-subscriptions.php:250
-#: classes/class-dibs-subscriptions.php:303
-#, php-format
-msgid "Subscription payment made with Nets. Nets order id: %s"
-msgstr ""
-
-#: classes/class-dibs-subscriptions.php:257
-msgid ""
-"Payment status not available: Scheduling payment status check to be "
-"triggered in 1 minute."
-msgstr ""
-
-#: classes/class-dibs-subscriptions.php:262
-#, php-format
-msgid "Subscription payment failed with Nets. Error code: %1$s. Message: %2$s"
-msgstr ""
-
-#: classes/class-dibs-subscriptions.php:268
-#, php-format
-msgid "Subscription payment failed with Nets. Error message: %1$s."
-msgstr ""
-
-#: classes/class-dibs-subscriptions.php:309
-#, php-format
-msgid ""
-"Payment status not correct for subscription. Status: %1$s. Message: %2$s"
-msgstr ""
-
-#: classes/class-dibs-subscriptions.php:315
-msgid ""
-"Subscription payment failed with Nets during scheduled request. No paymentId "
-"found in response"
 msgstr ""
 
 #: includes/dibs-checkout-functions.php:46
@@ -394,10 +397,20 @@ msgid ""
 msgstr ""
 
 #: includes/dibs-settings.php:109
+msgid "Auto-capture"
+msgstr ""
+
+#: includes/dibs-settings.php:111
+msgid ""
+"Enable Auto-capture. If enabled Nets Easy charges your customer immediately "
+"after payment completion. Only enable for compliant products/services."
+msgstr ""
+
+#: includes/dibs-settings.php:115
 msgid "Complete payment button text"
 msgstr ""
 
-#: includes/dibs-settings.php:122
+#: includes/dibs-settings.php:128
 msgid ""
 "Select the text displayed on the complete payment button. (Only applicable "
 "for subscription based payments). Translations for the selections can be "

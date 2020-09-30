@@ -47,8 +47,9 @@ class DIBS_Post_Checkout {
 
 			// Error handling.
 			if ( null != $request ) {
-				if ( array_key_exists( 'chargeId', $request ) ) { // Payment success
-					$wc_order->add_order_note( sprintf( __( 'Payment made in Nets with charge ID %s', 'dibs-easy-for-woocommerce' ), $request->chargeId ) );
+				if ( array_key_exists( 'chargeId', $request ) ) { // Payment success.
+					// Translators: Nets Charge ID.
+					$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy with charge ID %s', 'dibs-easy-for-woocommerce' ), $request->chargeId ) );
 
 					update_post_meta( $order_id, '_dibs_charge_id', $request->chargeId );
 				} elseif ( array_key_exists( 'errors', $request ) ) { // Response with errors.

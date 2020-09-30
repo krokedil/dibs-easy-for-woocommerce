@@ -60,6 +60,10 @@ class DIBS_Templates {
 				return $template;
 			}
 
+			if ( is_wc_endpoint_url( 'order-pay' ) ) {
+				return $template;
+			}
+
 			if ( 'checkout/form-checkout.php' === $template_name ) {
 				$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 

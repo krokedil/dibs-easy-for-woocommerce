@@ -224,45 +224,18 @@ class DIBS_Subscriptions {
 			}
 		}
 
-		$create_order_response = new DIBS_Request_Charge_Subscription( $order_id );
+		$create_order_response = new DIBS_Request_Charge_Subscription( $order_id, $recurring_token );
 		$create_order_response = $create_order_response->request();
 
-		if ( ! is_wp_error( $create_order_response ) && ! empty( $create_order_response->bulkId ) ) {
-			// We got a bulkId in response. Save it in the renewal order and make a new request to DIBS to get the status and ID of the transaction
-			update_post_meta( $order_id, '_dibs_recurring_bulk_id', $create_order_response->bulkId );
+		if ( ! is_wp_error( $create_order_response ) && ! empty( $create_order_response->paymentId ) ) {
 
-			$recurring_orders = new DIBS_Request_Get_Subscription_Bulk_Id( $create_order_response->bulkId, $order_id );
-			$recurring_orders = $recurring_orders->request();
+			// All good. Update the renewal order with an order note and run payment_complete on all subscriptions.
+			update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
+			update_post_meta( $order_id, '_dibs_charge_id', $create_order_response->chargeId );
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Payment ID: %1$s. Charge ID %2$s.', 'dibs-easy-for-woocommerce' ), $create_order_response->paymentId, $create_order_response->chargeId ) );
 
-			$payment_id = null;
-			foreach ( $recurring_orders->page as $recurring_order ) {
-				if ( $recurring_order->subscriptionId == $recurring_token ) {
-					$payment_id = $recurring_order->paymentId;
-					break;
-				}
-			}
-
-			if ( ! empty( $payment_id ) ) {
-
-				if ( 'Succeeded' == $recurring_order->status ) {
-					// All good. Update the renewal order with an order note and run payment_complete on all subscriptions.
-					update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
-					$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Nets order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
-
-					foreach ( $subscriptions as $subscription ) {
-						$subscription->payment_complete( $payment_id );
-					}
-				} else {
-					// Payment status not available yet. Schedule new check in 1 minute.
-					$renewal_order->add_order_note( sprintf( __( 'Payment status not available: Scheduling payment status check to be triggered in 1 minute.', 'dibs-easy-for-woocommerce' ), $payment_id ) );
-					wp_schedule_single_event( time() + 60, 'wc_dibs_easy_check_subscription_status', array( $order_id, $create_order_response->bulkId ) );
-				}
-			} else {
-				// Something is wrong. Run payment_failed on all subscriptions.
-				$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error code: %1$s. Message: %2$s', 'dibs-easy-for-woocommerce' ), 'fel', $create_order_response->bulkId ) );
-				foreach ( $subscriptions as $subscription ) {
-					$subscription->payment_failed();
-				}
+			foreach ( $subscriptions as $subscription ) {
+				$subscription->payment_complete( $create_order_response->paymentId );
 			}
 		} else {
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $create_order_response ) ) );

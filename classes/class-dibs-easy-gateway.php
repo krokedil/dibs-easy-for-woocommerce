@@ -108,7 +108,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		}
 
 		// Regular purchase.
-		if ( 'embedded' === $this->checkout_flow ) {
+		if ( 'embedded' === $this->checkout_flow && ! is_wc_endpoint_url( 'order-pay' ) ) {
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
 			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
 				// wc_dibs_confirm_dibs_order( $order_id );
@@ -129,7 +129,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				);
 			}
 		} else {
-			$request  = new DIBS_Requests_Create_DIBS_Order( $this->checkout_flow, $order_id );
+			$request  = new DIBS_Requests_Create_DIBS_Order( 'redirect', $order_id );
 			$response = json_decode( $request->request() );
 
 			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
@@ -165,7 +165,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$request = json_decode( $request->request() );
 
 		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
-			$order->add_order_note( sprintf( __( 'Refund made in Nets with charge ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
+			// Translators: Nets refund ID.
+			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) );
 			return true;
 		} else {
 			return false;

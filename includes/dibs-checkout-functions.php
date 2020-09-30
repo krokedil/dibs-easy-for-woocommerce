@@ -136,7 +136,7 @@ function wc_dibs_get_payment_id() {
 
 		$request = new DIBS_Requests_Create_DIBS_Order();
 		$request = json_decode( $request->request() );
-		if ( array_key_exists( 'paymentId', $request ) ) {
+		if ( isset( $request->paymentId ) ) {
 			WC()->session->set( 'dibs_payment_id', $request->paymentId );
 
 			// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
@@ -194,6 +194,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	$payment_id    = get_post_meta( $order_id, '_dibs_payment_id', true );
 	$settings      = get_option( 'woocommerce_dibs_easy_settings' );
 	$checkout_flow = ( isset( $settings['checkout_flow'] ) ) ? $settings['checkout_flow'] : 'embedded';
+	$auto_capture  = ( isset( $settings['auto_capture'] ) ) ? $settings['auto_capture'] : 'no';
 
 	if ( '' !== $order->get_shipping_method() ) {
 		wc_dibs_save_shipping_reference_to_order( $order_id );
@@ -217,11 +218,17 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		}
 
 		if ( 'A2A' === $request->payment->paymentDetails->paymentType ) {
-			$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentMethod ) );
+			// Translators: Nets Easy Payment ID.
+			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentMethod ) );
 		} else {
-			$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
+			// Translators: Nets Easy Payment ID.
+			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
 		}
 		$order->payment_complete( $payment_id );
+
+		if ( 'yes' === $auto_capture ) {
+			Nets_Easy()->order_management->dibs_order_completed( $order_id );
+		}
 	} else {
 		// Purchase not finalized in DIBS.
 		// If this is a redirect checkout flow let's redirect the customer to cart page.

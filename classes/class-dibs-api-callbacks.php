@@ -308,9 +308,11 @@ class DIBS_Api_Callbacks {
 			update_post_meta( $order_id, 'dibs_customer_card', $dibs_order->payment->paymentDetails->cardDetails->maskedPan );
 		}
 		if ( 'A2A' === $dibs_order->payment->paymentDetails->paymentType ) {
-			$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $dibs_order->payment->paymentId, $dibs_order->payment->paymentDetails->paymentMethod ) );
+			// Translators: Nets Easy Payment ID.
+			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $dibs_order->payment->paymentId, $dibs_order->payment->paymentDetails->paymentMethod ) );
 		} else {
-			$order->add_order_note( sprintf( __( 'Order made in Nets with Payment ID %1$s. Payment type - %2$s.', 'dibs-easy-for-woocommerce' ), $dibs_order->payment->paymentId, $dibs_order->payment->paymentDetails->paymentType ) );
+			// Translators: Nets Easy Payment ID.
+			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $dibs_order->payment->paymentId, $dibs_order->payment->paymentDetails->paymentType ) );
 		}
 
 		$order->calculate_totals();

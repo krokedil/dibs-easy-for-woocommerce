@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy
 Requires at least: 4.7
-Tested up to: 5.4.2
+Tested up to: 5.5.1
 Stable tag: trunk
-Requires WooCommerce at least: 3.5
-Tested WooCommerce up to: 4.2.2
+Requires WooCommerce at least: 3.8
+Tested WooCommerce up to: 4.5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,16 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2020.09.30    - version 1.19.1 =
+* Fix           - Security update. Block order review area during 3DSecure/Swish/MobilePay/Vipps processing sequence.
+
+= 2020.09.21    - version 1.19.0 =
+* Feature       - Added support for auto-capture (automatically charge payment in nets directly after puchase is completed by customer).
+* Feature       - Added support for order pay link even if embedded checkout flow is selected.
+* Tweak         - Change from Bulk Charge to Single Charge endpoint request for renewal subscription orders.
+* Tweak         - Change wording in WC order notes for created payment, charge requests and refund requests.
+* Fix           - Use isset instead of array_key_exists to avoid php deprecated notice issue.
 
 = 2020.06.29    - version 1.18.0 =
 * Feature		- Added support for German, Polish, French, Dutch, Finnish and Spain locale.
