@@ -197,7 +197,13 @@ jQuery(function($) {
                 console.log('response.return_url');
                 console.log(response.return_url);
                 sessionStorage.setItem( 'DIBSRedirectUrl', response.return_url );
-
+                $('#dibs-order-review').block({
+					message: null,
+					overlayCSS: {
+						background: '#fff',
+						opacity: 0.6
+					}
+				});
                 $('form.checkout').removeClass( 'processing' ).unblock();
                 dibs_wc.dibsOrderProcessing = false;
 				dibsCheckout.send('payment-order-finalized', true);
