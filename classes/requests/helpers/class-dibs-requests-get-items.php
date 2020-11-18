@@ -48,7 +48,7 @@ class DIBS_Requests_Items {
 			'taxRate'          => self::get_item_tax_rate( $cart_item, $product ),
 			'taxAmount'        => intval( round( $cart_item['line_tax'] * 100, 2 ) ),
 			'grossTotalAmount' => intval( round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 ) ),
-			'netTotalAmount'   => intval( round( $cart_item['line_total'] * 100, 2 ) ),
+			'netTotalAmount'   => intval( round( $cart_item['line_total'] * 100 ) ),
 		);
 	}
 
@@ -58,7 +58,7 @@ class DIBS_Requests_Items {
 			'name'             => wc_dibs_clean_name( $fee->name ),
 			'quantity'         => 1,
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => intval( round( $fee->amount * 100, 2 ) ),
+			'unitPrice'        => intval( round( $fee->amount * 100 ) ),
 			'taxRate'          => intval( round( ( $fee->tax / $fee->amount ) * 10000, 2 ) ),
 			'taxAmount'        => intval( round( $fee->tax * 100, 2 ) ),
 			'grossTotalAmount' => intval( round( ( $fee->amount + $fee->tax ) * 100 ) ),
