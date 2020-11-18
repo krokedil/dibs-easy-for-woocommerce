@@ -9,25 +9,27 @@ class DIBS_Requests_Payment_Methods {
 		$invoice_fee_id = isset( $dibs_settings['dibs_invoice_fee'] ) ? $dibs_settings['dibs_invoice_fee'] : '';
 		$items          = array();
 		if ( $invoice_fee_id ) {
-			$product        = wc_get_product( $invoice_fee_id );
-			$price_excl_tax = wc_get_price_excluding_tax( $product );
-			$tax_data       = self::get_tax_data( $product );
+			$product = wc_get_product( $invoice_fee_id );
+			if ( is_object( $product ) ) {
+				$price_excl_tax = wc_get_price_excluding_tax( $product );
+				$tax_data       = self::get_tax_data( $product );
 
-			$invoice_items = array(
-				'name' => 'easyinvoice',
-				'fee'  => array(
-					'reference'        => self::get_sku( $product, $invoice_fee_id ),
-					'name'             => wc_dibs_clean_name( $product->get_name() ),
-					'quantity'         => 1,
-					'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-					'unitPrice'        => intval( round( $price_excl_tax, 2 ) * 100 ),
-					'taxRate'          => intval( round( $tax_data['tax_rate'], 2 ) * 100 ),
-					'taxAmount'        => intval( round( $tax_data['tax_amount'], 2 ) * 100 ),
-					'grossTotalAmount' => intval( round( $price_excl_tax + $tax_data['tax_amount'], 2 ) * 100 ),
-					'netTotalAmount'   => intval( round( $price_excl_tax, 2 ) * 100 ),
-				),
-			);
-			$items[]       = $invoice_items;
+				$invoice_items = array(
+					'name' => 'easyinvoice',
+					'fee'  => array(
+						'reference'        => self::get_sku( $product, $invoice_fee_id ),
+						'name'             => wc_dibs_clean_name( $product->get_name() ),
+						'quantity'         => 1,
+						'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
+						'unitPrice'        => intval( round( $price_excl_tax, 2 ) * 100 ),
+						'taxRate'          => intval( round( $tax_data['tax_rate'], 2 ) * 100 ),
+						'taxAmount'        => intval( round( $tax_data['tax_amount'], 2 ) * 100 ),
+						'grossTotalAmount' => intval( round( $price_excl_tax + $tax_data['tax_amount'], 2 ) * 100 ),
+						'netTotalAmount'   => intval( round( $price_excl_tax, 2 ) * 100 ),
+					),
+				);
+				$items[]       = $invoice_items;
+			}
 		}
 		return $items;
 	}
