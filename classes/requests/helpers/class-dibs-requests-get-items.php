@@ -27,6 +27,28 @@ class DIBS_Requests_Items {
 			}
 		}
 
+		// YITH Gift Cards.
+		if ( ! empty( WC()->cart->applied_gift_cards ) ) {
+			foreach ( WC()->cart->applied_gift_cards as $coupon_key => $code ) {
+				$coupon_amount = isset( WC()->cart->applied_gift_cards_amounts[ $code ] ) ? - WC()->cart->applied_gift_cards_amounts[ $code ] * 100 : 0;
+				$label         = apply_filters( 'yith_ywgc_cart_totals_gift_card_label', esc_html( __( 'Gift card:', 'yith-woocommerce-gift-cards' ) . ' ' . $code ), $code );
+				$giftcard_sku  = apply_filters( 'nets_yith_gift_card_sku', esc_html( __( 'giftcard', 'dibs-easy-for-woocommerce' ) ), $code );
+
+				$gift_card = array(
+					'reference'        => $giftcard_sku,
+					'name'             => $label,
+					'quantity'         => 1,
+					'unitPrice'        => $coupon_amount,
+					'taxRate'          => 0,
+					'grossTotalAmount' => $coupon_amount,
+					'netTotalAmount'   => $coupon_amount,
+					'taxAmount'        => 0,
+					'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
+				);
+			}
+			$items[] = $gift_card;
+		}
+
 		return $items;
 	}
 
