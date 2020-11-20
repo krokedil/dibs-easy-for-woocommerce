@@ -1,11 +1,11 @@
 === Nets Easy for WooCommerce ===
 Contributors: dibspayment, krokedil, NiklasHogefjord
-Tags: ecommerce, e-commerce, woocommerce, dibs, easy
+Tags: ecommerce, e-commerce, woocommerce, dibs, easy, nets
 Requires at least: 4.7
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Requires PHP: 5.6
 WC requires at least: 3.8.0
-WC tested up to: 4.5.2
+WC tested up to: 4.7.0
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -56,6 +56,12 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2020.11.18    - version 1.20.0 =
+* Feature       - Add compatibility support with YITH Gift Card plugin.
+* Tweak         - Don't send company name to Nets (in redirect flow) if B2C is the only allowed customer type.
+* Fix           - Rounding issue fix in cart netTotalAmount sent to Nets.
+* Fix           - Only try to add invoice fee data  to Nets if we actually have an invoice fee product.
 
 = 2020.09.30    - version 1.19.1 =
 * Fix           - Security update. Block order review area during 3DSecure/Swish/MobilePay/Vipps processing sequence.
