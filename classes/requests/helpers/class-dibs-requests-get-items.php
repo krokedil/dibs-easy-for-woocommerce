@@ -27,6 +27,28 @@ class DIBS_Requests_Items {
 			}
 		}
 
+		// YITH Gift Cards.
+		if ( ! empty( WC()->cart->applied_gift_cards ) ) {
+			foreach ( WC()->cart->applied_gift_cards as $coupon_key => $code ) {
+				$coupon_amount = isset( WC()->cart->applied_gift_cards_amounts[ $code ] ) ? - WC()->cart->applied_gift_cards_amounts[ $code ] * 100 : 0;
+				$label         = apply_filters( 'yith_ywgc_cart_totals_gift_card_label', esc_html( __( 'Gift card:', 'yith-woocommerce-gift-cards' ) . ' ' . $code ), $code );
+				$giftcard_sku  = apply_filters( 'nets_yith_gift_card_sku', esc_html( __( 'giftcard', 'dibs-easy-for-woocommerce' ) ), $code );
+
+				$gift_card = array(
+					'reference'        => $giftcard_sku,
+					'name'             => $label,
+					'quantity'         => 1,
+					'unitPrice'        => $coupon_amount,
+					'taxRate'          => 0,
+					'grossTotalAmount' => $coupon_amount,
+					'netTotalAmount'   => $coupon_amount,
+					'taxAmount'        => 0,
+					'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
+				);
+			}
+			$items[] = $gift_card;
+		}
+
 		return $items;
 	}
 
@@ -48,7 +70,7 @@ class DIBS_Requests_Items {
 			'taxRate'          => self::get_item_tax_rate( $cart_item, $product ),
 			'taxAmount'        => intval( round( $cart_item['line_tax'] * 100, 2 ) ),
 			'grossTotalAmount' => intval( round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 ) ),
-			'netTotalAmount'   => intval( round( $cart_item['line_total'] * 100, 2 ) ),
+			'netTotalAmount'   => intval( round( $cart_item['line_total'] * 100 ) ),
 		);
 	}
 
@@ -58,7 +80,7 @@ class DIBS_Requests_Items {
 			'name'             => wc_dibs_clean_name( $fee->name ),
 			'quantity'         => 1,
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => intval( round( $fee->amount * 100, 2 ) ),
+			'unitPrice'        => intval( round( $fee->amount * 100 ) ),
 			'taxRate'          => intval( round( ( $fee->tax / $fee->amount ) * 10000, 2 ) ),
 			'taxAmount'        => intval( round( $fee->tax * 100, 2 ) ),
 			'grossTotalAmount' => intval( round( ( $fee->amount + $fee->tax ) * 100 ) ),

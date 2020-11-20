@@ -30,6 +30,9 @@ class DIBS_Requests_Get_Order_Items {
 			$items[] = self::get_shipping( $shipping_method );
 		}
 
+		//Process gift cards
+		$items = self::process_gift_cards( $order_id, $order, $items );
+
 		return $items;
 	}
 
@@ -131,5 +134,29 @@ class DIBS_Requests_Get_Order_Items {
 		} else {
 			return false;
 		}
+	}
+
+	public static function process_gift_cards( $order_id, $order, $items ) {
+
+		$yith_giftcards = get_post_meta( $order_id, '_ywgc_applied_gift_cards', true );
+
+		if ( ! empty( $yith_giftcards ) ) {
+			foreach ( $yith_giftcards as $yith_giftcard_code => $yith_giftcard_value ) {
+				$yith_giftcard_value = $yith_giftcard_value * 100 * -1;
+				$items[]             = array(
+					'reference'        => 'gift_card',
+					'name'             => 'Gift card',
+					'quantity'         => '1',
+					'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
+					'unitPrice'        => $yith_giftcard_value,
+					'taxRate'          => 0,
+					'taxAmount'        => 0,
+					'grossTotalAmount' => $yith_giftcard_value,
+					'netTotalAmount'   => $yith_giftcard_value,
+				);
+			}
+		}
+
+		return $items;
 	}
 }

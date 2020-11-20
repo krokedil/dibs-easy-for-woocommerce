@@ -86,7 +86,11 @@ class DIBS_Requests_Checkout {
 		$consumer['shippingAddress']['country']      = dibs_get_iso_3_country( $order->get_billing_country() );
 		$consumer['phoneNumber']['prefix']           = self::get_phone_prefix( $order );
 		$consumer['phoneNumber']['number']           = self::get_phone_number( $order );
-		if ( $order->get_billing_company() ) {
+
+		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
+		$allowed_customer_types = ( isset( $dibs_settings['allowed_customer_types'] ) ) ? $dibs_settings['allowed_customer_types'] : 'B2C';
+
+		if ( $order->get_billing_company() && in_array( $allowed_customer_types, array( 'B2B', 'B2CB', 'B2BC' ), true ) ) {
 			$consumer['company']['name']                 = $order->get_billing_company();
 			$consumer['company']['contact']['firstName'] = $order->get_billing_first_name();
 			$consumer['company']['contact']['lastName']  = $order->get_billing_last_name();
