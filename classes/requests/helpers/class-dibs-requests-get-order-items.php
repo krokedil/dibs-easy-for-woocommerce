@@ -30,7 +30,7 @@ class DIBS_Requests_Get_Order_Items {
 			$items[] = self::get_shipping( $shipping_method );
 		}
 
-		//Process gift cards
+		// Process gift cards.
 		$items = self::process_gift_cards( $order_id, $order, $items );
 
 		return $items;
