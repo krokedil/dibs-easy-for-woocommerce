@@ -57,6 +57,12 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2020.11.23    - version 1.20.1 =
+* Tweak         - Remove unused code.
+* Fix           - Add auto capture trigger (if selected in settings) in payment created callback.
+* Fix           - Fix potential float issue in subscription renewal order request.
+* Fix           - Don't overwrite the charge id in Woo order post meta if the payment already have been charged in Nets Easy system.
+
 = 2020.11.18    - version 1.20.0 =
 * Feature       - Add compatibility support with YITH Gift Card plugin.
 * Tweak         - Don't send company name to Nets (in redirect flow) if B2C is the only allowed customer type.
