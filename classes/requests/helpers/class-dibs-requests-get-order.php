@@ -33,12 +33,11 @@ class DIBS_Requests_Order {
 		$amount = 0;
 		foreach ( $items as $item ) {
 			foreach ( $item as $key => $value ) {
-				if ( 'grossTotalAmount' == $key ) {
-					$value   = intval( $value );
+				if ( 'grossTotalAmount' === $key ) {
 					$amount += $value;
 				}
 			}
 		}
-		return $amount;
+		return intval( round( $amount * 100 ) );
 	}
 }
