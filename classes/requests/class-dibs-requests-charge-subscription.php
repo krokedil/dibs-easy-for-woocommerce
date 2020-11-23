@@ -47,7 +47,7 @@ class DIBS_Request_Charge_Subscription extends DIBS_Requests2 {
 		$order                      = wc_get_order( $this->order_id );
 		$body                       = array();
 		$body['order']['items']     = DIBS_Requests_Get_Order_Items::get_items( $this->order_id );
-		$body['order']['amount']    = $order->get_total() * 100;
+		$body['order']['amount']    = intval( round( $order->get_total() * 100 ) );
 		$body['order']['currency']  = $order->get_currency();
 		$body['order']['reference'] = $order->get_order_number();
 

@@ -155,6 +155,10 @@ class DIBS_Api_Callbacks {
 			$order->add_order_note( 'Payment via Nets Easy. Order status updated via API callback. Payment ID: ' . sanitize_key( $data['data']['paymentId'] ) );
 			DIBS_Easy::log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
 
+			// Auto capture order if activated in settings.
+			if ( 'yes' === $auto_capture ) {
+				Nets_Easy()->order_management->dibs_order_completed( $order_id );
+			}
 		} else {
 
 			// DIBS_Easy::log('Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to On hold.');

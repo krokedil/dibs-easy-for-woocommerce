@@ -26,8 +26,6 @@ class DIBS_Subscriptions {
 		// Charge renewal payment.
 		add_action( 'woocommerce_scheduled_subscription_payment_dibs_easy', array( $this, 'trigger_scheduled_payment' ), 10, 2 );
 
-		add_action( 'wc_dibs_easy_check_subscription_status', array( $this, 'check_subscription_status' ), 10, 2 );
-
 		add_action( 'init', array( $this, 'dibs_payment_method_changed' ) );
 
 	}
@@ -239,53 +237,6 @@ class DIBS_Subscriptions {
 			}
 		} else {
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $create_order_response ) ) );
-			foreach ( $subscriptions as $subscription ) {
-				$subscription->payment_failed();
-			}
-		}
-	}
-
-	/**
-	 * Creates an order in Klarna from the recurring token saved.
-	 *
-	 * @param string $renewal_total The total price for the order.
-	 * @param object $renewal_order The WooCommerce order for the renewal.
-	 */
-	public function check_subscription_status( $order_id, $subscription_bulk_id ) {
-		$order         = wc_get_order( $order_id );
-		$subscriptions = wcs_get_subscriptions_for_renewal_order( $order_id );
-		// $payment_id       = $order->get_transaction_id();
-		$recurring_token = get_post_meta( $order_id, '_dibs_recurring_token', true );
-
-		$recurring_orders = new DIBS_Request_Get_Subscription_Bulk_Id( $subscription_bulk_id, $order_id );
-		$recurring_orders = $recurring_orders->request();
-		$payment_id       = null;
-		foreach ( $recurring_orders->page as $recurring_order ) {
-			if ( $recurring_order->subscriptionId == $recurring_token ) {
-				$payment_id = $recurring_order->paymentId;
-				break;
-			}
-		}
-
-		if ( ! empty( $payment_id ) ) {
-
-			if ( 'Succeeded' == $recurring_order->status ) {
-
-				// All good. Update the renewal order with an order note and run payment_complete on all subscriptions.
-				update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
-				$order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Nets order id: %s', 'dibs-easy-for-woocommerce' ), $payment_id ) );
-
-				foreach ( $subscriptions as $subscription ) {
-					$subscription->payment_complete( $payment_id );
-				}
-			} else {
-				$order->add_order_note( sprintf( __( 'Payment status not correct for subscription. Status: %1$s. Message: %2$s', 'dibs-easy-for-woocommerce' ), $recurring_order->status, $recurring_order->message ) );
-				foreach ( $subscriptions as $subscription ) {
-					$subscription->payment_failed();
-				}
-			}
-		} else {
-			$order->add_order_note( sprintf( __( 'Subscription payment failed with Nets during scheduled request. No paymentId found in response', 'dibs-easy-for-woocommerce' ), 'fel' ) );
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_failed();
 			}
