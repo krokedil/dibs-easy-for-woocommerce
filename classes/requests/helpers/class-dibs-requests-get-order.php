@@ -38,6 +38,7 @@ class DIBS_Requests_Order {
 				}
 			}
 		}
-		return intval( round( $amount * 100 ) );
+		// Amount already rounded and converted to minor units.
+		return $amount;
 	}
 }
