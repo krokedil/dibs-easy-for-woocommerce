@@ -98,6 +98,9 @@ function wc_dibs_get_locale() {
 			$language = 'da-DK';
 			break;
 		case 'de_DE':
+		case 'de_CH':
+		case 'de_AT':
+		case 'de_DE_formal':
 			$language = 'de-DE';
 			break;
 		case 'pl_PL':
