@@ -99,6 +99,7 @@ function wc_dibs_get_locale() {
 			break;
 		case 'de_DE':
 		case 'de_CH':
+		case 'de_AT':
 		case 'de_DE_formal':
 			$language = 'de-DE';
 			break;
