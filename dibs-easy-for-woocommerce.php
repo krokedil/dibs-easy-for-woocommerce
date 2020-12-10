@@ -163,8 +163,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 				add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 
-				// Cart page error notice.
-				add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
 			}
 
 			// Set variables for shorthand access to classes.
@@ -309,15 +307,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 
 		/**
-		 * Load the needed JS scripts.
-		 */
-		public function add_error_notice_to_cart_page() {
-			if ( isset( $_GET['dibs-payment-id'] ) ) {
-				wc_print_notice( __( 'There was a problem paying with Nets.', 'dibs-easy-for-woocommerce' ), 'error' );
-			}
-		}
-
-		/**
 		 * When checking out using Easy, we need to make sure none of the WooCommerce are required, in case DIBS
 		 * does not return info for some of them.
 		 *
@@ -355,6 +344,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			return $data;
 		}
 
+		/**
+		 * Log function. Log messages to file.
+		 *
+		 * @param string $message Data to log.
+		 */
 		public static function log( $message ) {
 			$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 			if ( 'yes' === $dibs_settings['debug_mode'] ) {
