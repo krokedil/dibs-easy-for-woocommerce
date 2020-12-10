@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore
 /**
  * DIBS Easy for WooCommerce
  *
@@ -23,7 +23,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -36,6 +36,9 @@ define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
 define( 'DIBS_API_TEST_ENDPOINT', 'https://test.api.dibspayment.eu/v1/' );
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
+	/**
+	 * Class DIBS_Easy
+	 */
 	class DIBS_Easy {
 
 		/**
@@ -45,10 +48,23 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		protected static $instance;
 
+		/**
+		 * Reference to logging class.
+		 *
+		 * @var $log
+		 */
 		public static $log = '';
 
+		/**
+		 * Reference to dibs_settings.
+		 *
+		 * @var $dibs_settings
+		 */
 		public $dibs_settings;
 
+		/**
+		 * DIBS_Easy constructor.
+		 */
 		public function __construct() {
 			$this->dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 			$this->checkout_flow = ( isset( $this->dibs_settings['checkout_flow'] ) ) ? $this->dibs_settings['checkout_flow'] : 'embedded';
@@ -86,7 +102,10 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			wc_doing_it_wrong( __FUNCTION__, __( 'Nope' ), '1.0' );
 		}
 
-		// Include the classes and enqueue the scripts.
+		/**
+		 * Init the plugin after plugins_loaded so environment variables are set.
+		 * Include the classes and enqueue the scripts.
+		 */
 		public function init() {
 
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
@@ -139,15 +158,12 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 
 			if ( 'embedded' === $this->checkout_flow ) {
-				// Save DIBS data (payment id) in WC order
+				// Save DIBS data (payment id) in WC order.
 				add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_dibs_order_data' ), 10, 2 );
 
 				add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
 
-				// Remove the storefront sticky checkout.
-				add_action( 'wp_enqueue_scripts', array( $this, 'jk_remove_sticky_checkout' ), 99 );
-
-				// Cart page error notice
+				// Cart page error notice.
 				add_action( 'woocommerce_before_cart', array( $this, 'add_error_notice_to_cart_page' ) );
 			}
 
@@ -156,7 +172,10 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 		}
 
-		// Include DIBS Gateway if WC_Payment_Gateway exist
+
+		/**
+		 * Add the gateway to WooCommerce
+		 */
 		public function init_gateway() {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
@@ -166,30 +185,19 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_dibs_easy' ) );
 		}
 
-		// Load the needed JS scripts.
+		/**
+		 * Load the needed JS scripts.
+		 */
 		public function load_scripts() {
-			wp_enqueue_script( 'jquery' );
 			if ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) {
-				$testmode   = 'yes' === $this->dibs_settings['test_mode'];
-				$script_url = $testmode ? 'https://test.checkout.dibspayment.eu/v1/checkout.js?v=1' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
-
-				if ( isset( $_GET['dibs-payment-id'] ) ) {
-					$dibs_payment_id = $_GET['dibs-payment-id'];
-				} else {
-					$dibs_payment_id = null;
-				}
-
-				if ( isset( $_GET['paymentId'] ) ) {
-					$paymentId = $_GET['paymentId'];
-				} else {
-					$paymentId = null;
-				}
-
-				if ( isset( $_GET['paymentFailed'] ) ) {
-					$paymentFailed = $_GET['paymentFailed'];
-				} else {
-					$paymentFailed = null;
-				}
+				$testmode        = 'yes' === $this->dibs_settings['test_mode'];
+				$script_url      = $testmode ? 'https://test.checkout.dibspayment.eu/v1/checkout.js?v=1' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
+				$dibs_payment_id = filter_input( INPUT_GET, 'dibs-payment-id', FILTER_SANITIZE_STRING );
+				$dibs_payment_id = $dibs_payment_id ? $dibs_payment_id : null;
+				$paymentId       = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_STRING );  // phpcs:ignore
+				$paymentId       = $paymentId ? $paymentId : null;  // phpcs:ignore
+				$paymentFailed   = filter_input( INPUT_GET, 'paymentFailed', FILTER_SANITIZE_STRING );  // phpcs:ignore
+				$paymentFailed   = $paymentFailed ? $paymentFailed : null;  // phpcs:ignore
 
 				if ( WC()->session->get( 'dibs_payment_id' ) ) {
 					$checkout_initiated = 'yes';
@@ -199,15 +207,15 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 				$standard_woo_checkout_fields = array( 'billing_first_name', 'billing_last_name', 'billing_address_1', 'billing_address_2', 'billing_postcode', 'billing_city', 'billing_phone', 'billing_email', 'billing_state', 'billing_country', 'billing_company', 'shipping_first_name', 'shipping_last_name', 'shipping_address_1', 'shipping_address_2', 'shipping_postcode', 'shipping_city', 'shipping_state', 'shipping_country', 'shipping_company', 'terms', 'account_username', 'account_password' );
 
-				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ) );
-				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_EASY_VERSION );
+				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
+				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
 				wp_localize_script(
 					'checkout',
 					'wc_dibs_easy',
 					array(
 						'dibs_payment_id'                  => $dibs_payment_id,
-						'paymentId'                        => $paymentId,
-						'paymentFailed'                    => $paymentFailed,
+						'paymentId'                        => $paymentId, // phpcs:ignore
+						'paymentFailed'                    => $paymentFailed, // phpcs:ignore
 						'checkout_initiated'               => $checkout_initiated,
 						'standard_woo_checkout_fields'     => $standard_woo_checkout_fields,
 						'dibs_process_order_text'          => __( 'Please wait while we process your order...', 'dibs-easy-for-woocommerce' ),
@@ -221,7 +229,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				);
 				wp_enqueue_script( 'checkout' );
 
-				// Load stylesheet for the checkout page
+				// Load stylesheet for the checkout page.
 				wp_register_style(
 					'dibs_style',
 					plugins_url( '/assets/css/style.css', __FILE__ ),
@@ -235,6 +243,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		/**
 		 * Adds plugin action links
 		 *
+		 * @param array $links The links displayed in plugin page.
+		 *
+		 * @return array $links Plugin page links.
 		 * @since 1.0.4
 		 */
 		public function plugin_action_links( $links ) {
@@ -247,24 +258,32 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			return array_merge( $plugin_links, $links );
 		}
 
-		// Add DIBS Easy gateway to WooCommerce Admin interface
-		function add_dibs_easy( $methods ) {
+		/**
+		 * Add the gateway to WooCommerce
+		 *
+		 * @param  array $methods Payment methods.
+		 *
+		 * @return array $methods Payment methods.
+		 */
+		public function add_dibs_easy( $methods ) {
 			$methods[] = 'DIBS_Easy_Gateway';
 
 			return $methods;
 		}
 
-
-
-
-		public function jk_remove_sticky_checkout() {
-			wp_dequeue_script( 'storefront-sticky-payment' );
-		}
-
+		/**
+		 * Add Nets Easy related information to WooCommerce order emails.
+		 *
+		 * @param  object $order WooCommerce order.
+		 * @param  bool   $sent_to_admin Email to admin or not.
+		 * @param  bool   $plain_text Email html or text format.
+		 *
+		 * @return void
+		 */
 		public function email_extra_information( $order, $sent_to_admin, $plain_text = false ) {
 			$order_id     = $order->get_id();
 			$gateway_used = get_post_meta( $order_id, '_payment_method', true );
-			if ( 'dibs_easy' == $gateway_used ) {
+			if ( 'dibs_easy' === $gateway_used ) {
 				$payment_id     = get_post_meta( $order_id, '_dibs_payment_id', true );
 				$customer_card  = get_post_meta( $order_id, 'dibs_customer_card', true );
 				$payment_method = get_post_meta( $order_id, 'dibs_payment_method', true );
@@ -272,23 +291,26 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				$dibs_settings  = $this->dibs_settings;
 
 				if ( $dibs_settings['email_text'] ) {
-						echo wpautop( wptexturize( $dibs_settings['email_text'] ) );
+						echo wp_kses_post( wptexturize( $dibs_settings['email_text'] ) );
 				}
 				if ( $order_date ) {
-					echo wpautop( wptexturize( __( 'Order date: ', 'dibs-easy-for-woocommerce' ) . $order_date ) );
+					echo wp_kses_post( wptexturize( __( 'Order date: ', 'dibs-easy-for-woocommerce' ) . $order_date ) );
 				}
 				if ( $payment_id ) {
-					echo wpautop( wptexturize( __( 'Nets Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) );
+					echo wp_kses_post( wptexturize( __( 'Nets Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) );
 				}
 				if ( $payment_method ) {
-					echo wpautop( wptexturize( __( 'Payment method: ', 'dibs-easy-for-woocommerce' ) . $payment_method ) );
+					echo wp_kses_post( wptexturize( __( 'Payment method: ', 'dibs-easy-for-woocommerce' ) . $payment_method ) );
 				}
 				if ( $customer_card ) {
-					echo wpautop( wptexturize( __( 'Customer card: ', 'dibs-easy-for-woocommerce' ) . $customer_card ) );
+					echo wp_kses_post( wptexturize( __( 'Customer card: ', 'dibs-easy-for-woocommerce' ) . $customer_card ) );
 				}
 			}
 		}
 
+		/**
+		 * Load the needed JS scripts.
+		 */
 		public function add_error_notice_to_cart_page() {
 			if ( isset( $_GET['dibs-payment-id'] ) ) {
 				wc_print_notice( __( 'There was a problem paying with Nets.', 'dibs-easy-for-woocommerce' ), 'error' );
@@ -350,7 +372,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * @param array  $data  Posted data.
 		 */
 		public function save_dibs_order_data( $order_id, $data ) {
-			$payment_id = $_POST['dibs_payment_id'];
+			$payment_id = filter_input( INPUT_POST, 'dibs_payment_id', FILTER_SANITIZE_STRING );
 			self::log( 'Saving Nets meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
 			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		}
@@ -367,4 +389,4 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 	function Nets_Easy() { // phpcs:ignore
 		return DIBS_Easy::get_instance();
 	}
-}// End if().
+}
