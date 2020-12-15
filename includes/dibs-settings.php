@@ -1,12 +1,17 @@
 <?php
+/**
+ * Nets settings class.
+ *
+ * @package DIBS_Easy/Classes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
  * Settings for Nets Easy
  */
-
 return apply_filters(
 	'dibs_easy_settings',
 	array(

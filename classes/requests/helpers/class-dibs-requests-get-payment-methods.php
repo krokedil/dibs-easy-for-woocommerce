@@ -1,9 +1,26 @@
 <?php
+/**
+ * Formats the invoice fee sent to Nets.
+ *
+ * @package DIBS_Easy/Classes/Requests/Helpers
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
+
+/**
+ * DIBS_Requests_Payment_Methods class.
+ *
+ * Class that formats the invoice fee sent to Nets.
+ */
 class DIBS_Requests_Payment_Methods {
 
+	/**
+	 * Gets invoice fee.
+	 *
+	 * @return array
+	 */
 	public static function get_invoice_fees() {
 		$dibs_settings  = get_option( 'woocommerce_dibs_easy_settings' );
 		$invoice_fee_id = isset( $dibs_settings['dibs_invoice_fee'] ) ? $dibs_settings['dibs_invoice_fee'] : '';
@@ -34,6 +51,13 @@ class DIBS_Requests_Payment_Methods {
 		return $items;
 	}
 
+	/**
+	 * Gets tax data for invoice fee product.
+	 *
+	 * @param object $product The WooCommerce product used as invoice fee.
+	 *
+	 * @return array
+	 */
 	public static function get_tax_data( $product ) {
 		$_tax      = new WC_Tax();
 		$tmp_rates = $_tax->get_base_tax_rates( $product->get_tax_class() );
@@ -49,6 +73,13 @@ class DIBS_Requests_Payment_Methods {
 		return $item_tax;
 	}
 
+	/**
+	 * Gets the sku for the incoive fee item.
+	 *
+	 * @param object $product The WooCommerce product.
+	 * @param string $invoice_fee_id The WooCommerce product ID.
+	 * @return string
+	 */
 	public static function get_sku( $product, $invoice_fee_id ) {
 		if ( get_post_meta( $invoice_fee_id, '_sku', true ) !== '' ) {
 			$part_number = $product->get_sku();

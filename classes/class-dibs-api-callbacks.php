@@ -1,6 +1,12 @@
 <?php
+/**
+ * API Callback class
+ *
+ * @package DIBS_Easy/Classes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
@@ -39,23 +45,34 @@ class DIBS_Api_Callbacks {
 
 	}
 
+	/**
+	 * Handle scheduling of payment completed webhook.
+	 */
 	public function payment_created_scheduler() {
-		if ( isset( $_GET['dibs-payment-created-callback'] ) ) {
+		$dibs_payment_created_callback = filter_input( INPUT_GET, 'dibs-payment-created-callback', FILTER_SANITIZE_STRING );
+		if ( ! empty( $dibs_payment_created_callback ) && '1' === $dibs_payment_created_callback ) {
 
 			$post_body = file_get_contents( 'php://input' );
 			$data      = json_decode( $post_body, true );
 
-			// Order id is set to '' for now
+			// Order id is set to '' for now.
 			$order_id = '';
 
 			wp_schedule_single_event( time() + 120, 'dibs_payment_created_callback', array( $data, $order_id ) );
 		}
 	}
 
+	/**
+	 * Handle execution of payment created cronjob.
+	 *
+	 * @param array  $data order data returned from Nets.
+	 * @param string $order_id WC order id.
+	 */
 	public function execute_dibs_payment_created_callback( $data, $order_id = '' ) {
 
-		DIBS_Easy::log( 'Payment created API callback. Response data:' . json_encode( $data ) );
-		if ( empty( $order_id ) ) { // We're missing Order ID in callback. Try to get it via query by internal reference
+		DIBS_Easy::log( 'Payment created API callback. Response data:' . wp_json_encode( $data ) );
+		if ( empty( $order_id ) ) {
+			// We're missing Order ID in callback. Try to get it via query by internal reference.
 			$order_id = $this->get_order_id_from_payment_id( $data['data']['paymentId'] );
 		}
 
@@ -66,22 +83,22 @@ class DIBS_Api_Callbacks {
 		} else { // We can't find a coresponding Order ID.
 
 			DIBS_Easy::log( 'No coresponding order ID was found for Payment ID ' . $data['data']['paymentId'] );
-			// Backup order creation
+			// Backup order creation.
 			if ( ! empty( $data['data']['paymentId'] ) ) {
 				$this->backup_order_creation( $data );
 			}
-		} // End if().
+		}
 	}
 
 
 	/**
 	 * Try to retreive order_id from DIBS transaction id.
 	 *
-	 * @param string $internal_reference.
+	 * @param string $payment_id Nets transaction id.
 	 */
 	public function get_order_id_from_payment_id( $payment_id ) {
 
-		// Let's check so the internal reference doesn't already exist in an existing order
+		// Let's check so the internal reference doesn't already exist in an existing order.
 		$query  = new WC_Order_Query(
 			array(
 				'limit'          => -1,
@@ -112,7 +129,9 @@ class DIBS_Api_Callbacks {
 	/**
 	 * Check order status order total and transaction id, in case checkout process failed.
 	 *
-	 * @param string $private_id, $public_token, $customer_type.
+	 * @param array  $data Order data from Nets.
+	 * @param string $order_id WC order id.
+	 * @param string $payment_id Nets payment id.
 	 *
 	 * @throws Exception WC_Data_Exception.
 	 */
@@ -136,7 +155,10 @@ class DIBS_Api_Callbacks {
 
 
 	/**
-	 * Set order status function
+	 * Set order status function.
+	 *
+	 * @param object $order WC order.
+	 * @param array  $data Order data from Nets.
 	 */
 	public function set_order_status( $order, $data ) {
 		if ( $data['data']['paymentId'] ) {
@@ -145,12 +167,13 @@ class DIBS_Api_Callbacks {
 			$request  = new DIBS_Requests_Get_DIBS_Order( $data['data']['paymentId'] );
 			$response = $request->request();
 			if ( is_wp_error( $response ) ) {
+				/* Translators: Error message from Nets. */
 				$order->add_order_note( sprintf( __( 'Failed trying to receive the order from Nets. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response->get_error_message() ) ) );
 			} else {
 				update_post_meta( $order->get_id(), 'dibs_payment_type', $response->payment->paymentDetails->paymentType );
 				update_post_meta( $order->get_id(), 'dibs_payment_method', $response->payment->paymentDetails->paymentMethod );
 			}
-			update_post_meta( $order->get_id(), '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
+			update_post_meta( $order->get_id(), '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
 			$order->payment_complete( $data['data']['paymentId'] );
 			$order->add_order_note( 'Payment via Nets Easy. Order status updated via API callback. Payment ID: ' . sanitize_key( $data['data']['paymentId'] ) );
 			DIBS_Easy::log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
@@ -159,28 +182,30 @@ class DIBS_Api_Callbacks {
 			if ( 'yes' === $auto_capture ) {
 				Nets_Easy()->order_management->dibs_order_completed( $order_id );
 			}
-		} else {
-
-			// DIBS_Easy::log('Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to On hold.');
 		}
 	}
 
 	/**
-	 * Check order totals
+	 * Check order totals.
+	 *
+	 * @param object $order WC order.
+	 * @param array  $dibs_order Order data from Nets.
 	 */
 	public function check_order_totals( $order, $dibs_order ) {
 
 		$order_totals_match = true;
 
-		// Check order total and compare it with Woo
+		// Check order total and compare it with Woo.
 		$woo_order_total  = intval( round( $order->get_total() * 100 ) );
 		$dibs_order_total = $dibs_order['data']['order']['amount']['amount'];
 
 		if ( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
+			/* Translators: Nets order total. */
 			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
 			DIBS_Easy::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
 			$order_totals_match = false;
 		} elseif ( $dibs_order_total > $woo_order_total && ( $dibs_order_total - $woo_order_total ) > 30 ) {
+			/* Translators: Nets order total. */
 			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
 			DIBS_Easy::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
 			$order_totals_match = false;
@@ -193,9 +218,7 @@ class DIBS_Api_Callbacks {
 	/**
 	 * Backup order creation, in case checkout process failed.
 	 *
-	 * @param string $klarna_order_id Klarna order ID.
-	 *
-	 * @throws Exception WC_Data_Exception.
+	 * @param array $dibs_checkout_completed_order Nets order data.
 	 */
 	public function backup_order_creation( $dibs_checkout_completed_order ) {
 		$request    = new DIBS_Requests_Get_DIBS_Order( $dibs_checkout_completed_order['data']['paymentId'] );
@@ -204,7 +227,7 @@ class DIBS_Api_Callbacks {
 		// Process order.
 		$order = $this->process_order( $dibs_order, $dibs_checkout_completed_order );
 
-		// Send order number to DIBS
+		// Send order number to DIBS.
 		if ( is_object( $order ) ) {
 			$request = new DIBS_Requests_Update_DIBS_Order_Reference( $dibs_checkout_completed_order['data']['paymentId'], $order->get_id() );
 			$request = $request->request();
@@ -214,9 +237,10 @@ class DIBS_Api_Callbacks {
 	/**
 	 * Processes WooCommerce order on backup order creation.
 	 *
-	 * @param Klarna_Checkout_Order $collector_order Klarna order.
+	 * @param object $dibs_order Nets order data.
+	 * @param array  $dibs_checkout_completed_order Nets order data.
 	 *
-	 * @throws Exception WC_Data_Exception.
+	 * @return object
 	 */
 	private function process_order( $dibs_order, $dibs_checkout_completed_order = null ) {
 
@@ -231,23 +255,23 @@ class DIBS_Api_Callbacks {
 		$order = wc_create_order( array( 'status' => 'pending' ) );
 
 		if ( is_wp_error( $order ) ) {
-			DIBS_Easy::log( 'Backup order creation. Error - could not create order. ' . var_export( $order->get_error_message(), true ) );
+			DIBS_Easy::log( 'Backup order creation. Error - could not create order. ' . wp_json_encode( $order->get_error_message() ) );
 		} else {
 			DIBS_Easy::log( 'Backup order creation - order ID - ' . $order->get_id() . ' - created.' );
 		}
 
 		$order_id = $order->get_id();
 
-		$billing_first_name   = ( 'person' === $type ) ? $customer->firstName : $customer->contactDetails->firstName;
-		$billing_last_name    = ( 'person' === $type ) ? $customer->lastName : $customer->contactDetails->lastName;
+		$billing_first_name   = ( 'person' === $type ) ? $customer->firstName : $customer->contactDetails->firstName; // phpcs:ignore
+		$billing_last_name    = ( 'person' === $type ) ? $customer->lastName : $customer->contactDetails->lastName; // phpcs:ignore
 		$billing_address1     = $dibs_order->payment->consumer->shippingAddress->addressLine1;
 		$billing_postal_code  = $dibs_order->payment->consumer->shippingAddress->postalCode;
 		$billing_city         = $dibs_order->payment->consumer->shippingAddress->city;
 		$billing_country      = dibs_get_iso_2_country( $dibs_order->payment->consumer->shippingAddress->country );
-		$phone                = ( 'person' === $type ) ? $customer->phoneNumber->number : $customer->contactDetails->phoneNumber->number;
-		$email                = ( 'person' === $type ) ? $customer->email : $customer->contactDetails->email;
-		$shipping_first_name  = ( 'person' === $type ) ? $customer->firstName : $customer->contactDetails->firstName;
-		$shipping_last_name   = ( 'person' === $type ) ? $customer->lastName : $customer->contactDetails->firstName;
+		$phone                = ( 'person' === $type ) ? $customer->phoneNumber->number : $customer->contactDetails->phoneNumber->number; // phpcs:ignore
+		$email                = ( 'person' === $type ) ? $customer->email : $customer->contactDetails->email; // phpcs:ignore
+		$shipping_first_name  = ( 'person' === $type ) ? $customer->firstName : $customer->contactDetails->firstName; // phpcs:ignore
+		$shipping_last_name   = ( 'person' === $type ) ? $customer->lastName : $customer->contactDetails->firstName; // phpcs:ignore
 		$shipping_address1    = $dibs_order->payment->consumer->shippingAddress->addressLine1;
 		$shipping_postal_code = $dibs_order->payment->consumer->shippingAddress->postalCode;
 		$shipping_city        = $dibs_order->payment->consumer->shippingAddress->city;
@@ -306,9 +330,9 @@ class DIBS_Api_Callbacks {
 
 		update_post_meta( $order_id, 'dibs_payment_type', $dibs_order->payment->paymentDetails->paymentType );
 		update_post_meta( $order_id, '_dibs_payment_id', $dibs_order->payment->paymentId );
-		update_post_meta( $order_id, '_dibs_date_paid', date( 'Y-m-d H:i:s' ) );
+		update_post_meta( $order_id, '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
 
-		if ( 'CARD' == $dibs_order->payment->paymentDetails->paymentType ) {
+		if ( 'CARD' === $dibs_order->payment->paymentDetails->paymentType ) {
 			update_post_meta( $order_id, 'dibs_customer_card', $dibs_order->payment->paymentDetails->cardDetails->maskedPan );
 		}
 		if ( 'A2A' === $dibs_order->payment->paymentDetails->paymentType ) {
@@ -327,6 +351,7 @@ class DIBS_Api_Callbacks {
 		}
 
 		if ( (int) round( $order->get_total() * 100 ) !== (int) $dibs_checkout_completed_order['data']['order']['amount']['amount'] ) {
+			// Translators: Nets order total.
 			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review, WooCommerce total and Nets total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_checkout_completed_order['data']['order']['amount']['amount'] ) );
 		}
 
@@ -336,8 +361,8 @@ class DIBS_Api_Callbacks {
 	/**
 	 * Processes cart contents on backup order creation.
 	 *
-	 * @param DIBS_Easy_Order   $dibs_order Klarna order.
-	 * @param WooCommerce_Order $order WooCommerce order.
+	 * @param array  $dibs_checkout_completed_order Nets order.
+	 * @param object $order WooCommerce order.
 	 *
 	 * @throws Exception WC_Data_Exception.
 	 */
@@ -346,7 +371,7 @@ class DIBS_Api_Callbacks {
 		foreach ( $dibs_checkout_completed_order['data']['order']['orderItems'] as $cart_item ) {
 
 			if ( strpos( $cart_item['reference'], 'shipping|' ) !== false ) {
-				// Shipping
+				// Shipping.
 				$trimmed_cart_item_reference = str_replace( 'shipping|', '', $cart_item['reference'] );
 				$method_id                   = substr( $trimmed_cart_item_reference, 0, strpos( $trimmed_cart_item_reference, ':' ) );
 				$instance_id                 = substr( $trimmed_cart_item_reference, strpos( $trimmed_cart_item_reference, ':' ) + 1 );
@@ -364,7 +389,7 @@ class DIBS_Api_Callbacks {
 				$order->add_item( $item );
 
 			} elseif ( strpos( $cart_item['reference'], 'fee|' ) !== false ) {
-				// Fee
+				// Fee.
 				$trimmed_cart_item_id = str_replace( 'fee|', '', $cart_item['reference'] );
 				$tax_class            = '';
 
@@ -383,7 +408,7 @@ class DIBS_Api_Callbacks {
 					DIBS_Easy::log( 'Backup order creation error add fee error: ' . $e->getCode() . ' - ' . $e->getMessage() );
 				}
 			} else {
-				// Product items
+				// Product items.
 				if ( wc_get_product_id_by_sku( $cart_item['reference'] ) ) {
 					$id = wc_get_product_id_by_sku( $cart_item['reference'] );
 				} else {
@@ -417,6 +442,13 @@ class DIBS_Api_Callbacks {
 		}
 	}
 
+	/**
+	 * Get shipping total amount.
+	 *
+	 * @param array $dibs_checkout_completed_order Nets order.
+	 *
+	 * return string.
+	 */
 	private static function get_shipping_total( $dibs_checkout_completed_order ) {
 		$shipping_total = 0;
 		foreach ( $dibs_checkout_completed_order['data']['order']['orderItems'] as $cart_item ) {
@@ -430,6 +462,13 @@ class DIBS_Api_Callbacks {
 		return $shipping_total;
 	}
 
+	/**
+	 * Get cart item tax amount.
+	 *
+	 * @param array $dibs_checkout_completed_order Nets order.
+	 *
+	 * return string.
+	 */
 	private static function get_cart_contents_tax( $dibs_checkout_completed_order ) {
 		$cart_contents_tax = 0;
 		foreach ( $dibs_checkout_completed_order['data']['order']['orderItems'] as $cart_item ) {
@@ -443,6 +482,13 @@ class DIBS_Api_Callbacks {
 		return $cart_contents_tax;
 	}
 
+	/**
+	 * Get shipping tax amount.
+	 *
+	 * @param array $dibs_checkout_completed_order Nets order.
+	 *
+	 * return string.
+	 */
 	private static function get_shipping_tax_total( $dibs_checkout_completed_order ) {
 		$shipping_tax_total = 0;
 		foreach ( $dibs_checkout_completed_order['data']['order']['orderItems'] as $cart_item ) {
