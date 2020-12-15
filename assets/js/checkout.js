@@ -257,7 +257,8 @@ jQuery(function($) {
                         async: true,
                         data: {
                             action:		'customer_adress_updated',
-                            address 	: address
+                            address 	: address,
+                            nonce : wc_dibs_easy.nets_checkout_nonce
                         },
                         success: function (response) {
                         },
@@ -331,8 +332,9 @@ jQuery(function($) {
                 dataType: "json",
                 async: true,
                 data: {
-                    action:		'payment_success',
-                    'paymentId': paymentId
+                    action :		'payment_success',
+                    paymentId : paymentId,
+                    nonce : wc_dibs_easy.nets_checkout_nonce
                 },
                 success: function (data) {
                     console.log(data);
@@ -411,7 +413,8 @@ jQuery(function($) {
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        action  : 'update_checkout'
+                        action  : 'update_checkout',
+                        nonce : wc_dibs_easy.nets_checkout_nonce
                     },
                     success: function(response) {
                         if (true === response.success) {
@@ -454,7 +457,8 @@ jQuery(function($) {
                 async: true,
                 data: {
                     action:		"dibs_change_payment_method",
-                    dibs_easy 	: false
+                    dibs_easy 	: false,
+                    nonce : wc_dibs_easy.nets_checkout_nonce
                 },
                 success: function (data) {
                 },
@@ -482,7 +486,8 @@ jQuery(function($) {
                         async: true,
                         data: {
                             action:		"dibs_change_payment_method",
-                            dibs_easy 	: true
+                            dibs_easy 	: true,
+                            nonce : wc_dibs_easy.nets_checkout_nonce
                         },
                         success: function (data) {
                         },

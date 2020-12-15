@@ -1,9 +1,24 @@
 <?php
+/**
+ * Ajax class
+ *
+ * @package DIBS_Easy/Classes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
+/**
+ * Ajax class.
+ */
 class DIBS_Ajax_Calls extends WC_AJAX {
+
+	/**
+	 * $private_key. Nets private key.
+	 *
+	 * @var string
+	 */
 	public $private_key;
 
 	/**
@@ -38,6 +53,12 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 */
 	public static function update_checkout() {
 
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'nets_checkout' ) ) {
+			wp_send_json_error( 'bad_nonce' );
+			exit;
+		}
+
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
 		WC()->cart->calculate_shipping();
@@ -46,7 +67,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 
-		// Check that the DIBS paymentId session is still valid
+		// Check that the DIBS paymentId session is still valid.
 		if ( false === get_transient( 'dibs_payment_id_' . $payment_id ) ) {
 			wc_dibs_unset_sessions();
 			$return['redirect_url'] = wc_get_checkout_url();
@@ -78,20 +99,22 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 */
 	public static function customer_adress_updated() {
 
-		/*
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'dibs_nonce' ) ) {
-			exit( 'Nonce can not be verified.' );
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'nets_checkout' ) ) {
+			wp_send_json_error( 'bad_nonce' );
+			exit;
 		}
-		*/
+
 		$update_needed      = 'no';
 		$must_login         = 'no';
 		$must_login_message = apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. Please log in.', 'woocommerce' ) );
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
-		// Get customer data from DIBS
-		$country   = dibs_get_iso_2_country( $_REQUEST['address']['countryCode'] );
-		$post_code = $_REQUEST['address']['postalCode'];
+		// Get customer data from Nets.
+		$address   = filter_input( INPUT_POST, 'address', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		$country   = dibs_get_iso_2_country( $address['countryCode'] );
+		$post_code = $address['postalCode'];
 
 		// If customer is not logged in and this is a subscription purchase - get customer email from DIBS.
 		if ( ! is_user_logged_in() && ( ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) ) {
@@ -106,16 +129,16 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 
 		if ( $country ) {
-			// If country is changed then we need to trigger an cart update in the DIBS Easy Checkout
+			// If country is changed then we need to trigger an cart update in the DIBS Easy Checkout.
 			if ( WC()->customer->get_billing_country() !== $country ) {
 				$update_needed = 'yes';
 			}
 
-			// If country is changed then we need to trigger an cart update in the DIBS Easy Checkout
+			// If country is changed then we need to trigger an cart update in the DIBS Easy Checkout.
 			if ( WC()->customer->get_shipping_postcode() !== $post_code ) {
 				$update_needed = 'yes';
 			}
-			// Set customer data in Woo
+			// Set customer data in Woo.
 			WC()->customer->set_billing_country( $country );
 			WC()->customer->set_shipping_country( $country );
 			WC()->customer->set_billing_postcode( $post_code );
@@ -136,15 +159,23 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		wp_die();
 	}
 
-
+	/**
+	 * Get Nets order data, right before WC form is submitted in checkout.
+	 */
 	public static function get_order_data() {
+
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'nets_checkout' ) ) {
+			wp_send_json_error( 'bad_nonce' );
+			exit;
+		}
 
 		if ( ! defined( 'WOOCOMMERCE_CHECKOUT' ) ) {
 			define( 'WOOCOMMERCE_CHECKOUT', true );
 		}
 
-		$payment_id = $_POST['paymentId'];
-		// Set the endpoint sufix
+		$payment_id = filter_input( INPUT_POST, 'paymentId', FILTER_SANITIZE_STRING );
+		// Set the endpoint sufix.
 		$endpoint_sufix = 'payments/' . $payment_id;
 
 		// Prevent duplicate orders if payment complete event is triggered twice or if order already exist in Woo (via webhook).
@@ -179,31 +210,31 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			}
 		}
 
-		// Make the request
+		// Make the request.
 		$request  = new DIBS_Requests_Get_DIBS_Order( $payment_id );
 		$response = $request->request();
 
 		if ( is_wp_error( $response ) || empty( $response ) ) {
-			// Something went wrong
+			// Something went wrong.
 			if ( is_wp_error( $response ) ) {
 				$message = $response->get_error_message();
 			} else {
 				$message = 'Empty response from Nets.';
 			}
 
-			DIBS_Easy::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . var_export( $message, true ) );
+			DIBS_Easy::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . wp_json_encode( $message ) );
 
 			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
 			wp_die();
 		} else {
-			// All good with the request
-			// Convert country code from 3 to 2 letters
+			// All good with the request.
+			// Convert country code from 3 to 2 letters.
 			if ( $response->payment->consumer->shippingAddress->country ) {
 				$response->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $response->payment->consumer->shippingAddress->country );
 			}
 
-			// Store the order data in a sesstion. We might need it if form processing in Woo fails
+			// Store the order data in a sesstion. We might need it if form processing in Woo fails.
 			WC()->session->set( 'dibs_order_data', $response );
 
 			DIBS_Easy::log( 'processWooCheckout triggered and checkout form about to be submitted for Nets payment ID ' . $payment_id );
@@ -215,14 +246,24 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 
 	}
 
-	// Change payment method
+	/**
+	 * Change payment method.
+	 */
 	public static function change_payment_method() {
+
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'nets_checkout' ) ) {
+			wp_send_json_error( 'bad_nonce' );
+			exit;
+		}
+
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_totals();
 
 		$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
-		if ( 'false' === $_POST['dibs_easy'] ) {
+		$dibs_easy          = filter_input( INPUT_POST, 'dibs_easy', FILTER_SANITIZE_STRING );
+		if ( 'false' === $dibs_easy ) {
 			// Set chosen payment method to first gateway that is not DIBS Easy.
 			$first_gateway = reset( $available_gateways );
 			if ( 'dibs_easy' !== $first_gateway->id ) {
@@ -244,7 +285,11 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		wp_die();
 	}
 
-	// Helper function to prepare the cart session before processing the order form
+	/**
+	 * Helper function to prepare the cart session before processing the order form.
+	 *
+	 * @param string $country Customer country.
+	 */
 	public static function prepare_cart_before_form_processing( $country = false ) {
 		if ( $country ) {
 			WC()->customer->set_billing_country( $country );
