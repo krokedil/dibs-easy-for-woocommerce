@@ -1,9 +1,26 @@
 <?php
+/**
+ * Formats the cart items sent to Nets.
+ *
+ * @package DIBS_Easy/Classes/Requests/Helpers
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
+
+/**
+ * DIBS_Requests_Items class.
+ *
+ * Class that formats the cart items sent to Nets.
+ */
 class DIBS_Requests_Items {
 
+	/**
+	 * Gets formatted cart items.
+	 *
+	 * @return array
+	 */
 	public static function get_items() {
 		$items = array();
 
@@ -19,7 +36,7 @@ class DIBS_Requests_Items {
 			$items[] = self::get_fees( $fee );
 		}
 
-		// Get cart shipping
+		// Get cart shipping.
 		if ( WC()->cart->needs_shipping() ) {
 			$shipping = self::get_shipping();
 			if ( null !== $shipping ) {
@@ -52,6 +69,12 @@ class DIBS_Requests_Items {
 		return $items;
 	}
 
+	/**
+	 * Gets one formatted cart line item.
+	 *
+	 * @param array $cart_item The WooCommerce cart line item.
+	 * @return array
+	 */
 	public static function get_item( $cart_item ) {
 		if ( $cart_item['variation_id'] ) {
 			$product    = wc_get_product( $cart_item['variation_id'] );
@@ -74,6 +97,12 @@ class DIBS_Requests_Items {
 		);
 	}
 
+	/**
+	 * Gets one formatted cart fee item.
+	 *
+	 * @param object $fee The WooCommerce fee line item.
+	 * @return array
+	 */
 	public static function get_fees( $fee ) {
 		return array(
 			'reference'        => 'fee|' . $fee->id,
@@ -88,6 +117,11 @@ class DIBS_Requests_Items {
 		);
 	}
 
+	/**
+	 * Gets one formatted cart shipping item.
+	 *
+	 * @return array
+	 */
 	public static function get_shipping() {
 		WC()->cart->calculate_shipping();
 		$packages        = WC()->shipping->get_packages();
@@ -126,6 +160,13 @@ class DIBS_Requests_Items {
 		}
 	}
 
+	/**
+	 * Gets the sku for one item.
+	 *
+	 * @param object $product The WooCommerce product.
+	 * @param string $product_id The WooCommerce product ID.
+	 * @return string
+	 */
 	public static function get_sku( $product, $product_id ) {
 		if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
 			$part_number = $product->get_sku();

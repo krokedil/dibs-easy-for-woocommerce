@@ -1,12 +1,17 @@
 <?php
+/**
+ * Nets settings class.
+ *
+ * @package DIBS_Easy/Classes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 /**
  * Settings for Nets Easy
  */
-
 return apply_filters(
 	'dibs_easy_settings',
 	array(
@@ -110,6 +115,13 @@ return apply_filters(
 			'type'    => 'checkbox',
 			'label'   => __( 'Enable Auto-capture. If enabled Nets Easy charges your customer immediately after payment completion. Only enable for compliant products/services.', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
+		),
+		'select_another_method_text'   => array(
+			'title'       => __( 'Other payment method button text', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => __( 'Customize the <em>Select another payment method</em> button text that is displayed in checkout if using other payment methods than Nets Easy. Leave blank to use the default (and translatable) text.', 'dibs-easy-for-woocommerce' ),
+			'default'     => '',
+			'desc_tip'    => true,
 		),
 		'complete_payment_button_text' => array(
 			'title'       => __( 'Complete payment button text', 'dibs-easy-for-woocommerce' ),

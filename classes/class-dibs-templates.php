@@ -1,4 +1,10 @@
 <?php
+/**
+ * Nets templates class.
+ *
+ * @package DIBS_Easy/Classes
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -55,7 +61,7 @@ class DIBS_Templates {
 	public function override_template( $template, $template_name, $template_path ) {
 		if ( is_checkout() ) {
 
-			// Don't display DIBS Easy template if we have a cart that doesn't needs payment
+			// Don't display DIBS Easy template if we have a cart that doesn't needs payment.
 			if ( ! WC()->cart->needs_payment() ) {
 				return $template;
 			}

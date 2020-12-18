@@ -1,19 +1,49 @@
 <?php
+/**
+ * Refund order request class
+ *
+ * @package DIBS_Easy/Classes/Requests
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
+/**
+ * Post Nets refund order request class
+ */
 class DIBS_Request_Refund_Order extends DIBS_Requests2 {
 
+	/**
+	 * $order_id. WooCommerce order ID.
+	 *
+	 * @var string
+	 */
 	public $order_id;
+
+	/**
+	 * $charge_id. Nets Easy charge ID for the order.
+	 *
+	 * @var string
+	 */
 	public $charge_id;
 
+	/**
+	 * Class constructor.
+	 *
+	 * @param string $order_id WC order id.
+	 */
 	public function __construct( $order_id ) {
 		parent::__construct();
 
 		$this->order_id = $order_id;
 	}
 
+	/**
+	 * Makes the request.
+	 *
+	 * @return mixed
+	 */
 	public function request() {
 		$charge_id = get_post_meta( $this->order_id, '_dibs_charge_id', true );
 
@@ -33,18 +63,28 @@ class DIBS_Request_Refund_Order extends DIBS_Requests2 {
 		}
 	}
 
+	/**
+	 * Gets the request args for the API call.
+	 *
+	 * @return array
+	 */
 	public function get_request_args() {
 		$request_args = array(
 			'headers'    => $this->request_headers( $this->order_id ),
 			'user-agent' => $this->request_user_agent(),
 			'method'     => 'POST',
-			'body'       => json_encode( $this->request_body() ),
+			'body'       => wp_json_encode( $this->request_body() ),
 			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
 		);
-		DIBS_Easy::log( 'DIBS Refund Order request args: ' . stripslashes_deep( json_encode( $request_args ) ) );
+		DIBS_Easy::log( 'DIBS Refund Order request args: ' . stripslashes_deep( wp_json_encode( $request_args ) ) );
 		return apply_filters( 'dibs_easy_refund_order_args', $request_args );
 	}
 
+	/**
+	 * Gets the request request body.
+	 *
+	 * @return array
+	 */
 	public function request_body() {
 		$order = wc_get_order( $this->order_id );
 		return array(

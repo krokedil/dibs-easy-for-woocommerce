@@ -1,9 +1,29 @@
 <?php
+/**
+ * Formats the order information sent to Nets.
+ *
+ * @package DIBS_Easy/Classes/Requests/Helpers
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
+
+/**
+ * DIBS_Requests_Order class.
+ *
+ * Class that formats the order information sent to Nets.
+ */
 class DIBS_Requests_Order {
 
+	/**
+	 * Gets formatted order.
+	 *
+	 * @param string $checkout_flow The checkout flow selected in settings (or set in plugin for specific occations).
+	 * @param mixed  $order_id The WooCommerce order ID if one order exist.
+	 *
+	 * @return array
+	 */
 	public static function get_order( $checkout_flow = 'embedded', $order_id = null ) {
 		if ( 'embedded' === $checkout_flow ) {
 			$items = DIBS_Requests_Items::get_items();
@@ -29,6 +49,13 @@ class DIBS_Requests_Order {
 		}
 	}
 
+	/**
+	 * Gets order total by calculating the sum of all order lines.
+	 *
+	 * @param array $items The order/cart line tems.
+	 *
+	 * @return string
+	 */
 	public static function get_order_total( $items ) {
 		$amount = 0;
 		foreach ( $items as $item ) {

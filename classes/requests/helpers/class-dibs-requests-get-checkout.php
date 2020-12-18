@@ -1,9 +1,29 @@
 <?php
+/**
+ * Class that formats the checkout section.
+ *
+ * @package DIBS_Easy/Classes/Requests/Helpers
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
+
+/**
+ * DIBS_Requests_Checkout class.
+ *
+ * Class that gets the checkout data for the order.
+ */
 class DIBS_Requests_Checkout {
 
+	/**
+	 * Gets merchant checkout for Easy purchase.
+	 *
+	 * @param  string $checkout_flow Embedded or Redirect.
+	 * @param  mixed  $order_id WooCommerce order ID or null.
+	 *
+	 * @return array
+	 */
 	public static function get_checkout( $checkout_flow = 'embedded', $order_id = null ) {
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 
@@ -55,11 +75,16 @@ class DIBS_Requests_Checkout {
 				break;
 			default:
 				$checkout['consumerType']['supportedTypes'] = array( 'B2B' );
-		} // End switch().
+		}
 
 		return $checkout;
 	}
 
+	/**
+	 * Gets formatted shipping countries.
+	 *
+	 * @return array
+	 */
 	public static function get_shipping_countries() {
 		$converted_countries      = array();
 		$supported_dibs_countries = dibs_get_supported_countries();
@@ -69,13 +94,19 @@ class DIBS_Requests_Checkout {
 
 		foreach ( $countries as $country ) {
 			$converted_country = dibs_get_iso_3_country( $country );
-			if ( in_array( $converted_country, $supported_dibs_countries ) ) {
+			if ( in_array( $converted_country, $supported_dibs_countries, true ) ) {
 				$converted_countries[] = array( 'countryCode' => $converted_country );
 			}
 		}
 		return $converted_countries;
 	}
 
+	/**
+	 * Gets customer address.
+	 *
+	 * @param object $order The WooCommerce order.
+	 * @return array
+	 */
 	public static function get_consumer_address( $order ) {
 		$consumer                                    = array();
 		$consumer['email']                           = $order->get_billing_email();
@@ -101,9 +132,15 @@ class DIBS_Requests_Checkout {
 		return $consumer;
 	}
 
+	/**
+	 * Gets customer phone prefix formatted for Nets.
+	 *
+	 * @param object $order The WooCommerce order.
+	 * @return string
+	 */
 	public static function get_phone_prefix( $order ) {
 		$prefix = null;
-		if ( substr( $order->get_billing_phone(), 0, 1 ) == '+' ) {
+		if ( substr( $order->get_billing_phone(), 0, 1 ) === '+' ) {
 			$prefix = substr( $order->get_billing_phone(), 0, 3 );
 		} else {
 			$prefix = dibs_get_phone_prefix_for_country( $order->get_billing_country() );
@@ -111,9 +148,15 @@ class DIBS_Requests_Checkout {
 		return $prefix;
 	}
 
+	/**
+	 * Gets customer phone number formatted for Nets.
+	 *
+	 * @param object $order The WooCommerce order.
+	 * @return string
+	 */
 	public static function get_phone_number( $order ) {
 		$phone_number = null;
-		if ( substr( $order->get_billing_phone(), 0, 1 ) == '+' ) {
+		if ( substr( $order->get_billing_phone(), 0, 1 ) === '+' ) {
 			$phone_number = substr( $order->get_billing_phone(), strlen( self::get_phone_prefix( $order ) ) );
 			$phone_number = str_replace( ' ', '', $phone_number );
 		} else {
