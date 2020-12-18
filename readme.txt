@@ -57,6 +57,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2020.12.18    - version 1.20.4 =
+* Tweak         - Add setting for Select another payment method button text.
+
 = 2020.12.15    - version 1.20.3 =
 * Tweak         - Coding standard improvements.
 
