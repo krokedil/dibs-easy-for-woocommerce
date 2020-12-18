@@ -48,7 +48,7 @@ function wc_dibs_show_another_gateway_button() {
 		?>
 		<p style="margin-top:30px">
 			<a class="checkout-button button" href="#" id="dibs-easy-select-other">
-				<?php echo $select_another_method_text; ?>
+				<?php echo esc_html( $select_another_method_text ); ?>
 			</a>
 		</p>
 		<?php
