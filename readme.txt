@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy, nets
 Requires at least: 4.7
-Tested up to: 5.5.3
+Tested up to: 5.6
 Requires PHP: 5.6
 WC requires at least: 3.8.0
-WC tested up to: 4.7.1
+WC tested up to: 4.8.0
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -56,6 +56,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2020.12.15    - version 1.20.3 =
+* Tweak         - Coding standard improvements.
 
 = 2020.11.30    - version 1.20.2 =
 * Tweak         - Interpret and send WP locale de_CH, de_AT & de_DE_formal as German (de-DE) to Nets.

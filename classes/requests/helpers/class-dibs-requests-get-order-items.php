@@ -1,16 +1,27 @@
 <?php
+/**
+ * Formats the order items sent to Nets. Used with redirect checkout flow.
+ *
+ * @package DIBS_Easy/Classes/Requests/Helpers
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
+/**
+ * DIBS_Requests_Get_Order_Items class.
+ *
+ * Class that formats the order items sent to Nets. Used with redirect checkout flow.
+ */
 class DIBS_Requests_Get_Order_Items {
-	/**
-	 * DIBS Settings
-	 *
-	 * @var mixed
-	 */
-	// public static $dibs_settings;
 
+	/**
+	 * Gets formatted order items.
+	 *
+	 * @param string $order_id The WooCommerce order ID.
+	 * @return array
+	 */
 	public static function get_items( $order_id ) {
 		$order = wc_get_order( $order_id );
 		$items = array();
@@ -25,7 +36,7 @@ class DIBS_Requests_Get_Order_Items {
 			$items[] = self::get_fees( $order_fee );
 		}
 
-		// Get order shipping
+		// Get order shipping.
 		foreach ( $order->get_shipping_methods() as $shipping_method ) {
 			$items[] = self::get_shipping( $shipping_method );
 		}
@@ -36,6 +47,12 @@ class DIBS_Requests_Get_Order_Items {
 		return $items;
 	}
 
+	/**
+	 * Gets one formatted order line item.
+	 *
+	 * @param array $order_item The WooCommerce order line item.
+	 * @return array
+	 */
 	public static function get_item( $order_item ) {
 		$product = $order_item->get_product();
 		if ( $order_item['variation_id'] ) {
@@ -57,6 +74,12 @@ class DIBS_Requests_Get_Order_Items {
 		);
 	}
 
+	/**
+	 * Gets one formatted order fee item.
+	 *
+	 * @param object $order_fee The WooCommerce fee line item.
+	 * @return array
+	 */
 	public static function get_fees( $order_fee ) {
 		$fee_reference    = 'Fee';
 		$invoice_fee_name = '';
@@ -90,6 +113,12 @@ class DIBS_Requests_Get_Order_Items {
 		);
 	}
 
+	/**
+	 * Gets one formatted cart shipping item.
+	 *
+	 * @param object $shipping_method The WooCommerce shipping method line item.
+	 * @return array
+	 */
 	public static function get_shipping( $shipping_method ) {
 		$order_id = $shipping_method->get_order_id();
 
@@ -123,6 +152,13 @@ class DIBS_Requests_Get_Order_Items {
 		);
 	}
 
+	/**
+	 * Gets the sku for one item.
+	 *
+	 * @param object $product The WooCommerce product.
+	 * @param string $product_id The WooCommerce product ID.
+	 * @return string
+	 */
 	public static function get_sku( $product, $product_id ) {
 		if ( is_object( $product ) ) {
 			if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
@@ -136,6 +172,14 @@ class DIBS_Requests_Get_Order_Items {
 		}
 	}
 
+	/**
+	 * Process gift cards.
+	 *
+	 * @param string $order_id The WooCommerce order ID.
+	 * @param object $order The WooCommerce order.
+	 * @param array  $items The items about to be sent to Nets.
+	 * @return array
+	 */
 	public static function process_gift_cards( $order_id, $order, $items ) {
 
 		$yith_giftcards = get_post_meta( $order_id, '_ywgc_applied_gift_cards', true );
