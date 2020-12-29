@@ -57,6 +57,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2020.12.29    - version 1.20.5 =
+* Fix           - Fix email line break bug. Introduced in previous coding standard update.
+
 = 2020.12.18    - version 1.20.4 =
 * Tweak         - Add setting for Select another payment method button text.
 
