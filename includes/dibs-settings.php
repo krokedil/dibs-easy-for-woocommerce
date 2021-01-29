@@ -28,9 +28,9 @@ return apply_filters(
 			'default'     => __( 'Nets Easy', 'dibs-easy-for-woocommerce' ),
 		),
 		'merchant_number'              => array(
-			'title'       => __( 'Merchant Number', 'dibs-easy-for-woocommerce' ),
+			'title'       => __( 'Merchant ID', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Use Merchant number if you are a partner and initiating the checkout with your partner keys.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'The stores Nets Easy Merchant ID. Only required if you are a partner and initiating the checkout with your partner keys.', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 		),
 		'dibs_live_key'                => array(
