@@ -22,10 +22,11 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 	 */
 	public function __construct( $checkout_flow = 'embedded', $order_id = null ) {
 		parent::__construct();
-		$this->checkout_flow  = $checkout_flow;
-		$this->order_id       = $order_id;
-		$this->settings       = get_option( 'woocommerce_dibs_easy_settings' );
-		$this->invoice_fee_id = isset( $this->settings['dibs_invoice_fee'] ) ? $this->settings['dibs_invoice_fee'] : '';
+		$this->checkout_flow   = $checkout_flow;
+		$this->order_id        = $order_id;
+		$this->settings        = get_option( 'woocommerce_dibs_easy_settings' );
+		$this->invoice_fee_id  = isset( $this->settings['dibs_invoice_fee'] ) ? $this->settings['dibs_invoice_fee'] : '';
+		$this->merchant_number = isset( $this->settings['merchant_number'] ) ? $this->settings['merchant_number'] : '';
 	}
 
 	/**
@@ -79,6 +80,10 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 
 		if ( $this->invoice_fee_id ) {
 			$request_args['paymentMethods'] = DIBS_Requests_Payment_Methods::get_invoice_fees();
+		}
+
+		if ( $this->merchant_number ) {
+			$request_args['merchantNumber'] = $this->merchant_number;
 		}
 
 		return apply_filters( 'dibs_easy_create_order_args', $request_args );

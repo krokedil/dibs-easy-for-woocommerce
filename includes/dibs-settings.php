@@ -27,6 +27,12 @@ return apply_filters(
 			'description' => __( 'This is the title that the user sees on the checkout page for Nets Easy.', 'dibs-easy-for-woocommerce' ),
 			'default'     => __( 'Nets Easy', 'dibs-easy-for-woocommerce' ),
 		),
+		'merchant_number'              => array(
+			'title'       => __( 'Merchant ID', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => __( 'The stores Nets Easy Merchant ID. Only required if you are a partner and initiating the checkout with your partner keys.', 'dibs-easy-for-woocommerce' ),
+			'default'     => '',
+		),
 		'dibs_live_key'                => array(
 			'title'       => __( 'Live Secret key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',

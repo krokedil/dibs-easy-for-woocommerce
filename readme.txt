@@ -3,9 +3,9 @@ Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy, nets
 Requires at least: 4.7
 Tested up to: 5.6
-Requires PHP: 5.6
+Requires PHP: 5.6.1
 WC requires at least: 3.8.0
-WC tested up to: 4.8.0
+WC tested up to: 4.9.2
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -56,6 +56,11 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2021.02.05    - version 1.21.0 =
+* Feature       - Add Merchant Number setting. Only required if you are a partner and initiating the checkout with your partner keys.
+* Tweak         - Only send phone number to Nets if it exist in the WC order (for redirect flow).
+* Fix           - Change subscription time to 5 years. Caused issue with some card processors.
 
 = 2020.12.29    - version 1.20.5 =
 * Fix           - Fix email line break bug. Introduced in previous coding standard update.
