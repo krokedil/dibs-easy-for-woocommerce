@@ -46,7 +46,7 @@ class DIBS_Subscriptions {
 		// Check if we have a subscription product. If yes set recurring field.
 		if ( class_exists( 'WC_Subscriptions_Cart' ) && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
 			$request_args['subscription'] = array(
-				'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+150 year' ) ),
+				'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+5 year' ) ),
 				'interval' => 0,
 			);
 		}
@@ -103,7 +103,7 @@ class DIBS_Subscriptions {
 						unset( $request_args['notifications'] );
 
 						$request_args['subscription'] = array(
-							'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+150 year' ) ),
+							'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+5 year' ) ),
 							'interval' => 0,
 						);
 					}
