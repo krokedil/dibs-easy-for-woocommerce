@@ -94,6 +94,7 @@ class DIBS_Post_Checkout {
 					$this->charge_failed( $wc_order, true, $message );
 
 				} elseif ( array_key_exists( 'code', $request ) && '1001' === $request->code ) { // Set order as completed if order has already been charged.
+					// @todo - set status to on hold if WC order total and Nets order total don't match.
 					$wc_order->add_order_note( sprintf( __( 'Nets error message: %s', 'dibs-easy-for-woocommerce' ), $request->message ) ); // phpcs:ignore
 				} else {
 					$this->charge_failed( $wc_order );

@@ -47,6 +47,12 @@ class DIBS_Request_Refund_Order extends DIBS_Requests2 {
 	public function request() {
 		$charge_id = get_post_meta( $this->order_id, '_dibs_charge_id', true );
 
+		if ( empty( $purchase_id ) ) {
+			$order = wc_get_order( $this->order_id );
+			$order->add_order_note( __( 'Nets Easy order could not be refunded. Missing Charge id.', 'dibs-easy-for-woocommerce' ) );
+			return;
+		}
+
 		$request_url  = $this->endpoint . 'charges/' . $charge_id . '/refunds';
 		$request_args = $this->get_request_args();
 		$response     = wp_remote_request( $request_url, $request_args );
