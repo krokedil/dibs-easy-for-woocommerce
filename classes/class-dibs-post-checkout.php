@@ -94,7 +94,7 @@ class DIBS_Post_Checkout {
 					$this->charge_failed( $wc_order, true, $message );
 
 				} elseif ( array_key_exists( 'code', $request ) && '1001' === $request->code ) { // Set order as completed if order has already been charged.
-					$wc_order->add_order_note( __( 'Payment already charged in Nets', 'dibs-easy-for-woocommerce' ) );
+					$wc_order->add_order_note( sprintf( __( 'Nets error message: %s', 'dibs-easy-for-woocommerce' ), $request->message ) ); // phpcs:ignore
 				} else {
 					$this->charge_failed( $wc_order );
 				}
@@ -156,4 +156,3 @@ class DIBS_Post_Checkout {
 		}
 	}
 }
-$dibs_post_checkout = new DIBS_Post_Checkout();
