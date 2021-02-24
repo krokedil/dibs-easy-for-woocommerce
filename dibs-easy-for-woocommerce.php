@@ -49,13 +49,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		protected static $instance;
 
 		/**
-		 * Reference to logging class.
-		 *
-		 * @var $log
-		 */
-		public static $log = '';
-
-		/**
 		 * Reference to dibs_settings.
 		 *
 		 * @var $dibs_settings
@@ -120,6 +113,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-admin-notices.php' );
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
 			include_once plugin_basename( 'classes/class-dibs-confirmation.php' );
+			include_once plugin_basename( 'classes/class-dibs-logger.php' );
 
 			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 
@@ -166,6 +160,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			// Set variables for shorthand access to classes.
 			$this->order_management = new DIBS_Post_Checkout();
+			$this->logger           = new DIBS_Logger();
 
 		}
 
@@ -345,21 +340,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 
 		/**
-		 * Log function. Log messages to file.
-		 *
-		 * @param string $message Data to log.
-		 */
-		public static function log( $message ) {
-			$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-			if ( 'yes' === $dibs_settings['debug_mode'] ) {
-				if ( empty( self::$log ) ) {
-					self::$log = new WC_Logger();
-				}
-				self::$log->add( 'dibs_easy', $message );
-			}
-		}
-
-		/**
 		 * Saves DIBS data to WooCommerce order as meta field.
 		 *
 		 * @param string $order_id WooCommerce order id.
@@ -367,7 +347,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		public function save_dibs_order_data( $order_id, $data ) {
 			$payment_id = filter_input( INPUT_POST, 'dibs_payment_id', FILTER_SANITIZE_STRING );
-			self::log( 'Saving Nets meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
+			Nets_Easy()->logger->log( 'Saving Nets meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
 			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		}
 	}

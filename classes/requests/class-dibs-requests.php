@@ -92,7 +92,7 @@ class DIBS_Requests2 {
 		$errors = new WP_Error();
 		$errors->add( 'dibs_easy', $response_body );
 
-		DIBS_Easy::log( 'DIBS Error Response: ' . stripslashes_deep( wp_json_encode( $response_body ) ) );
+		Nets_Easy()->logger->log( 'DIBS Error Response: ' . stripslashes_deep( wp_json_encode( $response_body ) ) );
 		return $errors;
 	}
 }

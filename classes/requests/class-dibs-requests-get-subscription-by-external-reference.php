@@ -48,7 +48,7 @@ class DIBS_Request_Get_Subscription_By_External_Reference extends DIBS_Requests2
 	public function request() {
 		$request_url  = $this->endpoint . 'subscriptions?externalreference=' . $this->external_reference;
 		$request_args = $this->get_request_args();
-		DIBS_Easy::log( 'DIBS Get Subscription by externalreference args (' . $request_url . '): ' . stripslashes_deep( wp_json_encode( $request_args ) ) );
+		Nets_Easy()->logger->log( 'DIBS Get Subscription by externalreference args (' . $request_url . '): ' . stripslashes_deep( wp_json_encode( $request_args ) ) );
 
 		$response = wp_remote_request( $request_url, $this->get_request_args() );
 		if ( is_wp_error( $response ) ) {
@@ -56,7 +56,7 @@ class DIBS_Request_Get_Subscription_By_External_Reference extends DIBS_Requests2
 		}
 
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
-			DIBS_Easy::log( 'DIBS Get Subscription by externalreference response: ' . stripslashes_deep( wp_json_encode( $response ) ) );
+			Nets_Easy()->logger->log( 'DIBS Get Subscription by externalreference response: ' . stripslashes_deep( wp_json_encode( $response ) ) );
 			return json_decode( wp_remote_retrieve_body( $response ) );
 		} else {
 			return $this->get_error_message( $response );

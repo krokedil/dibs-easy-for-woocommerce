@@ -70,7 +70,7 @@ class DIBS_Api_Callbacks {
 	 */
 	public function execute_dibs_payment_created_callback( $data, $order_id = '' ) {
 
-		DIBS_Easy::log( 'Payment created API callback. Response data:' . wp_json_encode( $data ) );
+		Nets_Easy()->logger->log( 'Payment created API callback. Response data:' . wp_json_encode( $data ) );
 		if ( empty( $order_id ) ) {
 			// We're missing Order ID in callback. Try to get it via query by internal reference.
 			$order_id = $this->get_order_id_from_payment_id( $data['data']['paymentId'] );
@@ -82,7 +82,7 @@ class DIBS_Api_Callbacks {
 
 		} else { // We can't find a coresponding Order ID.
 
-			DIBS_Easy::log( 'No coresponding order ID was found for Payment ID ' . $data['data']['paymentId'] );
+			Nets_Easy()->logger->log( 'No coresponding order ID was found for Payment ID ' . $data['data']['paymentId'] );
 			// Backup order creation.
 			if ( ! empty( $data['data']['paymentId'] ) ) {
 				$this->backup_order_creation( $data );
@@ -118,7 +118,7 @@ class DIBS_Api_Callbacks {
 
 			if ( $order_payment_id === $payment_id ) {
 				$order_id_match = $order_id;
-				DIBS_Easy::log( 'Payment ID ' . $payment_id . ' already exist in order ID ' . $order_id_match );
+				Nets_Easy()->logger->log( 'Payment ID ' . $payment_id . ' already exist in order ID ' . $order_id_match );
 				break;
 			}
 		}
@@ -176,7 +176,7 @@ class DIBS_Api_Callbacks {
 			update_post_meta( $order->get_id(), '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
 			$order->payment_complete( $data['data']['paymentId'] );
 			$order->add_order_note( 'Payment via Nets Easy. Order status updated via API callback. Payment ID: ' . sanitize_key( $data['data']['paymentId'] ) );
-			DIBS_Easy::log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
+			Nets_Easy()->logger->log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
 
 			// Auto capture order if activated in settings.
 			if ( 'yes' === $auto_capture ) {
@@ -202,12 +202,12 @@ class DIBS_Api_Callbacks {
 		if ( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
 			/* Translators: Nets order total. */
 			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
-			DIBS_Easy::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
+			Nets_Easy()->logger->log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
 			$order_totals_match = false;
 		} elseif ( $dibs_order_total > $woo_order_total && ( $dibs_order_total - $woo_order_total ) > 30 ) {
 			/* Translators: Nets order total. */
 			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
-			DIBS_Easy::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
+			Nets_Easy()->logger->log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
 			$order_totals_match = false;
 		}
 
@@ -255,9 +255,9 @@ class DIBS_Api_Callbacks {
 		$order = wc_create_order( array( 'status' => 'pending' ) );
 
 		if ( is_wp_error( $order ) ) {
-			DIBS_Easy::log( 'Backup order creation. Error - could not create order. ' . wp_json_encode( $order->get_error_message() ) );
+			Nets_Easy()->logger->log( 'Backup order creation. Error - could not create order. ' . wp_json_encode( $order->get_error_message() ) );
 		} else {
-			DIBS_Easy::log( 'Backup order creation - order ID - ' . $order->get_id() . ' - created.' );
+			Nets_Easy()->logger->log( 'Backup order creation - order ID - ' . $order->get_id() . ' - created.' );
 		}
 
 		$order_id = $order->get_id();
@@ -367,7 +367,7 @@ class DIBS_Api_Callbacks {
 	 * @throws Exception WC_Data_Exception.
 	 */
 	private function process_order_lines( $dibs_checkout_completed_order, $order ) {
-		DIBS_Easy::log( 'Processing order lines (from Nets order) during backup order creation for Nets payment ID ' . $dibs_checkout_completed_order['data']['paymentId'] );
+		Nets_Easy()->logger->log( 'Processing order lines (from Nets order) during backup order creation for Nets payment ID ' . $dibs_checkout_completed_order['data']['paymentId'] );
 		foreach ( $dibs_checkout_completed_order['data']['order']['orderItems'] as $cart_item ) {
 
 			if ( strpos( $cart_item['reference'], 'shipping|' ) !== false ) {
@@ -405,7 +405,7 @@ class DIBS_Api_Callbacks {
 					$fee->set_props( $args );
 					$order->add_item( $fee );
 				} catch ( Exception $e ) {
-					DIBS_Easy::log( 'Backup order creation error add fee error: ' . $e->getCode() . ' - ' . $e->getMessage() );
+					Nets_Easy()->logger->log( 'Backup order creation error add fee error: ' . $e->getCode() . ' - ' . $e->getMessage() );
 				}
 			} else {
 				// Product items.
@@ -436,7 +436,7 @@ class DIBS_Api_Callbacks {
 					$item->save();
 					$order->add_item( $item );
 				} catch ( Exception $e ) {
-					DIBS_Easy::log( 'Backup order creation error add to cart error: ' . $e->getCode() . ' - ' . $e->getMessage() );
+					Nets_Easy()->logger->log( 'Backup order creation error add to cart error: ' . $e->getCode() . ' - ' . $e->getMessage() );
 				}
 			}
 		}
