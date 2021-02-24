@@ -46,11 +46,14 @@ class DIBS_Requests_Get_DIBS_Order extends DIBS_Requests2 {
 	 * @return mixed
 	 */
 	public function request() {
-		$request_url = $this->endpoint . 'payments/' . $this->payment_id;
+		$request_url  = $this->endpoint . 'payments/' . $this->payment_id;
+		$request_args = $this->get_request_args();
+		$response     = wp_remote_request( $request_url, $request_args );
+		$code         = wp_remote_retrieve_response_code( $response );
 
-		$response = wp_remote_request( $request_url, $this->get_request_args() );
-
-		DIBS_Easy::log( 'DIBS GET Order response (' . $request_url . '): ' . stripslashes_deep( wp_json_encode( $response ) ) );
+		// Log the request.
+		$log = Nets_Easy()->logger->format_log( $this->payment_id, 'GET', 'Nets get checkout', $request_args, $request_url, json_decode( wp_remote_retrieve_body( $response ), true ), $code );
+		Nets_Easy()->logger->log( $log );
 
 		if ( is_wp_error( $response ) ) {
 			return $this->get_error_message( $response );
@@ -75,8 +78,6 @@ class DIBS_Requests_Get_DIBS_Order extends DIBS_Requests2 {
 			'method'     => 'GET',
 			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
 		);
-		DIBS_Easy::log( 'DIBS Get Order request args: ' . stripslashes_deep( wp_json_encode( $request_args ) ) );
-
 		return $request_args;
 	}
 }

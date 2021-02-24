@@ -8,15 +8,15 @@
  * Plugin Name:             Nets Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/dibs/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
- * Version:                 1.21.0
+ * Version:                 1.21.1
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
  * Developer URI:           https://krokedil.se/
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
- * WC requires at least:    3.8.0
- * WC tested up to:         4.9.2
+ * WC requires at least:    4.0.0
+ * WC tested up to:         5.0.0
  * Copyright:               © 2017-2021 Krokedil AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '1.21.0' );
+define( 'WC_DIBS_EASY_VERSION', '1.21.1' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -47,13 +47,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * @var $instance
 		 */
 		protected static $instance;
-
-		/**
-		 * Reference to logging class.
-		 *
-		 * @var $log
-		 */
-		public static $log = '';
 
 		/**
 		 * Reference to dibs_settings.
@@ -120,6 +113,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-admin-notices.php' );
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
 			include_once plugin_basename( 'classes/class-dibs-confirmation.php' );
+			include_once plugin_basename( 'classes/class-dibs-logger.php' );
 
 			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 
@@ -166,6 +160,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			// Set variables for shorthand access to classes.
 			$this->order_management = new DIBS_Post_Checkout();
+			$this->logger           = new DIBS_Logger();
 
 		}
 
@@ -345,21 +340,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 
 		/**
-		 * Log function. Log messages to file.
-		 *
-		 * @param string $message Data to log.
-		 */
-		public static function log( $message ) {
-			$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-			if ( 'yes' === $dibs_settings['debug_mode'] ) {
-				if ( empty( self::$log ) ) {
-					self::$log = new WC_Logger();
-				}
-				self::$log->add( 'dibs_easy', $message );
-			}
-		}
-
-		/**
 		 * Saves DIBS data to WooCommerce order as meta field.
 		 *
 		 * @param string $order_id WooCommerce order id.
@@ -367,7 +347,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		public function save_dibs_order_data( $order_id, $data ) {
 			$payment_id = filter_input( INPUT_POST, 'dibs_payment_id', FILTER_SANITIZE_STRING );
-			self::log( 'Saving Nets meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
+			Nets_Easy()->logger->log( 'Saving Nets meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
 			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		}
 	}

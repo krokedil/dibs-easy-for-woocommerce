@@ -65,6 +65,13 @@ class DIBS_Post_Checkout {
 				return;
 			}
 
+			// Bail if order total is 0. Can happen for 0 value initial subscription orders.
+			if ( round( 0, 2 ) === round( $wc_order->get_total(), 2 ) ) {
+				/* Translators: WC order total for the order. */
+				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nets system since the order total is %s.', 'dibs-easy-for-woocommerce' ), $wc_order->get_total() ) );
+				return;
+			}
+
 			$request = new DIBS_Requests_Activate_Order( $order_id );
 			$request = json_decode( $request->request() );
 
@@ -87,7 +94,8 @@ class DIBS_Post_Checkout {
 					$this->charge_failed( $wc_order, true, $message );
 
 				} elseif ( array_key_exists( 'code', $request ) && '1001' === $request->code ) { // Set order as completed if order has already been charged.
-					$wc_order->add_order_note( __( 'Payment already charged in Nets', 'dibs-easy-for-woocommerce' ) );
+					// @todo - set status to on hold if WC order total and Nets order total don't match.
+					$wc_order->add_order_note( sprintf( __( 'Nets error message: %s', 'dibs-easy-for-woocommerce' ), $request->message ) ); // phpcs:ignore
 				} else {
 					$this->charge_failed( $wc_order );
 				}
@@ -149,4 +157,3 @@ class DIBS_Post_Checkout {
 		}
 	}
 }
-$dibs_post_checkout = new DIBS_Post_Checkout();

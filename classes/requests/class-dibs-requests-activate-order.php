@@ -39,10 +39,16 @@ class DIBS_Requests_Activate_Order extends DIBS_Requests2 {
 	 */
 	public function request() {
 
-		$order       = wc_get_order( $this->order_id );
-		$payment_id  = $order->get_transaction_id();
-		$request_url = $this->endpoint . 'payments/' . $payment_id . '/charges';
-		$response    = wp_remote_request( $request_url, $this->get_request_args() );
+		$order        = wc_get_order( $this->order_id );
+		$payment_id   = $order->get_transaction_id();
+		$request_url  = $this->endpoint . 'payments/' . $payment_id . '/charges';
+		$request_args = $this->get_request_args();
+		$response     = wp_remote_request( $request_url, $request_args );
+		$code         = wp_remote_retrieve_response_code( $response );
+
+		// Log the request.
+		$log = Nets_Easy()->logger->format_log( $payment_id, 'POST', 'Nets activate order', $request_args, $request_url, json_decode( wp_remote_retrieve_body( $response ), true ), $code );
+		Nets_Easy()->logger->log( $log );
 
 		if ( is_wp_error( $response ) ) {
 			$this->get_error_message( $response );
@@ -70,7 +76,6 @@ class DIBS_Requests_Activate_Order extends DIBS_Requests2 {
 			'body'       => wp_json_encode( $this->request_body() ),
 			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
 		);
-		DIBS_Easy::log( 'DIBS Activate Order request args: ' . wp_json_encode( $request_args ) );
 		return apply_filters( 'dibs_easy_activate_order_args', $request_args );
 	}
 

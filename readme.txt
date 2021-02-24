@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy, nets
 Requires at least: 4.7
-Tested up to: 5.6
-Requires PHP: 5.6.1
-WC requires at least: 3.8.0
-WC tested up to: 4.9.2
+Tested up to: 5.6.2
+Requires PHP: 5.6
+WC requires at least: 4.0.0
+WC tested up to: 5.0.0
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -56,6 +56,14 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2021.02.24    - version 1.21.1 =
+* Tweak         - Improved logging. Move logging logic to separate class.
+* Tweak         - Log file now named nets_easy in WooCommerce admin.
+* Tweak         - Display the returned error message in order note if error code 1001 is returned in charge request.
+* Fix           - Don't trigger a charge/activation request to Nets if WC order total is 0.
+* Fix           - Add order note if missing charge id in refund request.
+* Fix           - Don't try to instantiate Post_Checkout class twice.
 
 = 2021.02.05    - version 1.21.0 =
 * Feature       - Add Merchant Number setting. Only required if you are a partner and initiating the checkout with your partner keys.
