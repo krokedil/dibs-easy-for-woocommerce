@@ -65,6 +65,13 @@ class DIBS_Post_Checkout {
 				return;
 			}
 
+			// Bail if order total is 0. Can happen for 0 value initial subscription orders.
+			if ( round( 0, 2 ) === round( $wc_order->get_total(), 2 ) ) {
+				/* Translators: WC order total for the order. */
+				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nets system since the order total is %s.', 'dibs-easy-for-woocommerce' ), $wc_order->get_total() ) );
+				return;
+			}
+
 			$request = new DIBS_Requests_Activate_Order( $order_id );
 			$request = json_decode( $request->request() );
 
