@@ -55,7 +55,7 @@ class DIBS_Easy_Admin_Notices {
 		if ( ! wc_get_page_id( 'terms' ) || wc_get_page_id( 'terms' ) < 0 ) {
 			echo '<div class="notice notice-error">';
 			/* Translators: url to Woocommerce docs */
-			echo '<p>' . wp_kses_post( sprintf( __( 'You need to <a href="%s" target="_blank">specify a terms page</a> in WooCommerce Settings to be able to use Nets Easy.', 'dibs-easy-for-woocommerce' ), 'https://docs.woocommerce.com/document/configuring-woocommerce-settings/#section-14' ) ) . '</p>';
+			echo '<p>' . wp_kses_post( sprintf( __( 'You need to <a href="%s" target="_blank">specify a terms page</a> in WooCommerce Settings to be able to use Nets Easy.', 'dibs-easy-for-woocommerce' ), 'https://docs.woocommerce.com/document/configuring-woocommerce-settings/#section-25' ) ) . '</p>';
 			echo '</div>';
 		}
 	}
