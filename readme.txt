@@ -60,7 +60,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 = 2021.03.05    - version 1.21.2 =
 * Tweak         - Updated url to WooCommerce.com docs about configuring terms page.
 * Fix           - Charge id check resulted in refunds not working properly.
-* Fix           - PHP notice fix in admin noticces class.
+* Fix           - PHP notice fix in admin notices class.
 
 = 2021.02.24    - version 1.21.1 =
 * Tweak         - Improved logging. Move logging logic to separate class.
