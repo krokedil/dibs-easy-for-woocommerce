@@ -26,7 +26,7 @@ class DIBS_Post_Checkout {
 	 */
 	public function __construct() {
 		$dibs_settings       = get_option( 'woocommerce_dibs_easy_settings' );
-		$this->manage_orders = $dibs_settings['dibs_manage_orders'];
+		$this->manage_orders = isset( $dibs_settings['dibs_manage_orders'] ) ? $dibs_settings['dibs_manage_orders'] : '';
 		if ( 'yes' === $this->manage_orders ) {
 			add_action( 'woocommerce_order_status_completed', array( $this, 'dibs_order_completed' ) );
 			add_action( 'woocommerce_order_status_cancelled', array( $this, 'dibs_order_canceled' ) );
