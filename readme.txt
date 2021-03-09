@@ -2,7 +2,7 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy, nets
 Requires at least: 4.7
-Tested up to: 5.6.2
+Tested up to: 5.7
 Requires PHP: 5.6
 WC requires at least: 4.0.0
 WC tested up to: 5.0.0
@@ -56,6 +56,10 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2021.03.09    - version 1.22.0 =
+* Tweak         - Remove backup order creation feature. WooCommerce order should always be created on pay-initialized JS event.
+* Fix           - Modify filter woocommerce_order_needs_payment so recurring token is saved in WooCommerce subscription even if initial order contain a recurring coupon that results in a 0 value order.
 
 = 2021.03.05    - version 1.21.2 =
 * Tweak         - Updated url to WooCommerce.com docs about configuring terms page.

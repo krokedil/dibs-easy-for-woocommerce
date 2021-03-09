@@ -85,7 +85,8 @@ class DIBS_Api_Callbacks {
 			Nets_Easy()->logger->log( 'No coresponding order ID was found for Payment ID ' . $data['data']['paymentId'] );
 			// Backup order creation.
 			if ( ! empty( $data['data']['paymentId'] ) ) {
-				$this->backup_order_creation( $data );
+				// @todo - remove all reference to backup order creation process.
+				// $this->backup_order_creation( $data );
 			}
 		}
 	}
