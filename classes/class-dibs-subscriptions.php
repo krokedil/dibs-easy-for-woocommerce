@@ -34,6 +34,8 @@ class DIBS_Subscriptions {
 
 		add_action( 'init', array( $this, 'dibs_payment_method_changed' ) );
 
+		add_filter( 'woocommerce_order_needs_payment', array( $this, 'maybe_change_needs_payment' ), 999, 3 );
+
 	}
 
 	/**
@@ -315,6 +317,40 @@ class DIBS_Subscriptions {
 			}
 		}
 
+	}
+
+	/**
+	 * Maybe change the needs payment for a WooCommerce order.
+	 * Used to trigger process_payment for subscrition parent orders with a recurring coupon that results in a 0 value order.
+	 *
+	 * @param bool     $wc_result The result WooCommerce had.
+	 * @param WC_Order $order The WooCommerce order.
+	 * @param array    $valid_order_statuses The valid order statuses.
+	 * @return bool
+	 */
+	public function maybe_change_needs_payment( $wc_result, $order, $valid_order_statuses ) {
+
+		// Only change for Nets Easy orders.
+		if ( 'dibs_easy' !== $order->get_payment_method() ) {
+			return $wc_result;
+		}
+
+		// Only change for subscription orders.
+		if ( ! $this->has_subscription( $order->get_id() ) ) {
+			return $wc_result;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Is $order_id a subscription?
+	 *
+	 * @param  int $order_id WooCommerce order id.
+	 * @return boolean
+	 */
+	public function has_subscription( $order_id ) {
+		return ( function_exists( 'wcs_order_contains_subscription' ) && ( wcs_order_contains_subscription( $order_id ) || wcs_is_subscription( $order_id ) || wcs_order_contains_renewal( $order_id ) ) );
 	}
 }
 new DIBS_Subscriptions();
