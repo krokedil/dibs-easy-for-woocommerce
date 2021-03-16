@@ -1,12 +1,12 @@
 <?php // phpcs:ignore
 /**
- * DIBS Easy for WooCommerce
+ * Nets Easy for WooCommerce
  *
  * @package WC_Dibs_Easy
  *
  * @wordpress-plugin
  * Plugin Name:             Nets Easy for WooCommerce
- * Plugin URI:              https://krokedil.se/dibs/
+ * Plugin URI:              https://krokedil.se/produkt/nets-easy/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
  * Version:                 1.22.0
  * Author:                  Krokedil

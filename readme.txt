@@ -25,9 +25,9 @@ https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 *Easy administration* - Track sales in our user-friendly administration portal and get all payments collected in a report. It saves time in account reconsiliation and bookkeeping.
 
 = Get started =
-To get started with Nets Easy you need to [sign up](http://www.dibs.se/easy-se) for an account.
+To get started with Nets Easy you need to [sign up](https://www.nets.eu/en/payments/online/) for an account.
 
-More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 = Connect Easy to your webshop by setting up a test account. It is free and created immediately =
 With a test account, you will see how the Easy administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).  
@@ -38,8 +38,8 @@ With a test account, you will see how the Easy administration portal works. In t
 2. If you use the WordPress plugin uploader to install this plugin skip to step 4.
 3. Upload the entire plugin directory to your /wp-content/plugins/ directory.
 4. Activate the plugin through the 'Plugins' menu in WordPress Administration.
-5. Go WooCommerce Settings --> Payment Gateways and configure your DIBS Easy settings.
-6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+5. Go WooCommerce Settings --> Payment Gateways and configure your Nets Easy settings.
+6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 
 == Frequently Asked Questions ==
@@ -47,7 +47,7 @@ With a test account, you will see how the Easy administration portal works. In t
 Available for merchants in Denmark, Sweden and Norway.
 
 = Where can I find Nets Easy for WooCommerce documentation? =
-For help setting up and configuring Nets Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+For help setting up and configuring Nets Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 = Are there any specific requirements? =
 * WooCommerce 3.5 or newer is required.
