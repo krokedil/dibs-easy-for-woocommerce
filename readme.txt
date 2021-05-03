@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy, nets
 Requires at least: 4.7
-Tested up to: 5.7
+Tested up to: 5.7.1
 Requires PHP: 5.6
 WC requires at least: 4.0.0
-WC tested up to: 5.0.0
+WC tested up to: 5.2.2
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -56,6 +56,14 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2021.05.03    - version 1.23.0 =
+* Feature       - Updated countries supported by Nets (https://tech.dibspayment.com/easy/api/datastring-parameters).
+* Tweak         - Change DIBS to Nets in readme and settings.
+* Tweak         - Remove old/unused code related to backup order creation.
+* Tweak         - Remove code for saving order note field & extra checkout field data in session storage. Not needed in current embedded checkout flow.
+* Fix           - Improved logic for handling payment processing on API callback. Fixes issues with Swish/Vipps payments where customer never returns to store/browser after completed payment. 
+* Fix           - Improve function get_order_id_from_payment_id. Don't try to make a query to db if missing payment_id.
 
 = 2021.03.09    - version 1.22.0 =
 * Tweak         - Remove backup order creation feature. WooCommerce order should always be created on pay-initialized JS event.
