@@ -89,7 +89,7 @@ return apply_filters(
 		'dibs_manage_orders'           => array(
 			'title'   => __( 'Manage orders', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable WooCommerce to manage orders in DIBS Easys backend', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable WooCommerce to manage orders in Nets Easy backend', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'debug_mode'                   => array(

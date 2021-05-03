@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy, nets
 Requires at least: 4.7
-Tested up to: 5.7
+Tested up to: 5.7.1
 Requires PHP: 5.6
 WC requires at least: 4.0.0
-WC tested up to: 5.0.0
+WC tested up to: 5.2.2
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -25,9 +25,9 @@ https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 *Easy administration* - Track sales in our user-friendly administration portal and get all payments collected in a report. It saves time in account reconsiliation and bookkeeping.
 
 = Get started =
-To get started with Nets Easy you need to [sign up](http://www.dibs.se/easy-se) for an account.
+To get started with Nets Easy you need to [sign up](https://www.nets.eu/en/payments/online/) for an account.
 
-More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 = Connect Easy to your webshop by setting up a test account. It is free and created immediately =
 With a test account, you will see how the Easy administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).  
@@ -38,8 +38,8 @@ With a test account, you will see how the Easy administration portal works. In t
 2. If you use the WordPress plugin uploader to install this plugin skip to step 4.
 3. Upload the entire plugin directory to your /wp-content/plugins/ directory.
 4. Activate the plugin through the 'Plugins' menu in WordPress Administration.
-5. Go WooCommerce Settings --> Payment Gateways and configure your DIBS Easy settings.
-6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+5. Go WooCommerce Settings --> Payment Gateways and configure your Nets Easy settings.
+6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 
 == Frequently Asked Questions ==
@@ -47,7 +47,7 @@ With a test account, you will see how the Easy administration portal works. In t
 Available for merchants in Denmark, Sweden and Norway.
 
 = Where can I find Nets Easy for WooCommerce documentation? =
-For help setting up and configuring Nets Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/dibs-easy-for-woocommerce/).
+For help setting up and configuring Nets Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 = Are there any specific requirements? =
 * WooCommerce 3.5 or newer is required.
@@ -56,6 +56,14 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2021.05.03    - version 1.23.0 =
+* Feature       - Updated countries supported by Nets (https://tech.dibspayment.com/easy/api/datastring-parameters).
+* Tweak         - Change DIBS to Nets in readme and settings.
+* Tweak         - Remove old/unused code related to backup order creation.
+* Tweak         - Remove code for saving order note field & extra checkout field data in session storage. Not needed in current embedded checkout flow.
+* Fix           - Improved logic for handling payment processing on API callback. Fixes issues with Swish/Vipps payments where customer never returns to store/browser after completed payment. 
+* Fix           - Improve function get_order_id_from_payment_id. Don't try to make a query to db if missing payment_id.
 
 = 2021.03.09    - version 1.22.0 =
 * Tweak         - Remove backup order creation feature. WooCommerce order should always be created on pay-initialized JS event.

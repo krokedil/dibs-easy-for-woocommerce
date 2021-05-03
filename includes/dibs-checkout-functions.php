@@ -274,13 +274,15 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
  * @return void
  */
 function wc_dibs_save_shipping_reference_to_order( $order_id ) {
-	$packages        = WC()->shipping->get_packages();
-	$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
-	$chosen_shipping = $chosen_methods[0];
-	foreach ( $packages as $i => $package ) {
-		foreach ( $package['rates'] as $method ) {
-			if ( $chosen_shipping === $method->id ) {
-				update_post_meta( $order_id, '_nets_shipping_reference', 'shipping|' . $method->id );
+	if ( method_exists( WC()->session, 'get' ) ) {
+		$packages        = WC()->shipping->get_packages();
+		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
+		$chosen_shipping = $chosen_methods[0];
+		foreach ( $packages as $i => $package ) {
+			foreach ( $package['rates'] as $method ) {
+				if ( $chosen_shipping === $method->id ) {
+					update_post_meta( $order_id, '_nets_shipping_reference', 'shipping|' . $method->id );
+				}
 			}
 		}
 	}

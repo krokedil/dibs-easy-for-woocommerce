@@ -8,9 +8,7 @@ jQuery(function($) {
         
         // Extra checkout fields.
 		blocked: false,
-		extraFieldsSelectorText: 'div#dibs-extra-checkout-fields input[type="text"], div#dibs-extra-checkout-fields input[type="password"], div#dibs-extra-checkout-fields textarea, div#dibs-extra-checkout-fields input[type="email"], div#dibs-extra-checkout-fields input[type="tel"]',
-		extraFieldsSelectorNonText: 'div#dibs-extra-checkout-fields select, div#dibs-extra-checkout-fields input[type="radio"], div#dibs-extra-checkout-fields input[type="checkbox"], div#dibs-extra-checkout-fields input.checkout-date-picker, input#terms input[type="checkbox"]',
-
+		
         // Dibs processing order.
         dibsOrderProcessing: false,
 
@@ -19,14 +17,9 @@ jQuery(function($) {
 		 * Runs on the $(document).ready event.
 		 */
 		documentReady: function() {
-			//dibs_wc.DibsFreeze();
 			
 			// Extra checkout fields.
-			dibs_wc.setFormFieldValues();
-			dibs_wc.checkFormData();
             dibs_wc.moveExtraCheckoutFields();
-            let fieldData = JSON.parse( sessionStorage.getItem( 'DIBSFieldData' ) );
-            $('#order_comments').val( fieldData.order_comments );
         },
         
         /*
@@ -57,112 +50,6 @@ jQuery(function($) {
 				dibsCheckout.thawCheckout();
 			}
 		},
-        
-        /**
-		 * Checks for form Data on the page, and sets the checkout fields session storage.
-		 */
-		checkFormData: function() {
-			let form = $('form[name="checkout"] input, form[name="checkout"] select, textarea');
-            let requiredFields = [];
-            let fieldData = {};
-            // Get all form fields.
-            for ( i = 0; i < form.length; i++ ) { 
-                // Check if the form has a name set.
-                if ( form[i]['name'] !== '' ) {
-                    let name    = form[i]['name'];
-                    let field = $('*[name="' + name + '"]');
-                    let required = ( $('p#' + name + '_field').hasClass('validate-required') ? true : false );
-                    // Only keep track of non standard WooCommerce checkout fields
-                    if ($.inArray(name, wc_dibs_easy.standard_woo_checkout_fields) == '-1' && name.indexOf('[qty]') < 0 && name.indexOf( 'shipping_method' ) < 0 && name.indexOf( 'payment_method' ) < 0 ) {
-                        // Only keep track of required fields for validation.
-                        if ( required === true ) {
-                            requiredFields.push(name);
-                        }
-                        // Get the value from the field.
-                        let value = '';
-                        if( field.is(':checkbox') ) {
-                            if( field.is(':checked') ) {
-                                value = form[i].value;
-                            }
-                        } else if( field.is(':radio') ) {
-                            if( field.is(':checked') ) {
-                                value = $( 'input[name="' + name + '"]:checked').val();
-                            }
-                        } else {
-                            value = form[i].value
-                        }
-                        // Set field data with values.
-                        fieldData[name] = value;
-                    }
-                }
-            }
-            sessionStorage.setItem( 'DIBSRequiredFields', JSON.stringify( requiredFields ) );
-            sessionStorage.setItem( 'DIBSFieldData', JSON.stringify( fieldData ) );
-        },
-        
-        /**
-		 * Validates the required fields, checks if they have a value set.
-		 */
-		validateRequiredFields: function() {
-			// Get data from session storage.
-			let requiredFields = JSON.parse( sessionStorage.getItem( 'DIBSRequiredFields' ) );
-			let fieldData = JSON.parse( sessionStorage.getItem( 'DIBSFieldData' ) );
-			// Check if all data is set for required fields.
-            let allValid = true;
-            if( requiredFields !== null ) {
-                for( i = 0; i < requiredFields.length; i++ ) {
-                    fieldName = requiredFields[i];
-                    if ( '' === fieldData[fieldName] ) {
-                        allValid = false;
-                    }
-                }
-            }
-            if( false === allValid ) {
-                dibs_wc.printValidationMessage();
-            }
-            return allValid;
-        },
-        
-        /**
-		 * Print the validation error message.
-		 */
-		printValidationMessage: function() {
-			if ( ! $('#dibs-required-fields-notice').length ) {
-				$('form.checkout').prepend( '<div id="dibs-required-fields-notice" class="woocommerce-NoticeGroup woocommerce-NoticeGroup-updateOrderReview"><ul class="woocommerce-error" role="alert"><li>' +  wc_dibs_easy.required_fields_text + '</li></ul></div>' );
-				var etop = $('form.checkout').offset().top;
-				$('html, body').animate({
-					scrollTop: etop
-				}, 1000);
-			}
-		},
-
-        /**
-		 * Sets the form fields values from the session storage.
-		 */
-		setFormFieldValues: function() {
-            let form_data = JSON.parse( sessionStorage.getItem( 'DIBSFieldData' ) );
-            if( form_data !== null ) {
-                $.each( form_data, function( name, value ) {
-                    let field = $('*[name="' + name + '"]');
-                    let saved_value = value;
-                    // Check if field is a checkbox
-                    if( field.is(':checkbox') ) {
-                        if( saved_value !== '' ) {
-                            field.prop('checked', true);
-                        }
-                    } else if( field.is(':radio') ) {
-                        for ( x = 0; x < field.length; x++ ) {
-                            if( field[x].value === value ) {
-                                $(field[x]).prop('checked', true);
-                            }
-                        }
-                    } else {
-                        field.val( saved_value );
-                    }
-
-                });
-            }
-        },
 
         /**
 		 * Moves all non standard fields to the extra checkout fields.
@@ -219,12 +106,7 @@ jQuery(function($) {
 
                 $(document).ready( dibs_wc.documentReady() );
 
-				// Extra checkout fields.
-				dibs_wc.bodyEl.on('blur', dibs_wc.extraFieldsSelectorText, dibs_wc.checkFormData);
-				dibs_wc.bodyEl.on('change', dibs_wc.extraFieldsSelectorNonText, dibs_wc.checkFormData);
-                dibs_wc.bodyEl.on('click', 'input#terms', dibs_wc.checkFormData);
                 window.addEventListener("hashchange", dibs_wc.handleHashChange);
-
 			}
 		},
     }
