@@ -85,7 +85,7 @@ class DIBS_Api_Callbacks {
 
 		// Maybe abort the callback (if the order already has been processed in Woo).
 		if ( ! empty( $order->get_date_paid() ) ) {
-			Nets_Easy()->logger->log( 'Aborting Payment created API callback. Order ' . $order->get_order_number() . '( order ID ' . $order_id . ') already processed.' );
+			Nets_Easy()->logger->log( 'Aborting Payment created API callback. Order ' . $order->get_order_number() . '(order ID ' . $order_id . ') already processed.' );
 		} else {
 			Nets_Easy()->logger->log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
 			wc_dibs_confirm_dibs_order( $order_id );
@@ -124,7 +124,7 @@ class DIBS_Api_Callbacks {
 
 			if ( $order_payment_id === $payment_id ) {
 				$order_id_match = $order_id;
-				Nets_Easy()->logger->log( 'Payment ID ' . $payment_id . ' already exist in order ID ' . $order_id_match );
+				Nets_Easy()->logger->log( 'Payment ID ' . $payment_id . ' exist in order ID ' . $order_id_match );
 				break;
 			}
 		}
