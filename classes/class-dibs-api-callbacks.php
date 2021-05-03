@@ -99,6 +99,10 @@ class DIBS_Api_Callbacks {
 	 */
 	public function get_order_id_from_payment_id( $payment_id ) {
 
+		if ( empty( $payment_id ) ) {
+			return false;
+		}
+
 		// Let's check so the internal reference doesn't already exist in an existing order.
 		$query  = new WC_Order_Query(
 			array(
