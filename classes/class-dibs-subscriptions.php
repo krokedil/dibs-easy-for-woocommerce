@@ -51,6 +51,9 @@ class DIBS_Subscriptions {
 				'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+5 year' ) ),
 				'interval' => 0,
 			);
+
+			$complete_payment_button_text = ( isset( $dibs_settings['complete_payment_button_text'] ) ) ? $dibs_settings['complete_payment_button_text'] : 'subscribe';
+			$request_args['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
 		}
 
 		// Checks if this is a DIBS subscription payment method change.

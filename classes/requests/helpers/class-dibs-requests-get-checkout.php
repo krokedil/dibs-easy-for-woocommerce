@@ -44,9 +44,6 @@ class DIBS_Requests_Checkout {
 			if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
 				$checkout['shipping']['countries'] = self::get_shipping_countries();
 			}
-
-			$complete_payment_button_text                                       = ( isset( $dibs_settings['complete_payment_button_text'] ) ) ? $dibs_settings['complete_payment_button_text'] : 'subscribe';
-			$checkout['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
 		} else {
 			$order                                   = wc_get_order( $order_id );
 			$checkout['returnUrl']                   = add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() );
