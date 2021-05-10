@@ -57,6 +57,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2021.05.10    - version 1.23.1 =
+* Tweak         - Only send information about completePaymentButtonText if cart contain subscription. Solves issue where "Subscribe" text could be displayed in pay button even for regular purchases.
+
 = 2021.05.03    - version 1.23.0 =
 * Feature       - Updated countries supported by Nets (https://tech.dibspayment.com/easy/api/datastring-parameters).
 * Tweak         - Change DIBS to Nets in readme and settings.
