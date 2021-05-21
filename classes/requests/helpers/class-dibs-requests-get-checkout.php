@@ -105,13 +105,26 @@ class DIBS_Requests_Checkout {
 	 * @return array
 	 */
 	public static function get_consumer_address( $order ) {
-		$consumer                                    = array();
-		$consumer['email']                           = $order->get_billing_email();
-		$consumer['shippingAddress']['addressLine1'] = $order->get_billing_address_1();
-		$consumer['shippingAddress']['addressLine2'] = $order->get_billing_address_2();
-		$consumer['shippingAddress']['postalCode']   = ( ! empty( $order->get_billing_postcode() ) ) ? $order->get_billing_postcode() : null;
-		$consumer['shippingAddress']['city']         = $order->get_billing_city();
-		$consumer['shippingAddress']['country']      = dibs_get_iso_3_country( $order->get_billing_country() );
+		$consumer          = array();
+		$consumer['email'] = $order->get_billing_email();
+
+		if ( $order->get_billing_address_1() ) {
+			$consumer['shippingAddress']['addressLine1'] = $order->get_billing_address_1();
+		}
+
+		if ( $order->get_billing_address_2() ) {
+			$consumer['shippingAddress']['addressLine2'] = $order->get_billing_address_2();
+		}
+
+		if ( $order->get_billing_postcode() ) {
+			$consumer['shippingAddress']['postalCode'] = ( ! empty( $order->get_billing_postcode() ) ) ? $order->get_billing_postcode() : null;
+		}
+
+		if ( $order->get_billing_city() ) {
+			$consumer['shippingAddress']['city'] = $order->get_billing_city();
+		}
+
+		$consumer['shippingAddress']['country'] = dibs_get_iso_3_country( $order->get_billing_country() );
 
 		if ( $order->get_billing_phone() ) {
 			$consumer['phoneNumber']['prefix'] = self::get_phone_prefix( $order );
