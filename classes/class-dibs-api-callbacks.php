@@ -41,7 +41,7 @@ class DIBS_Api_Callbacks {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_api_dibs_api_callbacks', array( $this, 'payment_created_scheduler' ) );
-		add_action( 'dibs_payment_created_callback', array( $this, 'execute_dibs_payment_created_callback' ), 10, 2 );
+		add_action( 'dibs_payment_created_callback', array( $this, 'execute_dibs_payment_created_callback' ), 10, 3 );
 
 	}
 
@@ -55,29 +55,36 @@ class DIBS_Api_Callbacks {
 			$post_body = file_get_contents( 'php://input' );
 			$data      = json_decode( $post_body, true );
 
-			// Order id is set to '' for now.
-			$order_id = '';
+			$amount       = $data['data']['order']['amount']['amount'];
+			$payment_id   = $data['data']['paymentId'];
+			$order_number = $data['data']['order']['reference'];
 
-			wp_schedule_single_event( time() + 120, 'dibs_payment_created_callback', array( $data, $order_id ) );
+			Nets_Easy()->logger->log( 'Payment created webhook listener hit ' . wp_json_encode( $data ) );
+
+			as_schedule_single_action( time() + 120, 'dibs_payment_created_callback', array( $payment_id, $order_number, $amount ) );
+			header( 'HTTP/1.1 200 OK' );
+			die();
 		}
 	}
 
 	/**
 	 * Handle execution of payment created cronjob.
 	 *
-	 * @param array  $data order data returned from Nets.
-	 * @param string $order_id WC order id.
+	 * @param string $payment_id Nets payment id.
+	 * @param string $order_number WC order number.
+	 * @param string $amount Nets order amount.
 	 */
-	public function execute_dibs_payment_created_callback( $data, $order_id = '' ) {
+	public function execute_dibs_payment_created_callback( $payment_id, $order_number, $amount ) {
 
-		Nets_Easy()->logger->log( 'Payment created API callback. Response data:' . wp_json_encode( $data ) );
+		Nets_Easy()->logger->log( 'Execute Payment created API callback. Payment ID:' . $payment_id . '. Order number: ' . $order_number . '. Amount: ' . $amount );
+		$order_id = '';
 		if ( empty( $order_id ) ) {
 			// We're missing Order ID in callback. Try to get it via query by internal reference.
-			$order_id = $this->get_order_id_from_payment_id( $data['data']['paymentId'] );
+			$order_id = $this->get_order_id_from_payment_id( $payment_id );
 		}
 
 		if ( empty( $order_id ) ) {
-			Nets_Easy()->logger->log( 'No coresponding order ID was found for Payment ID ' . $data['data']['paymentId'] );
+			Nets_Easy()->logger->log( 'No coresponding order ID was found for Payment ID ' . $payment_id );
 			return;
 		}
 
@@ -89,7 +96,7 @@ class DIBS_Api_Callbacks {
 		} else {
 			Nets_Easy()->logger->log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
 			wc_dibs_confirm_dibs_order( $order_id );
-			$this->check_order_totals( $order, $data );
+			$this->check_order_totals( $order, $amount );
 		}
 	}
 
@@ -135,15 +142,14 @@ class DIBS_Api_Callbacks {
 	 * Check order totals.
 	 *
 	 * @param object $order WC order.
-	 * @param array  $dibs_order Order data from Nets.
+	 * @param string $dibs_order_total Order total amount from Nets.
 	 */
-	public function check_order_totals( $order, $dibs_order ) {
+	public function check_order_totals( $order, $dibs_order_total ) {
 
 		$order_totals_match = true;
 
 		// Check order total and compare it with Woo.
-		$woo_order_total  = intval( round( $order->get_total() * 100 ) );
-		$dibs_order_total = $dibs_order['data']['order']['amount']['amount'];
+		$woo_order_total = intval( round( $order->get_total() * 100 ) );
 
 		if ( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
 			/* Translators: Nets order total. */
