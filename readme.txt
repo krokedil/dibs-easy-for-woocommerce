@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, easy, nets
 Requires at least: 4.7
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 Requires PHP: 5.6
 WC requires at least: 4.0.0
-WC tested up to: 5.2.2
+WC tested up to: 5.3.0
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -56,6 +56,10 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2021.05.25    - version 1.23.2 =
+* Tweak         - Use Action scheduler instead of WP cron for queuing payment created webhook handling. This is a more reliable solution.
+* Tweak         - Only try to send the customer data to Nets that actually exist in WooCommerce order. Improves redirect flow where the store doesn't enable full address collecting. 
 
 = 2021.05.10    - version 1.23.1 =
 * Tweak         - Only send information about completePaymentButtonText if cart contain subscription. Solves issue where "Subscribe" text could be displayed in pay button even for regular purchases.
