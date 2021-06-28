@@ -87,6 +87,9 @@ function wc_dibs_unset_sessions() {
 		if ( WC()->session->get( 'dibs_customer_order_note' ) ) {
 			WC()->session->__unset( 'dibs_customer_order_note' );
 		}
+		if ( WC()->session->get( 'dibs_currency' ) ) {
+			WC()->session->__unset( 'dibs_currency' );
+		}
 	}
 }
 
@@ -143,7 +146,7 @@ function wc_dibs_get_payment_id() {
 		return $_POST['dibs_payment_id'];
 	}
 
-	if ( ! empty( WC()->session->get( 'dibs_payment_id' ) ) ) {
+	if ( ! empty( WC()->session->get( 'dibs_payment_id' ) && WC()->session->get( 'dibs_currency' ) === get_woocommerce_currency() ) ) {
 		return WC()->session->get( 'dibs_payment_id' );
 	} else {
 		WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
@@ -152,6 +155,7 @@ function wc_dibs_get_payment_id() {
 		$request = json_decode( $request->request() );
 		if ( isset( $request->paymentId ) ) { // phpcs:ignore
 			WC()->session->set( 'dibs_payment_id', $request->paymentId ); // phpcs:ignore
+			WC()->session->set( 'dibs_currency', get_woocommerce_currency() );
 
 			// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
 			set_transient( 'dibs_payment_id_' . $request->paymentId, $request->paymentId, 15 * MINUTE_IN_SECONDS ); // phpcs:ignore

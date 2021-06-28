@@ -68,7 +68,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 
 		// Check that the DIBS paymentId session is still valid.
-		if ( false === get_transient( 'dibs_payment_id_' . $payment_id ) ) {
+		if ( false === get_transient( 'dibs_payment_id_' . $payment_id ) || WC()->session->get( 'dibs_currency' ) !== get_woocommerce_currency() ) {
 			wc_dibs_unset_sessions();
 			$return['redirect_url'] = wc_get_checkout_url();
 			wp_send_json_error( $return );

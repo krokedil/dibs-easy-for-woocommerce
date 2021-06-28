@@ -77,15 +77,15 @@ class DIBS_Post_Checkout {
 
 			// Error handling.
 			if ( null !== $request ) {
-				if ( array_key_exists( 'chargeId', $request ) ) { // Payment success.
+				if ( isset( $request->chargeId ) ) { // Payment success.
 					// Translators: Nets Charge ID.
 					$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy with charge ID %s', 'dibs-easy-for-woocommerce' ), $request->chargeId ) ); // phpcs:ignore
 
 					update_post_meta( $order_id, '_dibs_charge_id', $request->chargeId ); // phpcs:ignore
-				} elseif ( array_key_exists( 'errors', $request ) ) { // Response with errors.
-					if ( array_key_exists( 'instance', $request->errors ) ) { // If return is empty.
+				} elseif ( isset( $request->errors ) ) { // Response with errors.
+					if ( isset( $request->errors->instance ) ) { // If return is empty.
 						$message = $request->errors->instance[0];
-					} elseif ( array_key_exists( 'amount', $request->errors ) ) { // If total amount is wrong.
+					} elseif ( isset( $request->errors->amount ) ) { // If total amount is wrong.
 						$message = $request->errors->amount[0];
 					} else {
 						$message = wp_json_encode( $request->errors );
@@ -93,7 +93,7 @@ class DIBS_Post_Checkout {
 
 					$this->charge_failed( $wc_order, true, $message );
 
-				} elseif ( array_key_exists( 'code', $request ) && '1001' === $request->code ) { // Set order as completed if order has already been charged.
+				} elseif ( isset( $request->code ) && '1001' === $request->code ) { // Set order as completed if order has already been charged.
 					// @todo - set status to on hold if WC order total and Nets order total don't match.
 					$wc_order->add_order_note( sprintf( __( 'Nets error message: %s', 'dibs-easy-for-woocommerce' ), $request->message ) ); // phpcs:ignore
 				} else {
