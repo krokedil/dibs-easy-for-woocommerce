@@ -57,6 +57,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2021.06.29    - version 1.23.4 =
+* Fix           - Improvement in woocommerce_order_needs_payment filter. Could cause Pay for order button being visible on My account pages even for paid orders.
+
 = 2021.06.28    - version 1.23.3 =
 * Fix           - Change array_key_exists to isset to better handle PHP 8 compatibility.
 * Fix           - Create new payment session if currency changes during an ongoing session in checkout.

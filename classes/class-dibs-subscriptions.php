@@ -343,6 +343,11 @@ class DIBS_Subscriptions {
 			return $wc_result;
 		}
 
+		// Only change in checkout.
+		if ( ! is_checkout() ) {
+			return $wc_result;
+		}
+
 		return true;
 	}
 
