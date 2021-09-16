@@ -27,6 +27,13 @@ return apply_filters(
 			'description' => __( 'This is the title that the user sees on the checkout page for Nets Easy.', 'dibs-easy-for-woocommerce' ),
 			'default'     => __( 'Nets Easy', 'dibs-easy-for-woocommerce' ),
 		),
+		'description'                  => array(
+			'title'       => __( 'Description', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'textarea',
+			'default'     => '',
+			'desc_tip'    => true,
+			'description' => __( 'This controls the description which the user sees during checkout.', 'dibs-easy-for-woocommerce' ),
+		),
 		'merchant_number'              => array(
 			'title'       => __( 'Merchant ID', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
