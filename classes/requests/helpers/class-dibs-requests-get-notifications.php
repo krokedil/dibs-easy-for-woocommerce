@@ -36,7 +36,7 @@ class DIBS_Requests_Notifications {
 		$web_hooks = array();
 
 		// Only set web hooks if host is not local (127.0.0.1 or ::1).
-		if ( isset( $_SERVER['REMOTE_ADDR'] ) && in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ), true ) ) {
+		if ( isset( $_SERVER['REMOTE_ADDR'] ) && in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ), true ) || isset( $_SERVER['HTTP_HOST'] ) && 'localhost' === substr( $_SERVER['HTTP_HOST'], 0, 9 ) ) {
 			return $web_hooks;
 		} else {
 			$web_hooks[] = array(
