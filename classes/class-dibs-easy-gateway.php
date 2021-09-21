@@ -31,6 +31,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$this->method_description = __( 'Nets Easy Payment for checkout', 'dibs-easy-for-woocommerce' );
 
+		$this->description = $this->get_option( 'description' );
+
 		// Load the form fields.
 		$this->init_form_fields();
 		// Load the settings.
