@@ -67,7 +67,7 @@ class DIBS_Requests_Get_Order_Items {
 			'quantity'         => $order_item['qty'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( ( $order_item->get_total() / $order_item['qty'] ) * 100 ) ),
-			'taxRate'          => intval( round( ( $order_item->get_total_tax() / $order_item->get_total() ) * 10000 ) ),
+			'taxRate'          => ( empty( $order_item->get_total() ) ) ? 0 : intval( round( ( $order_item->get_total_tax() / $order_item->get_total() ) * 10000 ) ),
 			'taxAmount'        => intval( round( $order_item->get_total_tax() * 100 ) ),
 			'grossTotalAmount' => intval( round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ) ),
 			'netTotalAmount'   => intval( round( $order_item->get_total() * 100 ) ),
