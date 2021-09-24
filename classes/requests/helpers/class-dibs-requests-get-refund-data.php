@@ -123,7 +123,7 @@ class DIBS_Requests_Get_Refund_Data {
 			$quantity           = ( 0 === $item->get_quantity() ) ? 1 : $item->get_quantity();
 			$unit               = __( 'pcs', 'dibs-easy-for-woocommerce' );
 			$unit_price         = intval( round( ( $item->get_total() / abs( $quantity ) ) * 100 ) );
-			$tax_rate           = ( '0' === $item->get_total() ) ? 0 : intval( round( ( $item->get_total_tax() * 100 ) / ( $item->get_total() * 100 ) * 10000 ) );
+			$tax_rate           = ( empty( $item->get_total() ) ) ? 0 : intval( round( ( $item->get_total_tax() * 100 ) / ( $item->get_total() * 100 ) * 10000 ) );
 			$tax_amount         = intval( round( $item->get_total_tax() * 100 ) );
 			$gross_total_amount = intval( round( ( $item->get_total() + $item->get_total_tax() ) * 100 ) );
 			$net_total_amount   = intval( round( $item->get_total() * 100 ) );
