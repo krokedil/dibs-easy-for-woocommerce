@@ -1,6 +1,6 @@
 === Nets Easy for WooCommerce ===
 Contributors: dibspayment, krokedil, NiklasHogefjord
-Tags: ecommerce, e-commerce, woocommerce, dibs, easy, nets
+Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
 Tested up to: 5.7.2
 Requires PHP: 7.0
@@ -12,9 +12,9 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 
 == DESCRIPTION ==
-Nets Easy for WooCommerce is a plugin that extends WooCommerce, allowing you to take payments via Nets payment method Easy.
+Nets Easy for WooCommerce is a plugin that extends WooCommerce, allowing you to take payments via Nets payment method Nets Easy.
 
-Easy is an exceptionally quick checkout for consumers. A single agreement for all payment methods. These are just some of the benefits to look forward to when choosing our new Easy payment solution for your online store.
+Nets Easy is an exceptionally quick checkout for consumers. A single agreement for all payment methods. These are just some of the benefits to look forward to when choosing our new Nets Easy payment solution for your online store.
 
 https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 
@@ -29,8 +29,8 @@ To get started with Nets Easy you need to [sign up](https://www.nets.eu/en/payme
 
 More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
-= Connect Easy to your webshop by setting up a test account. It is free and created immediately =
-With a test account, you will see how the Easy administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).  
+= Connect Nets Easy to your webshop by setting up a test account. It is free and created immediately =
+With a test account, you will see how the Nets Easy administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).  
 
 
 == INSTALLATION	 ==
@@ -53,7 +53,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * WooCommerce 3.5 or newer is required.
 * PHP 5.6 or higher is required.
 * A SSL Certificate is required.
-* This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Easy platform to use this plugin.
+* This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
 
