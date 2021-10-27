@@ -150,7 +150,7 @@ return apply_filters(
 				'accept'    => 'Accept',
 
 			),
-			'description' => __( 'Select the text displayed on the complete payment button. (Only applicable for subscription based payments). Translations for the selections can be found <a href="https://docs.krokedil.com/article/202-dibs-easy-subscription-support#h-H2_5" target="_blank">here.</a>', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Select the text displayed on the complete payment button. (Only applicable for subscription based payments). Translations for the selections can be found <a href="https://docs.krokedil.com/nets-easy-for-woocommerce/get-started/subscription-support/#custom-button-text-for-subscription-payments" target="_blank">here.</a>', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'subscribe',
 			'desc_tip'    => false,
 		),
