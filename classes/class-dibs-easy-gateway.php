@@ -202,7 +202,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		$request = new DIBS_Request_Refund_Order( $order_id );
-		$request = json_decode( $request->request() );
+		$request = json_decode( $request->request(), true );
 
 		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
 			// Translators: Nets refund ID.
