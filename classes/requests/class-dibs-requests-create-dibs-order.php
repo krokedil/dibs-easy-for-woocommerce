@@ -45,7 +45,7 @@ class DIBS_Requests_Create_DIBS_Order extends DIBS_Requests2 {
 		Nets_Easy()->logger->log( $log );
 
 		if ( is_wp_error( $response ) ) {
-			return $this->get_error_message( $response );
+			return wp_json_encode( $this->get_error_message( $response ) );
 		}
 
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
