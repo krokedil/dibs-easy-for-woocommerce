@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
-Tested up to: 5.7.2
+Tested up to: 5.8.2
 Requires PHP: 7.0
 WC requires at least: 4.0.0
-WC tested up to: 5.4.1
+WC tested up to: 5.9.0
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -56,6 +56,18 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2021.11.11    - version 1.24.0 =
+* Feature       - Adds setting to set checkout description.
+* Tweak         - Do not set webhooks if Host is localhost. Makes it easier to test Nets Easy in a local development environment.
+* Tweak         - Bump required PHP version to 7.0.
+* Tweak         - Replacing all mentions of "Easy" on its own to be "Nets Easy".
+* Tweak         - Replaces old Docs links to current URLs.
+* Fix           - Division by zero fix that could happen in taxRate calculation.
+* Fix           - Division by zero fix that could happen in refund request.
+* Fix           - PHP 8 related issue fix that could prevent redirect to Nets payment window.
+* Fix           - PHP 8 related issue fix that could cause partial refund to fail due to expected array missing.
+
 
 = 2021.06.29    - version 1.23.4 =
 * Fix           - Improvement in woocommerce_order_needs_payment filter. Could cause Pay for order button being visible on My account pages even for paid orders.
