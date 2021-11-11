@@ -64,14 +64,14 @@ class DIBS_Request_Refund_Order extends DIBS_Requests2 {
 
 		if ( is_wp_error( $response ) ) {
 			$this->get_error_message( $response );
-			return 'ERROR';
+			return wp_json_encode( $response );
 		}
 
 		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
 			return wp_remote_retrieve_body( $response );
 		} else {
 			$this->get_error_message( $response );
-			return 'ERROR';
+			return wp_json_encode( $response );
 		}
 	}
 

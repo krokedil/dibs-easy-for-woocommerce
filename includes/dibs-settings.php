@@ -27,6 +27,13 @@ return apply_filters(
 			'description' => __( 'This is the title that the user sees on the checkout page for Nets Easy.', 'dibs-easy-for-woocommerce' ),
 			'default'     => __( 'Nets Easy', 'dibs-easy-for-woocommerce' ),
 		),
+		'description'                  => array(
+			'title'       => __( 'Description', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'textarea',
+			'default'     => '',
+			'desc_tip'    => true,
+			'description' => __( 'This controls the description which the user sees during checkout.', 'dibs-easy-for-woocommerce' ),
+		),
 		'merchant_number'              => array(
 			'title'       => __( 'Merchant ID', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
@@ -112,7 +119,7 @@ return apply_filters(
 				'embedded' => __( 'Embedded', 'dibs-easy-for-woocommerce' ),
 				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
 			),
-			'description' => __( 'Select how Easy should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nets.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Select how Nets Easy should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nets.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'embedded',
 			'desc_tip'    => false,
 		),
@@ -143,7 +150,7 @@ return apply_filters(
 				'accept'    => 'Accept',
 
 			),
-			'description' => __( 'Select the text displayed on the complete payment button. (Only applicable for subscription based payments). Translations for the selections can be found <a href="https://docs.krokedil.com/article/202-dibs-easy-subscription-support#h-H2_5" target="_blank">here.</a>', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Select the text displayed on the complete payment button. (Only applicable for subscription based payments). Translations for the selections can be found <a href="https://docs.krokedil.com/nets-easy-for-woocommerce/get-started/subscription-support/#custom-button-text-for-subscription-payments" target="_blank">here.</a>', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'subscribe',
 			'desc_tip'    => false,
 		),

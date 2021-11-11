@@ -31,6 +31,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
 		$this->method_description = __( 'Nets Easy Payment for checkout', 'dibs-easy-for-woocommerce' );
 
+		$this->description = $this->get_option( 'description' );
+
 		// Load the form fields.
 		$this->init_form_fields();
 		// Load the settings.
@@ -158,15 +160,15 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 			}
 		} else {
 			$request  = new DIBS_Requests_Create_DIBS_Order( 'redirect', $order_id );
-			$response = json_decode( $request->request() );
+			$response = json_decode( $request->request(), true );
 
 			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
 				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
-				update_post_meta( $order_id, '_dibs_payment_id', $response->paymentId ); // phpcs:ignore
+				update_post_meta( $order_id, '_dibs_payment_id', $response['paymentId'] ); // phpcs:ignore
 				return array(
 					'result'   => 'success',
-					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response->hostedPaymentPageUrl ), // phpcs:ignore
+					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ), // phpcs:ignore
 				);
 			} else {
 				// Something else went wrong.
@@ -200,7 +202,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		$request = new DIBS_Request_Refund_Order( $order_id );
-		$request = json_decode( $request->request() );
+		$request = json_decode( $request->request(), true );
 
 		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
 			// Translators: Nets refund ID.
