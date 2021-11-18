@@ -57,6 +57,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2021.11.18    - version 1.24.1 =
+* Tweak         - Strip postal code/ZIP of potential spaces. Nets Easy does not allow this.
+
 = 2021.11.11    - version 1.24.0 =
 * Feature       - Adds setting to set checkout description.
 * Tweak         - Do not set webhooks if Host is localhost. Makes it easier to test Nets Easy in a local development environment.
