@@ -117,7 +117,11 @@ class DIBS_Requests_Checkout {
 		}
 
 		if ( $order->get_billing_postcode() ) {
-			$consumer['shippingAddress']['postalCode'] = ( ! empty( $order->get_billing_postcode() ) ) ? $order->get_billing_postcode() : null;
+			$postal_code = null;
+			if ( ! empty( $order->get_billing_postcode() ) ) {
+				$postal_code = str_replace( ' ', '', $order->get_billing_postcode() );
+			}
+			$consumer['shippingAddress']['postalCode'] = $postal_code;
 		}
 
 		if ( $order->get_billing_city() ) {
