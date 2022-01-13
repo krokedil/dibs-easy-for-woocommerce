@@ -204,9 +204,11 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		$request = new DIBS_Request_Refund_Order( $order_id );
 		$request = json_decode( $request->request(), true );
 
+		// TODO - Set up logic to switch between charge id and order id.
+
 		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
 			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request->refundId, $reason ) ); // phpcs:ignore
+			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request['refundId'], $reason ) ); // phpcs:ignore
 			return true;
 		} else {
 			return false;

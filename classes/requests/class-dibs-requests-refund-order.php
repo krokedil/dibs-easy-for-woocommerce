@@ -45,6 +45,8 @@ class DIBS_Request_Refund_Order extends DIBS_Requests2 {
 	 * @return mixed
 	 */
 	public function request() {
+
+		// TODO - Set up logic to switch between charge id and order id.
 		$charge_id = get_post_meta( $this->order_id, '_dibs_charge_id', true );
 
 		if ( empty( $charge_id ) ) {
