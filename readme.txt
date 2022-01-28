@@ -57,6 +57,10 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2022.01.28    - version 1.25.1 =
+* Fix           - Remove white space in all phone numbers sent to Nets.
+* Fix           - Fix display of error message in checkout if Nets denies create payment request for redirect checkout flow.
+
 = 2022.01.14    - version 1.25.0 =
 * Enhancement   - Add support for refunds even for A2A payment types (like Swish).
 
