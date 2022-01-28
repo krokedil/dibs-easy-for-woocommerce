@@ -172,8 +172,8 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 				);
 			} else {
 				// Something else went wrong.
-				if ( $response->errors ) {
-					foreach ( $response->errors as $error ) {
+				if ( isset( $response['errors'] ) && ! empty( $response['errors'] ) ) {
+					foreach ( $response['errors'] as $error ) {
 						$error_message = $error[0];
 					}
 					if ( $this->is_json( $error_message ) ) {
