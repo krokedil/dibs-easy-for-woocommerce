@@ -178,6 +178,7 @@ class DIBS_Requests_Checkout {
 			$phone_number = str_replace( ' ', '', $phone_number );
 		} else {
 			$phone_number = str_replace( '-', '', $order->get_billing_phone() );
+			$phone_number = str_replace( ' ', '', $phone_number );
 		}
 		return $phone_number;
 	}
