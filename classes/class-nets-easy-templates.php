@@ -40,7 +40,7 @@ class Nets_Easy_Templates {
 	 */
 	public function __construct() {
 		// Override template if DIBS Easy Checkout page.
-		add_filter( 'woocommerce_locate_template', array( $this, 'override_template' ), 999, 3 );
+		add_filter( 'wc_get_template', array( $this, 'override_template' ), 999, 2 );
 
 		// Template hooks.
 		add_action( 'wc_dibs_after_order_review', array( $this, 'add_extra_checkout_fields' ), 10 );
@@ -57,7 +57,7 @@ class Nets_Easy_Templates {
 	 *
 	 * @return string
 	 */
-	public function override_template( $template, $template_name, $template_path ) {
+	public function override_template( $template, $template_name ) {
 		if ( is_checkout() ) {
 
 			// Don't display DIBS Easy template if we have a cart that doesn't needs payment.
