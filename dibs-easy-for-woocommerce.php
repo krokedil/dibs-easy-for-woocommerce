@@ -130,11 +130,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-activate-order.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-cancel-order.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-refund-order.php' );
-			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-dibs-order.php' );
+			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-dibs-order.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-charge-subscription.php' );
-			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-bulk-charge-id.php' );
-			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription.php' );
-			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-by-external-reference.php' );
+			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-subscription-bulk-charge-id.php' );
+			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-subscription.php' );
+			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-subscription-by-external-reference.php' );
 
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-checkout.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-items.php' );
