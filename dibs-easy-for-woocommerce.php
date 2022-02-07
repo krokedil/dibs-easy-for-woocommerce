@@ -134,8 +134,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-get-subscription-by-external-reference.php' );
 
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-checkout.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-header.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-user-agent.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-items.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order-items.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order.php' );
