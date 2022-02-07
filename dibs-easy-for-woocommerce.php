@@ -90,7 +90,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 *
 		 * @return void
 		 */
-		private function __wakeup() {
+		public function __wakeup() {
 			wc_doing_it_wrong( __FUNCTION__, __( 'Nope' ), '1.0' );
 		}
 
@@ -113,7 +113,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
 			include_once plugin_basename( 'classes/class-dibs-confirmation.php' );
 			include_once plugin_basename( 'classes/class-dibs-logger.php' );
-			include_once plugin_basename( 'classes/class-dibs-email.php' );
+			include_once plugin_basename( 'classes/class-dibs-easy-email.php' );
 
 			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 
@@ -131,7 +131,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/post/class-dibs-requests-cancel-order.php' );
 			include_once plugin_basename( 'classes/requests/post/class-dibs-requests-refund-order.php' );
 			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-dibs-order.php' );
-			include_once plugin_basename( 'classes/requests/class-dibs-requests-charge-subscription.php' );
+			include_once plugin_basename( 'classes/requests/post/class-dibs-requests-charge-subscription.php' );
 			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-subscription-bulk-charge-id.php' );
 			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-subscription.php' );
 			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-subscription-by-external-reference.php' );
