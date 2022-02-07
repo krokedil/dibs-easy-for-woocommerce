@@ -113,6 +113,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
 			include_once plugin_basename( 'classes/class-dibs-confirmation.php' );
 			include_once plugin_basename( 'classes/class-dibs-logger.php' );
+			include_once plugin_basename( 'classes/class-dibs-email.php' );
 
 			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
 
