@@ -144,20 +144,13 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-payment-methods.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-refund-data.php' );
+			include_once plugin_basename( 'classes/class-dibs-assets.php' );
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
 			$this->init_gateway();
 
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
-
-			if ( 'embedded' === $this->checkout_flow ) {
-				// Save DIBS data (payment id) in WC order.
-				add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_dibs_order_data' ), 10, 2 );
-
-				add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
-
-			}
 
 			// Set variables for shorthand access to classes.
 			$this->order_management = new DIBS_Post_Checkout();
@@ -176,62 +169,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-dibs-easy-gateway.php' );
 
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_dibs_easy' ) );
-		}
-
-		/**
-		 * Load the needed JS scripts.
-		 */
-		public function load_scripts() {
-			if ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) {
-				$testmode        = 'yes' === $this->dibs_settings['test_mode'];
-				$script_url      = $testmode ? 'https://test.checkout.dibspayment.eu/v1/checkout.js?v=1' : 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
-				$dibs_payment_id = filter_input( INPUT_GET, 'dibs-payment-id', FILTER_SANITIZE_STRING );
-				$dibs_payment_id = $dibs_payment_id ? $dibs_payment_id : null;
-				$paymentId       = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_STRING );  // phpcs:ignore
-				$paymentId       = $paymentId ? $paymentId : null;  // phpcs:ignore
-				$paymentFailed   = filter_input( INPUT_GET, 'paymentFailed', FILTER_SANITIZE_STRING );  // phpcs:ignore
-				$paymentFailed   = $paymentFailed ? $paymentFailed : null;  // phpcs:ignore
-
-				if ( WC()->session->get( 'dibs_payment_id' ) ) {
-					$checkout_initiated = 'yes';
-				} else {
-					$checkout_initiated = 'no';
-				}
-
-				$standard_woo_checkout_fields = array( 'billing_first_name', 'billing_last_name', 'billing_address_1', 'billing_address_2', 'billing_postcode', 'billing_city', 'billing_phone', 'billing_email', 'billing_state', 'billing_country', 'billing_company', 'shipping_first_name', 'shipping_last_name', 'shipping_address_1', 'shipping_address_2', 'shipping_postcode', 'shipping_city', 'shipping_state', 'shipping_country', 'shipping_company', 'terms', 'account_username', 'account_password' );
-
-				wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
-				wp_register_script( 'checkout', plugins_url( '/assets/js/checkout.js', __FILE__ ), array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
-				wp_localize_script(
-					'checkout',
-					'wc_dibs_easy',
-					array(
-						'dibs_payment_id'                  => $dibs_payment_id,
-						'paymentId'                        => $paymentId, // phpcs:ignore
-						'paymentFailed'                    => $paymentFailed, // phpcs:ignore
-						'checkout_initiated'               => $checkout_initiated,
-						'standard_woo_checkout_fields'     => $standard_woo_checkout_fields,
-						'dibs_process_order_text'          => __( 'Please wait while we process your order...', 'dibs-easy-for-woocommerce' ),
-						'required_fields_text'             => __( 'Please fill in all required checkout fields.', 'dibs-easy-for-woocommerce' ),
-						'update_checkout_url'              => WC_AJAX::get_endpoint( 'update_checkout' ),
-						'customer_adress_updated_url'      => WC_AJAX::get_endpoint( 'customer_adress_updated' ),
-						'get_order_data_url'               => WC_AJAX::get_endpoint( 'get_order_data' ),
-						'dibs_add_customer_order_note_url' => WC_AJAX::get_endpoint( 'dibs_add_customer_order_note' ),
-						'change_payment_method_url'        => WC_AJAX::get_endpoint( 'change_payment_method' ),
-						'nets_checkout_nonce'              => wp_create_nonce( 'nets_checkout' ),
-					)
-				);
-				wp_enqueue_script( 'checkout' );
-
-				// Load stylesheet for the checkout page.
-				wp_register_style(
-					'dibs_style',
-					plugins_url( '/assets/css/style.css', __FILE__ ),
-					array(),
-					WC_DIBS_EASY_VERSION
-				);
-				wp_enqueue_style( 'dibs_style' );
-			}
 		}
 
 		/**
