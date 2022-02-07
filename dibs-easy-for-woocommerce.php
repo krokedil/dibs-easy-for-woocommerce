@@ -121,6 +121,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'includes/dibs-checkout-functions.php' );
 
 			include_once plugin_basename( 'classes/requests/class-dibs-requests.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-request-post.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-request-put.php' );
+			include_once plugin_basename( 'classes/requests/class-dibs-request-get.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-create-dibs-order.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-update-dibs-order.php' );
 			include_once plugin_basename( 'classes/requests/class-dibs-requests-update-dibs-order-reference.php' );

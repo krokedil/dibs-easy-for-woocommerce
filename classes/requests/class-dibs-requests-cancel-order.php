@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Cancel order request class
  */
-class DIBS_Requests_Cancel_Order extends DIBS_Requests2 {
+class DIBS_Requests_Cancel_Order extends Dibs_Request_Post {
 
 	/**
 	 * Reference to order_id.
@@ -24,69 +24,35 @@ class DIBS_Requests_Cancel_Order extends DIBS_Requests2 {
 	/**
 	 * Class constructor.
 	 *
-	 * @param string $order_id WC order id.
+	 * @param array $arguments The request args.
 	 */
-	public function __construct( $order_id ) {
-		parent::__construct();
-
-		$this->order_id = $order_id;
+	public function __construct( $arguments = array() ) {
+		parent::__construct( $arguments );
+		$this->log_title = 'Cancel order';
+		$this->order_id  = $arguments['order_id'];
 	}
 
 	/**
-	 * Makes the request.
-	 *
-	 * @return mixed
-	 */
-	public function request() {
-		$payment_id   = get_post_meta( $this->order_id, '_dibs_payment_id', true );
-		$request_url  = $this->endpoint . 'payments/' . $payment_id . '/cancels';
-		$request_args = $this->get_request_args();
-		$response     = wp_remote_request( $request_url, $request_args );
-		$code         = wp_remote_retrieve_response_code( $response );
-
-		// Log the request.
-		$log = Nets_Easy()->logger->format_log( $payment_id, 'POST', 'Nets cancel order', $request_args, $request_url, json_decode( wp_remote_retrieve_body( $response ), true ), $code );
-		Nets_Easy()->logger->log( $log );
-
-		if ( is_wp_error( $response ) ) {
-			$this->get_error_message( $response );
-			return 'ERROR';
-		}
-
-		if ( $response['response']['code'] >= 200 && $response['response']['code'] <= 299 ) {
-			return wp_remote_retrieve_body( $response );
-		} else {
-			$this->get_error_message( $response );
-			return wp_remote_retrieve_body( $response );
-		}
-	}
-
-	/**
-	 * Gets the request args for the API call.
+	 * Get the body for the request.
 	 *
 	 * @return array
 	 */
-	public function get_request_args() {
-		$request_args = array(
-			'headers'    => $this->request_headers( $this->order_id ),
-			'user-agent' => $this->request_user_agent(),
-			'method'     => 'POST',
-			'body'       => wp_json_encode( $this->request_body() ),
-			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
-		);
-		return apply_filters( 'dibs_easy_cancel_order_args', $request_args );
-	}
-
-	/**
-	 * Gets the request request body.
-	 *
-	 * @return array
-	 */
-	public function request_body() {
+	protected function get_body() {
 		$order = wc_get_order( $this->order_id );
 		return array(
 			'amount'     => intval( round( $order->get_total() * 100 ) ),
 			'orderItems' => DIBS_Requests_Get_Order_Items::get_items( $this->order_id ),
 		);
+	}
+
+
+	/**
+	 * Get the request url.
+	 *
+	 * @return string
+	 */
+	protected function get_request_url() {
+		$payment_id = get_post_meta( $this->order_id, '_dibs_payment_id', true );
+		return $this->endpoint . 'payments/' . $payment_id . '/cancels';
 	}
 }
