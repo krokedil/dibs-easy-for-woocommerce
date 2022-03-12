@@ -37,16 +37,17 @@ class DIBS_Requests_Order {
 				),
 				'reference' => '1',
 			);
-		} else {
-			$items = DIBS_Requests_Get_Order_Items::get_items( $order_id );
-			$order = wc_get_order( $order_id );
-			return array(
-				'items'     => $items,
-				'amount'    => intval( round( $order->get_total() * 100, 2 ) ),
-				'currency'  => $order->get_currency(),
-				'reference' => $order->get_order_number(),
-			);
 		}
+
+		$items = DIBS_Requests_Get_Order_Items::get_items( $order_id );
+		$order = wc_get_order( $order_id );
+
+		return array(
+			'items'     => $items,
+			'amount'    => intval( round( $order->get_total() * 100, 2 ) ),
+			'currency'  => $order->get_currency(),
+			'reference' => $order->get_order_number(),
+		);
 	}
 
 	/**
