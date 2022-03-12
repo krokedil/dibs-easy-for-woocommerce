@@ -19,13 +19,35 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @author   Krokedil
  */
 class DIBS_Easy_Admin_Notices {
+
+	/**
+	 * The plugin settings.
+	 *
+	 * @var array
+	 */
+	protected $settings;
+
+	/**
+	 * Indicates whether it is a payment method enabled
+	 *
+	 * @var string
+	 */
+	protected $enabled;
+
+	/**
+	 * Checkout flow type
+	 *
+	 * @var string
+	 */
+	protected $checkout_flow;
+
 	/**
 	 * DIBS_Easy_Admin_Notices constructor.
 	 */
 	public function __construct() {
 		$this->settings      = get_option( 'woocommerce_dibs_easy_settings' );
-		$this->enabled       = ( isset( $this->settings['enabled'] ) ) ? $this->settings['enabled'] : '';
-		$this->checkout_flow = ( isset( $this->settings['checkout_flow'] ) ) ? $this->settings['checkout_flow'] : 'embedded';
+		$this->enabled       = $this->settings['enabled'] ?? '';
+		$this->checkout_flow = $this->settings['checkout_flow'] ?? 'embedded';
 		add_action( 'admin_init', array( $this, 'check_settings' ) );
 	}
 

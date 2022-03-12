@@ -1,3 +1,8 @@
+
+function alog(msg) {
+    console.log(msg);
+}
+
 jQuery(function($) {
     const dibs_wc = {
         bodyEl: $('body'),
@@ -17,7 +22,7 @@ jQuery(function($) {
 		 * Runs on the $(document).ready event.
 		 */
 		documentReady: function() {
-			
+			alog(1);
 			// Extra checkout fields.
             dibs_wc.moveExtraCheckoutFields();
         },
@@ -26,6 +31,7 @@ jQuery(function($) {
 		 * Check if DIBS Easy is the selected gateway.
 		 */
 		DibsIsSelected: function() {
+            alog(2);
 			if (dibs_wc.paymentMethodEl.length > 0) {
 				dibs_wc.paymentMethod = dibs_wc.paymentMethodEl.filter(':checked').val();
 				if( 'dibs_easy' === dibs_wc.paymentMethod ) {
@@ -39,6 +45,7 @@ jQuery(function($) {
 		 * Locks the iFrame. 
 		 */
 		DibsFreeze: function() {
+            alog(3);
 			dibsCheckout.freezeCheckout();
 		},
 
@@ -46,6 +53,7 @@ jQuery(function($) {
 		 * Unlocks the iFrame. 
 		 */
 		DibsResume: function() {
+            alog(4);
 			if ( ! dibs_wc.blocked ) {
 				dibsCheckout.thawCheckout();
 			}
@@ -55,6 +63,7 @@ jQuery(function($) {
 		 * Moves all non standard fields to the extra checkout fields.
 		 */
 		moveExtraCheckoutFields: function() {
+            alog(5);
 			// Move order comments.
 			$('.woocommerce-additional-fields').appendTo('#dibs-extra-checkout-fields');
 
@@ -73,7 +82,9 @@ jQuery(function($) {
 		 * Handle hashchange triggered when Woo order is created.
 		 */
         handleHashChange : function(event){
-			console.log('hashchange');
+            alog(6);
+
+            console.log('hashchange');
 			var currentHash = location.hash;
             var splittedHash = currentHash.split("=");
             console.log(splittedHash[0]);
@@ -101,7 +112,9 @@ jQuery(function($) {
 		 * Initiates the script and sets the triggers for the functions.
 		 */
 		init: function() {
-			// Check if DIBS Easy is the selected payment method before we do anything.
+            alog(7);
+
+            // Check if DIBS Easy is the selected payment method before we do anything.
 			if( dibs_wc.DibsIsSelected() ) {
 
                 $(document).ready( dibs_wc.documentReady() );
@@ -118,6 +131,8 @@ jQuery(function($) {
     var paymentId = wc_dibs_easy.paymentId;
             
     $( document ).ready( function() {
+        alog(8);
+
         if ("dibs_easy" === $("input[name='payment_method']:checked").val() ) {
             addressChangedListener();
             paymentInitializedListener();
@@ -128,17 +143,19 @@ jQuery(function($) {
     // Address updated in Easy checkout
     function addressChangedListener() {
         dibsCheckout.on('address-changed', function (address) {
+            alog(9);
+
             if( address ) {
                 console.log('address-changed');    
                 console.log(address);
                 $.ajax(
-                    wc_dibs_easy.customer_adress_updated_url,
+                    wc_dibs_easy.customer_address_updated_url,
                     {
                         type: "POST",
                         dataType: "json",
                         async: true,
                         data: {
-                            action:		'customer_adress_updated',
+                            action:		'customer_address_updated',
                             address 	: address,
                             nonce : wc_dibs_easy.nets_checkout_nonce
                         },
@@ -147,16 +164,16 @@ jQuery(function($) {
                         error: function (response) {
                         },
                         complete: function (response) {
-                            console.log('customer_adress_updated ');
+                            console.log('customer_address_updated ');
                             console.log( response.responseJSON.data );
-                            if( 'yes' == response.responseJSON.data.updateNeeded ) {
+                            if( 'yes' === response.responseJSON.data.updateNeeded ) {
                                 $( '#billing_country' ).val( response.responseJSON.data.country );
                                 $( '#shipping_country' ).val( response.responseJSON.data.country );
-                                $( 'input#billing_postcode' ).val( response.responseJSON.data.postCode );
-                                $( 'input#shipping_postcode' ).val( response.responseJSON.data.postCode )
+                                $( '#billing_postcode' ).val( response.responseJSON.data.postCode );
+                                $( '#shipping_postcode' ).val( response.responseJSON.data.postCode )
                             }
                             
-                            if( 'yes' == response.responseJSON.data.mustLogin ) {
+                            if( 'yes' === response.responseJSON.data.mustLogin ) {
                                 // Customer might need to login. Inform customer and freeze DIBS checkout.
                                 var $form = $( 'form.checkout' );
                                 $form.prepend( '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-updateOrderReview"><ul class="woocommerce-error" role="alert"><li>' + response.responseJSON.data.mustLoginMessage + '</li></ul></div>' );
@@ -181,6 +198,8 @@ jQuery(function($) {
     // When customer clicks Pay button in Easy. Before redirect to 3DSecure.
     function paymentInitializedListener() {
         dibsCheckout.on('pay-initialized', function(response) {
+            alog(10);
+
             dibs_wc.dibsOrderProcessing = true;
             $(document.body).trigger('dibs_pay_initialized');
             console.log('dibs_pay_initialized');
@@ -192,6 +211,8 @@ jQuery(function($) {
     //After payment is complete
     function paymentCompletedListener() {
         dibsCheckout.on('payment-completed', function (response) {
+            alog(11);
+
             console.log('payment-completed');
             console.log(response.paymentId);
             //DIBS_Payment_Success(response.paymentId);
@@ -204,6 +225,8 @@ jQuery(function($) {
     }
 
     function processWooCheckout(paymentId) {
+        alog(12);
+
 
         // $('body').addClass( 'dibs-checkout-processing' );
         // $( 'body' ).append( $( '<div class="dibs-modal"><div class="dibs-modal-content">' + wc_dibs_easy.dibs_process_order_text + '</div></div>' ) );
@@ -274,9 +297,10 @@ jQuery(function($) {
                         $('form[name="checkout"]').submit();
                         $('form.woocommerce-checkout').addClass( 'processing' );
 
-                    } 
+                    }
                 },
                 error: function (data) {
+                    console.log(data, 'error_data');
                 },
                 complete: function (data) {
                 }
@@ -287,7 +311,9 @@ jQuery(function($) {
 
     // Update DIBS Easy checkout (after Woo updated_checkout)
     function update_checkout() {
-        if( ( checkout_initiated == 'yes' && wc_dibs_easy.paymentId == null ) || ( wc_dibs_easy.paymentId !== null && wc_dibs_easy.paymentFailed !== null ) ) {
+        alog(13);
+
+        if( ( checkout_initiated === 'yes' && wc_dibs_easy.paymentId == null ) || ( wc_dibs_easy.paymentId !== null && wc_dibs_easy.paymentFailed !== null ) ) {
             console.log('update checkout');
             $.ajax(
                 wc_dibs_easy.update_checkout_url,
@@ -320,14 +346,16 @@ jQuery(function($) {
 
     
     var wc_dibs_body_class = function wc_dibs_body_class() {
-		if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
+        alog(14);
+
+        if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
 			$("body").addClass("dibs-selected").removeClass("dibs-deselected");
 		} else {
 			$("body").removeClass("dibs-selected").addClass("dibs-deselected");
 		}
     };
 
-    // When Select another payment method button is clicked
+    // When Select another payment method button is clicked - ovo sam uradio.
     $(document).on('click', '#dibs-easy-select-other', function (e) {
         e.preventDefault();
 			
@@ -356,8 +384,10 @@ jQuery(function($) {
         );
     });
 
-    // When payment method is changed
+    // When payment method is changed ovo sam uradio.
     $(document).on("change", "input[name='payment_method']", function (event) {
+        alog(14);
+
         if ( true !== dibs_wc.dibsOrderProcessing ) {
             if ( "dibs_easy" === $("input[name='payment_method']:checked").val() ) {	
                 $.ajax(
@@ -388,8 +418,12 @@ jQuery(function($) {
     });
     
     // When WooCommerce checkout submission fails
-	$(document).on("checkout_error", function () {
+	$(document).on("checkout_error", function (wpe) {
+        alog(15);
+
+        console.log(wpe);
 		if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
+            alog('15aa');
            console.log('responded with payment-order-finalized false');
            dibsCheckout.send('payment-order-finalized', false);
 		}
@@ -397,21 +431,30 @@ jQuery(function($) {
     
     // Suspend DIBS Checkout during WooCommerce checkout update
     $(document).on('update_checkout', function () {
+        alog(16);
+
         if ("dibs_easy" === $("input[name='payment_method']:checked").val() && checkout_initiated == 'yes' && paymentId == null ) {
+            alog(17);
+
             dibsCheckout.freezeCheckout();
         }
     });
 
     // Send an updated cart to DIBS after the checkout has been updated in Woo
     $(document).on('updated_checkout', function () {
+        alog(18);
+
         if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
+            alog(19);
 	        update_checkout();
         }
     });
 
     // Send an updated cart to DIBS after the checkout has been updated in Woo
     $(document).on('blur', function () {
+        alog(20);
         if ("dibs_easy" === $("input[name='payment_method']:checked").val()) {
+            alog(21);
 	        update_checkout();
         }
     });
