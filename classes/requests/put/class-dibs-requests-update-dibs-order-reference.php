@@ -22,12 +22,17 @@ class DIBS_Requests_Update_DIBS_Order_Reference extends Dibs_Request_Put {
 	public $payment_id;
 
 	/**
-	 * $order_id. WooCommerce order ID.
+	 * WooCommerce order ID.
 	 *
 	 * @var string
 	 */
 	public $order_id;
 
+	/**
+	 * Order number.
+	 *
+	 * @var string
+	 */
 	public $order_number;
 
 	/**
@@ -38,7 +43,7 @@ class DIBS_Requests_Update_DIBS_Order_Reference extends Dibs_Request_Put {
 	public function __construct( $arguments ) {
 		parent::__construct( $arguments );
 		$this->payment_id = $arguments['payment_id'];
-		$this->order_id   = $arguments['order_id'];
+		$this->order_id   = isset( $arguments['order_id'] ) ? $this->arguments['order_id'] : null;
 
 		$this->order_number = $this->get_order_number( $arguments['order_id'] );
 		$this->log_title    = 'Update order reference ';
