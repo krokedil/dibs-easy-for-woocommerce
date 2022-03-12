@@ -97,93 +97,40 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Process the payment and return the result.
 	 *
-	 * @param  int  $order_id WooCommerce order ID.
-	 * @param  bool $retry WooCommerce Retry.
+	 * @param int $order_id WooCommerce order ID.
 	 *
 	 * @return array
 	 */
-	public function process_payment( $order_id, $retry = false ) {
+	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
 		// Subscription payment method change.
 		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_STRING );
 		if ( ! empty( $change_payment_method ) ) {
-			$request  = new DIBS_Requests_Create_DIBS_Order( 'redirect', $order_id );
-			$response = json_decode( $request->request() );
+			$response = Nets_Easy()->api->create_dibs_easy_order( 'redirect', $order_id );
 			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
 				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
+
 				return array(
 					'result'   => 'success',
-					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response->hostedPaymentPageUrl ), // phpcs:ignore
+					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
+					// phpcs:ignore
 				);
-			} else {
-				// Something else went wrong.
-				if ( $response->errors ) {
-					foreach ( $response->errors as $error ) {
-						$error_message = $error[0];
-					}
-					if ( $this->is_json( $error_message ) ) {
-						$error_message = json_decode( $error_message );
-					}
-				} else {
-					$error_message = __( 'An error occured during communication with Nets. Please try again.', 'dibs-easy-for-woocommerce' );
-				}
-				/* Translators: Error message from Nets. */
-				wc_add_notice( sprintf( __( 'Nets Easy error: %s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $error_message ) ), 'error' );
-				return false;
 			}
+			return array(
+				'result' => 'error',
+			);
 		}
-
 		// Regular purchase.
+		// Embedded flow.
 		if ( 'embedded' === $this->checkout_flow && ! is_wc_endpoint_url( 'order-pay' ) ) {
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
-			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-
-				// Update order number in DIBS system if this is the embedded checkout flow.
-				$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
-				$request    = new DIBS_Requests_Update_DIBS_Order_Reference( $payment_id, $order_id );
-				$request    = $request->request();
-
-				// Add #dibseasy hash to checkout url so we can respond to DIBS that payment can proceed and be finalized in DIBS system.
-				$response = array(
-					'return_url' => add_query_arg( 'easy_confirm', 'yes', $this->get_return_url( $order ) ),
-					'time'       => time(),
-				);
-				return array(
-					'result'   => 'success',
-					'redirect' => '#dibseasy=' . base64_encode( wp_json_encode( $response ) ), // phpcs:ignore
-				);
-			}
-		} else {
-			$request  = new DIBS_Requests_Create_DIBS_Order( 'redirect', $order_id );
-			$response = json_decode( $request->request(), true );
-
-			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
-				// All good. Redirect customer to DIBS payment page.
-				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
-				update_post_meta( $order_id, '_dibs_payment_id', $response['paymentId'] ); // phpcs:ignore
-				return array(
-					'result'   => 'success',
-					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ), // phpcs:ignore
-				);
-			} else {
-				// Something else went wrong.
-				if ( $response->errors ) {
-					foreach ( $response->errors as $error ) {
-						$error_message = $error[0];
-					}
-					if ( $this->is_json( $error_message ) ) {
-						$error_message = json_decode( $error_message );
-					}
-				} else {
-					$error_message = __( 'An error occured during communication with Nets. Please try again.', 'dibs-easy-for-woocommerce' );
-				}
-				/* Translators: Error message from Nets. */
-				wc_add_notice( sprintf( __( 'Nets Easy error: %s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $error_message ) ), 'error' );
-				return false;
-			}
+			return $this->process_embedded_handler( $order_id );
 		}
+		// Redirect flow.
+		$response = Nets_Easy()->api->create_dibs_easy_order( 'redirect', $order_id );
+		return $this->process_redirect_handler( $order_id, $response );
 	}
 
 	/**
@@ -198,16 +145,15 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
 
-		$request = new DIBS_Request_Refund_Order( $order_id );
-		$request = json_decode( $request->request(), true );
-
-		if ( array_key_exists( 'refundId', $request ) ) { // Payment success
+		$response = Nets_Easy()->api->refund_dibs_easy_order( $order_id );
+		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
 			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $request['refundId'], $reason ) ); // phpcs:ignore
+			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %1$s. Reason: %2$s', 'dibs-easy-for-woocommerce' ), $response['refundId'], $reason ) ); // phpcs:ignore
+
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 	/**
 	 * Add Nets Easy body class.
@@ -265,24 +211,80 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Delete Nets sessions.
 	 *
-	 * @param  string $order_id WC order id.
-	 *
 	 * @return void
 	 */
-	public function maybe_delete_dibs_sessions( $order_id ) {
+	public function maybe_delete_dibs_sessions() {
 		wc_dibs_unset_sessions();
 	}
 
 	/**
 	 * Check if data is json.
 	 *
-	 * @param  string $string Json object.
+	 * @param string $string Json object.
 	 *
 	 * @return mixed
 	 */
 	public function is_json( $string ) {
 		json_decode( $string );
+
 		return ( json_last_error() === JSON_ERROR_NONE );
+	}
+
+	/**
+	 * @param int   $order_id The WooCommerce order id.
+	 * @param array $response The response from payment.
+	 *
+	 * @return array|string[]
+	 */
+	protected function process_redirect_handler( $order_id, $response ) {
+		$order = wc_get_order( $order_id );
+		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
+			// All good. Redirect customer to DIBS payment page.
+			$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
+			update_post_meta( $order_id, '_dibs_payment_id', $response['paymentId'] ); // phpcs:ignore
+
+			return array(
+				'result'   => 'success',
+				'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
+			);
+		}
+
+		return array(
+			'result' => 'error',
+		);
+	}
+
+	/**
+	 * process_embedded_handler
+	 *
+	 * @param int $order_id The WooCommerce order id.
+	 *
+	 * @return string[]|void
+	 */
+	protected function process_embedded_handler( $order_id ) {
+		$order = wc_get_order( $order_id );
+		if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+
+			// Update order number in DIBS system if this is the embedded checkout flow.
+			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+			update_post_meta( $order_id, '_dibs_payment_id', WC()->session->get( 'dibs_payment_id' ) );
+			$response = Nets_Easy()->api->update_dibs_easy_order_reference( WC()->session->get( 'dibs_payment_id' ), $order_id );
+			if ( is_wp_error( $response ) ) {
+				return array(
+					'result' => 'error',
+				);
+			}
+			// Add #dibseasy hash to checkout url, so we can respond to DIBS that payment can proceed and be finalized in DIBS system.
+			$checkout_url = array(
+				'return_url' => add_query_arg( 'easy_confirm', 'yes', $this->get_return_url( $order ) ),
+				'time'       => time(),
+			);
+
+			return array(
+				'result'   => 'success',
+				'redirect' => '#dibseasy=' . base64_encode( wp_json_encode( $checkout_url ) ), // phpcs:ignore
+			);
+		}
 	}
 
 }
