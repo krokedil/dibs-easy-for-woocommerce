@@ -240,9 +240,10 @@ abstract class DIBS_Requests2 {
 	/**
 	 * Logs the response from the request.
 	 *
-	 * @param object|WP_Error $response The response from the request.
-	 * @param array           $request_args The request args.
-	 * @param string          $request_url The request URL.
+	 * @param array|WP_Error $response The response from the request.
+	 * @param array          $request_args The request args.
+	 * @param string         $request_url The request URL.
+	 *
 	 * @return void
 	 */
 	protected function log_response( $response, $request_args, $request_url ) {
@@ -250,7 +251,7 @@ abstract class DIBS_Requests2 {
 		$title    = "{$this->log_title} - URL: {$request_url}";
 		$code     = wp_remote_retrieve_response_code( $response );
 		$order_id = $response['OrderID'] ?? null;
-		$log      = DIBS_Logger::format_log( $order_id, $method, $title, $request_args, $response, $code, $request_url );
+		$log      = DIBS_Logger::format_log( $order_id, $method, $title, $request_args, $request_url, $response, $code );
 		DIBS_Logger::log( $log );
 	}
 }
