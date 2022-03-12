@@ -41,7 +41,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 		// Get the settings values.
 		$this->title         = $this->get_option( 'title' );
 		$this->enabled       = $this->get_option( 'enabled' );
-		$this->checkout_flow = ( isset( $this->settings['checkout_flow'] ) ) ? $this->settings['checkout_flow'] : 'embedded';
+		$this->checkout_flow = $this->settings['checkout_flow'] ?? 'embedded';
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
@@ -84,11 +84,7 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	 * @return bool
 	 */
 	public function is_available() {
-		if ( 'yes' !== $this->enabled ) {
-			return false;
-		}
-
-		return true;
+		return 'yes' === $this->enabled;
 	}
 
 	/**
