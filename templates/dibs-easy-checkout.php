@@ -7,6 +7,8 @@
  * @package dibs-easy-for-woocommerce
  */
 
+$checkout = WC()->checkout();
+
 do_action( 'woocommerce_before_checkout_form', $checkout );
 do_action( 'wc_dibs_before_checkout_form' );
 
@@ -27,7 +29,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
 		<div id="dibs-iframe">
 			<?php do_action( 'wc_dibs_before_snippet' ); ?>
-			<?php wc_dibs_show_snippet(); ?>
+			<div id="dibs-complete-checkout"></div>
 			<?php do_action( 'wc_dibs_after_snippet' ); ?>
 		</div>
 	</div>
