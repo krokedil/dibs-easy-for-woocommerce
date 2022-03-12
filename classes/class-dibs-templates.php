@@ -96,13 +96,11 @@ class DIBS_Templates {
 					}
 
 					// If another gateway is saved in session, but has since become unavailable.
-					if ( WC()->session->get( 'chosen_payment_method' ) ) {
-						if ( ! array_key_exists( WC()->session->get( 'chosen_payment_method' ), $available_gateways ) ) {
-							reset( $available_gateways );
+					if ( WC()->session->get( 'chosen_payment_method' ) && ! array_key_exists( WC()->session->get( 'chosen_payment_method' ), $available_gateways ) ) {
+						reset( $available_gateways );
 
-							if ( 'dibs_easy' === key( $available_gateways ) ) {
-								$template = $dibs_easy_checkout_template;
-							}
+						if ( 'dibs_easy' === key( $available_gateways ) ) {
+							$template = $dibs_easy_checkout_template;
 						}
 					}
 				}
