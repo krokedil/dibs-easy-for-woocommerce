@@ -23,28 +23,58 @@ class DIBS_Logger {
 	/**
 	 * Logs an event.
 	 *
-	 * @param string $data The data string.
+	 * @param string|array $data The data string|array.
 	 */
 	public static function log( $data ) {
-		$collector_settings = get_option( 'woocommerce_dibs_easy_settings' );
-		if ( 'yes' === $collector_settings['debug_mode'] ) {
+		$dibs_easy__settings = get_option( 'woocommerce_dibs_easy_settings' );
+		if ( 'yes' === $dibs_easy__settings['debug_mode'] ) {
 			$message = self::format_data( $data );
 			if ( empty( self::$log ) ) {
 				self::$log = new WC_Logger();
 			}
 			self::$log->add( 'nets_easy', wp_json_encode( $message ) );
 		}
+
+		if ( isset( $data['response']['code'] ) && ( $data['response']['code'] < 200 || $data['response']['code'] > 299 ) ) {
+			self::log_to_db( $data );
+		}
+
+	}
+
+	/**
+	 * Logs an event in the WP DB.
+	 *
+	 * @param array $data The data to be logged.
+	 *
+	 * @throws JsonException Throws JsonException.
+	 */
+	public static function log_to_db( $data ) {
+		$logs = get_option( 'dibs_easy_debuglog', array() );
+
+		if ( ! empty( $logs ) ) {
+			$logs = json_decode( $logs, true, 512, JSON_THROW_ON_ERROR );
+		}
+
+		$logs   = array_slice( $logs, - 14 );
+		$logs[] = $data;
+		$logs   = wp_json_encode( $logs );
+		update_option( 'dibs_easy_debuglog', $logs );
 	}
 
 	/**
 	 * Formats the log data to prevent json error.
 	 *
-	 * @param string $data Json string of data.
-	 * @return array
+	 * @param string|array $data The data string|array.
+	 *
+	 * @return string|array
+	 * @throws JsonException Throws JsonException.
 	 */
 	public static function format_data( $data ) {
+		if ( ! is_array( $data ) ) {
+			return $data;
+		}
 		if ( isset( $data['request']['body'] ) ) {
-			$request_body            = json_decode( $data['request']['body'], true );
+			$request_body            = json_decode( $data['request']['body'], true, 512, JSON_THROW_ON_ERROR );
 			$data['request']['body'] = $request_body;
 		}
 
@@ -64,12 +94,6 @@ class DIBS_Logger {
 	 * @return array
 	 */
 	public static function format_log( $checkout_id, $method, $title, $request_args, $request_url, $response, $code ) {
-		// Unset the snippet to prevent issues in the response.
-		// Add logic to remove any HTML snippets from the response.
-
-		// Unset the snippet to prevent issues in the request body.
-		// Add logic to remove any HTML snippets from the request body.
-
 		return array(
 			'id'             => $checkout_id,
 			'type'           => $method,
