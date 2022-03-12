@@ -299,6 +299,25 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 	}
 
+	/**
+	 * Logs messages from the JavaScript to the server log.
+	 *
+	 * @return void
+	 */
+	public static function dibs_easy_wc_log_js() {
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'dibs_wc_log_js' ) ) {
+			wp_send_json_error( 'bad_nonce' );
+			exit;
+		}
+		$posted_message  = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
+		$dibs_payment_id = WC()->session->get( 'dibs_payment_id' );
+		$message         = "Frontend JS $dibs_payment_id: $posted_message";
+		DIBS_Logger::log( $message );
+		wp_send_json_success();
+		wp_die();
+	}
+
 }
 
 DIBS_Ajax_Calls::init();
