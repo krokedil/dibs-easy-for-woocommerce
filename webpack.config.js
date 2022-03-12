@@ -1,13 +1,13 @@
-const path = require('path');
+const path = require( 'path' );
 module.exports = {
 	mode: 'production', // production
 	entry: {
-		'checkout': './assets/js/checkout.js',
+		checkout: './assets/js/checkout.js',
 	},
 
 	output: {
 		filename: '[name].min.js',
-		path: path.resolve(__dirname, './assets/js'),
+		path: path.resolve( __dirname, './assets/js' ),
 	},
 	devtool: 'source-map',
 	module: {
@@ -18,11 +18,11 @@ module.exports = {
 				use: {
 					loader: 'babel-loader',
 					options: {
-						presets: ['@babel/preset-env'],
-						plugins: ['@babel/plugin-proposal-object-rest-spread'],
-					}
-				}
-			}
+						presets: [ '@babel/preset-env' ],
+						plugins: [ '@babel/plugin-proposal-object-rest-spread' ],
+					},
+				},
+			},
 		],
 	},
 };
