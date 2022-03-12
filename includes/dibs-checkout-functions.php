@@ -272,3 +272,14 @@ function wc_dibs_maybe_add_invoice_fee( $order ) {
 	}
 }
 
+/**
+ * Prints error message as notices.
+ *
+ * @param WP_Error|array $wp_error A WordPress error object.
+ *
+ * @return void
+ */
+function dibs_easy_print_error_message( $wp_error ) {
+	wc_print_notice( 'error', 'error' );
+}
+
