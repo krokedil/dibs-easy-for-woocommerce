@@ -14,12 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 
-	/**
-	 * Checkout fields.
-	 *
-	 * @var string
-	 */
-	public $checkout_fields;
 
 	/**
 	 * The checkout flow
