@@ -33,10 +33,10 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-			'update_checkout'         => true,
-			'customer_adress_updated' => true,
-			'get_order_data'          => true,
-			'change_payment_method'   => true,
+			'update_checkout'          => true,
+			'customer_address_updated' => true,
+			'get_order_data'           => true,
+			'change_payment_method'    => true,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -75,8 +75,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 			wp_die();
 		}
 
-		$request  = new DIBS_Requests_Update_DIBS_Order( $payment_id );
-		$response = $request->request();
+		$response = Nets_Easy()->api->update_dibs_easy_order( $payment_id );
 		if ( is_wp_error( $response ) ) {
 			wc_dibs_unset_sessions();
 			$return['redirect_url'] = wc_get_checkout_url();
@@ -97,7 +96,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 	/**
 	 * Customer address updated - triggered when address-changed event is fired
 	 */
-	public static function customer_adress_updated() {
+	public static function customer_address_updated() {
 
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
 		if ( ! wp_verify_nonce( $nonce, 'nets_checkout' ) ) {
@@ -119,8 +118,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		// If customer is not logged in and this is a subscription purchase - get customer email from DIBS.
 		if ( ! is_user_logged_in() && ( ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
-			$request    = new DIBS_Requests_Get_DIBS_Order( $payment_id );
-			$response   = $request->request();
+			$response   = Nets_Easy()->api->get_dibs_easy_order( $payment_id );
 			$email      = $response->payment->consumer->privatePerson->email;
 			if ( email_exists( $email ) ) {
 				// Email exist in a user account, customer must login.
@@ -175,13 +173,16 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		}
 
 		$payment_id = filter_input( INPUT_POST, 'paymentId', FILTER_SANITIZE_STRING );
+		if ( ! $payment_id ) {
+			$payment_id = WC()->session->get( 'dibs_payment_id' );
+		}
 		// Set the endpoint sufix.
 		$endpoint_sufix = 'payments/' . $payment_id;
 
 		// Prevent duplicate orders if payment complete event is triggered twice or if order already exist in Woo (via webhook).
 		$query          = new WC_Order_Query(
 			array(
-				'limit'          => -1,
+				'limit'          => - 1,
 				'orderby'        => 'date',
 				'order'          => 'DESC',
 				'return'         => 'ids',
@@ -202,17 +203,16 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		if ( $order_id_match ) {
 			$order = wc_get_order( $order_id_match );
 			if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-				Nets_Easy()->logger->log( 'Process Woo checkout triggered but _dibs_payment_id already exist in this order: ' . $order_id_match );
+				DIBS_Logger::log( 'Process Woo checkout triggered but _dibs_payment_id already exist in this order: ' . $order_id_match );
 				$location = $order->get_checkout_order_received_url();
-				Nets_Easy()->logger->log( '$location: ' . $location );
+				DIBS_Logger::log( '$location: ' . $location );
 				wp_send_json_error( array( 'redirect' => $location ) );
 				wp_die();
 			}
 		}
 
 		// Make the request.
-		$request  = new DIBS_Requests_Get_DIBS_Order( $payment_id );
-		$response = $request->request();
+		$response = Nets_Easy()->api->get_dibs_easy_order( $payment_id );
 
 		if ( is_wp_error( $response ) || empty( $response ) ) {
 			// Something went wrong.
@@ -222,7 +222,7 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 				$message = 'Empty response from Nets.';
 			}
 
-			Nets_Easy()->logger->log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . wp_json_encode( $message ) );
+			DIBS_Logger::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . wp_json_encode( $message ) );
 
 			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
@@ -230,16 +230,16 @@ class DIBS_Ajax_Calls extends WC_AJAX {
 		} else {
 			// All good with the request.
 			// Convert country code from 3 to 2 letters.
-			if ( $response->payment->consumer->shippingAddress->country ) {
-				$response->payment->consumer->shippingAddress->country = dibs_get_iso_2_country( $response->payment->consumer->shippingAddress->country );
+			if ( $response['payment']['consumer']['shippingAddress']['country'] ) {
+				$response['payment']['consumer']['shippingAddress']['country'] = dibs_get_iso_2_country( $response['payment']['consumer']['shippingAddress']['country'] );
 			}
 
 			// Store the order data in a sesstion. We might need it if form processing in Woo fails.
 			WC()->session->set( 'dibs_order_data', $response );
 
-			Nets_Easy()->logger->log( 'processWooCheckout triggered and checkout form about to be submitted for Nets payment ID ' . $payment_id );
+			DIBS_Logger::log( 'processWooCheckout triggered and checkout form about to be submitted for Nets payment ID ' . $payment_id );
 
-			self::prepare_cart_before_form_processing( $response->payment->consumer->shippingAddress->country );
+			self::prepare_cart_before_form_processing( $response['payment']['consumer']['shippingAddress']['country'] );
 			wp_send_json_success( $response );
 			wp_die();
 		}
