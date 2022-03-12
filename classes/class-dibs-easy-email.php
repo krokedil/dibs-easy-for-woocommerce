@@ -41,7 +41,6 @@ if ( ! class_exists( 'Dibs_Easy_Email' ) ) :
 				$payment_method = get_post_meta( $order_id, 'dibs_payment_method', true );
 				$order_date     = wc_format_datetime( $order->get_date_created() );
 
-
 				if ( $settings['email_text'] ) {
 					echo wp_kses_post( wpautop( wptexturize( $settings['email_text'] ) ) );
 				}
