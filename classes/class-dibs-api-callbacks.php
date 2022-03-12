@@ -59,7 +59,7 @@ class DIBS_Api_Callbacks {
 			$payment_id   = $data['data']['paymentId'];
 			$order_number = $data['data']['order']['reference'];
 
-			Nets_Easy()->logger->log( 'Payment created webhook listener hit ' . wp_json_encode( $data ) );
+			DIBS_Logger::log( 'Payment created webhook listener hit ' . wp_json_encode( $data ) );
 
 			as_schedule_single_action( time() + 120, 'dibs_payment_created_callback', array( $payment_id, $order_number, $amount ) );
 			header( 'HTTP/1.1 200 OK' );
@@ -76,7 +76,7 @@ class DIBS_Api_Callbacks {
 	 */
 	public function execute_dibs_payment_created_callback( $payment_id, $order_number, $amount ) {
 
-		Nets_Easy()->logger->log( 'Execute Payment created API callback. Payment ID:' . $payment_id . '. Order number: ' . $order_number . '. Amount: ' . $amount );
+		DIBS_Logger::log( 'Execute Payment created API callback. Payment ID:' . $payment_id . '. Order number: ' . $order_number . '. Amount: ' . $amount );
 		$order_id = '';
 		if ( empty( $order_id ) ) {
 			// We're missing Order ID in callback. Try to get it via query by internal reference.
@@ -84,7 +84,7 @@ class DIBS_Api_Callbacks {
 		}
 
 		if ( empty( $order_id ) ) {
-			Nets_Easy()->logger->log( 'No coresponding order ID was found for Payment ID ' . $payment_id );
+			DIBS_Logger::log( 'No coresponding order ID was found for Payment ID ' . $payment_id );
 			return;
 		}
 
@@ -92,9 +92,9 @@ class DIBS_Api_Callbacks {
 
 		// Maybe abort the callback (if the order already has been processed in Woo).
 		if ( ! empty( $order->get_date_paid() ) ) {
-			Nets_Easy()->logger->log( 'Aborting Payment created API callback. Order ' . $order->get_order_number() . '(order ID ' . $order_id . ') already processed.' );
+			DIBS_Logger::log( 'Aborting Payment created API callback. Order ' . $order->get_order_number() . '(order ID ' . $order_id . ') already processed.' );
 		} else {
-			Nets_Easy()->logger->log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
+			DIBS_Logger::log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
 			wc_dibs_confirm_dibs_order( $order_id );
 			$this->check_order_totals( $order, $amount );
 		}
@@ -131,7 +131,7 @@ class DIBS_Api_Callbacks {
 
 			if ( $order_payment_id === $payment_id ) {
 				$order_id_match = $order_id;
-				Nets_Easy()->logger->log( 'Payment ID ' . $payment_id . ' exist in order ID ' . $order_id_match );
+				DIBS_Logger::log( 'Payment ID ' . $payment_id . ' exist in order ID ' . $order_id_match );
 				break;
 			}
 		}
@@ -154,12 +154,12 @@ class DIBS_Api_Callbacks {
 		if ( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
 			/* Translators: Nets order total. */
 			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
-			Nets_Easy()->logger->log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
+			DIBS_Logger::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
 			$order_totals_match = false;
 		} elseif ( $dibs_order_total > $woo_order_total && ( $dibs_order_total - $woo_order_total ) > 30 ) {
 			/* Translators: Nets order total. */
 			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
-			Nets_Easy()->logger->log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
+			DIBS_Logger::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
 			$order_totals_match = false;
 		}
 
