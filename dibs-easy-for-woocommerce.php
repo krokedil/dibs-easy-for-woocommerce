@@ -56,6 +56,20 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		public $dibs_settings;
 
 		/**
+		 * Api class.
+		 *
+		 * @var Dibs_Easy_API
+		 */
+		public $api;
+
+		/**
+		 * The checkout type
+		 *
+		 * @var string
+		 */
+		public $checkout_flow;
+
+		/**
 		 * DIBS_Easy constructor.
 		 */
 		public function __construct() {
@@ -145,6 +159,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-payment-methods.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-refund-data.php' );
 			include_once plugin_basename( 'classes/class-dibs-assets.php' );
+			include_once plugin_basename( 'classes/class-dibs-api.php' );
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -154,7 +169,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			// Set variables for shorthand access to classes.
 			$this->order_management = new DIBS_Post_Checkout();
-			$this->logger           = new DIBS_Logger();
+
+			$this->api = new Dibs_Easy_API();
 
 		}
 
@@ -200,56 +216,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			$methods[] = 'DIBS_Easy_Gateway';
 
 			return $methods;
-		}
-
-		/**
-		 * When checking out using Easy, we need to make sure none of the WooCommerce are required, in case DIBS
-		 * does not return info for some of them.
-		 *
-		 * @param array $fields WooCommerce checkout fields.
-		 *
-		 * @return mixed
-		 */
-		public function unrequire_fields( $fields ) {
-			if ( 'dibs_easy' === WC()->session->get( 'chosen_payment_method' ) ) {
-				foreach ( $fields as $fieldset_key => $fieldset ) {
-					foreach ( $fieldset as $key => $field ) {
-						$fields[ $fieldset_key ][ $key ]['required']        = '';
-						$fields[ $fieldset_key ][ $key ]['wooccm_required'] = '';
-					}
-				}
-			}
-			return $fields;
-		}
-
-		/**
-		 * Makes sure there's no empty data sent for validation.
-		 *
-		 * @param array $data Posted data.
-		 *
-		 * @return mixed
-		 */
-		public function unrequire_posted_data( $data ) {
-			if ( 'dibs_easy' === WC()->session->get( 'chosen_payment_method' ) ) {
-				foreach ( $data as $key => $value ) {
-					if ( '' === $value ) {
-						unset( $data[ $key ] );
-					}
-				}
-			}
-			return $data;
-		}
-
-		/**
-		 * Saves DIBS data to WooCommerce order as meta field.
-		 *
-		 * @param string $order_id WooCommerce order id.
-		 * @param array  $data  Posted data.
-		 */
-		public function save_dibs_order_data( $order_id, $data ) {
-			$payment_id = filter_input( INPUT_POST, 'dibs_payment_id', FILTER_SANITIZE_STRING );
-			Nets_Easy()->logger->log( 'Saving Nets meta data for payment id ' . $payment_id . ' in order id ' . $order_id );
-			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
 		}
 	}
 
