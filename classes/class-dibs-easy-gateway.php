@@ -22,6 +22,13 @@ class DIBS_Easy_Gateway extends WC_Payment_Gateway {
 	public $checkout_fields;
 
 	/**
+	 * The checkout flow
+	 *
+	 * @var string
+	 */
+	public $checkout_flow;
+
+	/**
 	 * DIBS_Easy_Gateway constructor.
 	 */
 	public function __construct() {
