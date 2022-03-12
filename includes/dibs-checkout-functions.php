@@ -10,34 +10,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Echoes DIBS Easy iframe snippet.
+ * Maybe create an order.
+ *
+ * @return array|mixed|void|WP_Error
  */
-function wc_dibs_show_snippet() {
-	$private_key = wc_dibs_get_private_key();
-	$payment_id  = wc_dibs_get_payment_id();
-	$locale      = wc_dibs_get_locale();
+function dibs_easy_maybe_create_order() {
+	$cart       = WC()->cart;
+	$session    = WC()->session;
+	$payment_id = WC()->session->get( 'dibs_payment_id' );
+	$cart->calculate_fees();
+	$cart->calculate_shipping();
+	$cart->calculate_totals();
+	if ( $payment_id ) {
+		$dibs_easy_order = Nets_Easy()->api->get_dibs_easy_order( $payment_id );
+		if ( is_wp_error( $dibs_easy_order ) ) {
+			$session->__unset( 'dibs_payment_id' );
 
-	if ( ! is_array( $payment_id ) ) {
-		?>
-	<div id="dibs-complete-checkout"></div>
-	<script type="text/javascript">
-		var checkoutOptions = {
-					checkoutKey: "<?php _e( $private_key ); ?>", 	//[Required] Test or Live GUID with dashes.
-					paymentId : "<?php _e( $payment_id ); ?>", 		//[required] GUID without dashes.
-					containerId : "dibs-complete-checkout", 		//[optional] defaultValue: dibs-checkout-content.
-					language: "<?php _e( $locale ); ?>",            //[optional] defaultValue: en-GB.
-		};
-		var dibsCheckout = new Dibs.Checkout(checkoutOptions);
-		console.log(checkoutOptions);
-	</script>
-		<?php
-	} else {
-		?>
-		<ul class="woocommerce-error" role="alert">
-			<li><?php _e( 'Nets API Error: ' . $payment_id['error_message'] ); ?></li>
-		</ul>
-		<?php
+			return dibs_easy_maybe_create_order();
+		}
+
+		return $dibs_easy_order;
 	}
+
+	$dibs_easy_order = Nets_Easy()->api->create_dibs_easy_order();
+	if ( is_wp_error( $dibs_easy_order ) || ! $dibs_easy_order['paymentId'] ) {
+		// If failed then bail.
+		return;
+	}
+	// store payment id.
+	$session->set( 'dibs_payment_id', $dibs_easy_order['paymentId'] );
+	$session->set( 'dibs_currency', get_woocommerce_currency() );
+	// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
+	$payment_id = $dibs_easy_order['paymentId'];
+	set_transient( 'dibs_payment_id_' . $payment_id, $payment_id, 15 * MINUTE_IN_SECONDS ); // phpcs:ignore
+
+	// get dibs easy order.
+	return $dibs_easy_order;
 }
 
 /**
@@ -164,38 +172,43 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	$checkout_flow = ( isset( $settings['checkout_flow'] ) ) ? $settings['checkout_flow'] : 'embedded';
 	$auto_capture  = ( isset( $settings['auto_capture'] ) ) ? $settings['auto_capture'] : 'no';
 
+	if ( null === $payment_id ) {
+		$payment_id = WC()->session->get( 'dibs_payment_id' );
+	}
 	if ( '' !== $order->get_shipping_method() ) {
 		wc_dibs_save_shipping_reference_to_order( $order_id );
 	}
 
-	$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
-	$request = $request->request();
+	$request = Nets_Easy()->api->get_dibs_easy_order( $payment_id, $order_id );
 
-	if ( isset( $request->payment->summary->reservedAmount ) || isset( $request->payment->summary->chargedAmount ) || isset( $request->payment->subscription->id ) ) {
-
+	if ( isset( $request['payment']['summary']['reservedAmount'] ) || isset( $request['payment']['summary']['chargedAmount'] ) || isset( $request['payment']['subscription']['id'] ) ) {
+		// todo change.
 		do_action( 'dibs_easy_process_payment', $order_id, $request );
 
-		update_post_meta( $order_id, 'dibs_payment_type', $request->payment->paymentDetails->paymentType );
-		update_post_meta( $order_id, 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
+		update_post_meta( $order_id, 'dibs_payment_type', $request['payment']['paymentDetails']['paymentType'] );
+		update_post_meta( $order_id, 'dibs_payment_method', $request['payment']['paymentDetails']['paymentMethod'] );
 		update_post_meta( $order_id, '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
 
 		wc_dibs_maybe_add_invoice_fee( $order );
 
-		if ( 'CARD' == $request->payment->paymentDetails->paymentType ) { // phpcs:ignore
-			update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
+		// todo check this !!!
+		if ( 'CARD' === $request['payment']['paymentDetails']['paymentType'] ) { // phpcs:ignore
+			update_post_meta( $order_id, 'dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan'] );
 		}
 
-		if ( 'A2A' === $request->payment->paymentDetails->paymentType ) {
-
+		// TODO convert to array.
+		if ( 'A2A' === $request['payment']['paymentDetails']['paymentType'] ) {
+			// todod
 			// Get the DIBS order charge ID.
+			// todo ovo mora da se promeni.
 			$dibs_charge_id = $request->payment->charges[0]->chargeId;
 			update_post_meta( $order_id, '_dibs_charge_id', $dibs_charge_id );
 
 			// Translators: Nets Easy Payment ID.
-			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentMethod, $dibs_charge_id ) );
+			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
 		} else {
 			// Translators: Nets Easy Payment ID.
-			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request->payment->paymentDetails->paymentType ) );
+			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentType'] ) );
 		}
 		$order->payment_complete( $payment_id );
 
