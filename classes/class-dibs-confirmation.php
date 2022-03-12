@@ -50,20 +50,23 @@ class DIBS_Confirmation {
 	 */
 	public function confirm_order() {
 
-		if ( isset( $_GET['easy_confirm'] ) && isset( $_GET['key'] ) ) { // phpcs:ignore
-			$order_id = wc_get_order_id_by_order_key( sanitize_text_field( wp_unslash( $_GET['key'] ) ) ); // phpcs:ignore
-			$order    = wc_get_order( $order_id );
+		$easy_confirm = filter_input( INPUT_GET, 'easy_confirm', FILTER_SANITIZE_STRING );
+		$order_key    = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+		if ( empty( $easy_confirm ) || empty( $order_key ) ) {
+			return;
+		}
+		$order_id = wc_get_order_id_by_order_key( $order_key );
+		$order    = wc_get_order( $order_id );
 
-			Nets_Easy()->logger->log( $order_id . ': Confirmation endpoint hit for order.' );
+		DIBS_Logger::log( $order_id . ': Confirmation endpoint hit for order.' );
 
-			if ( empty( $order->get_date_paid() ) ) {
+		if ( empty( $order->get_date_paid() ) ) {
 
-				Nets_Easy()->logger->log( $order_id . ': Confirm the Nets order from the confirmation page.' );
+			DIBS_Logger::log( $order_id . ': Confirm the Nets order from the confirmation page.' );
 
-				// Confirm the order.
-				wc_dibs_confirm_dibs_order( $order_id );
-				wc_dibs_unset_sessions();
-			}
+			// Confirm the order.
+			wc_dibs_confirm_dibs_order( $order_id );
+			wc_dibs_unset_sessions();
 		}
 	}
 }
