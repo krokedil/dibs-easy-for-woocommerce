@@ -26,7 +26,7 @@ class DIBS_Post_Checkout {
 	 */
 	public function __construct() {
 		$dibs_settings       = get_option( 'woocommerce_dibs_easy_settings' );
-		$this->manage_orders = isset( $dibs_settings['dibs_manage_orders'] ) ? $dibs_settings['dibs_manage_orders'] : '';
+		$this->manage_orders = $dibs_settings['dibs_manage_orders'] ?? '';
 		if ( 'yes' === $this->manage_orders ) {
 			add_action( 'woocommerce_order_status_completed', array( $this, 'dibs_order_completed' ) );
 			add_action( 'woocommerce_order_status_cancelled', array( $this, 'dibs_order_canceled' ) );
@@ -72,30 +72,30 @@ class DIBS_Post_Checkout {
 				return;
 			}
 
-			$request = new DIBS_Requests_Activate_Order( $order_id );
-			$request = json_decode( $request->request() );
+			$response = Nets_Easy()->api->activate_dibs_easy_order( $order_id );
 
 			// Error handling.
-			if ( null !== $request ) {
-				if ( isset( $request->chargeId ) ) { // Payment success.
+			if ( null !== $response ) {
+				if ( isset( $response['chargeId'] ) ) { // Payment success.
 					// Translators: Nets Charge ID.
-					$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy with charge ID %s', 'dibs-easy-for-woocommerce' ), $request->chargeId ) ); // phpcs:ignore
+					$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy with charge ID %s', 'dibs-easy-for-woocommerce' ), $response['chargeId'] ) ); // phpcs:ignore
 
-					update_post_meta( $order_id, '_dibs_charge_id', $request->chargeId ); // phpcs:ignore
-				} elseif ( isset( $request->errors ) ) { // Response with errors.
-					if ( isset( $request->errors->instance ) ) { // If return is empty.
-						$message = $request->errors->instance[0];
-					} elseif ( isset( $request->errors->amount ) ) { // If total amount is wrong.
-						$message = $request->errors->amount[0];
+					update_post_meta( $order_id, '_dibs_charge_id', $response['chargeId'] ); // phpcs:ignore
+				} elseif ( isset( $request['errors'] ) ) { // Response with errors.
+					if ( isset( $request['errors']['instance'] ) ) { // If return is empty.
+						$message = $request['errors']['instance'][0];
+					} elseif ( isset( $request['errors']['amount'] ) ) { // If total amount is wrong.
+						$message = $request['errors']['amount'][0];
 					} else {
-						$message = wp_json_encode( $request->errors );
+						$message = wp_json_encode( $request['errors'] );
 					}
 
 					$this->charge_failed( $wc_order, true, $message );
 
-				} elseif ( isset( $request->code ) && '1001' === $request->code ) { // Set order as completed if order has already been charged.
+				} elseif ( isset( $request['code'] ) && '1001' === $request['code'] ) { // Set order as completed if order has already been charged.
 					// @todo - set status to on hold if WC order total and Nets order total don't match.
-					$wc_order->add_order_note( sprintf( __( 'Nets error message: %s', 'dibs-easy-for-woocommerce' ), $request->message ) ); // phpcs:ignore
+					// translators: 1: The response message.
+					$wc_order->add_order_note( sprintf( __( 'Nets error message: %s', 'dibs-easy-for-woocommerce' ), $response['message'] ) );
 				} else {
 					$this->charge_failed( $wc_order );
 				}
@@ -120,20 +120,18 @@ class DIBS_Post_Checkout {
 				return;
 			}
 
-			$request = new DIBS_Requests_Cancel_Order( $order_id );
-			$request = json_decode( $request->request() );
-
+			$response = Nets_Easy()->api->cancel_dibs_easy_order( $order_id );
 			$wc_order = wc_get_order( $order_id );
 
-			if ( null === $request ) {
+			if ( null === $response ) {
 				$wc_order->add_order_note( sprintf( __( 'Order has been canceled in Nets', 'dibs-easy-for-woocommerce' ) ) );
 			} else {
-				if ( array_key_exists( 'errors', $request ) ) {
-					$message = wp_json_encode( $request->errors );
-				} elseif ( array_key_exists( 'message', $request ) ) {
-					$message = wp_json_encode( $request->message );
+				if ( array_key_exists( 'errors', $response ) ) {
+					$message = wp_json_encode( $response['errors'] );
+				} elseif ( array_key_exists( 'message', $response ) ) {
+					$message = wp_json_encode( $response['message'] );
 				} else {
-					$message = wp_json_encode( $request );
+					$message = wp_json_encode( $response );
 				}
 				/* Translators: Nets message. */
 				$wc_order->add_order_note( sprintf( __( 'There was a problem canceling the order in Nets: %s', 'dibs-easy-for-woocommerce' ), $message ) );
