@@ -25,7 +25,7 @@ class Dibs_Easy_API {
 	 *
 	 * @return array|mixed
 	 */
-	public function create_dibs_easy_order( $checkout_flow = 'embeded', $order_id = null ) {
+	public function create_dibs_easy_order( $checkout_flow = 'embedded', $order_id = null ) {
 
 		// todo create dibs order.
 		$request  = new DIBS_Requests_Create_DIBS_Order(
@@ -112,15 +112,13 @@ class Dibs_Easy_API {
 	 * Retrieves Dibs Easy order.
 	 *
 	 * @param string $payment_id The payment identifier.
-	 * @param int    $order_id The WooCommerce order id.
 	 *
 	 * @return array|mixed
 	 */
-	public function get_dibs_easy_order( $payment_id, $order_id ) {
+	public function get_dibs_easy_order( $payment_id ) {
 		$request  = new DIBS_Requests_Get_DIBS_Order(
 			array(
 				'payment_id' => $payment_id,
-				'order_id'   => $order_id,
 			)
 		);
 		$response = $request->request();
@@ -222,7 +220,7 @@ class Dibs_Easy_API {
 	/**
 	 * Checks for WP Errors and returns either the response as array or a false.
 	 *
-	 * @param array $response The response from the request.
+	 * @param array|WP_Error $response The response from the request.
 	 * @return mixed
 	 */
 	private function check_for_api_error( $response ) {
