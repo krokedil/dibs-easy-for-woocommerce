@@ -32,7 +32,6 @@ class DIBS_Requests_Get_DIBS_Order extends Dibs_Request_Get {
 		$this->log_title = 'Get order ( admin )';
 
 		$this->payment_id = $arguments['payment_id'];
-		// $this->order_id   = $arguments['order_id'] ?? null;
 	}
 
 	/**
