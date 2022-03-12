@@ -128,18 +128,24 @@ class DIBS_Subscriptions {
 		$payment_id  = filter_input( INPUT_GET, 'paymentid', FILTER_SANITIZE_STRING );
 
 		if ( ! empty( $dibs_action ) && 'subs-payment-changed' === $dibs_action && ! empty( $order_id ) && ! empty( $payment_id ) ) {
-
-			$request = new DIBS_Requests_Get_DIBS_Order( $payment_id, $order_id );
+			// todo change this!
+			$request = new DIBS_Requests_Get_DIBS_Order(
+				array(
+					'payment_id' => $payment_id,
+					'order_id'   => $order_id,
+				)
+			);
 			$request = $request->request();
 
-			if ( isset( $request->payment->subscription->id ) ) {
+			// todo ovo treba da se promeni.
+			if ( isset( $request['payment']['subscription']['id'] ) ) {
 				$old_subscription_id = get_post_meta( $order_id, '_dibs_recurring_token', true );
-				$new_subscription_id = $request->payment->subscription->id;
+				$new_subscription_id = $request['payment']['subscription']['id'];
 
 				if ( $old_subscription_id !== $new_subscription_id ) {
-					update_post_meta( $order_id, '_dibs_recurring_token', $request->payment->subscription->id );
-					update_post_meta( $order_id, 'dibs_payment_method', $request->payment->paymentDetails->paymentMethod );
-					update_post_meta( $order_id, 'dibs_customer_card', $request->payment->paymentDetails->cardDetails->maskedPan );
+					update_post_meta( $order_id, '_dibs_recurring_token', $request['payment']['subscription']['id'] );
+					update_post_meta( $order_id, 'dibs_payment_method', $request['payment']['paymentDetails'] ['paymentMethod'] );
+					update_post_meta( $order_id, 'dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan'] );
 				}
 			} else {
 				wc_clear_notices(); // Customer did not finalize the payment method change.
@@ -175,22 +181,33 @@ class DIBS_Subscriptions {
 	 */
 	public function set_recurring_token_for_order( $order_id, $dibs_order ) {
 		$wc_order = wc_get_order( $order_id );
-		if ( isset( $dibs_order->payment->subscription->id ) ) {
-			update_post_meta( $order_id, '_dibs_recurring_token', $dibs_order->payment->subscription->id );
+		if ( isset( $dibs_order['payment']['subscription']['id'] ) ) {
+			update_post_meta( $order_id, '_dibs_recurring_token', $dibs_order['payment']['subscription->id'] );
 
-			$dibs_subscription = new DIBS_Requests_Get_Subscription( $dibs_order->payment->subscription->id, $order_id );
+			$subscription_id   = $dibs_order['payment']['subscription']['id'];
+			$responsedibs      = Nets_Easy()->api->get_dibs_easy_subscription( $subscription_id, $order_id );
+			$dibs_subscription = new DIBS_Requests_Get_Subscription( $dibs_order['payment']['subscription']['id'], $order_id );
 			$request           = $dibs_subscription->request();
-			if ( 'CARD' == $request->paymentDetails->paymentType ) { // phpcs:ignore
-				update_post_meta( $order_id, 'dibs_payment_type', $request->paymentDetails->paymentType ); // phpcs:ignore
-				update_post_meta( $order_id, 'dibs_customer_card', $request->paymentDetails->cardDetails->maskedPan ); // phpcs:ignore
+			$response          = Nets_Easy()->api->get_dibs_easy_subscription( $subscription_id, $order_id );
+			if ( 'CARD' === $request['paymentDetails']['paymentType'] ) { // phpcs:ignore
+				update_post_meta( $order_id, 'dibs_payment_type', $request['paymentDetail']['paymentType'] ); // phpcs:ignore
+				update_post_meta( $order_id, 'dibs_customer_card', $request['paymentDetails']['cardDetails']['maskedPan'] ); // phpcs:ignore
 			}
 
 			// This function is run after WCS has created the subscription order.
 			// Let's add the _dibs_recurring_token to the subscription as well.
-			if ( class_exists( 'WC_Subscriptions' ) && ( wcs_order_contains_subscription( $wc_order, array( 'parent', 'renewal', 'resubscribe', 'switch' ) ) || wcs_is_subscription( $wc_order ) ) ) {
-				$subcriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
-				foreach ( $subcriptions as $subcription ) {
-					update_post_meta( $subcription->get_id(), '_dibs_recurring_token', $dibs_order->payment->subscription->id );
+			if ( class_exists( 'WC_Subscriptions' ) && ( wcs_order_contains_subscription(
+				$wc_order,
+				array(
+					'parent',
+					'renewal',
+					'resubscribe',
+					'switch',
+				)
+			) || wcs_is_subscription( $wc_order ) ) ) {
+				$subscriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
+				foreach ( $subscriptions as $subscription ) {
+					update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $dibs_order['payment']['subscription']['id'] );
 				}
 			}
 		}
@@ -227,22 +244,21 @@ class DIBS_Subscriptions {
 				}
 				if ( ! empty( $dibs_ticket ) ) {
 					// We got a _dibs_ticket - try to getting the subscription via the externalreference request.
-					$subscription_request = new DIBS_Request_Get_Subscription_By_External_Reference( $dibs_ticket, $order_id );
-					$response             = $subscription_request->request();
+					$response = Nets_Easy()->api->get_dibs_easy_subscription_by_external_reference( $dibs_ticket, $order_id );
 
-					if ( ! is_wp_error( $response ) && ! empty( $response->subscriptionId ) ) { // phpcs:ignore
+					if ( ! is_wp_error( $response ) && isset( $response['subscriptionId'] ) ) { // phpcs:ignore
 						// All good, save the subscription ID as _dibs_recurring_token in the renewal order and in the subscription.
-						$recurring_token = $response->subscriptionId; // phpcs:ignore
+						$recurring_token = $response['subscriptionId']; // phpcs:ignore
 						update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
 
-						foreach ( $subcriptions as $subcription ) {
-							update_post_meta( $subcription->get_id(), '_dibs_recurring_token', $recurring_token );
-							$subcription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response->subscriptionId ) ); // phpcs:ignore
+						foreach ( $subscriptions as $subscription ) {
+							update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $recurring_token );
+							$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response['subscriptionId'] ) ); // phpcs:ignore
 						}
-						if ( 'CARD' === $response->paymentDetails->paymentType ) { // phpcs:ignore
+						if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
 							// Save card data in renewal order.
-							update_post_meta( $order_id, 'dibs_payment_type', $response->paymentDetails->paymentType ); // phpcs:ignore
-							update_post_meta( $order_id, 'dibs_customer_card', $response->paymentDetails->cardDetails->maskedPan ); // phpcs:ignore
+							update_post_meta( $order_id, 'dibs_payment_type', $response['paymentDetails']['paymentType'] ); // phpcs:ignore
+							update_post_meta( $order_id, 'dibs_customer_card', $response['paymentDetails']['cardDetails']['maskedPan'] ); // phpcs:ignore
 						}
 					} else {
 						/* Translators: Request response. */
@@ -252,23 +268,22 @@ class DIBS_Subscriptions {
 			}
 		}
 
-		$create_order_response = new DIBS_Request_Charge_Subscription( $order_id, $recurring_token );
-		$create_order_response = $create_order_response->request();
+		$response = Nets_Easy()->api->charge_dibs_easy_subscription( $order_id, $recurring_token );
 
-		if ( ! is_wp_error( $create_order_response ) && ! empty( $create_order_response->paymentId ) ) { // phpcs:ignore
+		if ( ! is_wp_error( $response ) && ! empty( $response['paymentId'] ) ) { // phpcs:ignore
 
 			// All good. Update the renewal order with an order note and run payment_complete on all subscriptions.
 			update_post_meta( $order_id, '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
-			update_post_meta( $order_id, '_dibs_charge_id', $create_order_response->chargeId ); // phpcs:ignore
+			update_post_meta( $order_id, '_dibs_charge_id', $response['chargeId'] ); // phpcs:ignore
 			/* Translators: Nets Payment ID & Charge ID. */
-			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Payment ID: %1$s. Charge ID %2$s.', 'dibs-easy-for-woocommerce' ), $create_order_response->paymentId, $create_order_response->chargeId ) ); // phpcs:ignore
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Payment ID: %1$s. Charge ID %2$s.', 'dibs-easy-for-woocommerce' ), $response['paymentId'], $response['chargeId'] ) ); // phpcs:ignore
 
 			foreach ( $subscriptions as $subscription ) {
-				$subscription->payment_complete( $create_order_response->paymentId ); // phpcs:ignore
+				$subscription->payment_complete( $response['paymentId'] ); // phpcs:ignore
 			}
 		} else {
 			/* Translators: Request response from Nets. */
-			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $create_order_response ) ) );
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response ) ) );// TODO check the type.
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_failed();
 			}
@@ -278,7 +293,7 @@ class DIBS_Subscriptions {
 	/**
 	 * Show recurring token in Subscription page in WP admin.
 	 *
-	 * @param string $order WooCommerce order.
+	 * @param WC_Order $order WooCommerce order.
 	 */
 	public function show_recurring_token( $order ) {
 		if ( 'shop_subscription' === $order->get_type() && get_post_meta( $order->get_id(), '_dibs_recurring_token' ) ) {
@@ -324,11 +339,12 @@ class DIBS_Subscriptions {
 
 	/**
 	 * Maybe change the needs payment for a WooCommerce order.
-	 * Used to trigger process_payment for subscrition parent orders with a recurring coupon that results in a 0 value order.
+	 * Used to trigger process_payment for subscription parent orders with a recurring coupon that results in a 0 value order.
 	 *
 	 * @param bool     $wc_result The result WooCommerce had.
 	 * @param WC_Order $order The WooCommerce order.
 	 * @param array    $valid_order_statuses The valid order statuses.
+	 *
 	 * @return bool
 	 */
 	public function maybe_change_needs_payment( $wc_result, $order, $valid_order_statuses ) {
