@@ -54,13 +54,12 @@ class DIBS_Requests_Payment_Methods {
 	/**
 	 * Gets tax data for invoice fee product.
 	 *
-	 * @param object $product The WooCommerce product used as invoice fee.
+	 * @param WC_Product $product The WooCommerce product used as invoice fee.
 	 *
 	 * @return array
 	 */
 	public static function get_tax_data( $product ) {
-		$_tax      = new WC_Tax();
-		$tmp_rates = $_tax->get_base_tax_rates( $product->get_tax_class() );
+		$tmp_rates = WC_Tax::get_base_tax_rates( $product->get_tax_class() );
 		$_vat      = array_shift( $tmp_rates );
 		$item_tax  = array();
 		if ( $product->is_taxable() && isset( $_vat['rate'] ) ) {
@@ -74,10 +73,10 @@ class DIBS_Requests_Payment_Methods {
 	}
 
 	/**
-	 * Gets the sku for the incoive fee item.
+	 * Gets the sku for the invoice fee item.
 	 *
-	 * @param object $product The WooCommerce product.
-	 * @param string $invoice_fee_id The WooCommerce product ID.
+	 * @param WC_Product $product The WooCommerce product.
+	 * @param string     $invoice_fee_id The WooCommerce product ID.
 	 * @return string
 	 */
 	public static function get_sku( $product, $invoice_fee_id ) {
