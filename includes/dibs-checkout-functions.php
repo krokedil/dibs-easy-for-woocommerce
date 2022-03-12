@@ -138,71 +138,7 @@ function wc_dibs_get_locale() {
 	return $language;
 }
 
-/**
- * Get payment id.
- */
-function wc_dibs_get_payment_id() {
-	if ( isset( $_POST['dibs_payment_id'] ) && ! empty( $_POST['dibs_payment_id'] ) ) {
-		return $_POST['dibs_payment_id'];
-	}
 
-	if ( ! empty( WC()->session->get( 'dibs_payment_id' ) && WC()->session->get( 'dibs_currency' ) === get_woocommerce_currency() ) ) {
-		return WC()->session->get( 'dibs_payment_id' );
-	} else {
-		WC()->session->set( 'chosen_payment_method', 'dibs_easy' );
-
-		$request = new DIBS_Requests_Create_DIBS_Order();
-		$request = json_decode( $request->request() );
-		if ( isset( $request->paymentId ) ) { // phpcs:ignore
-			WC()->session->set( 'dibs_payment_id', $request->paymentId ); // phpcs:ignore
-			WC()->session->set( 'dibs_currency', get_woocommerce_currency() );
-
-			// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
-			set_transient( 'dibs_payment_id_' . $request->paymentId, $request->paymentId, 15 * MINUTE_IN_SECONDS ); // phpcs:ignore
-
-			return $request->paymentId; // phpcs:ignore
-		} else {
-			foreach ( $request->errors as $error ) {
-				$error_message = $error[0];
-			}
-			echo( "<script>console.log('Nets error: " . $error_message . "');</script>" ); // phpcs:ignore
-			return array(
-				'result'        => false,
-				'error_message' => $error_message,
-			);
-		}
-	}
-}
-
-/**
- * Get order ID.
- */
-function wc_dibs_get_order_id() {
-	// Create an empty WooCommerce order and get order id if one is not made already.
-	if ( WC()->session->get( 'dibs_incomplete_order' ) === null ) {
-		$order    = wc_create_order();
-		$order_id = $order->get_id();
-		// Set the order id as a session variable.
-		WC()->session->set( 'dibs_incomplete_order', $order_id );
-		$order->save();
-	} else {
-		$order_id = WC()->session->get( 'dibs_incomplete_order' );
-		$order    = wc_get_order( $order_id );
-		$order->save();
-	}
-
-	return $order_id;
-}
-
-/**
- * Get private ID.
- */
-function wc_dibs_get_private_key() {
-	$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-	$testmode      = 'yes' === $dibs_settings['test_mode'];
-	$private_key   = $testmode ? $dibs_settings['dibs_test_checkout_key'] : $dibs_settings['dibs_checkout_key'];
-	return apply_filters( 'dibs_easy_request_checkout_key', $private_key, $testmode );
-}
 
 /**
  * Get name cleaned for Nets.
