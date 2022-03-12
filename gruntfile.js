@@ -1,32 +1,32 @@
-module.exports = function (grunt) {
-	grunt.loadNpmTasks('grunt-wp-i18n');
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
-	grunt.initConfig({
+module.exports = function( grunt ) {
+	grunt.loadNpmTasks( 'grunt-wp-i18n' );
+	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
+	grunt.initConfig( {
 		makepot: {
 			target: {
 				options: {
 					domainPath: '/languages',
 					mainFile: 'dibs-easy-for-woocommerce.php',
 					potFilename: 'dibs-easy-for-woocommerce.pot',
-					processPot: function (pot, options) {
+					processPot( pot, options ) {
 						// add header options
 						return pot;
 					},
-					type: 'wp-plugin'
-				}
-			}
+					type: 'wp-plugin',
+				},
+			},
 		},
 		// minify css
 		cssmin: {
 			target: {
-				files: [{
+				files: [ {
 					expand: true,
 					cwd: './assets/css',
-					src: ['*.css', '!*.min.css'],
+					src: [ '*.css', '!*.min.css' ],
 					dest: './assets/css',
-					ext: '.min.css'
-				}]
-			}
-		}
-	});
-}
+					ext: '.min.css',
+				} ],
+			},
+		},
+	} );
+};
