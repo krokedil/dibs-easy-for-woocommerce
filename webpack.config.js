@@ -2,7 +2,7 @@ const path = require( 'path' );
 module.exports = {
 	mode: 'production', // production
 	entry: {
-		checkout: './assets/js/checkout.js',
+		'dibs-easy-for-woocommerce': './assets/js/dibs-easy-for-woocommerce',
 	},
 
 	output: {
