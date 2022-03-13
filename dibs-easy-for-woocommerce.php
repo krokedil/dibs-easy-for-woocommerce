@@ -74,7 +74,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		public function __construct() {
 			$this->dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-			$this->checkout_flow = ( isset( $this->dibs_settings['checkout_flow'] ) ) ? $this->dibs_settings['checkout_flow'] : 'embedded';
+			$this->checkout_flow = $this->dibs_settings['checkout_flow'] ?? 'embedded';
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 		}
 
