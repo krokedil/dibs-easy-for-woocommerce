@@ -145,7 +145,7 @@ jQuery( function( $ ) {
 			}
 		},
 		/**
-		 * Triggers whenever your customer updates address information
+		 * Triggers whenever customer updates address information
 		 *
 		 * @param {Object} address
 		 */
@@ -202,7 +202,7 @@ jQuery( function( $ ) {
 			);
 		},
 		/**
-		 * Gets the Klarna order and starts the order submission
+		 * Gets the Dibs Easy order and starts the order submission
 		 */
 		getDibsEasyOrder() {
 			$.ajax( {
