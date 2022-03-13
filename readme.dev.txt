@@ -25,6 +25,11 @@ POT Command
 Build (.min.js, .min.css, .pot )
     yarn build
 
+==========Webpack==========
+
+Development mode
+     yarn webpack:dev
+
 
 
 
