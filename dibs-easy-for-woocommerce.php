@@ -51,14 +51,14 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		/**
 		 * Reference to dibs_settings.
 		 *
-		 * @var $dibs_settings
+		 * @var $array
 		 */
 		public $dibs_settings;
 
 		/**
 		 * Api class.
 		 *
-		 * @var Dibs_Easy_API
+		 * @var Nets_Easy_API
 		 */
 		public $api;
 
@@ -68,6 +68,13 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * @var string
 		 */
 		public $checkout_flow;
+
+		/**
+		 * The order management
+		 *
+		 * @var $order_management
+		 */
+		public $order_management;
 
 		/**
 		 * DIBS_Easy constructor.
@@ -118,48 +125,49 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				return;
 			}
 			if ( 'embedded' === $this->checkout_flow ) {
-				include_once plugin_basename( 'classes/class-dibs-templates.php' );
+				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
 			}
 
-			include_once plugin_basename( 'classes/class-dibs-ajax-calls.php' );
-			include_once plugin_basename( 'classes/class-dibs-post-checkout.php' );
-			include_once plugin_basename( 'classes/class-dibs-admin-notices.php' );
-			include_once plugin_basename( 'classes/class-dibs-api-callbacks.php' );
-			include_once plugin_basename( 'classes/class-dibs-confirmation.php' );
-			include_once plugin_basename( 'classes/class-dibs-logger.php' );
-			include_once plugin_basename( 'classes/class-dibs-easy-email.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-ajax.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-order-management.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-admin-notices.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-api-callbacks.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-confirmation.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-logger.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-email.php' );
 
-			include_once plugin_basename( 'classes/class-dibs-subscriptions.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-subscriptions.php' );
 
-			include_once plugin_basename( 'includes/dibs-country-converter-functions.php' );
-			include_once plugin_basename( 'includes/dibs-checkout-functions.php' );
+			include_once plugin_basename( 'includes/nets-easy-country-converter.php' );
+			include_once plugin_basename( 'includes/nets-easy-functions.php' );
 
-			include_once plugin_basename( 'classes/requests/class-dibs-requests.php' );
-			include_once plugin_basename( 'classes/requests/class-dibs-request-post.php' );
-			include_once plugin_basename( 'classes/requests/class-dibs-request-put.php' );
-			include_once plugin_basename( 'classes/requests/class-dibs-request-get.php' );
-			include_once plugin_basename( 'classes/requests/post/class-dibs-requests-create-dibs-order.php' );
-			include_once plugin_basename( 'classes/requests/put/class-dibs-requests-update-dibs-order.php' );
-			include_once plugin_basename( 'classes/requests/put/class-dibs-requests-update-dibs-order-reference.php' );
-			include_once plugin_basename( 'classes/requests/post/class-dibs-requests-activate-order.php' );
-			include_once plugin_basename( 'classes/requests/post/class-dibs-requests-cancel-order.php' );
-			include_once plugin_basename( 'classes/requests/post/class-dibs-requests-refund-order.php' );
-			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-dibs-order.php' );
-			include_once plugin_basename( 'classes/requests/post/class-dibs-requests-charge-subscription.php' );
-			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-subscription-bulk-charge-id.php' );
-			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-subscription.php' );
-			include_once plugin_basename( 'classes/requests/get/class-dibs-requests-get-subscription-by-external-reference.php' );
+			include_once plugin_basename( 'classes/requests/class-nets-easy-request.php' );
+			include_once plugin_basename( 'classes/requests/class-nets-easy-request-post.php' );
+			include_once plugin_basename( 'classes/requests/class-nets-easy-request-put.php' );
+			include_once plugin_basename( 'classes/requests/class-nets-easy-request-get.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-create-order.php' );
+			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-update-order.php' );
+			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-update-order-reference.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-activate-order.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-cancel-order.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-refund-order.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-order.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-charge-subscription.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-subscription-bulk-charge-id.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-subscription.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-subscription-by-external-reference.php' );
 
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-checkout.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-items.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order-items.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-notifications.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-order.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-payment-methods.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-dibs-requests-get-refund-data.php' );
-			include_once plugin_basename( 'classes/class-dibs-assets.php' );
-			include_once plugin_basename( 'classes/class-dibs-api.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-checkout-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-cart-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-order-items-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-order-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-notification-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-order-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-payment-method-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-refund-helper.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-assets.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-api.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-checkout.php' );
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -168,9 +176,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_action_links' ) );
 
 			// Set variables for shorthand access to classes.
-			$this->order_management = new DIBS_Post_Checkout();
+			$this->order_management = new Nets_Easy_Order_Management();
 
-			$this->api = new Dibs_Easy_API();
+			$this->api = new Nets_Easy_API();
 
 		}
 
@@ -182,7 +190,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
-			include_once plugin_basename( 'classes/class-dibs-easy-gateway.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-gateway.php' );
 
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_dibs_easy' ) );
 		}
@@ -213,7 +221,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * @return array $methods Payment methods.
 		 */
 		public function add_dibs_easy( $methods ) {
-			$methods[] = 'DIBS_Easy_Gateway';
+			$methods[] = 'Nets_Easy_Gateway';
 
 			return $methods;
 		}
