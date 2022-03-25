@@ -90,12 +90,12 @@ msgstr ""
 
 #: classes/class-dibs-subscriptions.php:235
 #, php-format
-msgid "Subscription payment made with Nets. Payment ID: %1$s. Charge ID %2$s."
+msgid "Subscription payment made with Nets. Payment ID: %s. Charge ID %s."
 msgstr ""
 
 #: classes/class-dibs-subscriptions.php:241
 #, php-format
-msgid "Subscription payment failed with Nets. Error message: %1$s."
+msgid "Subscription payment failed with Nets. Error message: %s."
 msgstr ""
 
 #: classes/class-dibs-subscriptions.php:276
@@ -106,7 +106,7 @@ msgstr ""
 #: classes/class-dibs-subscriptions.php:282
 #, php-format
 msgid ""
-"Payment status not correct for subscription. Status: %1$s. Message: %2$s"
+"Payment status not correct for subscription. Status: %s. Message: %s"
 msgstr ""
 
 #: classes/class-dibs-subscriptions.php:288
@@ -117,7 +117,7 @@ msgstr ""
 
 #: classes/class-dibs-api-callbacks.php:148
 #, php-format
-msgid "Failed trying to receive the order from Nets. Error message: %1$s."
+msgid "Failed trying to receive the order from Nets. Error message: %s."
 msgstr ""
 
 #: classes/class-dibs-api-callbacks.php:176
@@ -141,7 +141,7 @@ msgstr ""
 #: includes/dibs-checkout-functions.php:225
 #, php-format
 msgid ""
-"New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. "
+"New payment created in Nets Easy with Payment ID %s. Payment type - %s. "
 "Awaiting charge."
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 #. Nets refund ID.
 #: classes/class-dibs-easy-gateway.php:169
 #, php-format
-msgid "Refund made in Nets Easy with refund ID %1$s. Reason: %2$s"
+msgid "Refund made in Nets Easy with refund ID %s. Reason: %s"
 msgstr ""
 
 #: classes/class-dibs-easy-gateway.php:197
@@ -220,7 +220,7 @@ msgstr ""
 #: classes/class-dibs-order-submission-failure.php:51
 #, php-format
 msgid ""
-"New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s."
+"New payment created in Nets Easy with Payment ID %s. Payment type - %s."
 msgstr ""
 
 #: classes/class-dibs-order-submission-failure.php:56
