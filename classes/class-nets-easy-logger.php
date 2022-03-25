@@ -32,7 +32,7 @@ class Nets_Easy_Logger {
 			if ( empty( self::$log ) ) {
 				self::$log = new WC_Logger();
 			}
-			self::$log->add( 'nets_easy', wp_json_encode( $message ) );
+			self::$log->add( 'nets_easy', wp_json_encode( $message, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 		}
 
 		if ( isset( $data['response']['code'] ) && ( $data['response']['code'] < 200 || $data['response']['code'] > 299 ) ) {
@@ -74,8 +74,8 @@ class Nets_Easy_Logger {
 			return $data;
 		}
 		if ( isset( $data['request']['body'] ) ) {
-			$request_body            = json_decode( $data['request']['body'], true, 512, JSON_THROW_ON_ERROR );
-			$data['request']['body'] = $request_body;
+			$request_body            = json_decode( $data['request']['body'], true );
+			$data['request']['body'] = ( ! empty( $request_body ) ) ? $request_body : $data['request']['body'];
 		}
 
 		return $data;
