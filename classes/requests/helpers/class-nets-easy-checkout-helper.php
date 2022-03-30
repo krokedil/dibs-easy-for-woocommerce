@@ -54,7 +54,7 @@ class Nets_Easy_Checkout_Helper {
 			$checkout['consumer']                                = self::get_consumer_address( $order );
 		}
 
-		$allowed_customer_types = ( isset( $dibs_settings['allowed_customer_types'] ) ) ? $dibs_settings['allowed_customer_types'] : 'B2C';
+		$allowed_customer_types = $dibs_settings['allowed_customer_types'] ?? 'B2C';
 		switch ( $allowed_customer_types ) {
 			case 'B2C':
 				$checkout['consumerType']['supportedTypes'] = array( 'B2C' );
@@ -136,7 +136,7 @@ class Nets_Easy_Checkout_Helper {
 		}
 
 		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
-		$allowed_customer_types = ( isset( $dibs_settings['allowed_customer_types'] ) ) ? $dibs_settings['allowed_customer_types'] : 'B2C';
+		$allowed_customer_types = $dibs_settings['allowed_customer_types'] ?? 'B2C';
 
 		if ( $order->get_billing_company() && in_array( $allowed_customer_types, array( 'B2B', 'B2CB', 'B2BC' ), true ) ) {
 			$consumer['company']['name']                 = $order->get_billing_company();
