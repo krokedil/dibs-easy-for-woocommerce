@@ -120,7 +120,7 @@ class Nets_Easy_Cart_Helper {
 	/**
 	 * Gets one formatted cart shipping item.
 	 *
-	 * @return array
+	 * @return array|null
 	 */
 	public static function get_shipping() {
 		WC()->cart->calculate_shipping();
@@ -158,6 +158,8 @@ class Nets_Easy_Cart_Helper {
 				}
 			}
 		}
+
+		return null;
 	}
 
 	/**
