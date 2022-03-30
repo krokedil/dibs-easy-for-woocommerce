@@ -140,7 +140,6 @@ class Nets_Easy_Assets {
 					'standard_woo_checkout_fields'     => $standard_woo_checkout_fields,
 					'dibs_process_order_text'          => __( 'Please wait while we process your order...', 'dibs-easy-for-woocommerce' ),
 					'required_fields_text'             => __( 'Please fill in all required checkout fields.', 'dibs-easy-for-woocommerce' ),
-					'update_checkout_url'              => WC_AJAX::get_endpoint( 'update_checkout' ),
 					'customer_address_updated_url'     => WC_AJAX::get_endpoint( 'customer_address_updated' ),
 					'get_order_data_url'               => WC_AJAX::get_endpoint( 'get_order_data' ),
 					'submitOrder'                      => WC_AJAX::get_endpoint( 'checkout' ),

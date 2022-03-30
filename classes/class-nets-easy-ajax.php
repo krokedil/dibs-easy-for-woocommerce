@@ -33,7 +33,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
-			'update_checkout'          => true,
 			'customer_address_updated' => true,
 			'get_order_data'           => true,
 			'change_payment_method'    => true,
@@ -46,51 +45,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 				add_action( 'wc_ajax_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			}
 		}
-	}
-
-	/**
-	 * Update Nets Easy Checkout - executed when Woo updated_checkout event has been triggered
-	 */
-	public static function update_checkout() {
-
-		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
-		if ( ! wp_verify_nonce( $nonce, 'nets_checkout' ) ) {
-			wp_send_json_error( 'bad_nonce' );
-			exit;
-		}
-
-		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
-
-		WC()->cart->calculate_shipping();
-		WC()->cart->calculate_fees();
-		WC()->cart->calculate_totals();
-
-		$payment_id = WC()->session->get( 'dibs_payment_id' );
-
-		// Check that the DIBS paymentId session is still valid.
-		if ( false === get_transient( 'dibs_payment_id_' . $payment_id ) || WC()->session->get( 'dibs_currency' ) !== get_woocommerce_currency() ) {
-			wc_dibs_unset_sessions();
-			$return['redirect_url'] = wc_get_checkout_url();
-			wp_send_json_error( $return );
-			wp_die();
-		}
-
-		$response = Nets_Easy()->api->update_nets_easy_order( $payment_id );
-		if ( is_wp_error( $response ) ) {
-			wc_dibs_unset_sessions();
-			$return['redirect_url'] = wc_get_checkout_url();
-			wp_send_json_error( $return );
-			wp_die();
-		} else {
-			wp_send_json_success(
-				array(
-					'dibs_response' => $response,
-					'nonce'         => wp_nonce_field( 'woocommerce-process_checkout', 'woocommerce-process-checkout-nonce', true, false ),
-				)
-			);
-			wp_die();
-		}
-
 	}
 
 	/**
