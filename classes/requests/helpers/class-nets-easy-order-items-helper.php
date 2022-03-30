@@ -84,7 +84,7 @@ class Nets_Easy_Order_Items_Helper {
 		$fee_reference    = 'Fee';
 		$invoice_fee_name = '';
 		$dibs_settings    = get_option( 'woocommerce_dibs_easy_settings' );
-		$invoice_fee_id   = isset( $dibs_settings['dibs_invoice_fee'] ) ? $dibs_settings['dibs_invoice_fee'] : '';
+		$invoice_fee_id   = $dibs_settings['dibs_invoice_fee'] ?? '';
 
 		if ( $invoice_fee_id ) {
 			$_product         = wc_get_product( $invoice_fee_id );
@@ -167,9 +167,9 @@ class Nets_Easy_Order_Items_Helper {
 				$part_number = $product->get_id();
 			}
 			return substr( $part_number, 0, 32 );
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	/**
