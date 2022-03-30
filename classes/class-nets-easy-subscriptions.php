@@ -52,7 +52,7 @@ class Nets_Easy_Subscriptions {
 				'interval' => 0,
 			);
 
-			$complete_payment_button_text = ( isset( $dibs_settings['complete_payment_button_text'] ) ) ? $dibs_settings['complete_payment_button_text'] : 'subscribe';
+			$complete_payment_button_text = $dibs_settings['complete_payment_button_text'] ?? 'subscribe';
 			$request_args['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
 		}
 
@@ -173,16 +173,12 @@ class Nets_Easy_Subscriptions {
 	public function set_recurring_token_for_order( $order_id, $dibs_order ) {
 		$wc_order = wc_get_order( $order_id );
 		if ( isset( $dibs_order['payment']['subscription']['id'] ) ) {
-			update_post_meta( $order_id, '_dibs_recurring_token', $dibs_order['payment']['subscription->id'] );
-
-			$subscription_id   = $dibs_order['payment']['subscription']['id'];
-			$responsedibs      = Nets_Easy()->api->get_nets_easy_subscription( $subscription_id, $order_id );
-			$dibs_subscription = new DIBS_Requests_Get_Subscription( $dibs_order['payment']['subscription']['id'], $order_id );
-			$request           = $dibs_subscription->request();
-			$response          = Nets_Easy()->api->get_nets_easy_subscription( $subscription_id, $order_id );
-			if ( 'CARD' === $request['paymentDetails']['paymentType'] ) { // phpcs:ignore
-				update_post_meta( $order_id, 'dibs_payment_type', $request['paymentDetail']['paymentType'] ); // phpcs:ignore
-				update_post_meta( $order_id, 'dibs_customer_card', $request['paymentDetails']['cardDetails']['maskedPan'] ); // phpcs:ignore
+			$subscription_id = $dibs_order['payment']['subscription']['id'];
+			update_post_meta( $order_id, '_dibs_recurring_token', $subscription_id );
+			$response = Nets_Easy()->api->get_nets_easy_subscription( $subscription_id, $order_id );
+			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
+				update_post_meta( $order_id, 'dibs_payment_type', $response['paymentDetail']['paymentType'] ); // phpcs:ignore
+				update_post_meta( $order_id, 'dibs_customer_card', $response['paymentDetails']['cardDetails']['maskedPan'] ); // phpcs:ignore
 			}
 
 			// This function is run after WCS has created the subscription order.
@@ -198,7 +194,7 @@ class Nets_Easy_Subscriptions {
 			) || wcs_is_subscription( $wc_order ) ) ) {
 				$subscriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 				foreach ( $subscriptions as $subscription ) {
-					update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $dibs_order['payment']['subscription']['id'] );
+					update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $subscription_id );
 				}
 			}
 		}
