@@ -142,19 +142,19 @@ class Nets_Easy_Cart_Helper {
 							'grossTotalAmount' => intval( round( ( $method->cost + array_sum( $method->taxes ) ) * 100, 2 ) ),
 							'netTotalAmount'   => intval( round( $method->cost * 100 ) ),
 						);
-					} else {
-						return array(
-							'reference'        => 'shipping|' . $method->id,
-							'name'             => wc_dibs_clean_name( $method->label ),
-							'quantity'         => 1,
-							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-							'unitPrice'        => 0,
-							'taxRate'          => 0,
-							'taxAmount'        => 0,
-							'grossTotalAmount' => 0,
-							'netTotalAmount'   => 0,
-						);
 					}
+
+					return array(
+						'reference'        => 'shipping|' . $method->id,
+						'name'             => wc_dibs_clean_name( $method->label ),
+						'quantity'         => 1,
+						'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
+						'unitPrice'        => 0,
+						'taxRate'          => 0,
+						'taxAmount'        => 0,
+						'grossTotalAmount' => 0,
+						'netTotalAmount'   => 0,
+					);
 				}
 			}
 		}
