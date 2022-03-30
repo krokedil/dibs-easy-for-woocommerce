@@ -23,6 +23,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 	/**
 	 * Hook in ajax handlers.
+	 *
+	 * @return void
 	 */
 	public static function init() {
 		self::add_ajax_events();
@@ -30,6 +32,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 	/**
 	 * Hook in methods - uses WordPress ajax handlers (admin-ajax).
+	 *
+	 * @return void
 	 */
 	public static function add_ajax_events() {
 		$ajax_events = array(
@@ -49,6 +53,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 	/**
 	 * Customer address updated - triggered when address-changed event is fired
+	 *
+	 * @return void
 	 */
 	public static function customer_address_updated() {
 
@@ -114,6 +120,9 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 	/**
 	 * Get Nets order data, right before WC form is submitted in checkout.
+	 *
+	 * @return void
+	 * @throws Exception When query validation fails.
 	 */
 	public static function get_order_data() {
 
@@ -203,6 +212,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 	/**
 	 * Change payment method.
+	 *
+	 * @return void
 	 */
 	public static function change_payment_method() {
 
