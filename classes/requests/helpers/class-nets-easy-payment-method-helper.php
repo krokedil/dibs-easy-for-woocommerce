@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * DIBS_Requests_Payment_Methods class.
+ * Nets_Easy_Payment_Method_Helper class.
  *
  * Class that formats the invoice fee sent to Nets.
  */
@@ -23,7 +23,7 @@ class Nets_Easy_Payment_Method_Helper {
 	 */
 	public static function get_invoice_fees() {
 		$dibs_settings  = get_option( 'woocommerce_dibs_easy_settings' );
-		$invoice_fee_id = isset( $dibs_settings['dibs_invoice_fee'] ) ? $dibs_settings['dibs_invoice_fee'] : '';
+		$invoice_fee_id = $dibs_settings['dibs_invoice_fee'] ?? '';
 		$items          = array();
 		if ( $invoice_fee_id ) {
 			$product = wc_get_product( $invoice_fee_id );
