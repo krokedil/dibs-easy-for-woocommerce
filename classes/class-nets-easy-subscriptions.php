@@ -39,21 +39,22 @@ class Nets_Easy_Subscriptions {
 	}
 
 	/**
-	 * Marks the order as a recurring order for Klarna
+	 * Marks the order as a recurring order for Nets Easy
 	 *
-	 * @param array $request_args The Klarna request arguments.
+	 * @param array $request_args The Nets Easy request arguments.
 	 * @return array
 	 */
 	public function maybe_add_subscription( $request_args ) {
-		// Check if we have a subscription product. If yes set recurring field.
+		// Check if we have a subscription product. If yes set recurring fi eld.
 		if ( class_exists( 'WC_Subscriptions_Cart' ) && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
 			$request_args['subscription'] = array(
 				'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+5 year' ) ),
 				'interval' => 0,
 			);
-
+			$dibs_settings                = get_option( 'woocommerce_dibs_easy_settings' );
 			$complete_payment_button_text = $dibs_settings['complete_payment_button_text'] ?? 'subscribe';
 			$request_args['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
+			WC()->session->set( 'dibs_complete_payment_button_text', 'subscription' );
 		}
 
 		// Checks if this is a DIBS subscription payment method change.
