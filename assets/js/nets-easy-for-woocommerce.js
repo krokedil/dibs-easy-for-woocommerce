@@ -60,10 +60,10 @@ jQuery( function( $ ) {
 		 */
 		loadDibs() {
 			if ( dibsEasyForWoocommerce.dibsIsSelected() ) {
-				window.addEventListener(
-					'hashchange',
-					dibsEasyForWoocommerce.handleHashChange
-				);
+				// window.addEventListener(
+				// 	'hashchange',
+				// 	dibsEasyForWoocommerce.handleHashChange
+				// );
 				dibsEasyForWoocommerce.moveExtraCheckoutFields();
 				dibsEasyForWoocommerce.initDibsCheckout();
 				dibsEasyForWoocommerce.bodyEl.on( 'update_checkout', dibsEasyForWoocommerce.updateCheckout );
@@ -88,6 +88,7 @@ jQuery( function( $ ) {
 		 * @param {Object} response
 		 */
 		paymentCompleted( response ) {
+			console.log( 'ovo je taj response', response );
 			console.log( 'payment-completed' );
 			console.log( response.paymentId );
 			//DIBS_Payment_Success(response.paymentId);
@@ -285,6 +286,10 @@ jQuery( function( $ ) {
 				$( '#shipping_last_name' ).val( lastName );
 				$( '#billing_email' ).val( email );
 				$( '#billing_phone' ).val( `${ prefix }${ number }` );
+				// trigger events for 3rd part plugins.
+				$( '#billing_country' ).change();
+				$( '#billing_email' ).change();
+				$( '#billing_email' ).blur();
 			} else {
 				// B2C purchase
 				const { firstName, lastName, email, phoneNumber } = consumer.privatePerson;
@@ -296,6 +301,9 @@ jQuery( function( $ ) {
 				$( '#shipping_first_name' ).val( firstName );
 				$( '#shipping_last_name' ).val( lastName );
 				$( '#billing_email' ).val( email );
+				// trigger events for 3rd part plugins.
+				$( '#billing_email' ).change();
+				$( '#billing_email' ).blur();
 				$( '#billing_phone' ).val( `${ prefix }${ number }` );
 			}
 
@@ -354,35 +362,6 @@ jQuery( function( $ ) {
 			}
 		},
 		/**
-		 * Handle hashchange triggered when Woo order is created.
-		 */
-		handleHashChange( ) {
-			console.log( 'hashchange' );
-			const currentHash = location.hash;
-			const splintedHash = currentHash.split( '=' );
-			if ( splintedHash[ 0 ] === '#dibseasy' ) {
-				const response = JSON.parse( atob( splintedHash[ 1 ] ) );
-				window.dibsRedirectUrl = response.redirect_url;
-				console.log( 'response.return_url' );
-				console.log( response.return_url );
-				sessionStorage.setItem( 'DIBSRedirectUrl', response.return_url );
-				$( '#dibs-order-review' ).block( {
-					message: null,
-					overlayCSS: {
-						background: '#fff',
-						opacity: 0.6,
-					},
-				} );
-				$( dibsEasyForWoocommerce.checkoutFormSelector ).removeClass( 'processing' ).unblock();
-				wcDibsEasy.dibsOrderProcessing = false;
-				$( 'form.checkout' ).removeClass( 'processing' ).unblock();
-				dibsEasyForWoocommerce.dibsCheckout.send(
-					'payment-order-finalized',
-					true
-				);
-			}
-		},
-		/**
 		 * Submit the order using the WooCommerce AJAX function.
 		 */
 		submitOrder() {
@@ -403,6 +382,10 @@ jQuery( function( $ ) {
 						if ( 'success' === data.result ) {
 							dibsEasyForWoocommerce.logToFile(
 								'Successfully placed order.'
+							);
+							dibsEasyForWoocommerce.dibsCheckout.send(
+								'payment-order-finalized',
+								true
 							);
 							window.location.href = data.redirect;
 						} else {
