@@ -40,6 +40,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			'customer_address_updated' => true,
 			'get_order_data'           => true,
 			'change_payment_method'    => true,
+			'dibs_easy_wc_log_js'      => true,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_woocommerce_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -273,7 +274,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 	 */
 	public static function dibs_easy_wc_log_js() {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
-		if ( ! wp_verify_nonce( $nonce, 'dibs_wc_log_js' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'dibs_easy_wc_log_js' ) ) {
 			wp_send_json_error( 'bad_nonce' );
 			exit;
 		}
