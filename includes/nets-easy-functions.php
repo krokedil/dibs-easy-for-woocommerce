@@ -41,6 +41,7 @@ function dibs_easy_maybe_create_order() {
 	$session->set( 'dibs_payment_id', $dibs_easy_order['paymentId'] );
 	$session->set( 'dibs_currency', get_woocommerce_currency() );
 	$session->set( 'nets_easy_last_update_hash', $cart->get_cart_hash() );
+	$session->set( 'nets_easy_last_shipping_total', $cart->get_shipping_total() );
 	// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
 	$payment_id = $dibs_easy_order['paymentId'];
 	set_transient( 'dibs_payment_id_' . $payment_id, $payment_id, 15 * MINUTE_IN_SECONDS ); // phpcs:ignore
@@ -53,6 +54,7 @@ function dibs_easy_maybe_create_order() {
  * Shows select another payment method button in DIBS Checkout page.
  */
 function wc_dibs_show_another_gateway_button() {
+	error_log("hello from functions");
 	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 
 	if ( count( $available_gateways ) > 1 ) {
@@ -99,6 +101,27 @@ function wc_dibs_unset_sessions() {
 		if ( WC()->session->get( 'dibs_currency' ) ) {
 			WC()->session->__unset( 'dibs_currency' );
 		}
+
+		if ( WC()->session->get( 'dibs_complete_payment_button_text' ) ) {
+			WC()->session->__unset( 'dibs_complete_payment_button_text' );
+		}
+	}
+}
+
+/**
+ * @return void
+ */
+function maybe_force_reload_btn_text() {
+	$is_sub = WC()->session->get( 'dibs_complete_payment_button_text' );
+	if ( ! $is_sub && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
+		wc_dibs_unset_sessions();
+		dibs_easy_maybe_create_order();
+		wp_safe_redirect( wc_get_checkout_url() );
+	}
+	if ( 'subscription' === $is_sub && ! ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
+		wc_dibs_unset_sessions();
+		dibs_easy_maybe_create_order();
+		wp_safe_redirect( wc_get_checkout_url() );
 	}
 }
 
@@ -166,7 +189,7 @@ function wc_dibs_clean_name( $name ) {
 /**
  * Confirm the order in WooCommerce.
  *
- * @param string $order_id Woocommerce order id.
+ * @param int $order_id Woocommerce order id.
  *
  * @return void
  */
@@ -174,7 +197,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	$order         = wc_get_order( $order_id );
 	$payment_id    = get_post_meta( $order_id, '_dibs_payment_id', true );
 	$settings      = get_option( 'woocommerce_dibs_easy_settings' );
-	$checkout_flow = ( isset( $settings['checkout_flow'] ) ) ? $settings['checkout_flow'] : 'embedded';
+	$checkout_flow = $settings['checkout_flow'] ?? 'embedded';
 	$auto_capture  = $settings['auto_capture'] ?? 'no';
 
 	if ( null === $payment_id ) {

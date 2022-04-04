@@ -21,9 +21,11 @@ class Nets_Easy_Checkout {
 	/**
 	 * Update the Nets Easy order after calculations from WooCommerce has run.
 	 *
+	 * @param WC_Cart $cart The WooCommerce cart.
 	 * @return void
 	 */
-	public function update_nets_easy_order() {
+	public function update_nets_easy_order( $cart ) {
+
 		$settings = get_option( 'woocommerce_dibs_easy_settings' );
 
 		if ( ! is_checkout() && 'redirect' !== $settings['checkout_flow'] ) {
@@ -47,6 +49,14 @@ class Nets_Easy_Checkout {
 		if ( $cart_hash === $saved_hash ) {
 			return;
 		}
+
+		if ( WC()->session->get( 'nets_easy_last_shipping_total' ) === $cart->get_cart_shipping_total() ) {
+			return;
+		}
+
+		// dibs_complete_payment_button_text.
+		maybe_force_reload_btn_text();
+
 		$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 		if ( ! is_wp_error( $nets_easy_order ) ) {
 			Nets_Easy()->api->update_nets_easy_order( $payment_id );
