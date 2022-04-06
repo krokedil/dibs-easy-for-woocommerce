@@ -54,7 +54,6 @@ function dibs_easy_maybe_create_order() {
  * Shows select another payment method button in DIBS Checkout page.
  */
 function wc_dibs_show_another_gateway_button() {
-	error_log("hello from functions");
 	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 
 	if ( count( $available_gateways ) > 1 ) {
@@ -109,18 +108,16 @@ function wc_dibs_unset_sessions() {
 }
 
 /**
+ * Sets pay button text depending on cart content.
+ *
  * @return void
  */
 function maybe_force_reload_btn_text() {
-	$is_sub = WC()->session->get( 'dibs_complete_payment_button_text' );
-	if ( ! $is_sub && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
+	$is_sub   = WC()->session->get( 'dibs_complete_payment_button_text' ) === 'subscription';
+	$cart_sub = ( class_exists( 'WC_Subscriptions_Cart' ) && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) );
+
+	if ( $is_sub !== $cart_sub ) {
 		wc_dibs_unset_sessions();
-		dibs_easy_maybe_create_order();
-		wp_safe_redirect( wc_get_checkout_url() );
-	}
-	if ( 'subscription' === $is_sub && ! ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
-		wc_dibs_unset_sessions();
-		dibs_easy_maybe_create_order();
 		wp_safe_redirect( wc_get_checkout_url() );
 	}
 }
