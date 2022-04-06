@@ -45,14 +45,12 @@ class Nets_Easy_Logger {
 	 * Logs an event in the WP DB.
 	 *
 	 * @param array $data The data to be logged.
-	 *
-	 * @throws JsonException Throws JsonException.
 	 */
 	public static function log_to_db( $data ) {
 		$logs = get_option( 'dibs_easy_debuglog', array() );
 
 		if ( ! empty( $logs ) ) {
-			$logs = json_decode( $logs, true, 512, JSON_THROW_ON_ERROR );
+			$logs = json_decode( $logs );
 		}
 
 		$logs   = array_slice( $logs, - 14 );
@@ -67,7 +65,6 @@ class Nets_Easy_Logger {
 	 * @param string|array $data The data string|array.
 	 *
 	 * @return string|array
-	 * @throws JsonException Throws JsonException.
 	 */
 	public static function format_data( $data ) {
 		if ( ! is_array( $data ) ) {
