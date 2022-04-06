@@ -88,12 +88,8 @@ jQuery( function( $ ) {
 		 * @param {Object} response
 		 */
 		paymentCompleted( response ) {
-			console.log( 'ovo je taj response', response );
-			console.log( 'payment-completed' );
-			console.log( response.paymentId );
-			//DIBS_Payment_Success(response.paymentId);
-			const redirectUrl = sessionStorage.getItem( 'DIBSRedirectUrl' );
-			console.log( redirectUrl );
+			dibsEasyForWoocommerce.logToFile( 'Payment completed' );
+			const redirectUrl = sessionStorage.getItem( 'redirectNets' );
 			if ( redirectUrl ) {
 				window.location.href = redirectUrl;
 			}
@@ -209,7 +205,7 @@ jQuery( function( $ ) {
 			} );
 			dibsEasyForWoocommerce.dibsCheckout.on(
 				'pay-initialized',
-				dibsEasyForWoocommerce.payInitialized
+				dibsEasyForWoocommerce.getDibsEasyOrder
 			);
 			dibsEasyForWoocommerce.dibsCheckout.on(
 				'payment-completed',
@@ -224,6 +220,8 @@ jQuery( function( $ ) {
 		 * Gets the Dibs Easy order and starts the order submission
 		 */
 		getDibsEasyOrder() {
+			dibsEasyForWoocommerce.dibsOrderProcessing = true;
+			$( document.body ).trigger( 'dibs_pay_initialized' );
 			$.ajax( {
 				type: 'POST',
 				dataType: 'json',
@@ -258,6 +256,7 @@ jQuery( function( $ ) {
 		 * @param {Object} data
 		 */
 		setAddressData( data ) {
+			dibsEasyForWoocommerce.logToFile( 'Received "customer data" from Nets Easy' );
 			const consumer = data.data.payment.consumer;
 			const { billingAddress, shippingAddress } = consumer;
 
@@ -331,7 +330,6 @@ jQuery( function( $ ) {
 				/>`
 			);
 			dibsEasyForWoocommerce.submitOrder();
-			// $('form.woocommerce-checkout').addClass('processing');
 		},
 		/**
 		 * When the customer changes to Dibs Easy from other payment methods.
@@ -387,7 +385,11 @@ jQuery( function( $ ) {
 								'payment-order-finalized',
 								true
 							);
-							window.location.href = data.redirect;
+							window.sessionStorage.setItem( 'redirectNets', data.redirect );
+							dibsEasyForWoocommerce.dibsCheckout.send(
+								'payment-order-finalized',
+								true
+							);
 						} else {
 							throw 'Result failed';
 						}
@@ -488,7 +490,7 @@ jQuery( function( $ ) {
 				dataType: 'json',
 				data: {
 					message,
-					nonce: wcDibsEasy.get_log_nonce,
+					nonce: wcDibsEasy.log_to_file_nonce,
 				},
 			} );
 		},

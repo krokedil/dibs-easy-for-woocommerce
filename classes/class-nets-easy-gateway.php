@@ -274,15 +274,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 					'result' => 'error',
 				);
 			}
-			// Add #dibseasy hash to checkout url, so we can respond to DIBS that payment can proceed and be finalized in DIBS system.
-			$checkout_url = array(
-				'return_url' => add_query_arg( 'easy_confirm', 'yes', $this->get_return_url( $order ) ),
-				'time'       => time(),
-			);
-
 			return array(
 				'result'   => 'success',
-				'redirect' => '#dibseasy=' . base64_encode( wp_json_encode( $checkout_url ) ), // phpcs:ignore
+				'redirect' => add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ),
 			);
 		}
 	}
