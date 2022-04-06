@@ -5,6 +5,7 @@ You need to have NodeJS and Yarn installed on your system.
 
 1.NodeJS
 2.Yarn
+3.Composer
 
 ==========Translation and assets==========
 
@@ -35,5 +36,5 @@ Development mode
 JS
   yarn lintjs
 
-
-// TODO add phpcs command ( composer )
+PHP
+    composer run lint-fix or yarn lintphp
