@@ -30,6 +30,10 @@ Build (.min.js, .min.css, .pot )
 Development mode
      yarn webpack:dev
 
+===========Linter============
+
+JS
+  yarn lintjs
 
 
-
+// TODO add phpcs command ( composer )
