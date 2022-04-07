@@ -63,19 +63,14 @@ class Nets_Easy_Assets {
 	 * Loads scripts for the plugin.
 	 */
 	public function dibs_load_js() {
-		$settings = get_option( 'woocommerce_dibs_easy_settings' );
+		$settings = get_option( 'woocommerce_dibs_easy_settings', array() );
+
 		if ( 'yes' !== $settings['enabled'] ) {
 			return;
 		}
 		$test_mode = $settings['test_mode'];
 		if ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) {
-			$script_url      = $this->get_script_url();
-			$dibs_payment_id = filter_input( INPUT_GET, 'dibs-payment-id', FILTER_SANITIZE_STRING );
-			$dibs_payment_id = $dibs_payment_id ? $dibs_payment_id : null;
-			$paymentId       = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_STRING );  // phpcs:ignore
-			$paymentId       = $paymentId ? $paymentId : null;  // phpcs:ignore
-			$paymentFailed   = filter_input( INPUT_GET, 'paymentFailed', FILTER_SANITIZE_STRING );  // phpcs:ignore
-			$paymentFailed   = $paymentFailed ? $paymentFailed : null;  // phpcs:ignore
+			$script_url = $this->get_script_url();
 
 			if ( WC()->session->get( 'dibs_payment_id' ) ) {
 				$checkout_initiated = 'yes';
@@ -134,8 +129,6 @@ class Nets_Easy_Assets {
 				'wcDibsEasy',
 				array(
 					'dibs_payment_id'                  => WC()->session->get( 'dibs_payment_id' ),
-					'paymentId'                        => $paymentId, // phpcs:ignore
-					'paymentFailed'                    => $paymentFailed, // phpcs:ignore
 					'checkoutInitiated'                => $checkout_initiated,
 					'standard_woo_checkout_fields'     => $standard_woo_checkout_fields,
 					'dibs_process_order_text'          => __( 'Please wait while we process your order...', 'dibs-easy-for-woocommerce' ),
