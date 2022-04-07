@@ -43,7 +43,6 @@ class Nets_Easy_Templates {
 		add_filter( 'woocommerce_locate_template', array( $this, 'override_template' ), 999, 3 );
 
 		// Template hooks.
-//		add_action( 'wc_dibs_before_checkout_form', 'wc_dibs_calculate_totals', 1 );
 		add_action( 'wc_dibs_after_order_review', array( $this, 'add_extra_checkout_fields' ), 10 );
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_show_another_gateway_button', 20 );
 		add_action( 'wc_dibs_after_snippet', array( $this, 'add_wc_form' ), 10 );
