@@ -28,7 +28,11 @@ class Nets_Easy_Checkout {
 
 		$settings = get_option( 'woocommerce_dibs_easy_settings' );
 
-		if ( ! is_checkout() && 'redirect' !== $settings['checkout_flow'] ) {
+		if ( ! is_checkout() ) {
+			return;
+		}
+
+		if ( 'redirect' === $settings['checkout_flow'] ) {
 			return;
 		}
 
@@ -42,7 +46,7 @@ class Nets_Easy_Checkout {
 		}
 
 		// Check if the cart hash has been changed since last update.
-		$cart_hash  = WC()->cart->get_cart_hash();
+		$cart_hash  = $cart->get_cart_hash();
 		$saved_hash = WC()->session->get( 'nets_easy_last_update_hash' );
 
 		// If they are the same, return.
@@ -50,12 +54,17 @@ class Nets_Easy_Checkout {
 			return;
 		}
 
-		// dibs_complete_payment_button_text.
-		maybe_force_reload_btn_text();
+		// Check if we have a case where a regular product is in the cart and the incorrect text on the button.
+		// If so, delete the session and reload the page.
+		maybe_clear_wc_session();
 
+		// Retrieves the order.
 		$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 		if ( ! is_wp_error( $nets_easy_order ) ) {
+			// Updates the order.
 			Nets_Easy()->api->update_nets_easy_order( $payment_id );
 		}
+		// Update the session value with the new cart hash.
+		WC()->session->set( 'nets_easy_last_update_hash', $cart_hash );
 	}
 } new Nets_Easy_Checkout();
