@@ -60,10 +60,6 @@ jQuery( function( $ ) {
 		 */
 		loadDibs() {
 			if ( dibsEasyForWoocommerce.dibsIsSelected() ) {
-				// window.addEventListener(
-				// 	'hashchange',
-				// 	dibsEasyForWoocommerce.handleHashChange
-				// );
 				dibsEasyForWoocommerce.moveExtraCheckoutFields();
 				dibsEasyForWoocommerce.initDibsCheckout();
 				dibsEasyForWoocommerce.bodyEl.on( 'update_checkout', dibsEasyForWoocommerce.updateCheckout );
@@ -77,6 +73,7 @@ jQuery( function( $ ) {
 		 */
 		payInitialized( response ) {
 			dibsEasyForWoocommerce.dibsOrderProcessing = true;
+			dibsEasyForWoocommerce.logToFile( `Pay initialized is triggered with payment id: ${ response.paymentId }` );
 			$( document.body ).trigger( 'dibs_pay_initialized' );
 			console.log( 'dibs_pay_initialized' );
 			console.log( response );
@@ -88,7 +85,7 @@ jQuery( function( $ ) {
 		 * @param {Object} response
 		 */
 		paymentCompleted( response ) {
-			dibsEasyForWoocommerce.logToFile( 'Payment completed' );
+			dibsEasyForWoocommerce.logToFile( `Payment completed is triggered with payment id: ${ response.paymentId }` );
 			const redirectUrl = sessionStorage.getItem( 'redirectNets' );
 			if ( redirectUrl ) {
 				window.location.href = redirectUrl;
@@ -165,7 +162,7 @@ jQuery( function( $ ) {
 		 * @param {Object} address
 		 */
 		addressChanged( address ) {
-			console.log( 'address is: ', address );
+			dibsEasyForWoocommerce.logToFile( 'Address changed is triggered.' );
 			if ( address ) {
 				console.log( 'address-changed' );
 				console.log( address );
@@ -217,10 +214,13 @@ jQuery( function( $ ) {
 			);
 		},
 		/**
-		 * Gets the Dibs Easy order and starts the order submission
+		 * Gets the Nets Easy order and starts the order submission
+		 *
+		 * @param {string} paymentId
 		 */
-		getDibsEasyOrder() {
+		getDibsEasyOrder( paymentId ) {
 			dibsEasyForWoocommerce.dibsOrderProcessing = true;
+			dibsEasyForWoocommerce.logToFile( `Pay initialized is triggered with payment id: ${ paymentId }` );
 			$( document.body ).trigger( 'dibs_pay_initialized' );
 			$.ajax( {
 				type: 'POST',
@@ -229,7 +229,7 @@ jQuery( function( $ ) {
 				url: wcDibsEasy.get_order_data_url,
 				data: {
 					action: 'payment_success',
-					paymentId: wcDibsEasy.paymentId,
+					paymentId,
 					nonce: wcDibsEasy.nets_checkout_nonce,
 				},
 				success( data ) {
@@ -321,14 +321,6 @@ jQuery( function( $ ) {
 				$( dibsEasyForWoocommerce.wooTerms ).prop( 'checked', true );
 			}
 			$( 'input#ship-to-different-address-checkbox' ).prop( 'checked', true );
-			$( 'form.woocommerce-checkout' ).append(
-				`<input 
-					type="hidden"
-					id="dibs_payment_id"
-					name="dibs_payment_id"
-					value="${ wcDibsEasy.paymentId }"
-				/>`
-			);
 			dibsEasyForWoocommerce.submitOrder();
 		},
 		/**
@@ -416,7 +408,12 @@ jQuery( function( $ ) {
 					}
 				},
 				error( data ) {
-					dibsEasyForWoocommerce.failOrder();
+					try {
+						dibsEasyForWoocommerce.logToFile( 'AJAX error | ' + JSON.stringify( data ) );
+					} catch ( e ) {
+						dibsEasyForWoocommerce.logToFile( 'AJAX error | Failed to parse error message.' );
+					}
+					dibsEasyForWoocommerce.failOrder( 'ajax-error', '<div class="woocommerce-error">Internal Server Error</div>', );
 				},
 			} );
 		},

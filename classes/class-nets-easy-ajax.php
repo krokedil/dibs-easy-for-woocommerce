@@ -278,9 +278,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			wp_send_json_error( 'bad_nonce' );
 			exit;
 		}
-		$posted_message  = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
-		$dibs_payment_id = WC()->session->get( 'dibs_payment_id' );
-		$message         = "Frontend JS $dibs_payment_id: $posted_message";
+		$posted_message = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
+		$message        = "Frontend JS: $posted_message";
 		Nets_Easy_Logger::log( $message );
 		wp_send_json_success();
 		wp_die();
