@@ -40,8 +40,9 @@ function dibs_easy_maybe_create_order() {
 	// store payment id.
 	$session->set( 'dibs_payment_id', $dibs_easy_order['paymentId'] );
 	$session->set( 'dibs_currency', get_woocommerce_currency() );
-	$session->set( 'nets_easy_last_update_hash', $cart->get_cart_hash() );
-	$session->set( 'nets_easy_last_shipping_total', $cart->get_shipping_total() );
+	if ( ! $session->get( 'nets_easy_last_update_hash' ) ) {
+		$session->set( 'nets_easy_last_update_hash', $cart->get_cart_hash() );
+	}
 	// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
 	$payment_id = $dibs_easy_order['paymentId'];
 	set_transient( 'dibs_payment_id_' . $payment_id, $payment_id, 15 * MINUTE_IN_SECONDS ); // phpcs:ignore
@@ -113,11 +114,16 @@ function wc_dibs_unset_sessions() {
  * @return void
  */
 function maybe_force_reload_btn_text() {
-	$is_sub   = WC()->session->get( 'dibs_complete_payment_button_text' ) === 'subscription';
-	$cart_sub = ( class_exists( 'WC_Subscriptions_Cart' ) && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) );
 
-	if ( $is_sub !== $cart_sub ) {
+	$is_sub = WC()->session->get( 'dibs_complete_payment_button_text' );
+	if ( ! $is_sub && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
 		wc_dibs_unset_sessions();
+		dibs_easy_maybe_create_order();
+		wp_safe_redirect( wc_get_checkout_url() );
+	}
+	if ( 'subscription' === $is_sub && ! ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
+		wc_dibs_unset_sessions();
+		dibs_easy_maybe_create_order();
 		wp_safe_redirect( wc_get_checkout_url() );
 	}
 }

@@ -50,10 +50,6 @@ class Nets_Easy_Checkout {
 			return;
 		}
 
-		if ( WC()->session->get( 'nets_easy_last_shipping_total' ) === $cart->get_cart_shipping_total() ) {
-			return;
-		}
-
 		// dibs_complete_payment_button_text.
 		maybe_force_reload_btn_text();
 
