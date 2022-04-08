@@ -206,7 +206,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	$request = Nets_Easy()->api->get_nets_easy_order( $payment_id, $order_id );
 
 	if ( isset( $request['payment']['summary']['reservedAmount'] ) || isset( $request['payment']['summary']['chargedAmount'] ) || isset( $request['payment']['subscription']['id'] ) ) {
-		// todo change.
+
 		do_action( 'dibs_easy_process_payment', $order_id, $request );
 
 		update_post_meta( $order_id, 'dibs_payment_type', $request['payment']['paymentDetails']['paymentType'] );
@@ -215,17 +215,13 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 
 		wc_dibs_maybe_add_invoice_fee( $order );
 
-		// todo check this !!!
 		if ( 'CARD' === $request['payment']['paymentDetails']['paymentType'] ) { // phpcs:ignore
 			update_post_meta( $order_id, 'dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan'] );
 		}
 
-		// TODO convert to array.
 		if ( 'A2A' === $request['payment']['paymentDetails']['paymentType'] ) {
-			// todo
 			// Get the DIBS order charge ID.
-			// todo ovo mora da se promeni.
-			$dibs_charge_id = $request->payment->charges[0]->chargeId;
+			$dibs_charge_id = $request['payment']['charges'][0]['chargeId'];
 			update_post_meta( $order_id, '_dibs_charge_id', $dibs_charge_id );
 
 			// Translators: Nets Easy Payment ID.
