@@ -261,14 +261,14 @@ class DIBS_Subscriptions {
 			update_post_meta( $order_id, '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
 			update_post_meta( $order_id, '_dibs_charge_id', $create_order_response->chargeId ); // phpcs:ignore
 			/* Translators: Nets Payment ID & Charge ID. */
-			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Payment ID: %1$s. Charge ID %2$s.', 'dibs-easy-for-woocommerce' ), $create_order_response->paymentId, $create_order_response->chargeId ) ); // phpcs:ignore
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Payment ID: %s. Charge ID %s.', 'dibs-easy-for-woocommerce' ), $create_order_response->paymentId, $create_order_response->chargeId ) ); // phpcs:ignore
 
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_complete( $create_order_response->paymentId ); // phpcs:ignore
 			}
 		} else {
 			/* Translators: Request response from Nets. */
-			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %1$s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $create_order_response ) ) );
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $create_order_response ) ) );
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_failed();
 			}
