@@ -57,6 +57,11 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 
+= 2022.04.11    - version 1.26.0 =
+* Tweak         - The argnum in format specifier for translatable strings is removed to offer better compatibility with third-party translation API.
+* Fix           - (Redirect) Fix the error message on checkout when Nets denies the create payment request.
+* Fix           - Fix critical error sometimes happening when saving the shipping reference in the order.
+
 = 2022.01.28    - version 1.25.1 =
 * Fix           - Remove white space in all phone numbers sent to Nets.
 * Fix           - Fix display of error message in checkout if Nets denies create payment request for redirect checkout flow.
