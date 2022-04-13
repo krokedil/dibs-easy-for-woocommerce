@@ -98,7 +98,7 @@ class Nets_Easy_Logger {
 			'request_url'    => $request_url,
 			'request'        => $request_args,
 			'response'       => array(
-				'body' => $response,
+				'body' => $response['body'],
 				'code' => $code,
 			),
 			'timestamp'      => date( 'Y-m-d H:i:s' ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
