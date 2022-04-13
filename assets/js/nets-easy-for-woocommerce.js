@@ -67,19 +67,6 @@ jQuery( function( $ ) {
 			}
 		},
 		/**
-		 * Triggers when customer clicks the pay button.
-		 *
-		 * @param {Object} response
-		 */
-		payInitialized( response ) {
-			dibsEasyForWoocommerce.dibsOrderProcessing = true;
-			dibsEasyForWoocommerce.logToFile( `Pay initialized is triggered with payment id: ${ response.paymentId }` );
-			$( document.body ).trigger( 'dibs_pay_initialized' );
-			console.log( 'dibs_pay_initialized' );
-			console.log( response );
-			dibsEasyForWoocommerce.getDibsEasyOrder();
-		},
-		/**
 		 * Triggers after a successful payment.
 		 *
 		 * @param {Object} response
@@ -214,6 +201,7 @@ jQuery( function( $ ) {
 			);
 		},
 		/**
+		 * Triggers when customer clicks the pay button.
 		 * Gets the Nets Easy order and starts the order submission
 		 *
 		 * @param {string} paymentId
