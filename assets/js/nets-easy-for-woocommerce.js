@@ -250,9 +250,12 @@ jQuery( function( $ ) {
 
 			// billingAddress have country with 3 letters.
 
-			$( '#billing_address_1' ).val( billingAddress.addressLine1 );
-			$( '#billing_postcode' ).val( billingAddress.postalCode );
-			$( '#billing_city' ).val( billingAddress.city );
+			// check do we have data
+			const hasBillingData = typeof billingAddress === 'object' && ! Array.isArray( billingAddress );
+			// Use shipping data if billing data do not exist.
+			$( '#billing_address_1' ).val( hasBillingData ? billingAddress.addressLine1 : shippingAddress.addressLine1 );
+			$( '#billing_postcode' ).val( hasBillingData ? billingAddress.postalCode : shippingAddress.postalCode );
+			$( '#billing_city' ).val( hasBillingData ? billingAddress.city : shippingAddress.city );
 			$( '#billing_country' ).val( shippingAddress.country );
 
 			$( '#shipping_address_1' ).val( shippingAddress.addressLine1 );
