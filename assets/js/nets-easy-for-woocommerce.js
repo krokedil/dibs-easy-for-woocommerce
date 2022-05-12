@@ -364,10 +364,6 @@ jQuery( function( $ ) {
 							dibsEasyForWoocommerce.logToFile(
 								'Successfully placed order.'
 							);
-							dibsEasyForWoocommerce.dibsCheckout.send(
-								'payment-order-finalized',
-								true
-							);
 							window.sessionStorage.setItem( 'redirectNets', data.redirect );
 							dibsEasyForWoocommerce.dibsCheckout.send(
 								'payment-order-finalized',
