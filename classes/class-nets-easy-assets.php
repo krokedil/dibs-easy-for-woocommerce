@@ -41,10 +41,8 @@ class Nets_Easy_Assets {
 	 *
 	 * @return string
 	 */
-	protected function qoc_is_script_debug_enabled() {
-		// TODO fix this.
-		// return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		return '';
+	protected function nets_easy_is_script_debug_enabled() {
+		return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 	}
 
 	/**
@@ -108,7 +106,7 @@ class Nets_Easy_Assets {
 				'account_username',
 				'account_password',
 			);
-			$script_version               = $this->qoc_is_script_debug_enabled();
+			$script_version               = $this->nets_easy_is_script_debug_enabled();
 			// todo enable min version.
 			// phpcs:ignore $src                          = WC_DIBS__URL . '/assets/js/checkout' . $script_version . '.js';
 			wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
@@ -160,7 +158,7 @@ class Nets_Easy_Assets {
 		if ( is_order_received_page() ) {
 			return;
 		}
-		$style_version = $this->qoc_is_script_debug_enabled();
+		$style_version = $this->nets_easy_is_script_debug_enabled();
 		// Load stylesheet for the checkout page.
 		wp_register_style(
 			'dibs-style',
