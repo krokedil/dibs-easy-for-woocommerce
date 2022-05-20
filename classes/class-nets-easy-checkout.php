@@ -56,7 +56,12 @@ class Nets_Easy_Checkout {
 
 		// Check if we have a case where a regular product is in the cart and the incorrect text on the button.
 		// If so, delete the session and reload the page.
-		maybe_clear_wc_session();
+		if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
+			if ( WC()->session->get( 'dibs_cart_contains_subscription' ) !== get_dibs_cart_contains_subscription() ) {
+				wc_dibs_unset_sessions();
+				wp_safe_redirect( wc_get_checkout_url() );
+			}
+		}
 
 		// Retrieves the order.
 		$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );

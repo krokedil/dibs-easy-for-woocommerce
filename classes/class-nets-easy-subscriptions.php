@@ -54,7 +54,6 @@ class Nets_Easy_Subscriptions {
 			$dibs_settings                = get_option( 'woocommerce_dibs_easy_settings' );
 			$complete_payment_button_text = $dibs_settings['complete_payment_button_text'] ?? 'subscribe';
 			$request_args['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
-			WC()->session->set( 'dibs_complete_payment_button_text', 'subscription' );
 		}
 
 		// Checks if this is a DIBS subscription payment method change.
