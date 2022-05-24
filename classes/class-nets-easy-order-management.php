@@ -71,9 +71,19 @@ class Nets_Easy_Order_Management {
 				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nets system since the order total is %s.', 'dibs-easy-for-woocommerce' ), $wc_order->get_total() ) );
 				return;
 			}
-
+			// get nets easy order.
+			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( get_post_meta( $order_id, '_dibs_payment_id', true ) );
+			if ( $nets_easy_order['payment']['charges'] ) {
+				$dibs_charge_id = $nets_easy_order['payment']['charges'][0]['chargeId'];
+				// If charges id exists, update the post meta value.
+				if ( $dibs_charge_id ) {
+					update_post_meta( $order_id, '_dibs_charge_id', $nets_easy_order['payment']['charges'][0]['chargeId'] );
+					// Translators: 1. Nets Easy Payment id 2. Payment type  3.Charge id.
+					$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
+					return;
+				}
+			}
 			$response = Nets_Easy()->api->activate_nets_easy_order( $order_id );
-
 			// Error handling.
 			if ( null !== $response ) {
 				if ( isset( $response['chargeId'] ) ) { // Payment success.
