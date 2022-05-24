@@ -59,7 +59,11 @@ class Nets_Easy_Checkout {
 		if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
 			if ( WC()->session->get( 'dibs_cart_contains_subscription' ) !== get_dibs_cart_contains_subscription() ) {
 				wc_dibs_unset_sessions();
-				wp_safe_redirect( wc_get_checkout_url() );
+				if ( wp_doing_ajax() ) {
+					WC()->session->reload_checkout = true;
+				} else {
+					wp_safe_redirect( wc_get_checkout_url() );
+				}
 			}
 		}
 
