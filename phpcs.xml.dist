@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress (Krokedil) Coding Standards">
+    <description>A custom set of code standard rules to check for Krokedil WordPress coding standards.</description>
+
+    <!-- Exclude the Composer Vendor directory. -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <!-- Exclude the Node Modules directory. -->
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+    <!-- Pass some flags to PHPCS:
+         p flag: Show progress of the run.
+         s flag: Show sniff codes in all reports.
+    -->
+    <arg value="ps"/>
+
+    <!-- Check up to 8 files simultaneously. -->
+    <arg name="parallel" value="100"/>
+
+    <rule ref="WordPress-Core">
+        <!-- Ignore filenames. Without this exclusion file name like taxonomy-custom_taxonomy.php would not be allowed, since it contains underscore -->
+        <exclude name="WordPress.Files.FileName"/>
+
+        <!-- Allow shorthand array syntax -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found"/>
+
+        <!-- Allow to skip the translator comment -->
+        <exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
+    </rule>
+
+    <!-- Loads the PHP Compatibility ruleset. -->
+    <rule ref="PHPCompatibilityWP" />
+
+    <!-- PHP version check. -->
+    <config name="testVersion" value="7.2-"/>
+</ruleset>

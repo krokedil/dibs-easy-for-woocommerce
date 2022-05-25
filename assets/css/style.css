@@ -1,15 +1,14 @@
 @media only screen and (min-width : 768px) {
+    #dibs-wrapper {
+        display: flex;
+        gap: 35px;
+    }
     #dibs-iframe {
-        float:right;
-        width:47.8260869565%;
-        display:inline-block;
+        flex: 1;
     }
 
     #dibs-order-review {
-        width:47.8260869565%;
-        clear:both;
-        float:left;
-        display:inline-block;
+        flex: 1;
     }
 }
 body.dibs-checkout-processing {
