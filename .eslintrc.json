@@ -1,0 +1,22 @@
+{
+  "env": {
+    "commonjs": true,
+    "es6": true,
+    "jest": true,
+    "node": true,
+    "jquery": true,
+    "browser": true
+  },
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars":"off"
+  },
+  "extends": [
+    "plugin:@wordpress/eslint-plugin/esnext"
+  ],
+  "globals": {
+    "wcDibsEasy": false,
+    "Dibs": false
+  }
+
+}

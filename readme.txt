@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
-Tested up to: 5.9.3
+Tested up to: 6.0
 Requires PHP: 7.0
-WC requires at least: 4.0.0
-WC tested up to: 6.4.0
+WC requires at least: 5.0.0
+WC tested up to: 6.5.1
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -56,6 +56,12 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2022.05.25    - version 2.0.0 =
+* Enhancement   - Internal rewrite of plugin to better follow WP & Krokedil standards.
+* Enhancement   - Improved the speed of update calls to Nets to enhance the checkout experience for the customer.
+* Enhancement   - Adds minification of js & css files.
+* Fix           - Create new session if subscription product is added to or removed from cart after initial request. This way the place order button text should always be correct. 
 
 = 2022.04.11    - version 1.26.0 =
 * Tweak         - The argnum in format specifier for translatable strings is removed to offer better compatibility with third-party translation API.
