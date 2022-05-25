@@ -178,6 +178,7 @@ class Nets_Easy_Checkout_Helper {
 			$phone_number = str_replace( ' ', '', $phone_number );
 		} else {
 			$phone_number = str_replace( '-', '', $order->get_billing_phone() );
+			$phone_number = str_replace( ' ', '', $phone_number );
 		}
 		return $phone_number;
 	}
