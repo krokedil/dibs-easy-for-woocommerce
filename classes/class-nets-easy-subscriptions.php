@@ -270,7 +270,7 @@ class Nets_Easy_Subscriptions {
 			}
 		} else {
 			/* Translators: Request response from Nets. */
-			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response ) ) );// TODO check the type.
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response->get_error_message() ) ) );// TODO check the type.
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_failed();
 			}

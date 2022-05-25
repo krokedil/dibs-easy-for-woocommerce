@@ -29,6 +29,7 @@ class Nets_Easy_Request_Get_Subscription extends Nets_Easy_Request_Get {
 	 */
 	public function __construct( $arguments ) {
 		parent::__construct( $arguments );
+		$this->log_title       = 'Get subscription';
 		$this->subscription_id = $arguments['subscription_id'];
 	}
 

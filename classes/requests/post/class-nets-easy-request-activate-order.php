@@ -28,8 +28,8 @@ class Nets_Easy_Request_Activate_Order extends Nets_Easy_Request_Post {
 	 */
 	public function __construct( $arguments ) {
 		parent::__construct( $arguments );
-
-		$this->order_id = $this->arguments['order_id'];
+		$this->log_title = 'Activate order';
+		$this->order_id  = $this->arguments['order_id'];
 	}
 
 	/**

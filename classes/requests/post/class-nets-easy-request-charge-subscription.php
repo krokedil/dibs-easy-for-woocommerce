@@ -33,6 +33,7 @@ class Nets_Easy_Request_Charge_Subscription extends Nets_Easy_Request_Post {
 	 */
 	public function __construct( $arguments ) {
 		parent::__construct( $arguments );
+		$this->log_title       = 'Charge subscription';
 		$this->order_id        = $arguments['order_id'];
 		$this->recurring_token = $arguments['recurring_token'];
 	}

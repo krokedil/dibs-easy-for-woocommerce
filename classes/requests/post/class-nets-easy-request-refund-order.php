@@ -35,7 +35,8 @@ class Nets_Easy_Request_Refund_Order extends Nets_Easy_Request_Post {
 	 */
 	public function __construct( $arguments ) {
 		parent::__construct( $arguments );
-		$this->order_id = $arguments['order_id'];
+		$this->log_title = 'Refund order';
+		$this->order_id  = $arguments['order_id'];
 	}
 
 	/**

@@ -247,14 +247,13 @@ abstract class Nets_Easy_Request {
 	 * @return void
 	 */
 	protected function log_response( $response, $request_args, $request_url ) {
-		$method   = $this->method;
-		$title    = "{$this->log_title} - URL: {$request_url}";
-		$code     = wp_remote_retrieve_response_code( $response );
-
+		$method = $this->method;
+		$title  = $this->log_title;
+		$code   = wp_remote_retrieve_response_code( $response );
 
 		// try to get order id from request args
-		//is admin
-		if (is_admin()) {
+		// is admin
+		if ( is_admin() ) {
 			// get payment id from post meta.
 		} else {
 			// get payment id from wc session.
