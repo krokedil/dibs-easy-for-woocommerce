@@ -56,6 +56,8 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2022.05.27    - version 2.0.1 =
+* Fix           - Fixed an issue where the test checkout key would be used in the frontend even when testmode was disabled.
 
 = 2022.05.25    - version 2.0.0 =
 * Enhancement   - Internal rewrite of plugin to better follow WP & Krokedil standards.
