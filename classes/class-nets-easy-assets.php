@@ -121,7 +121,7 @@ class Nets_Easy_Assets {
 				WC_DIBS_EASY_VERSION,
 				false
 			);
-			$private_key = $test_mode ? $settings['dibs_test_checkout_key'] : $settings['dibs_checkout_key'];
+			$private_key = "yes" === $test_mode ? $settings['dibs_test_checkout_key'] : $settings['dibs_checkout_key'];
 			wp_localize_script(
 				'checkout',
 				'wcDibsEasy',
