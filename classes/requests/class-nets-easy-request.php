@@ -259,7 +259,13 @@ abstract class Nets_Easy_Request {
 			// get payment id from wc session.
 		}
 
-		$order_id = $response['body']['payment_id'] ?? null;
+		$body = json_decode( $response['body'], true );
+		/*
+		POST request -> body.paymentId.
+		GET request -> body.payment.paymentId.
+		PUT request -> body is empty.
+		*/
+		$order_id = $body['paymentId'] ?? $body['payment']['paymentId'] ?? null;
 		$log      = Nets_Easy_Logger::format_log( $order_id, $method, $title, $request_args, $request_url, $response, $code );
 		Nets_Easy_Logger::log( $log );
 	}

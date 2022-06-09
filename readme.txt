@@ -56,6 +56,11 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2022.06.09    - version 2.0.2 =
+* Fix           - Fix various fatal errors.
+* Fix           - Fix payment id not being logged.
+* Fix           - The text for the "payment complete" button should now show the text specified in the settings for subscription payments.
+
 = 2022.05.27    - version 2.0.1 =
 * Fix           - Fixed an issue where the test checkout key would be used in the frontend even when testmode was disabled.
 

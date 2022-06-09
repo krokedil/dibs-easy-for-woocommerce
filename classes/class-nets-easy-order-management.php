@@ -73,7 +73,7 @@ class Nets_Easy_Order_Management {
 			}
 			// get nets easy order.
 			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( get_post_meta( $order_id, '_dibs_payment_id', true ) );
-			if ( $nets_easy_order['payment']['charges'] ) {
+			if ( ! is_wp_error( $nets_easy_order ) && $nets_easy_order['payment']['charges'] ) {
 				$dibs_charge_id = $nets_easy_order['payment']['charges'][0]['chargeId'];
 				// If charges id exists, update the post meta value.
 				if ( $dibs_charge_id ) {

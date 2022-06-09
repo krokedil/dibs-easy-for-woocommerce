@@ -53,7 +53,7 @@ class Nets_Easy_Subscriptions {
 			);
 			$dibs_settings                = get_option( 'woocommerce_dibs_easy_settings' );
 			$complete_payment_button_text = $dibs_settings['complete_payment_button_text'] ?? 'subscribe';
-			$request_args['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
+			$request_args['checkout']['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
 		}
 
 		// Checks if this is a DIBS subscription payment method change.
@@ -166,9 +166,9 @@ class Nets_Easy_Subscriptions {
 	 * Sets the recurring token for the subscription order
 	 *
 	 * @param string $order_id WooCommerce order id.
-	 * @param object $dibs_order Nets order.
+	 * @param array  $dibs_order Nets order.
 	 *
-	 * @return object
+	 * @return array|false On success the same $dibs_order is returned, otherwise FALSE if something goes wrong.
 	 */
 	public function set_recurring_token_for_order( $order_id, $dibs_order ) {
 		$wc_order = wc_get_order( $order_id );
@@ -176,6 +176,13 @@ class Nets_Easy_Subscriptions {
 			$subscription_id = $dibs_order['payment']['subscription']['id'];
 			update_post_meta( $order_id, '_dibs_recurring_token', $subscription_id );
 			$response = Nets_Easy()->api->get_nets_easy_subscription( $subscription_id, $order_id );
+
+			if ( is_wp_error( $response ) ) {
+				/* Translators: The response we get back from Nets. */
+				$wc_order->add_order_note( sprintf( __( 'Something went wrong when trying to retrieve the subscription from Nets: %s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response ) ) );
+				return false;
+			}
+
 			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
 				update_post_meta( $order_id, 'dibs_payment_type', $response['paymentDetail']['paymentType'] ); // phpcs:ignore
 				update_post_meta( $order_id, 'dibs_customer_card', $response['paymentDetails']['cardDetails']['maskedPan'] ); // phpcs:ignore
