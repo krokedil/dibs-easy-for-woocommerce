@@ -80,11 +80,12 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		if ( ! is_user_logged_in() && ( ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
 			$response   = Nets_Easy()->api->get_nets_easy_order( $payment_id );
-			// todo change response to array.
-			$email = $response['payment']['consumer']['privatePerson']['email'];
-			if ( email_exists( $email ) ) {
-				// Email exist in a user account, customer must login.
-				$must_login = 'yes';
+			if ( ! is_wp_error( $response ) ) {
+				$email = $response['payment']['consumer']['privatePerson']['email'];
+				if ( email_exists( $email ) ) {
+					// Email exist in a user account, customer must login.
+					$must_login = 'yes';
+				}
 			}
 		}
 
