@@ -47,7 +47,6 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 		$this->supports = array(
 			'products',
-			'refunds',
 			'subscriptions',
 			'subscription_cancellation',
 			'subscription_suspension',
@@ -59,6 +58,10 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			'subscription_payment_method_change',
 			'multiple_subscriptions',
 		);
+
+		if ( 'yes' === $this->get_option( 'dibs_manage_orders' ) ) {
+			$this->supports[] = 'refunds';
+		}
 
 		// Add class if DIBS Easy is set as the default gateway.
 		add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
@@ -146,6 +149,11 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		$response = Nets_Easy()->api->refund_nets_easy_order( $order_id );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
 		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
 			// Translators: Nets refund ID.
 			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s. Reason: %s', 'dibs-easy-for-woocommerce' ), $response['refundId'], $reason ) ); // phpcs:ignore

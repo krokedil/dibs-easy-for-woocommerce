@@ -172,6 +172,7 @@ abstract class Nets_Easy_Request {
 	 * @return object|WP_Error
 	 */
 	public function request() {
+
 		$url      = $this->get_request_url();
 		$args     = $this->get_request_args();
 		$response = wp_remote_request( $url, $args );
@@ -198,14 +199,22 @@ abstract class Nets_Easy_Request {
 			// Get the error messages.
 			if ( null !== json_decode( $response['body'], true ) ) {
 				$errors = json_decode( $response['body'], true );
-
-				foreach ( $errors as $error ) {
-					$error_message .= ' ' . $error;
+				foreach ( $errors as $properties ) {
+					if ( is_array( $properties ) ) {
+						foreach ( $properties as $property ) {
+							foreach ( $property as $err_message ) {
+								$error_message .= ' ' . $err_message;
+							}
+						}
+					} else {
+						$error_message .= ' ' . $properties;
+					}
 				}
+			} else {
+				$message       = wp_remote_retrieve_response_message( $response );
+				$error_message = "API Error ${response_code}, message : ${message}";
 			}
-			$code          = wp_remote_retrieve_response_code( $response );
-			$error_message = empty( $response['body'] ) ? "API Error ${code}" : json_decode( $response['body'], true );
-			$return        = new WP_Error( $code, $error_message, $data );
+			$return = new WP_Error( $response_code, $error_message, $data );
 		} else {
 			$return = json_decode( wp_remote_retrieve_body( $response ), true );
 		}
@@ -251,20 +260,7 @@ abstract class Nets_Easy_Request {
 		$title  = $this->log_title;
 		$code   = wp_remote_retrieve_response_code( $response );
 
-		// try to get order id from request args
-		// is admin
-		if ( is_admin() ) {
-			// get payment id from post meta.
-		} else {
-			// get payment id from wc session.
-		}
-
-		$body = json_decode( $response['body'], true );
-		/*
-		POST request -> body.paymentId.
-		GET request -> body.payment.paymentId.
-		PUT request -> body is empty.
-		*/
+		$body     = json_decode( $response['body'], true );
 		$order_id = $body['paymentId'] ?? $body['payment']['paymentId'] ?? null;
 		$log      = Nets_Easy_Logger::format_log( $order_id, $method, $title, $request_args, $request_url, $response, $code );
 		Nets_Easy_Logger::log( $log );
