@@ -66,6 +66,7 @@ class Nets_Easy_Assets {
 		if ( 'yes' !== $settings['enabled'] ) {
 			return;
 		}
+
 		$test_mode = $settings['test_mode'];
 		if ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) {
 			$script_url = $this->get_script_url();
@@ -75,7 +76,7 @@ class Nets_Easy_Assets {
 			} else {
 				$checkout_initiated = 'no';
 				$easy_confirm       = filter_input( INPUT_GET, 'easy_confirm', FILTER_SANITIZE_STRING );
-				if ( empty( $easy_confirm ) ) {
+				if ( empty( $easy_confirm ) && 'dibs_easy' === WC()->session->get( 'chosen_payment_method' ) ) {
 					dibs_easy_maybe_create_order();
 					$checkout_initiated = 'yes';
 				}
@@ -121,7 +122,7 @@ class Nets_Easy_Assets {
 				WC_DIBS_EASY_VERSION,
 				false
 			);
-			$private_key = "yes" === $test_mode ? $settings['dibs_test_checkout_key'] : $settings['dibs_checkout_key'];
+			$private_key = 'yes' === $test_mode ? $settings['dibs_test_checkout_key'] : $settings['dibs_checkout_key'];
 			wp_localize_script(
 				'checkout',
 				'wcDibsEasy',
