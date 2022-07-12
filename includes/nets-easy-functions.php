@@ -311,10 +311,17 @@ function wc_dibs_maybe_add_invoice_fee( $order ) {
  * @return void
  */
 function dibs_easy_print_error_message( $wp_error ) {
+	$error_message = $wp_error->get_error_message();
+
+	if ( is_array( $error_message ) ) {
+		// Rather than assuming the first element is a string, we'll force a string conversion instead.
+		$error_message = implode( ' ', $error_message );
+	}
+
 	if ( is_ajax() ) {
-		wc_add_notice( $wp_error->get_error_message(), 'error' );
+		wc_add_notice( $error_message, 'error' );
 	} else {
-		wc_print_notice( $wp_error->get_error_message(), 'error' );
+		wc_print_notice( $error_message, 'error' );
 	}
 }
 
