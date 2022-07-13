@@ -67,7 +67,7 @@ class Nets_Easy_Assets {
 			return;
 		}
 		$test_mode = $settings['test_mode'];
-		if ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) {
+		if ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) && ! is_order_received_page() ) {
 			$script_url = $this->get_script_url();
 
 			if ( WC()->session->get( 'dibs_payment_id' ) ) {
