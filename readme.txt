@@ -2,7 +2,7 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
-Tested up to: 6.0
+Tested up to: 6.0.1
 Requires PHP: 7.0
 WC requires at least: 5.0.0
 WC tested up to: 6.7.0
@@ -56,6 +56,12 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2022.07.14    - version 2.0.4 =
+* Fix           - Fixed a critical error happening when attempting to process and print an error message.
+* Fix           - Fixed checkout template filter not working with Redis Cache (thanks @oxyc!)
+* Tweak         - Plugin assets won't be loaded on the thank-you page anymore.
+* Tweak         - We no longer create a new session unless the selected payment method is Nets Easy.
+
 = 2022.06.30    - version 2.0.3 =
 * Fix           - Fix issues with error handling from the Nets API with order management. Solves the errors that would show as "Uncaught Error" in the WooCommerce logs.
 
