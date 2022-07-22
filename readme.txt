@@ -6,7 +6,7 @@ Tested up to: 6.0.1
 Requires PHP: 7.0
 WC requires at least: 5.0.0
 WC tested up to: 6.7.0
-Stable tag: 2.0.3
+Stable tag: 2.0.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2022.07.22    - version 2.0.6 =
+* Fix           - Fix SVN and stable tag versioning.
+
 = 2022.07.14    - version 2.0.4 =
 * Fix           - Fixed a critical error happening when attempting to process and print an error message.
 * Fix           - Fixed checkout template filter not working with Redis Cache (thanks @oxyc!)
