@@ -36,6 +36,7 @@ class Nets_Easy_Subscriptions {
 
 		add_filter( 'woocommerce_order_needs_payment', array( $this, 'maybe_change_needs_payment' ), 999, 3 );
 
+		$this->subscription_type = apply_filters( 'nets_easy_subscription_type', 'scheduled_subscription' );
 	}
 
 	/**
@@ -47,10 +48,19 @@ class Nets_Easy_Subscriptions {
 	public function maybe_add_subscription( $request_args ) {
 		// Check if we have a subscription product. If yes set recurring fi eld.
 		if ( class_exists( 'WC_Subscriptions_Cart' ) && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
-			$request_args['subscription'] = array(
-				'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+5 year' ) ),
-				'interval' => 0,
-			);
+
+			// Unscheduled or scheduled subscription?
+			if ( 'unscheduled_subscription' === $this->subscription_type ) {
+				$request_args['unscheduledSubscription'] = array(
+					'create' => true,
+				);
+			} else {
+				$request_args['subscription'] = array(
+					'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+5 year' ) ),
+					'interval' => 0,
+				);
+			}
+
 			$dibs_settings                = get_option( 'woocommerce_dibs_easy_settings' );
 			$complete_payment_button_text = $dibs_settings['complete_payment_button_text'] ?? 'subscribe';
 			$request_args['checkout']['appearance']['textOptions']['completePaymentButtonText'] = $complete_payment_button_text;
@@ -172,21 +182,18 @@ class Nets_Easy_Subscriptions {
 	 */
 	public function set_recurring_token_for_order( $order_id, $dibs_order ) {
 		$wc_order = wc_get_order( $order_id );
-		if ( isset( $dibs_order['payment']['subscription']['id'] ) ) {
-			$subscription_id = $dibs_order['payment']['subscription']['id'];
+		if ( isset( $dibs_order['payment']['subscription']['id'] ) || isset( $dibs_order['payment']['unscheduledSubscription']['unscheduledSubscriptionId'] ) ) {
+
+			if ( isset( $dibs_order['payment']['subscription']['id'] ) ) {
+				$subscription_id   = $dibs_order['payment']['subscription']['id'];
+				$subscription_type = 'scheduled_subscription';
+			} else {
+				$subscription_id   = $dibs_order['payment']['unscheduledSubscription']['unscheduledSubscriptionId'];
+				$subscription_type = 'unscheduled_subscription';
+			}
+
 			update_post_meta( $order_id, '_dibs_recurring_token', $subscription_id );
-			$response = Nets_Easy()->api->get_nets_easy_subscription( $subscription_id, $order_id );
-
-			if ( is_wp_error( $response ) ) {
-				/* Translators: The response we get back from Nets. */
-				$wc_order->add_order_note( sprintf( __( 'Something went wrong when trying to retrieve the subscription from Nets: %s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response ) ) );
-				return false;
-			}
-
-			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
-				update_post_meta( $order_id, 'dibs_payment_type', $response['paymentDetail']['paymentType'] ); // phpcs:ignore
-				update_post_meta( $order_id, 'dibs_customer_card', $response['paymentDetails']['cardDetails']['maskedPan'] ); // phpcs:ignore
-			}
+			update_post_meta( $order_id, '_dibs_subscription_type', $subscription_type );
 
 			// This function is run after WCS has created the subscription order.
 			// Let's add the _dibs_recurring_token to the subscription as well.
@@ -202,6 +209,7 @@ class Nets_Easy_Subscriptions {
 				$subscriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 				foreach ( $subscriptions as $subscription ) {
 					update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $subscription_id );
+					update_post_meta( $subscription->get_id(), '_dibs_subscription_type', $subscription_type );
 				}
 			}
 		}
@@ -222,6 +230,9 @@ class Nets_Easy_Subscriptions {
 		// Get recurring token.
 		$recurring_token = get_post_meta( $order_id, '_dibs_recurring_token', true );
 
+		// Subscription type.
+		$subscription_type = get_post_meta( $order_id, '_dibs_subscription_type', true );
+
 		// If _dibs_recurring_token is missing.
 		if ( empty( $recurring_token ) ) {
 			// Try getting it from parent order.
@@ -238,42 +249,35 @@ class Nets_Easy_Subscriptions {
 				}
 				if ( ! empty( $dibs_ticket ) ) {
 					// We got a _dibs_ticket - try to getting the subscription via the externalreference request.
-					$response = Nets_Easy()->api->get_nets_easy_subscription_by_external_reference( $dibs_ticket, $order_id );
-
-					if ( ! is_wp_error( $response ) && isset( $response['subscriptionId'] ) ) { // phpcs:ignore
-						// All good, save the subscription ID as _dibs_recurring_token in the renewal order and in the subscription.
-						$recurring_token = $response['subscriptionId']; // phpcs:ignore
-						update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
-
-						foreach ( $subscriptions as $subscription ) {
-							update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $recurring_token );
-							$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response['subscriptionId'] ) ); // phpcs:ignore
-						}
-						if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
-							// Save card data in renewal order.
-							update_post_meta( $order_id, 'dibs_payment_type', $response['paymentDetails']['paymentType'] ); // phpcs:ignore
-							update_post_meta( $order_id, 'dibs_customer_card', $response['paymentDetails']['cardDetails']['maskedPan'] ); // phpcs:ignore
-						}
+					if ( 'unscheduled_subscription' === $this->subscription_type || 'unscheduled_subscription' === $subscription_type ) {
+						$recurring_token = $this->get_recurring_token_from_unscheduled_subscription_external_reference( $dibs_ticket, $order_id, $subscriptions, $renewal_order );
 					} else {
-						/* Translators: Request response. */
-						$renewal_order->add_order_note( sprintf( __( 'Error during DIBS_Request_Get_Subscription_By_External_Reference: %s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response ) ) );
+						$recurring_token = $this->get_recurring_token_from_scheduled_subscription_external_reference( $dibs_ticket, $order_id, $subscriptions, $renewal_order );
 					}
 				}
 			}
 		}
-
-		$response = Nets_Easy()->api->charge_nets_easy_subscription( $order_id, $recurring_token );
+		// Unscheduled or scheduled subscription charge?
+		if ( 'unscheduled_subscription' === $this->subscription_type || 'unscheduled_subscription' === $subscription_type ) {
+			$response          = Nets_Easy()->api->charge_nets_easy_unscheduled_subscription( $order_id, $recurring_token );
+			$subscription_type = 'unscheduled_subscription';
+		} else {
+			$response          = Nets_Easy()->api->charge_nets_easy_scheduled_subscription( $order_id, $recurring_token );
+			$subscription_type = 'scheduled_subscription';
+		}
 
 		if ( ! is_wp_error( $response ) && ! empty( $response['paymentId'] ) ) { // phpcs:ignore
 
 			// All good. Update the renewal order with an order note and run payment_complete on all subscriptions.
 			update_post_meta( $order_id, '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
 			update_post_meta( $order_id, '_dibs_charge_id', $response['chargeId'] ); // phpcs:ignore
+			update_post_meta( $order_id, '_dibs_subscription_type', $subscription_type );
 			/* Translators: Nets Payment ID & Charge ID. */
 			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Payment ID: %s. Charge ID %s.', 'dibs-easy-for-woocommerce' ), $response['paymentId'], $response['chargeId'] ) ); // phpcs:ignore
 
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_complete( $response['paymentId'] ); // phpcs:ignore
+				update_post_meta( $subscription->get_id(), '_dibs_subscription_type', $subscription_type );
 			}
 		} else {
 			/* Translators: Request response from Nets. */
@@ -282,6 +286,78 @@ class Nets_Easy_Subscriptions {
 				$subscription->payment_failed();
 			}
 		}
+	}
+
+	/**
+	 * Try to get recurring token by external reference from scheduled subscription.
+	 *
+	 * @param string  $dibs_ticket The recurring ticket from the old DIBS subscription platform.
+	 * @param string  $order_id The WooCommerce order ID.
+	 * @param objects $subscriptions WooCommerce Subscriptions tied to the renewal order.
+	 * @param object  $renewal_order The WooCommerce order for the renewal.
+	 *
+	 * @return string The recurring token.
+	 */
+	public function get_recurring_token_from_scheduled_subscription_external_reference( $dibs_ticket, $order_id, $subscriptions, $renewal_order ) {
+		$recurring_token = '';
+		$response        = Nets_Easy()->api->get_nets_easy_subscription_by_external_reference( $dibs_ticket, $order_id );
+
+		if ( ! is_wp_error( $response ) && isset( $response['subscriptionId'] ) ) { // phpcs:ignore
+			// All good, save the subscription ID as _dibs_recurring_token in the renewal order and in the subscription.
+			$recurring_token = $response['subscriptionId']; // phpcs:ignore
+			update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
+
+			foreach ( $subscriptions as $subscription ) {
+				update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $recurring_token );
+				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response['subscriptionId'] ) ); // phpcs:ignore
+			}
+			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
+				// Save card data in renewal order.
+				update_post_meta( $order_id, 'dibs_payment_type', $response['paymentDetails']['paymentType'] ); // phpcs:ignore
+				update_post_meta( $order_id, 'dibs_customer_card', $response['paymentDetails']['cardDetails']['maskedPan'] ); // phpcs:ignore
+			}
+		} else {
+			/* Translators: Request response. */
+			$renewal_order->add_order_note( sprintf( __( 'Error during Nets_Easy_Request_Get_Subscription_By_External_Reference: %s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response ) ) );
+		}
+
+		return $recurring_token;
+	}
+
+	/**
+	 * Try to get recurring token by external reference from unscheduled subscription.
+	 *
+	 * @param string  $dibs_ticket The recurring ticket from the old DIBS subscription platform.
+	 * @param string  $order_id The WooCommerce order ID.
+	 * @param objects $subscriptions WooCommerce Subscriptions tied to the renewal order.
+	 * @param object  $renewal_order The WooCommerce order for the renewal.
+	 *
+	 * @return string The recurring token.
+	 */
+	public function get_recurring_token_from_unscheduled_subscription_external_reference( $dibs_ticket, $order_id, $subscriptions, $renewal_order ) {
+		$recurring_token = '';
+		$response        = Nets_Easy()->api->get_nets_easy_unscheduled_subscription_by_external_reference( $dibs_ticket, $order_id );
+
+		if ( ! is_wp_error( $response ) && isset( $response['unscheduledSubscriptionId'] ) ) { // phpcs:ignore
+			// All good, save the subscription ID as _dibs_recurring_token in the renewal order and in the subscription.
+			$recurring_token = $response['unscheduledSubscriptionId']; // phpcs:ignore
+			update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
+
+			foreach ( $subscriptions as $subscription ) {
+				update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $recurring_token );
+				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s. Subscription type: %s.', 'dibs-easy-for-woocommerce' ), $response['subscriptionId'], 'Unscheduled' ) ); // phpcs:ignore
+			}
+			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
+				// Save card data in renewal order.
+				update_post_meta( $order_id, 'dibs_payment_type', $response['paymentDetails']['paymentType'] ); // phpcs:ignore
+				update_post_meta( $order_id, 'dibs_customer_card', $response['paymentDetails']['cardDetails']['maskedPan'] ); // phpcs:ignore
+			}
+		} else {
+			/* Translators: Request response. */
+			$renewal_order->add_order_note( sprintf( __( 'Error during Nets_Easy_Request_Get_Unscheduled_Subscription_By_External_Reference: %s', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response ) ) );
+		}
+
+		return $recurring_token;
 	}
 
 	/**

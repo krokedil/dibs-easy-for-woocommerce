@@ -153,9 +153,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-refund-order.php' );
 			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-order.php' );
 			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-charge-subscription.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-charge-unscheduled-subscription.php' );
 			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-subscription-bulk-charge-id.php' );
 			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-subscription.php' );
 			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-subscription-by-external-reference.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-unscheduled-subscription-by-external-reference.php' );
 
 			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-checkout-helper.php' );
 			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-cart-helper.php' );
