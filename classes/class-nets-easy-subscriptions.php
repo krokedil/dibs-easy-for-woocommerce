@@ -345,7 +345,7 @@ class Nets_Easy_Subscriptions {
 
 			foreach ( $subscriptions as $subscription ) {
 				update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $recurring_token );
-				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s. Subscription type: %s.', 'dibs-easy-for-woocommerce' ), $response['subscriptionId'], 'Unscheduled' ) ); // phpcs:ignore
+				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s. Subscription type: %s.', 'dibs-easy-for-woocommerce' ), $recurring_token, 'Unscheduled' ) ); // phpcs:ignore
 			}
 			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
 				// Save card data in renewal order.
