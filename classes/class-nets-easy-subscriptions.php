@@ -117,10 +117,17 @@ class Nets_Easy_Subscriptions {
 
 						unset( $request_args['notifications'] );
 
-						$request_args['subscription'] = array(
-							'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+5 year' ) ),
-							'interval' => 0,
-						);
+						// Unscheduled or scheduled subscription?
+						if ( 'unscheduled_subscription' === $this->subscription_type ) {
+							$request_args['unscheduledSubscription'] = array(
+								'create' => true,
+							);
+						} else {
+							$request_args['subscription'] = array(
+								'endDate'  => gmdate( 'Y-m-d\TH:i', strtotime( '+5 year' ) ),
+								'interval' => 0,
+							);
+						}
 					}
 				}
 			}
@@ -231,7 +238,7 @@ class Nets_Easy_Subscriptions {
 		$recurring_token = get_post_meta( $order_id, '_dibs_recurring_token', true );
 
 		// Subscription type.
-		$subscription_type = get_post_meta( $order_id, '_dibs_subscription_type', true );
+		$subscription_type = ! empty( get_post_meta( $order_id, '_dibs_subscription_type', true ) ) ? get_post_meta( $order_id, '_dibs_subscription_type', true ) : $this->subscription_type;
 
 		// If _dibs_recurring_token is missing.
 		if ( empty( $recurring_token ) ) {
@@ -249,7 +256,7 @@ class Nets_Easy_Subscriptions {
 				}
 				if ( ! empty( $dibs_ticket ) ) {
 					// We got a _dibs_ticket - try to getting the subscription via the externalreference request.
-					if ( 'unscheduled_subscription' === $this->subscription_type || 'unscheduled_subscription' === $subscription_type ) {
+					if ( 'unscheduled_subscription' === $subscription_type ) {
 						$recurring_token = $this->get_recurring_token_from_unscheduled_subscription_external_reference( $dibs_ticket, $order_id, $subscriptions, $renewal_order );
 					} else {
 						$recurring_token = $this->get_recurring_token_from_scheduled_subscription_external_reference( $dibs_ticket, $order_id, $subscriptions, $renewal_order );
@@ -258,12 +265,10 @@ class Nets_Easy_Subscriptions {
 			}
 		}
 		// Unscheduled or scheduled subscription charge?
-		if ( 'unscheduled_subscription' === $this->subscription_type || 'unscheduled_subscription' === $subscription_type ) {
-			$response          = Nets_Easy()->api->charge_nets_easy_unscheduled_subscription( $order_id, $recurring_token );
-			$subscription_type = 'unscheduled_subscription';
+		if ( 'unscheduled_subscription' === $subscription_type ) {
+			$response = Nets_Easy()->api->charge_nets_easy_unscheduled_subscription( $order_id, $recurring_token );
 		} else {
-			$response          = Nets_Easy()->api->charge_nets_easy_scheduled_subscription( $order_id, $recurring_token );
-			$subscription_type = 'scheduled_subscription';
+			$response = Nets_Easy()->api->charge_nets_easy_scheduled_subscription( $order_id, $recurring_token );
 		}
 
 		if ( ! is_wp_error( $response ) && ! empty( $response['paymentId'] ) ) { // phpcs:ignore
