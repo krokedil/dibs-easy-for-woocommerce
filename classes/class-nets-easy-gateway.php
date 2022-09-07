@@ -196,7 +196,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Embedded or redirect checkout flow.
 		if ( 'embedded' === $this->checkout_flow ) {
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
-			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+			if ( empty( $order->get_date_paid() ) ) {
 				wc_dibs_confirm_dibs_order( $order_id );
 				$order->add_order_note( __( 'Order finalized in thankyou page.', 'dibs-easy-for-woocommerce' ) );
 				WC()->cart->empty_cart();
@@ -209,7 +209,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			// Unset sessions.
 			wc_dibs_unset_sessions();
 		} else {
-			if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
+			if ( empty( $order->get_date_paid() ) ) {
 				wc_dibs_confirm_dibs_order( $order_id );
 			}
 		}
