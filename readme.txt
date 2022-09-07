@@ -2,11 +2,11 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
-Tested up to: 6.0.1
+Tested up to: 6.0.2
 Requires PHP: 7.0
 WC requires at least: 5.0.0
-WC tested up to: 6.7.0
-Stable tag: 2.0.7
+WC tested up to: 6.8.2
+Stable tag: 2.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,11 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2022.09.07    - version 2.1.0 =
+* Feature       - Adds support for Nets Easy unscheduled subscriptions. Can only be activated via filter nets_easy_subscription_type for now.
+* Fix           - Fix bug not possible to update recurring token from subscriptions page.
+* Fix           - Use get_date_paid in thank you page (instead of order status) to determine if confirm order process should be triggered.
+
 = 2022.07.27    - version 2.0.7 =
 * Fix           - Fixed an issue where if a scheduled subscription failed to renew would result in a fatal error.
 
