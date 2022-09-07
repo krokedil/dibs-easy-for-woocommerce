@@ -143,15 +143,34 @@ class Nets_Easy_API {
 	}
 
 	/**
-	 * Charge subscription.
+	 * Charge scheduled subscription.
 	 *
 	 * @param int    $order_id The WooCommerce order id.
 	 * @param string $recurring_token Subscription token.
 	 *
 	 * @return array|mixed
 	 */
-	public function charge_nets_easy_subscription( $order_id, $recurring_token ) {
+	public function charge_nets_easy_scheduled_subscription( $order_id, $recurring_token ) {
 		$request  = new Nets_Easy_Request_Charge_Subscription(
+			array(
+				'order_id'        => $order_id,
+				'recurring_token' => $recurring_token,
+			)
+		);
+		$response = $request->request();
+		return $this->check_for_api_error( $response );
+	}
+
+	/**
+	 * Charge unscheduled subscription.
+	 *
+	 * @param int    $order_id The WooCommerce order id.
+	 * @param string $recurring_token Subscription token.
+	 *
+	 * @return array|mixed
+	 */
+	public function charge_nets_easy_unscheduled_subscription( $order_id, $recurring_token ) {
+		$request  = new Nets_Easy_Request_Charge_Unscheduled_Subscription(
 			array(
 				'order_id'        => $order_id,
 				'recurring_token' => $recurring_token,
@@ -207,6 +226,25 @@ class Nets_Easy_API {
 	 */
 	public function get_nets_easy_subscription_by_external_reference( $dibs_ticket, $order_id ) {
 		$request  = new Nets_Easy_Request_Get_Subscription_By_External_Reference(
+			array(
+				'external_reference' => $dibs_ticket,
+				'order_id'           => $order_id,
+			)
+		);
+		$response = $request->request();
+		return $this->check_for_api_error( $response );
+	}
+
+	/**
+	 * Retrieves a unscheduled subscription by external reference
+	 *
+	 * @param string $dibs_ticket The external reference to search for.
+	 * @param int    $order_id The WooCommerce order id.
+	 *
+	 * @return array|mixed
+	 */
+	public function get_nets_easy_unscheduled_subscription_by_external_reference( $dibs_ticket, $order_id ) {
+		$request  = new Nets_Easy_Request_Get_Unscheduled_Subscription_By_External_Reference(
 			array(
 				'external_reference' => $dibs_ticket,
 				'order_id'           => $order_id,
