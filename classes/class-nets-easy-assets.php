@@ -122,7 +122,7 @@ class Nets_Easy_Assets {
 		wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
 		$src = WC_DIBS__URL . '/assets/js/nets-easy-for-woocommerce' . $script_version . '.js';
 		wp_register_script(
-			'checkout',
+			'nets-easy-checkout',
 			$src,
 			array(
 				'jquery',
@@ -133,7 +133,7 @@ class Nets_Easy_Assets {
 		);
 		$private_key = 'yes' === $test_mode ? $settings['dibs_test_checkout_key'] : $settings['dibs_checkout_key'];
 		wp_localize_script(
-			'checkout',
+			'nets-easy-checkout',
 			'wcDibsEasy',
 			array(
 				'dibs_payment_id'                  => WC()->session->get( 'dibs_payment_id' ),
@@ -153,7 +153,7 @@ class Nets_Easy_Assets {
 				'locale'                           => wc_dibs_get_locale(),
 			)
 		);
-		wp_enqueue_script( 'checkout' );
+		wp_enqueue_script( 'nets-easy-checkout' );
 	}
 
 
