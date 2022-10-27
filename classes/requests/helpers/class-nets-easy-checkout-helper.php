@@ -48,7 +48,7 @@ class Nets_Easy_Checkout_Helper {
 			$order                                   = wc_get_order( $order_id );
 			$checkout['returnUrl']                   = add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() );
 			$checkout['integrationType']             = 'HostedPaymentPage';
-			$checkout['cancelUrl']                   = wc_get_checkout_url();
+			$checkout['cancelUrl']                   = 'admin' === $order->get_created_via() ? $order->get_checkout_payment_url() : wc_get_checkout_url();
 			$checkout['merchantHandlesConsumerData'] = true;
 			$checkout['shipping']['countries']       = array();
 			$checkout['shipping']['merchantHandlesShippingCost'] = false;
