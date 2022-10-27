@@ -44,6 +44,9 @@ class Nets_Easy_Checkout_Helper {
 			if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
 				$checkout['shipping']['countries'] = self::get_shipping_countries();
 			}
+			if ( is_user_logged_in() ) {
+				$checkout['consumer'] = self::get_em_customer_data();
+			}
 		} else {
 			$order                                   = wc_get_order( $order_id );
 			$checkout['returnUrl']                   = add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() );
@@ -178,6 +181,77 @@ class Nets_Easy_Checkout_Helper {
 			$phone_number = str_replace( ' ', '', $phone_number );
 		} else {
 			$phone_number = str_replace( '-', '', $order->get_billing_phone() );
+			$phone_number = str_replace( ' ', '', $phone_number );
+		}
+		return $phone_number;
+	}
+
+
+	/**
+	 * Gets customer address.
+	 *
+	 * @return array
+	 */
+	protected static function get_em_customer_data() {
+		$consumer          = array();
+		$email             = ! empty( WC()->checkout()->get_value( 'shipping_email' ) ) ? WC()->checkout()->get_value( 'shipping_email' ) : WC()->checkout()->get_value( 'billing_email' );
+		$consumer['email'] = $email;
+
+		$consumer['shippingAddress']['addressLine1'] = WC()->checkout()->get_value( 'shipping_address_1' );
+
+		$consumer['shippingAddress']['addressLine2'] = WC()->checkout()->get_value( 'shipping_address_2' );
+
+		$consumer['shippingAddress']['postalCode'] = WC()->checkout()->get_value( 'shipping_postcode' );
+
+		$consumer['shippingAddress']['city'] = WC()->checkout()->get_value( 'billing_city' );
+
+		$consumer['shippingAddress']['country'] = dibs_get_iso_3_country( WC()->checkout()->get_value( 'billing_country' ) );
+
+		$consumer['phoneNumber']['prefix'] = self::get_checkout_phone_prefix();
+		$consumer['phoneNumber']['number'] = self::get_checkout_phone_number();
+
+		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
+		$allowed_customer_types = $dibs_settings['allowed_customer_types'] ?? 'B2C';
+
+		if ( WC()->checkout()->get_value( 'billing_company' ) && in_array( $allowed_customer_types, array( 'B2B', 'B2CB', 'B2BC' ), true ) ) {
+			$consumer['company']['name']                 = WC()->checkout()->get_value( 'billing_company' );
+			$consumer['company']['contact']['firstName'] = WC()->checkout()->get_value( 'billing_first_name' );
+			$consumer['company']['contact']['lastName']  = WC()->checkout()->get_value( 'billing_last_name' );
+		} else {
+			$consumer['privatePerson']['firstName'] = WC()->checkout()->get_value( 'billing_first_name' );
+			$consumer['privatePerson']['lastName']  = WC()->checkout()->get_value( 'billing_last_name' );
+		}
+		return $consumer;
+	}
+
+	/**
+	 * Gets customer phone prefix formatted for Nets.
+	 *
+	 * @return string
+	 */
+	public static function get_checkout_phone_prefix() {
+		$prefix       = null;
+		$phone_number = WC()->checkout()->get_value( 'billing_phone' );
+		if ( substr( $phone_number, 0, 1 ) === '+' ) {
+			$prefix = substr( $phone_number, 0, 3 );
+		} else {
+			$prefix = dibs_get_phone_prefix_for_country( WC()->checkout()->get_value( 'billing_country' ) );
+		}
+		return $prefix;
+	}
+
+	/**
+	 * Gets customer phone number formatted for Nets.
+	 *
+	 * @return string
+	 */
+	public static function get_checkout_phone_number() {
+		$billing_phone = WC()->checkout()->get_value( 'billing_phone' );
+		if ( substr( $billing_phone, 0, 1 ) === '+' ) {
+			$phone_number = substr( $billing_phone, strlen( self::get_checkout_phone_prefix() ) );
+			$phone_number = str_replace( ' ', '', $phone_number );
+		} else {
+			$phone_number = str_replace( '-', '', $billing_phone );
 			$phone_number = str_replace( ' ', '', $phone_number );
 		}
 		return $phone_number;
