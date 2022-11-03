@@ -44,9 +44,9 @@ class Nets_Easy_Checkout_Helper {
 			if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
 				$checkout['shipping']['countries'] = self::get_shipping_countries();
 			}
-			if ( is_user_logged_in() ) {
-				$checkout['consumer'] = self::get_em_customer_data();
-			}
+
+			$checkout['consumer'] = self::prefill_embedded_customer_data();
+
 		} else {
 			$order                                   = wc_get_order( $order_id );
 			$checkout['returnUrl']                   = add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() );
@@ -188,24 +188,42 @@ class Nets_Easy_Checkout_Helper {
 
 
 	/**
-	 * Gets customer address.
+	 * Prefill customer data in embedded checkout.
 	 *
 	 * @return array
 	 */
-	protected static function get_em_customer_data() {
-		$consumer          = array();
-		$email             = ! empty( WC()->checkout()->get_value( 'shipping_email' ) ) ? WC()->checkout()->get_value( 'shipping_email' ) : WC()->checkout()->get_value( 'billing_email' );
+	protected static function prefill_embedded_customer_data() {
+		$consumer = array();
+		/**
+		 * The customer object.
+		 *
+		 * @var $customer WC_Customer
+		 */
+		$customer          = WC()->customer;
+		$email             = $customer->get_billing_email();
 		$consumer['email'] = $email;
 
-		$consumer['shippingAddress']['addressLine1'] = WC()->checkout()->get_value( 'shipping_address_1' );
+		if ( $customer->get_billing_address_1() ) {
+			$consumer['shippingAddress']['addressLine1'] = $customer->get_billing_address_1();
+		}
 
-		$consumer['shippingAddress']['addressLine2'] = WC()->checkout()->get_value( 'shipping_address_2' );
+		if ( $customer->get_billing_address_2() ) {
+			$consumer['shippingAddress']['addressLine2'] = $customer->get_billing_address_2();
+		}
 
-		$consumer['shippingAddress']['postalCode'] = WC()->checkout()->get_value( 'shipping_postcode' );
+		if ( $customer->get_billing_postcode() ) {
+			$postal_code = null;
+			if ( ! empty( $customer->get_billing_postcode() ) ) {
+				$postal_code = str_replace( ' ', '', $customer->get_billing_postcode() );
+			}
+			$consumer['shippingAddress']['postalCode'] = $postal_code;
+		}
 
-		$consumer['shippingAddress']['city'] = WC()->checkout()->get_value( 'billing_city' );
+		if ( $customer->get_billing_city() ) {
+			$consumer['shippingAddress']['city'] = $customer->get_billing_city();
+		}
 
-		$consumer['shippingAddress']['country'] = dibs_get_iso_3_country( WC()->checkout()->get_value( 'billing_country' ) );
+		$consumer['shippingAddress']['country'] = dibs_get_iso_3_country( $customer->get_billing_country() );
 
 		$consumer['phoneNumber']['prefix'] = self::get_checkout_phone_prefix();
 		$consumer['phoneNumber']['number'] = self::get_checkout_phone_number();
@@ -213,13 +231,13 @@ class Nets_Easy_Checkout_Helper {
 		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
 		$allowed_customer_types = $dibs_settings['allowed_customer_types'] ?? 'B2C';
 
-		if ( WC()->checkout()->get_value( 'billing_company' ) && in_array( $allowed_customer_types, array( 'B2B', 'B2CB', 'B2BC' ), true ) ) {
-			$consumer['company']['name']                 = WC()->checkout()->get_value( 'billing_company' );
-			$consumer['company']['contact']['firstName'] = WC()->checkout()->get_value( 'billing_first_name' );
-			$consumer['company']['contact']['lastName']  = WC()->checkout()->get_value( 'billing_last_name' );
+		if ( $customer->get_billing_company() && in_array( $allowed_customer_types, array( 'B2B', 'B2CB', 'B2BC' ), true ) ) {
+			$consumer['company']['name']                 = $customer->get_billing_company();
+			$consumer['company']['contact']['firstName'] = $customer->get_billing_first_name();
+			$consumer['company']['contact']['lastName']  = $customer->get_billing_last_name();
 		} else {
-			$consumer['privatePerson']['firstName'] = WC()->checkout()->get_value( 'billing_first_name' );
-			$consumer['privatePerson']['lastName']  = WC()->checkout()->get_value( 'billing_last_name' );
+			$consumer['privatePerson']['firstName'] = $customer->get_billing_first_name();
+			$consumer['privatePerson']['lastName']  = $customer->get_billing_last_name();
 		}
 		return $consumer;
 	}
@@ -231,7 +249,7 @@ class Nets_Easy_Checkout_Helper {
 	 */
 	public static function get_checkout_phone_prefix() {
 		$prefix       = null;
-		$phone_number = WC()->checkout()->get_value( 'billing_phone' );
+		$phone_number = WC()->customer->get_billing_phone();
 		if ( substr( $phone_number, 0, 1 ) === '+' ) {
 			$prefix = substr( $phone_number, 0, 3 );
 		} else {
@@ -246,7 +264,7 @@ class Nets_Easy_Checkout_Helper {
 	 * @return string
 	 */
 	public static function get_checkout_phone_number() {
-		$billing_phone = WC()->checkout()->get_value( 'billing_phone' );
+		$billing_phone = WC()->customer->get_billing_phone();
 		if ( substr( $billing_phone, 0, 1 ) === '+' ) {
 			$phone_number = substr( $billing_phone, strlen( self::get_checkout_phone_prefix() ) );
 			$phone_number = str_replace( ' ', '', $phone_number );
