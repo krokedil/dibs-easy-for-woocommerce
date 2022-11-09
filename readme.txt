@@ -61,7 +61,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * Tweak         - Sends cancel url in payment requests to Nets.
 * Fix           - Better handling of finalizing purchase in WooCommerce if customer is redirected back to store in another browser than what the purchase started with.
 * Fix           - Use mb_ereg_replace instead of preg_replace to avoid certain characters not approved by Nets in product and shipping names.
-* Fix           - Save recurring token correctly for uncheduled subscriptions when changing/updating payment method from My account page.
+* Fix           - Save recurring token correctly for unscheduled subscriptions when changing/updating payment method from My account page.
 * Fix           - Adds a unique script name when enqueuing checkout script. To avoid conflicts with other payment plugins.
 
 = 2022.09.07    - version 2.1.0 =
