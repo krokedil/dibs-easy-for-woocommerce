@@ -5,8 +5,8 @@ Requires at least: 5.0
 Tested up to: 6.1
 Requires PHP: 7.0
 WC requires at least: 5.0.0
-WC tested up to: 7.0.0
-Stable tag: 2.1.0
+WC tested up to: 7.1.0
+Stable tag: 2.2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,14 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2022.11.09    - version 2.2.0 =
+* Feature       - Adds customer name and address in create session request to Nets (if they exist in Woo) for embedded checkout.
+* Tweak         - Sends cancel url in payment requests to Nets.
+* Fix           - Better handling of finalizing purchase in WooCommerce if customer is redirected back to store in another browser than what the purchase started with.
+* Fix           - Use mb_ereg_replace instead of preg_replace to avoid certain characters not approved by Nets in product and shipping names.
+* Fix           - Save recurring token correctly for uncheduled subscriptions when changing/updating payment method from My account page.
+* Fix           - Adds a unique script name when enqueuing checkout script. To avoid conflicts with other payment plugins.
+
 = 2022.09.07    - version 2.1.0 =
 * Feature       - Adds support for Nets Easy unscheduled subscriptions. Can only be activated via filter nets_easy_subscription_type for now.
 * Fix           - Fix bug not possible to update recurring token from subscriptions page.
