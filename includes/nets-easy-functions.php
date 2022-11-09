@@ -329,3 +329,35 @@ function dibs_easy_print_error_message( $wp_error ) {
 	}
 }
 
+/**
+ * Finds an Order ID based on a payment ID (the Nets order number).
+ *
+ * @param string $payment_id Nets order number saved as Payment ID in WC order.
+ * @return int The ID of an order, or 0 if the order could not be found.
+ */
+function nets_easy_get_order_id_by_purchase_id( $payment_id ) {
+	$query_args = array(
+		'fields'      => 'ids',
+		'post_type'   => wc_get_order_types(),
+		'post_status' => array_keys( wc_get_order_statuses() ),
+		'meta_key'    => '_dibs_payment_id', // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
+		'meta_value'  => sanitize_text_field( wp_unslash( $payment_id ) ), // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
+		'date_query'  => array(
+			array(
+				'after' => '30 day ago',
+			),
+		),
+	);
+
+	$orders = get_posts( $query_args );
+
+	if ( $orders ) {
+		$order_id = $orders[0];
+	} else {
+		$order_id = 0;
+	}
+
+	return $order_id;
+}
+
+
