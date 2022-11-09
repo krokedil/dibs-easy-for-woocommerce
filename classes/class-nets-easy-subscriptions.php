@@ -146,13 +146,12 @@ class Nets_Easy_Subscriptions {
 
 		if ( ! empty( $dibs_action ) && 'subs-payment-changed' === $dibs_action && ! empty( $order_id ) && ! empty( $payment_id ) ) {
 			$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
-			if ( isset( $response['payment']['subscription']['id'] ) ) {
-				$old_subscription_id = get_post_meta( $order_id, '_dibs_recurring_token', true );
-				$new_subscription_id = $response['payment']['subscription']['id'];
+			if ( ! is_wp_error( $response ) ) {
+				$this->set_recurring_token_for_order( $order_id, $response );
 
-				if ( $old_subscription_id !== $new_subscription_id ) {
-					update_post_meta( $order_id, '_dibs_recurring_token', $response['payment']['subscription']['id'] );
-					update_post_meta( $order_id, 'dibs_payment_method', $response['payment']['paymentDetails'] ['paymentMethod'] );
+				update_post_meta( $order_id, 'dibs_payment_type', $response['payment']['paymentDetails']['paymentType'] );
+				update_post_meta( $order_id, 'dibs_payment_method', $response['payment']['paymentDetails'] ['paymentMethod'] );
+				if ( 'CARD' === $response['payment']['paymentDetails']['paymentType'] ) {
 					update_post_meta( $order_id, 'dibs_customer_card', $response['payment']['paymentDetails']['cardDetails']['maskedPan'] );
 				}
 			} else {
@@ -198,7 +197,7 @@ class Nets_Easy_Subscriptions {
 				$subscription_id   = $dibs_order['payment']['unscheduledSubscription']['unscheduledSubscriptionId'];
 				$subscription_type = 'unscheduled_subscription';
 			}
-
+			$wc_order->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 			update_post_meta( $order_id, '_dibs_recurring_token', $subscription_id );
 			update_post_meta( $order_id, '_dibs_subscription_type', $subscription_type );
 
@@ -215,8 +214,15 @@ class Nets_Easy_Subscriptions {
 			) || wcs_is_subscription( $wc_order ) ) ) {
 				$subscriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 				foreach ( $subscriptions as $subscription ) {
+					$subscription->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 					update_post_meta( $subscription->get_id(), '_dibs_recurring_token', $subscription_id );
 					update_post_meta( $subscription->get_id(), '_dibs_subscription_type', $subscription_type );
+
+					update_post_meta( $order_id, 'dibs_payment_type', $dibs_order['payment']['paymentDetails']['paymentType'] );
+					update_post_meta( $order_id, 'dibs_payment_method', $dibs_order['payment']['paymentDetails'] ['paymentMethod'] );
+					if ( 'CARD' === $dibs_order['paymentDetails']['paymentType'] ) {
+						update_post_meta( $order_id, 'dibs_customer_card', $dibs_order['payment']['paymentDetails']['cardDetails']['maskedPan'] );
+					}
 				}
 			}
 		}
