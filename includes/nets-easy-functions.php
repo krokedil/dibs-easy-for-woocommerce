@@ -203,6 +203,17 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 
 	$request = Nets_Easy()->api->get_nets_easy_order( $payment_id, $order_id );
 
+	if ( is_wp_error( $request ) ) {
+		$order->add_order_note(
+			sprintf(
+				/* translators: %s: Error message */
+				__( 'Nets Easy: Error when confirming order: %s', 'dibs-easy-for-woocommerce' ),
+				$request->get_error_message()
+			)
+		);
+		return;
+	}
+
 	if ( isset( $request['payment']['summary']['reservedAmount'] ) || isset( $request['payment']['summary']['chargedAmount'] ) || isset( $request['payment']['subscription']['id'] ) ) {
 
 		do_action( 'dibs_easy_process_payment', $order_id, $request );
