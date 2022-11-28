@@ -133,6 +133,12 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		}
 		// Redirect flow.
 		$response = Nets_Easy()->api->create_nets_easy_order( 'redirect', $order_id );
+		if ( is_wp_error( $response ) ) {
+			wc_add_notice( $response->get_error_message(), 'error' );
+			return array(
+				'result' => 'error',
+			);
+		}
 		return $this->process_redirect_handler( $order_id, $response );
 	}
 
