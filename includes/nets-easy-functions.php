@@ -174,8 +174,9 @@ function wc_dibs_get_locale() {
  * @param string $name Name to be cleaned.
  */
 function wc_dibs_clean_name( $name ) {
-	$regex = '/[^!#$%()*+,-.\/:;=?@\[\]\\\^_`{}|~a-zA-Z0-9\x{00A1}-\x{00AC}\x{00AE}-\x{00FF}\x{0100}-\x{017F}\x{0180}-\x{024F}\x{0250}-\x{02AF}\x{02B0}-\x{02FF}\x{0300}-\x{036F}\s]+/u';
-	$name  = mb_ereg_replace( $regex, '', $name );
+	$not_allowed_characters = array( '<', '>', '\\', '"', '&' );
+	$name                   = wp_strip_all_tags( $name );
+	$name                   = str_replace( $not_allowed_characters, '', $name );
 
 	return substr( $name, 0, 128 );
 }
@@ -202,6 +203,17 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	}
 
 	$request = Nets_Easy()->api->get_nets_easy_order( $payment_id, $order_id );
+
+	if ( is_wp_error( $request ) ) {
+		$order->add_order_note(
+			sprintf(
+				/* translators: %s: Error message */
+				__( 'Nets Easy: Error when confirming order: %s', 'dibs-easy-for-woocommerce' ),
+				$request->get_error_message()
+			)
+		);
+		return;
+	}
 
 	if ( isset( $request['payment']['summary']['reservedAmount'] ) || isset( $request['payment']['summary']['chargedAmount'] ) || isset( $request['payment']['subscription']['id'] ) ) {
 
