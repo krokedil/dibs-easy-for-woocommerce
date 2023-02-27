@@ -45,6 +45,14 @@ class Nets_Easy_Checkout {
 			return;
 		}
 
+		// Check that the currency is the same as earlier, otherwise create a new session.
+		if ( get_woocommerce_currency() !== WC()->session->get( 'nets_easy_currency' ) ) {
+			wc_dibs_unset_sessions();
+			Nets_Easy_Logger::log( 'Currency changed in update Nets function. Clearing Nets session and reloading the checkout page.' );
+			WC()->session->reload_checkout = true;
+			return;
+		}
+
 		// Check if the cart hash has been changed since last update.
 		$cart_hash  = $cart->get_cart_hash();
 		$saved_hash = WC()->session->get( 'nets_easy_last_update_hash' );
