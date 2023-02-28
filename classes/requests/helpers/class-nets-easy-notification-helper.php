@@ -35,8 +35,9 @@ class Nets_Easy_Notification_Helper {
 	public static function get_web_hooks() {
 		$web_hooks = array();
 
-		// Only set web hooks if host is not local (127.0.0.1 or ::1).
-		if ( isset( $_SERVER['REMOTE_ADDR'] ) && in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ), true ) || isset( $_SERVER['HTTP_HOST'] ) && 'localhost' === substr( $_SERVER['HTTP_HOST'], 0, 9 ) ) {
+		// Do not send webhook url if this site is declared as a local environment via wp_get_environment_type().
+		// Read more about wp_get_environment_type https://developer.wordpress.org/reference/functions/wp_get_environment_type/.
+		if ( function_exists( 'wp_get_environment_type' ) && apply_filters( 'nets_easy_environment_without_public_url', 'local' ) === wp_get_environment_type() ) {
 			return $web_hooks;
 		} else {
 			$web_hooks[] = array(

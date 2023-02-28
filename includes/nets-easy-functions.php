@@ -39,7 +39,7 @@ function dibs_easy_maybe_create_order() {
 	}
 	// store payment id.
 	$session->set( 'dibs_payment_id', $dibs_easy_order['paymentId'] );
-	$session->set( 'dibs_currency', get_woocommerce_currency() );
+	$session->set( 'nets_easy_currency', get_woocommerce_currency() );
 	$session->set( 'nets_easy_last_update_hash', $cart->get_cart_hash() );
 	$session->set( 'dibs_cart_contains_subscription', get_dibs_cart_contains_subscription() );
 	// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
@@ -109,8 +109,8 @@ function wc_dibs_unset_sessions() {
 		if ( WC()->session->get( 'dibs_customer_order_note' ) ) {
 			WC()->session->__unset( 'dibs_customer_order_note' );
 		}
-		if ( WC()->session->get( 'dibs_currency' ) ) {
-			WC()->session->__unset( 'dibs_currency' );
+		if ( WC()->session->get( 'nets_easy_currency' ) ) {
+			WC()->session->__unset( 'nets_easy_currency' );
 		}
 
 		if ( WC()->session->get( 'dibs_cart_contains_subscription' ) ) {
