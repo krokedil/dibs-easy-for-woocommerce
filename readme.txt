@@ -5,8 +5,8 @@ Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.2
 WC requires at least: 5.0.0
-WC tested up to: 7.2.2
-Stable tag: 2.2.1
+WC tested up to: 7.4.0
+Stable tag: 2.2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -50,12 +50,16 @@ Available for merchants in Denmark, Sweden and Norway.
 For help setting up and configuring Nets Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 = Are there any specific requirements? =
-* WooCommerce 3.5 or newer is required.
-* PHP 5.6 or higher is required.
+* WooCommerce 5.0 or newer is required.
+* PHP 7.2 or higher is required.
 * A SSL Certificate is required.
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2023.02.28    - version 2.2.2 =
+* Tweak         - Do not send webhook url to Nets if the site is declared as a local environment via wp_get_environment_type(). Previously this was checked via $_SERVER['REMOTE_ADDR'] & $_SERVER['HTTP_HOST'].
+* fix           - Improved multi currency support. Creates new Nets payment ID if currency is changed mid session.
+
 = 2022.12.14    - version 2.2.1 =
 * Tweak         - Improvement in logic regarding product & shipping method name cleaning. We now remove specific characters not supported by Nets.
 * Fix           - Avoid fatal error in confirmation sequence if request to Nets fails. 
