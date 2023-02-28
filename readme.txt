@@ -58,7 +58,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 == CHANGELOG ==
 = 2023.02.28    - version 2.2.2 =
 * Tweak         - Do not send webhook url to Nets if the site is declared as a local environment via wp_get_environment_type(). Previously this was checked via $_SERVER['REMOTE_ADDR'] & $_SERVER['HTTP_HOST'].
-* fix           - Improved multi currency support. Creates new Nets payment ID if currency is changed mid session.
+* Fix           - Improved multi currency support. Creates new Nets payment ID if currency is changed mid session.
 
 = 2022.12.14    - version 2.2.1 =
 * Tweak         - Improvement in logic regarding product & shipping method name cleaning. We now remove specific characters not supported by Nets.
