@@ -9,6 +9,8 @@ export class NetseasyIframe {
     readonly postalCodeInput: Locator;
     readonly phonenumberInput: Locator;
 
+    readonly calculatingShipping: Locator;
+
     readonly placeOrderButton: Locator;
     readonly approvePaymentButton: Locator;
 
@@ -20,6 +22,8 @@ export class NetseasyIframe {
         this.emailInput = this.iframe.locator('input#registrationManualEmail');
         this.postalCodeInput = this.iframe.locator('input#registrationManualPostalCode');
         this.phonenumberInput = this.iframe.locator('input#swishPhoneNumber');
+
+        this.calculatingShipping = this.iframe.locator('#calculating-shipping-cost.message');
 
         this.placeOrderButton = this.iframe.locator('button#btnPay');
         this.approvePaymentButton = this.iframe.locator('button#AuthenticationSuccessButton');
@@ -45,6 +49,10 @@ export class NetseasyIframe {
         await this.fillEmail();
         await this.fillPostalCode();
         await this.fillPhonenumber();
+
+        // Expect shipping to be calculated once.
+        await expect(this.calculatingShipping).toHaveCount(1)
+        await expect(this.calculatingShipping).toHaveCount(0)
 
         await this.placeOrder();
         //await this.approvePayment();
