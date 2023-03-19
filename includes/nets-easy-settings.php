@@ -154,5 +154,19 @@ return apply_filters(
 			'default'     => 'subscribe',
 			'desc_tip'    => false,
 		),
+		'payment_gateway_icon'         => array(
+			'title'       => __( 'Payment gateway icon', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nets logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
+			'default'     => 'default',
+			'desc_tip'    => false,
+		),
+		'payment_gateway_icon_width'   => array(
+			'title'       => __( 'Payment gateway icon width', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'number',
+			'description' => __( 'Specify the max width (in px) of the payment gateway icon.', 'dibs-easy-for-woocommerce' ),
+			'default'     => '',
+			'desc_tip'    => true,
+		),
 	)
 );
