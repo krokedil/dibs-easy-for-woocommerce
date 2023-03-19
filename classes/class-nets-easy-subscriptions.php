@@ -67,8 +67,8 @@ class Nets_Easy_Subscriptions {
 		}
 
 		// Checks if this is a DIBS subscription payment method change.
-		$key                   = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
-		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_STRING );
+		$key                   = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( ! empty( $key ) && ! empty( $change_payment_method ) ) {
 			$order_id = wc_get_order_id_by_order_key( sanitize_key( $key ) );
 			if ( $order_id ) {
@@ -140,9 +140,9 @@ class Nets_Easy_Subscriptions {
 	 * Handles subscription payment method change.
 	 */
 	public function dibs_payment_method_changed() {
-		$dibs_action = filter_input( INPUT_GET, 'dibs-action', FILTER_SANITIZE_STRING );
-		$order_id    = filter_input( INPUT_GET, 'wc-subscription-id', FILTER_SANITIZE_STRING );
-		$payment_id  = filter_input( INPUT_GET, 'paymentid', FILTER_SANITIZE_STRING );
+		$dibs_action = filter_input( INPUT_GET, 'dibs-action', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$order_id    = filter_input( INPUT_GET, 'wc-subscription-id', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$payment_id  = filter_input( INPUT_GET, 'paymentid', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if ( ! empty( $dibs_action ) && 'subs-payment-changed' === $dibs_action && ! empty( $order_id ) && ! empty( $payment_id ) ) {
 			$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
@@ -410,7 +410,7 @@ class Nets_Easy_Subscriptions {
 	public function save_dibs_recurring_token_update( $post_id, $post ) {
 		$order = wc_get_order( $post_id );
 		if ( 'shop_subscription' === $order->get_type() && get_post_meta( $order->get_id(), '_dibs_recurring_token' ) ) {
-			$dibs_recurring_token = filter_input( INPUT_POST, '_dibs_recurring_token', FILTER_SANITIZE_STRING );
+			$dibs_recurring_token = filter_input( INPUT_POST, '_dibs_recurring_token', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 			if ( ! empty( $dibs_recurring_token ) ) {
 				update_post_meta( $post_id, '_dibs_recurring_token', $dibs_recurring_token );
 			}
