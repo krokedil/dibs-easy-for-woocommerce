@@ -78,10 +78,19 @@ class Nets_Easy_Checkout {
 		// Retrieves the order.
 		$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 		if ( ! is_wp_error( $nets_easy_order ) ) {
+
 			// Updates the order.
-			Nets_Easy()->api->update_nets_easy_order( $payment_id );
+			$updated_nets_easy_order = Nets_Easy()->api->update_nets_easy_order( $payment_id );
+
+			if ( is_wp_error( $updated_nets_easy_order ) && 409 === $updated_nets_easy_order->get_error_code() ) {
+				// 409 response - try again.
+				Nets_Easy_Logger::log( $payment_id . '. Nets Easy update order request resulted in 409 response. Reloading the checkout page and try to update again.' );
+				WC()->session->reload_checkout = true;
+				return;
+			}
+
+			// Update the session value with the new cart hash.
+			WC()->session->set( 'nets_easy_last_update_hash', $cart_hash );
 		}
-		// Update the session value with the new cart hash.
-		WC()->session->set( 'nets_easy_last_update_hash', $cart_hash );
 	}
 } new Nets_Easy_Checkout();
