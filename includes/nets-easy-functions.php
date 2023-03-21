@@ -193,7 +193,6 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	$payment_id    = get_post_meta( $order_id, '_dibs_payment_id', true );
 	$settings      = get_option( 'woocommerce_dibs_easy_settings' );
 	$checkout_flow = $settings['checkout_flow'] ?? 'embedded';
-	$auto_capture  = $settings['auto_capture'] ?? 'no';
 
 	if ( null === $payment_id ) {
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
@@ -229,7 +228,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 			update_post_meta( $order_id, 'dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan'] );
 		}
 
-		if ( 'A2A' === $request['payment']['paymentDetails']['paymentType'] ) {
+		if ( isset( $request['payment']['charges'][0]['chargeId'] ) && ! empty( $request['payment']['charges'][0]['chargeId'] ) ) {
 			// Get the DIBS order charge ID.
 			$dibs_charge_id = $request['payment']['charges'][0]['chargeId'];
 			update_post_meta( $order_id, '_dibs_charge_id', $dibs_charge_id );
@@ -242,9 +241,6 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		}
 		$order->payment_complete( $payment_id );
 
-		if ( 'yes' === $auto_capture ) {
-			Nets_Easy()->order_management->dibs_order_completed( $order_id );
-		}
 	} else {
 		// Purchase not finalized in DIBS.
 		// If this is a redirect checkout flow let's redirect the customer to cart page.
