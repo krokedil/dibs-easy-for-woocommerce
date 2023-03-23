@@ -186,10 +186,14 @@ class Nets_Easy_Order_Items_Helper {
 
 		if ( ! empty( $yith_giftcards ) ) {
 			foreach ( $yith_giftcards as $yith_giftcard_code => $yith_giftcard_value ) {
+
+				$label        = apply_filters( 'yith_ywgc_cart_totals_gift_card_label', esc_html( __( 'Gift card:', 'yith-woocommerce-gift-cards' ) . ' ' . $yith_giftcard_code ), $yith_giftcard_code );
+				$giftcard_sku = apply_filters( 'nets_yith_gift_card_sku', esc_html( $yith_giftcard_code ), $code );
+
 				$yith_giftcard_value = $yith_giftcard_value * 100 * -1;
 				$items[]             = array(
-					'reference'        => 'gift_card',
-					'name'             => 'Gift card',
+					'reference'        => $giftcard_sku,
+					'name'             => $label,
 					'quantity'         => '1',
 					'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 					'unitPrice'        => $yith_giftcard_value,

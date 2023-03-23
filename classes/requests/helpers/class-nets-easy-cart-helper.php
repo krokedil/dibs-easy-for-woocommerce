@@ -49,7 +49,7 @@ class Nets_Easy_Cart_Helper {
 			foreach ( WC()->cart->applied_gift_cards as $coupon_key => $code ) {
 				$coupon_amount = isset( WC()->cart->applied_gift_cards_amounts[ $code ] ) ? - WC()->cart->applied_gift_cards_amounts[ $code ] * 100 : 0;
 				$label         = apply_filters( 'yith_ywgc_cart_totals_gift_card_label', esc_html( __( 'Gift card:', 'yith-woocommerce-gift-cards' ) . ' ' . $code ), $code );
-				$giftcard_sku  = apply_filters( 'nets_yith_gift_card_sku', esc_html( __( 'giftcard', 'dibs-easy-for-woocommerce' ) ), $code );
+				$giftcard_sku  = apply_filters( 'nets_yith_gift_card_sku', esc_html( $code ), $code );
 
 				$gift_card = array(
 					'reference'        => $giftcard_sku,
