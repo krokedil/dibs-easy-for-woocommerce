@@ -26,6 +26,7 @@ class Nets_Easy_Checkout_Helper {
 	 */
 	public static function get_checkout( $checkout_flow = 'embedded', $order_id = null ) {
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+		$auto_capture  = $dibs_settings['auto_capture'] ?? 'no';
 
 		$checkout = array(
 			'termsUrl' => wc_get_page_permalink( 'terms' ),
@@ -76,6 +77,12 @@ class Nets_Easy_Checkout_Helper {
 				break;
 			default:
 				$checkout['consumerType']['supportedTypes'] = array( 'B2B' );
+		}
+
+		// Capture transaction directly when reservation has been accepted?
+		// https://developers.nets.eu/nets-easy/en-EU/api/payment-v1/#v1-payments-post-body-checkout-charge.
+		if ( 'yes' === $auto_capture ) {
+			$checkout['charge'] = true;
 		}
 
 		return $checkout;
