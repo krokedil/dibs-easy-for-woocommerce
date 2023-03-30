@@ -16,7 +16,7 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    5.0.0
- * WC tested up to:         7.4.0
+ * WC tested up to:         7.5.1
  * Copyright:               © 2017-2023 Krokedil AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
