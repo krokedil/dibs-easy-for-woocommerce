@@ -57,6 +57,12 @@ class Nets_Easy_Checkout {
 		$cart_hash  = $cart->get_cart_hash();
 		$saved_hash = WC()->session->get( 'nets_easy_last_update_hash' );
 
+		// Gift cards may not change cart hash.
+		// Always trigger update if coupons exist to be compatible with Smart Coupons plugin.
+		if ( method_exists( $cart, 'get_coupons' ) && ! empty( WC()->cart->get_coupons() ) ) {
+			$saved_hash = '';
+		}
+
 		// If they are the same, return.
 		if ( $cart_hash === $saved_hash ) {
 			return;
