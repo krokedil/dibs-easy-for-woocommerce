@@ -28,8 +28,10 @@ class Nets_Easy_Request_Cancel_Order extends Nets_Easy_Request_Post {
 	 */
 	public function __construct( $arguments = array() ) {
 		parent::__construct( $arguments );
-		$this->log_title = 'Cancel order';
-		$this->order_id  = $arguments['order_id'];
+		$this->log_title  = 'Cancel order';
+		$this->order_id   = $arguments['order_id'];
+		$this->order      = wc_get_order( $this->order_id );
+		$this->payment_id = $this->order->get_transaction_id();
 	}
 
 	/**
@@ -38,13 +40,11 @@ class Nets_Easy_Request_Cancel_Order extends Nets_Easy_Request_Post {
 	 * @return array
 	 */
 	protected function get_body() {
-		$order = wc_get_order( $this->order_id );
 		return array(
-			'amount'     => intval( round( $order->get_total() * 100 ) ),
+			'amount'     => intval( round( $this->order->get_total() * 100 ) ),
 			'orderItems' => Nets_Easy_Order_Items_Helper::get_items( $this->order_id ),
 		);
 	}
-
 
 	/**
 	 * Get the request url.
@@ -52,7 +52,6 @@ class Nets_Easy_Request_Cancel_Order extends Nets_Easy_Request_Post {
 	 * @return string
 	 */
 	protected function get_request_url() {
-		$payment_id = get_post_meta( $this->order_id, '_dibs_payment_id', true );
-		return $this->endpoint . 'payments/' . $payment_id . '/cancels';
+		return $this->endpoint . 'payments/' . $this->payment_id . '/cancels';
 	}
 }
