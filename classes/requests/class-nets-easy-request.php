@@ -260,9 +260,16 @@ abstract class Nets_Easy_Request {
 		$title  = $this->log_title;
 		$code   = wp_remote_retrieve_response_code( $response );
 
-		$body     = json_decode( $response['body'], true );
-		$order_id = $body['paymentId'] ?? $body['payment']['paymentId'] ?? null;
-		$log      = Nets_Easy_Logger::format_log( $order_id, $method, $title, $request_args, $request_url, $response, $code );
+		$body = json_decode( $response['body'], true );
+
+		// Set payment id for reference iin log.
+		if ( ! empty( $this->payment_id ) ) {
+			$order_id = $this->payment_id;
+		} else {
+			$order_id = $body['paymentId'] ?? $body['payment']['paymentId'] ?? null;
+		}
+
+		$log = Nets_Easy_Logger::format_log( $order_id, $method, $title, $request_args, $request_url, $response, $code );
 		Nets_Easy_Logger::log( $log );
 	}
 }
