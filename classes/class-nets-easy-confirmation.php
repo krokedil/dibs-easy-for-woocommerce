@@ -50,8 +50,8 @@ class Nets_Easy_Confirmation {
 	 */
 	public function confirm_order() {
 
-		$easy_confirm = filter_input( INPUT_GET, 'easy_confirm', FILTER_SANITIZE_STRING );
-		$order_key    = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_STRING );
+		$easy_confirm = filter_input( INPUT_GET, 'easy_confirm', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$order_key    = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( empty( $easy_confirm ) || empty( $order_key ) ) {
 			return;
 		}
@@ -83,7 +83,7 @@ class Nets_Easy_Confirmation {
 	 */
 	public function maybe_confirm_customer_redirected_from_payment_page_order() {
 
-		$payment_id = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_STRING );
+		$payment_id = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if ( empty( $payment_id ) ) {
 			return;
