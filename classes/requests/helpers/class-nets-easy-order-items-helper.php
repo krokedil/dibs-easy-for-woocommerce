@@ -205,6 +205,37 @@ class Nets_Easy_Order_Items_Helper {
 			}
 		}
 
+		// Smart coupons.
+		if ( ! empty( $order->get_items( 'coupon' ) ) ) {
+			foreach ( $order->get_items( 'coupon' ) as $item_id => $item ) {
+
+				$code          = ( is_object( $item ) && is_callable( array( $item, 'get_name' ) ) ) ? $item->get_name() : trim( $item['name'] );
+				$coupon        = new WC_Coupon( $code );
+				$discount_type = $coupon->get_discount_type();
+				$discount      = ( is_object( $item ) && is_callable( array( $item, 'get_discount' ) ) ) ? $item->get_discount() : $item['discount_amount'];
+
+				if ( 'smart_coupon' === $discount_type && ! empty( $discount ) ) {
+
+					$coupon_amount = intval( round( ( $discount * 100 ) * -1 ) );
+					$label         = apply_filters( 'nets_smart_coupon_gift_card_label', esc_html( __( 'Gift card:', 'dibs-easy-for-woocommerce' ) . ' ' . $coupon->get_code() ), $coupon );
+					$giftcard_sku  = apply_filters( 'nets_smart_coupon_gift_card_sku', esc_html( $coupon->get_id() ), $coupon );
+					$gift_card     = array(
+						'reference'        => $giftcard_sku,
+						'name'             => $label,
+						'quantity'         => 1,
+						'unitPrice'        => $coupon_amount,
+						'taxRate'          => 0,
+						'grossTotalAmount' => $coupon_amount,
+						'netTotalAmount'   => $coupon_amount,
+						'taxAmount'        => 0,
+						'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
+					);
+
+					$items[] = $gift_card;
+				}
+			}
+		}
+
 		return $items;
 	}
 }
