@@ -135,7 +135,7 @@ class Nets_Easy_Assets {
 			}
 		}
 
-		$standard_woo_checkout_fields = apply_filters( 'dibs_easy_ignored_checkout_fields', array(
+		$standard_woo_checkout_fields = apply_filters( 'nets_easy_ignored_checkout_fields', array(
 			'billing_first_name',
 			'billing_last_name',
 			'billing_address_1',
