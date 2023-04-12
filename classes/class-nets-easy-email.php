@@ -32,9 +32,10 @@ if ( ! class_exists( 'Nets_Easy_Email' ) ) :
 		 * @return void
 		 */
 		public function email_extra_information( $order, $sent_to_admin, $plain_text = false ) {
-			$settings     = get_option( 'woocommerce_dibs_easy_settings' );
-			$order_id     = $order->get_id();
-			$gateway_used = get_post_meta( $order_id, '_payment_method', true );
+			$settings                = get_option( 'woocommerce_dibs_easy_settings' );
+			$email_nets_payment_data = $settings['email_nets_payment_data'] ?? 'yes';
+			$order_id                = $order->get_id();
+			$gateway_used            = get_post_meta( $order_id, '_payment_method', true );
 			if ( 'dibs_easy' === $gateway_used ) {
 				$payment_id     = get_post_meta( $order_id, '_dibs_payment_id', true );
 				$customer_card  = get_post_meta( $order_id, 'dibs_customer_card', true );
@@ -44,17 +45,16 @@ if ( ! class_exists( 'Nets_Easy_Email' ) ) :
 				if ( $settings['email_text'] ) {
 					echo wp_kses_post( wpautop( wptexturize( $settings['email_text'] ) ) );
 				}
-				if ( $order_date ) {
-					echo wp_kses_post( wpautop( wptexturize( __( 'Order date: ', 'dibs-easy-for-woocommerce' ) . $order_date ) ) );
-				}
-				if ( $payment_id ) {
-					echo wp_kses_post( wpautop( wptexturize( __( 'Nets Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) ) );
-				}
-				if ( $payment_method ) {
-					echo wp_kses_post( wpautop( wptexturize( __( 'Payment method: ', 'dibs-easy-for-woocommerce' ) . $payment_method ) ) );
-				}
-				if ( $customer_card ) {
-					echo wp_kses_post( wpautop( wptexturize( __( 'Customer card: ', 'dibs-easy-for-woocommerce' ) . $customer_card ) ) );
+				if ( 'yes' === $email_nets_payment_data ) {
+					if ( $payment_id ) {
+						echo wp_kses_post( wpautop( wptexturize( __( 'Nets Payment ID: ', 'dibs-easy-for-woocommerce' ) . $payment_id ) ) );
+					}
+					if ( $payment_method ) {
+						echo wp_kses_post( wpautop( wptexturize( __( 'Payment method: ', 'dibs-easy-for-woocommerce' ) . $payment_method ) ) );
+					}
+					if ( $customer_card ) {
+						echo wp_kses_post( wpautop( wptexturize( __( 'Customer card: ', 'dibs-easy-for-woocommerce' ) . $customer_card ) ) );
+					}
 				}
 			}
 		}
