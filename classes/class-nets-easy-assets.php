@@ -135,7 +135,7 @@ class Nets_Easy_Assets {
 			}
 		}
 
-		$standard_woo_checkout_fields = array(
+		$standard_woo_checkout_fields = apply_filters( 'nets_easy_ignored_checkout_fields', array(
 			'billing_first_name',
 			'billing_last_name',
 			'billing_address_1',
@@ -159,7 +159,7 @@ class Nets_Easy_Assets {
 			'terms',
 			'account_username',
 			'account_password',
-		);
+		) );
 
 		// todo enable min version.
 		// phpcs:ignore $src                          = WC_DIBS__URL . '/assets/js/checkout' . $script_version . '.js';
