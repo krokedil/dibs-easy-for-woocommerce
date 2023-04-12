@@ -15,7 +15,7 @@ class Nets_Easy_Checkout {
 	 * Class constructor
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_after_calculate_totals', array( $this, 'update_nets_easy_order' ), 9999 );
+		add_action( 'woocommerce_after_calculate_totals', array( $this, 'update_nets_easy_order' ), 999999 );
 	}
 
 	/**
