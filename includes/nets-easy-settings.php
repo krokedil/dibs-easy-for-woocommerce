@@ -93,6 +93,12 @@ return apply_filters(
 			'description' => __( 'This text will be added to your customers order confirmation email.', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 		),
+		'email_nets_payment_data'      => array(
+			'title'   => __( 'Email payment data', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Add Nets payment data to order confirmation email.', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
 		'dibs_manage_orders'           => array(
 			'title'   => __( 'Manage orders', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
