@@ -45,6 +45,12 @@ class Nets_Easy_Checkout {
 			return;
 		}
 
+		// Trigger get if the ajax event is among the approved ones.
+		$ajax = filter_input( INPUT_GET, 'wc-ajax', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		if ( ! in_array( $ajax, array( 'update_order_review' ), true ) ) {
+			return;
+		}
+
 		// Check that the currency is the same as earlier, otherwise create a new session.
 		if ( get_woocommerce_currency() !== WC()->session->get( 'nets_easy_currency' ) ) {
 			wc_dibs_unset_sessions();
@@ -78,6 +84,15 @@ class Nets_Easy_Checkout {
 				} else {
 					wp_safe_redirect( wc_get_checkout_url() );
 				}
+			}
+		}
+
+		// If cart doesn't need payment anymore - reload the checkout page.
+		if ( apply_filters( 'nets_easy_check_if_needs_payment', true ) && 'no' === get_dibs_cart_contains_subscription() ) {
+			if ( ! WC()->cart->needs_payment() ) {
+				Nets_Easy_Logger::log( 'Cart does not need payment. Reloading the checkout page.' );
+				WC()->session->reload_checkout = true;
+				return;
 			}
 		}
 
