@@ -175,7 +175,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
 			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s. Reason: %s', 'dibs-easy-for-woocommerce' ), $response['refundId'], $reason ) ); // phpcs:ignore
+			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
 
 			return true;
 		}
