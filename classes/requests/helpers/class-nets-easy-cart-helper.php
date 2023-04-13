@@ -49,7 +49,7 @@ class Nets_Easy_Cart_Helper {
 			foreach ( WC()->cart->applied_gift_cards as $coupon_key => $code ) {
 				$coupon_amount = isset( WC()->cart->applied_gift_cards_amounts[ $code ] ) ? - WC()->cart->applied_gift_cards_amounts[ $code ] * 100 : 0;
 				$label         = apply_filters( 'yith_ywgc_cart_totals_gift_card_label', esc_html( __( 'Gift card:', 'yith-woocommerce-gift-cards' ) . ' ' . $code ), $code );
-				$giftcard_sku  = apply_filters( 'nets_yith_gift_card_sku', esc_html( __( 'giftcard', 'dibs-easy-for-woocommerce' ) ), $code );
+				$giftcard_sku  = apply_filters( 'nets_yith_gift_card_sku', esc_html( $code ), $code );
 
 				$gift_card = array(
 					'reference'        => $giftcard_sku,
@@ -64,6 +64,31 @@ class Nets_Easy_Cart_Helper {
 				);
 			}
 			$items[] = $gift_card;
+		}
+
+		// Smart coupons.
+		if ( ! empty( WC()->cart->get_coupons() ) ) {
+			foreach ( WC()->cart->get_coupons() as $coupon ) {
+				if ( 'smart_coupon' === $coupon->get_discount_type() ) {
+
+					$coupon_amount = intval( round( ( $coupon->get_amount() * 100 ) * -1 ) );
+					$label         = apply_filters( 'nets_smart_coupon_gift_card_label', esc_html( __( 'Gift card:', 'dibs-easy-for-woocommerce' ) . ' ' . $coupon->get_code() ), $coupon );
+					$giftcard_sku  = apply_filters( 'nets_smart_coupon_gift_card_sku', esc_html( $coupon->get_id() ), $coupon );
+					$gift_card     = array(
+						'reference'        => $giftcard_sku,
+						'name'             => $label,
+						'quantity'         => 1,
+						'unitPrice'        => $coupon_amount,
+						'taxRate'          => 0,
+						'grossTotalAmount' => $coupon_amount,
+						'netTotalAmount'   => $coupon_amount,
+						'taxAmount'        => 0,
+						'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
+					);
+
+					$items[] = $gift_card;
+				}
+			}
 		}
 
 		return $items;

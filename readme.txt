@@ -2,11 +2,11 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
-Tested up to: 6.1.1
+Tested up to: 6.2
 Requires PHP: 7.2
 WC requires at least: 5.0.0
-WC tested up to: 7.4.0
-Stable tag: 2.2.2
+WC tested up to: 7.5.1
+Stable tag: 2.3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,21 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2023.04.13    - version 2.3.0 =
+* Feature       - Adds settings for custom payment gateway icon.
+* Feature       - Add setting to control if Nets payment data (payment method, payment ID and masked card number) should be added to customer email.
+* Feature       - Adds support for gift cards via Smart coupons plugin.
+* Feature       - Adds filter nets_easy_ignored_checkout_fields to allow others to alter which fields appear under additional fields (thanks @oxyc).
+* Tweak         - Reload checkout page and try to send update request again to Nets if response code is 409 on an update.
+* Tweak         - Change logic for auto capture. We now send charge = true in the create request and look for a charge id in payment confirmation, instead of making an activation request in payment confirmation sequenze.
+* Tweak         - Improved logic for enqueuing of js files to avoid creation of Nets payment ID when checkout page is rendered but Nets Easy isn't the selected payment gateway.
+* Tweak         - Change sku sent for YITH giftcard. Now we use giftcard code to allow multiple cift card used n one order. 
+* Tweak         - Tweak to YITH giftcard name sent to Nets, use the format Gift card: {gifdcard_code}.
+* Tweak         - Adds payment ID to log for charge order, cancel order and update cart requests.
+* Tweak         - Tweak in refund message logged as order note. Reason not needed.
+* Fix           - PHP 8.1 deprecated notice fix.
+* Fix           - Reload checkout page if cart doesn't need payment for embedded checkoutflow. So that regular Woo checkout template is used instead.
+
 = 2023.02.28    - version 2.2.2 =
 * Tweak         - Do not send webhook url to Nets if the site is declared as a local environment via wp_get_environment_type(). Previously this was checked via $_SERVER['REMOTE_ADDR'] & $_SERVER['HTTP_HOST'].
 * Fix           - Improved multi currency support. Creates new Nets payment ID if currency is changed mid session.

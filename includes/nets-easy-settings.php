@@ -93,6 +93,12 @@ return apply_filters(
 			'description' => __( 'This text will be added to your customers order confirmation email.', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 		),
+		'email_nets_payment_data'      => array(
+			'title'   => __( 'Email payment data', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Add Nets payment data to order confirmation email.', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
 		'dibs_manage_orders'           => array(
 			'title'   => __( 'Manage orders', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
@@ -153,6 +159,20 @@ return apply_filters(
 			'description' => __( 'Select the text displayed on the complete payment button. (Only applicable for subscription based payments). Translations for the selections can be found <a href="https://docs.krokedil.com/nets-easy-for-woocommerce/get-started/subscription-support/#custom-button-text-for-subscription-payments" target="_blank">here.</a>', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'subscribe',
 			'desc_tip'    => false,
+		),
+		'payment_gateway_icon'         => array(
+			'title'       => __( 'Payment gateway icon', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nets logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
+			'default'     => 'default',
+			'desc_tip'    => false,
+		),
+		'payment_gateway_icon_width'   => array(
+			'title'       => __( 'Payment gateway icon width', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'number',
+			'description' => __( 'Specify the max width (in px) of the payment gateway icon.', 'dibs-easy-for-woocommerce' ),
+			'default'     => '',
+			'desc_tip'    => true,
 		),
 	)
 );

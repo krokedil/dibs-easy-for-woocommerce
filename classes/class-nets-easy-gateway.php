@@ -39,9 +39,11 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Load the settings.
 		$this->init_settings();
 		// Get the settings values.
-		$this->title         = $this->get_option( 'title' );
-		$this->enabled       = $this->get_option( 'enabled' );
-		$this->checkout_flow = $this->settings['checkout_flow'] ?? 'embedded';
+		$this->title                          = $this->get_option( 'title' );
+		$this->enabled                        = $this->get_option( 'enabled' );
+		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'embedded';
+		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? 'default';
+		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? '145';
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
@@ -75,9 +77,20 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 * @return string
 	 */
 	public function get_icon() {
-		$icon_src   = 'https://cdn.dibspayment.com/logo/checkout/combo/horiz/DIBS_checkout_kombo_horizontal_04.png';
-		$icon_width = '145';
-		$icon_html  = '<img src="' . $icon_src . '" alt="Nets - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
+
+		if ( empty( $this->payment_gateway_icon ) ) {
+			return;
+		}
+
+		if ( 'default' === strtolower( $this->payment_gateway_icon ) ) {
+			$icon_src   = 'https://cdn.dibspayment.com/logo/checkout/combo/horiz/DIBS_checkout_kombo_horizontal_04.png';
+			$icon_width = '145';
+		} else {
+			$icon_src   = $this->payment_gateway_icon;
+			$icon_width = $this->payment_gateway_icon_max_width;
+		}
+
+		$icon_html = '<img src="' . $icon_src . '" alt="Nets - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
 		return apply_filters( 'wc_dibs_easy_icon_html', $icon_html );
 	}
 
@@ -162,7 +175,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
 			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s. Reason: %s', 'dibs-easy-for-woocommerce' ), $response['refundId'], $reason ) ); // phpcs:ignore
+			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
 
 			return true;
 		}

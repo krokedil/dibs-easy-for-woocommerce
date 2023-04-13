@@ -15,7 +15,7 @@ class Nets_Easy_Checkout {
 	 * Class constructor
 	 */
 	public function __construct() {
-		add_action( 'woocommerce_after_calculate_totals', array( $this, 'update_nets_easy_order' ), 9999 );
+		add_action( 'woocommerce_after_calculate_totals', array( $this, 'update_nets_easy_order' ), 999999 );
 	}
 
 	/**
@@ -45,6 +45,12 @@ class Nets_Easy_Checkout {
 			return;
 		}
 
+		// Trigger get if the ajax event is among the approved ones.
+		$ajax = filter_input( INPUT_GET, 'wc-ajax', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		if ( ! in_array( $ajax, array( 'update_order_review' ), true ) ) {
+			return;
+		}
+
 		// Check that the currency is the same as earlier, otherwise create a new session.
 		if ( get_woocommerce_currency() !== WC()->session->get( 'nets_easy_currency' ) ) {
 			wc_dibs_unset_sessions();
@@ -56,6 +62,12 @@ class Nets_Easy_Checkout {
 		// Check if the cart hash has been changed since last update.
 		$cart_hash  = $cart->get_cart_hash();
 		$saved_hash = WC()->session->get( 'nets_easy_last_update_hash' );
+
+		// Gift cards may not change cart hash.
+		// Always trigger update if coupons exist to be compatible with Smart Coupons plugin.
+		if ( method_exists( $cart, 'get_coupons' ) && ! empty( WC()->cart->get_coupons() ) ) {
+			$saved_hash = '';
+		}
 
 		// If they are the same, return.
 		if ( $cart_hash === $saved_hash ) {
@@ -75,13 +87,31 @@ class Nets_Easy_Checkout {
 			}
 		}
 
+		// If cart doesn't need payment anymore - reload the checkout page.
+		if ( apply_filters( 'nets_easy_check_if_needs_payment', true ) && 'no' === get_dibs_cart_contains_subscription() ) {
+			if ( ! WC()->cart->needs_payment() ) {
+				Nets_Easy_Logger::log( 'Cart does not need payment. Reloading the checkout page.' );
+				WC()->session->reload_checkout = true;
+				return;
+			}
+		}
+
 		// Retrieves the order.
 		$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 		if ( ! is_wp_error( $nets_easy_order ) ) {
+
 			// Updates the order.
-			Nets_Easy()->api->update_nets_easy_order( $payment_id );
+			$updated_nets_easy_order = Nets_Easy()->api->update_nets_easy_order( $payment_id );
+
+			if ( is_wp_error( $updated_nets_easy_order ) && 409 === $updated_nets_easy_order->get_error_code() ) {
+				// 409 response - try again.
+				Nets_Easy_Logger::log( $payment_id . '. Nets Easy update order request resulted in 409 response. Reloading the checkout page and try to update again.' );
+				WC()->session->reload_checkout = true;
+				return;
+			}
+
+			// Update the session value with the new cart hash.
+			WC()->session->set( 'nets_easy_last_update_hash', $cart_hash );
 		}
-		// Update the session value with the new cart hash.
-		WC()->session->set( 'nets_easy_last_update_hash', $cart_hash );
 	}
 } new Nets_Easy_Checkout();
