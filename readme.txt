@@ -5,8 +5,8 @@ Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 7.2
 WC requires at least: 5.0.0
-WC tested up to: 7.5.1
-Stable tag: 2.3.0
+WC tested up to: 7.6.0
+Stable tag: 2.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,11 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2023.04.20    - version 2.3.1 =
+* Tweak         - Remove maybeChangeToDibsEasy logic from nets-easy-for-woocommerce.js. This has been moved to nets-easy-utility.js.
+* Fix           - Avoid division by zero issue if fee is 0.
+* Fix           - Improvements in logger logic. Check if log object is instance of WP_Hook to avoid potential fatal error.
+
 = 2023.04.13    - version 2.3.0 =
 * Feature       - Adds settings for custom payment gateway icon.
 * Feature       - Add setting to control if Nets payment data (payment method, payment ID and masked card number) should be added to customer email.

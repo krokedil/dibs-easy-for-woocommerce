@@ -29,11 +29,6 @@ jQuery( function( $ ) {
 		init() {
 			$( document ).ready( dibsEasyForWoocommerce.loadDibs );
 			dibsEasyForWoocommerce.bodyEl.on(
-				'change',
-				'input[name="payment_method"]',
-				dibsEasyForWoocommerce.maybeChangeToDibsEasy
-			);
-			dibsEasyForWoocommerce.bodyEl.on(
 				'click',
 				dibsEasyForWoocommerce.selectAnotherSelector,
 				dibsEasyForWoocommerce.changeFromDibsEasy
@@ -313,34 +308,6 @@ jQuery( function( $ ) {
 			}
 			$( 'input#ship-to-different-address-checkbox' ).prop( 'checked', true );
 			dibsEasyForWoocommerce.submitOrder();
-		},
-		/**
-		 * When the customer changes to Dibs Easy from other payment methods.
-		 */
-		maybeChangeToDibsEasy() {
-			if ( 'dibs_easy' === $( this ).val() ) {
-				$( '.woocommerce-info' ).remove();
-				$( dibsEasyForWoocommerce.checkoutFormSelector ).block( {
-					message: null,
-					overlayCSS: {
-						background: '#fff',
-						opacity: 0.6,
-					},
-				} );
-				$.ajax( {
-					type: 'POST',
-					data: {
-						nonce: wcDibsEasy.nets_checkout_nonce,
-					},
-					dataType: 'json',
-					url: wcDibsEasy.change_payment_method_url,
-					success( data ) {},
-					error( data ) {},
-					complete( data ) {
-						window.location.href = data.responseJSON.data.redirect;
-					},
-				} );
-			}
 		},
 		/**
 		 * Submit the order using the WooCommerce AJAX function.

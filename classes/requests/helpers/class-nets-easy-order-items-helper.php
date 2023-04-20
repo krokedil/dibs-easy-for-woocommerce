@@ -106,7 +106,7 @@ class Nets_Easy_Order_Items_Helper {
 			'quantity'         => '1',
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( $order_fee->get_total() * 100 ) ),
-			'taxRate'          => intval( round( ( $order_fee->get_total_tax() / $order_fee->get_total() ) * 10000 ) ),
+			'taxRate'          => ( empty( $order_fee->get_total() ) ) ? 0 : intval( round( ( $order_fee->get_total_tax() / $order_fee->get_total() ) * 10000 ) ),
 			'taxAmount'        => intval( round( $order_fee->get_total_tax() * 100 ) ),
 			'grossTotalAmount' => intval( round( ( $order_fee->get_total() + $order_fee->get_total_tax() ) * 100 ) ),
 			'netTotalAmount'   => intval( round( $order_fee->get_total() * 100 ) ),
