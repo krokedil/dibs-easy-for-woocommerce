@@ -1,15 +1,15 @@
-# Copyright (C) 2022 Krokedil
+# Copyright (C) 2023 Krokedil
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nets Easy for WooCommerce 2.0.6\n"
+"Project-Id-Version: Nets Easy for WooCommerce 2.3.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2022-07-26 16:17:32+00:00\n"
+"POT-Creation-Date: 2023-04-13 09:58:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
@@ -57,27 +57,23 @@ msgid ""
 "not match. Nets order total: %s."
 msgstr ""
 
-#: classes/class-nets-easy-assets.php:142
+#: classes/class-nets-easy-assets.php:175
 msgid "Please wait while we process your order..."
 msgstr ""
 
-#: classes/class-nets-easy-assets.php:143
+#: classes/class-nets-easy-assets.php:176
 msgid "Please fill in all required checkout fields."
 msgstr ""
 
-#: classes/class-nets-easy-email.php:48
-msgid "Order date: "
-msgstr ""
-
-#: classes/class-nets-easy-email.php:51
+#: classes/class-nets-easy-email.php:50
 msgid "Nets Payment ID: "
 msgstr ""
 
-#: classes/class-nets-easy-email.php:54
+#: classes/class-nets-easy-email.php:53
 msgid "Payment method: "
 msgstr ""
 
-#: classes/class-nets-easy-email.php:57
+#: classes/class-nets-easy-email.php:56
 msgid "Customer card: "
 msgstr ""
 
@@ -89,17 +85,17 @@ msgstr ""
 msgid "Nets Easy Payment for checkout"
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:116
-#: classes/class-nets-easy-gateway.php:251
+#: classes/class-nets-easy-gateway.php:129
+#: classes/class-nets-easy-gateway.php:270
 msgid "Customer redirected to Nets payment page."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:159
+#: classes/class-nets-easy-gateway.php:178
 #. Translators: Nets refund ID.
-msgid "Refund made in Nets Easy with refund ID %s. Reason: %s"
+msgid "Refund made in Nets Easy with refund ID %s."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:201
+#: classes/class-nets-easy-gateway.php:220
 msgid "Order finalized in thankyou page."
 msgstr ""
 
@@ -150,16 +146,18 @@ msgid ""
 "- %2$s. Charge ID %3$s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:82
+#: classes/class-nets-easy-subscriptions.php:92
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:63
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:91
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:111
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:138
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:151
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:86
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:116
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:136
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:163
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:176
 #: classes/requests/helpers/class-nets-easy-order-items-helper.php:68
 #: classes/requests/helpers/class-nets-easy-order-items-helper.php:107
 #: classes/requests/helpers/class-nets-easy-order-items-helper.php:146
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:194
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:198
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:231
 #: classes/requests/helpers/class-nets-easy-payment-method-helper.php:40
 #: classes/requests/helpers/class-nets-easy-refund-helper.php:124
 #: classes/requests/helpers/class-nets-easy-refund-helper.php:183
@@ -167,58 +165,70 @@ msgstr ""
 msgid "pcs"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:182
-#. Translators: The response we get back from Nets.
-msgid "Something went wrong when trying to retrieve the subscription from Nets: %s"
+#: classes/class-nets-easy-subscriptions.php:200
+#: classes/class-nets-easy-subscriptions.php:217
+msgid "Nets Easy subscription ID/recurring token %s saved."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:250
+#: classes/class-nets-easy-subscriptions.php:287
+#. Translators: Nets Payment ID & Charge ID.
+msgid "Subscription payment made with Nets. Payment ID: %s. Charge ID %s."
+msgstr ""
+
+#: classes/class-nets-easy-subscriptions.php:295
+#. Translators: Request response from Nets.
+msgid "Subscription payment failed with Nets. Error message: %s."
+msgstr ""
+
+#: classes/class-nets-easy-subscriptions.php:323
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
 "Nets. Recurring token: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:259
+#: classes/class-nets-easy-subscriptions.php:332
 #. Translators: Request response.
-msgid "Error during DIBS_Request_Get_Subscription_By_External_Reference: %s"
+msgid "Error during Nets_Easy_Request_Get_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:273
-#. Translators: Nets Payment ID & Charge ID.
-msgid "Subscription payment made with Nets. Payment ID: %s. Charge ID %s."
+#: classes/class-nets-easy-subscriptions.php:359
+msgid ""
+"Saved _dibs_recurring_token in subscription by externalreference request to "
+"Nets. Recurring token: %s. Subscription type: %s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:280
-#. Translators: Request response from Nets.
-msgid "Subscription payment failed with Nets. Error message: %s."
+#: classes/class-nets-easy-subscriptions.php:368
+#. Translators: Request response.
+msgid ""
+"Error during "
+"Nets_Easy_Request_Get_Unscheduled_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:298
-#: classes/class-nets-easy-subscriptions.php:306
+#: classes/class-nets-easy-subscriptions.php:385
+#: classes/class-nets-easy-subscriptions.php:393
 msgid "Nets recurring token"
 msgstr ""
 
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:51
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:75
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:190
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:220
 msgid "Gift card:"
-msgstr ""
-
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:52
-msgid "giftcard"
 msgstr ""
 
 #: dibs-easy-for-woocommerce.php:106 dibs-easy-for-woocommerce.php:115
 msgid "Nope"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:209
+#: dibs-easy-for-woocommerce.php:211
 msgid "Settings"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:210
+#: dibs-easy-for-woocommerce.php:212
 msgid "Docs"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:211
+#: dibs-easy-for-woocommerce.php:213
 msgid "Support"
 msgstr ""
 
@@ -226,14 +236,19 @@ msgstr ""
 msgid "Select another payment method"
 msgstr ""
 
-#: includes/nets-easy-functions.php:226
+#: includes/nets-easy-functions.php:210
+#. translators: %s: Error message
+msgid "Nets Easy: Error when confirming order: %s"
+msgstr ""
+
+#: includes/nets-easy-functions.php:237
 #. Translators: Nets Easy Payment ID.
 msgid ""
 "New payment created in Nets Easy with Payment ID %s. Payment type - %s. "
 "Charge ID %3$s."
 msgstr ""
 
-#: includes/nets-easy-functions.php:229
+#: includes/nets-easy-functions.php:240
 #. Translators: Nets Easy Payment ID.
 msgid ""
 "New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. "
@@ -349,45 +364,53 @@ msgid "This text will be added to your customers order confirmation email."
 msgstr ""
 
 #: includes/nets-easy-settings.php:97
-msgid "Manage orders"
+msgid "Email payment data"
 msgstr ""
 
 #: includes/nets-easy-settings.php:99
-msgid "Enable WooCommerce to manage orders in Nets Easy backend"
+msgid "Add Nets payment data to order confirmation email."
 msgstr ""
 
 #: includes/nets-easy-settings.php:103
-msgid "Debug mode"
+msgid "Manage orders"
 msgstr ""
 
 #: includes/nets-easy-settings.php:105
-msgid "Enable Debug mode for Nets Easy"
+msgid "Enable WooCommerce to manage orders in Nets Easy backend"
 msgstr ""
 
 #: includes/nets-easy-settings.php:109
-msgid "Invoice fee ID"
+msgid "Debug mode"
 msgstr ""
 
 #: includes/nets-easy-settings.php:111
+msgid "Enable Debug mode for Nets Easy"
+msgstr ""
+
+#: includes/nets-easy-settings.php:115
+msgid "Invoice fee ID"
+msgstr ""
+
+#: includes/nets-easy-settings.php:117
 msgid ""
 "Create a hidden (simple) product that acts as the invoice fee. Enter the "
 "product <strong>ID</strong> number in this textfield. Leave blank to "
 "disable."
 msgstr ""
 
-#: includes/nets-easy-settings.php:116
+#: includes/nets-easy-settings.php:122
 msgid "Checkout flow"
 msgstr ""
 
-#: includes/nets-easy-settings.php:119
+#: includes/nets-easy-settings.php:125
 msgid "Embedded"
 msgstr ""
 
-#: includes/nets-easy-settings.php:120
+#: includes/nets-easy-settings.php:126
 msgid "Redirect"
 msgstr ""
 
-#: includes/nets-easy-settings.php:122
+#: includes/nets-easy-settings.php:128
 msgid ""
 "Select how Nets Easy should be integrated in WooCommerce. "
 "<strong>Embedded</strong> – the checkout is embedded in the WooCommerce "
@@ -396,32 +419,32 @@ msgid ""
 "hosted by Nets."
 msgstr ""
 
-#: includes/nets-easy-settings.php:127
+#: includes/nets-easy-settings.php:133
 msgid "Auto-capture"
 msgstr ""
 
-#: includes/nets-easy-settings.php:129
+#: includes/nets-easy-settings.php:135
 msgid ""
 "Enable Auto-capture. If enabled Nets Easy charges your customer immediately "
 "after payment completion. Only enable for compliant products/services."
 msgstr ""
 
-#: includes/nets-easy-settings.php:133
+#: includes/nets-easy-settings.php:139
 msgid "Other payment method button text"
 msgstr ""
 
-#: includes/nets-easy-settings.php:135
+#: includes/nets-easy-settings.php:141
 msgid ""
 "Customize the <em>Select another payment method</em> button text that is "
 "displayed in checkout if using other payment methods than Nets Easy. Leave "
 "blank to use the default (and translatable) text."
 msgstr ""
 
-#: includes/nets-easy-settings.php:140
+#: includes/nets-easy-settings.php:146
 msgid "Complete payment button text"
 msgstr ""
 
-#: includes/nets-easy-settings.php:153
+#: includes/nets-easy-settings.php:159
 msgid ""
 "Select the text displayed on the complete payment button. (Only applicable "
 "for subscription based payments). Translations for the selections can be "
@@ -429,6 +452,25 @@ msgid ""
 "href=\"https://docs.krokedil.com/nets-easy-for-woocommerce/get-started/"
 "subscription-support/#custom-button-text-for-subscription-payments\" "
 "target=\"_blank\">here.</a>"
+msgstr ""
+
+#: includes/nets-easy-settings.php:164
+msgid "Payment gateway icon"
+msgstr ""
+
+#: includes/nets-easy-settings.php:166
+msgid ""
+"Enter an URL to the icon you want to display for the payment method. Use "
+"<i>default</i> to display the default Nets logo. Leave blank to not show an "
+"icon at all."
+msgstr ""
+
+#: includes/nets-easy-settings.php:171
+msgid "Payment gateway icon width"
+msgstr ""
+
+#: includes/nets-easy-settings.php:173
+msgid "Specify the max width (in px) of the payment gateway icon."
 msgstr ""
 
 #: templates/nets-easy-checkout.php:17
