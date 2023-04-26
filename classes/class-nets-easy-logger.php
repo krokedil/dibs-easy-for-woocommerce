@@ -121,7 +121,7 @@ class Nets_Easy_Logger {
 				if ( in_array( $data['function'], array( 'do_action', 'apply_filters' ), true ) ) {
 					if ( isset( $data['object'] ) && $data['object'] instanceof WP_Hook ) {
 						$priority   = $data['object']->current_priority();
-						$name       = key( $data['object']->current() );
+						$name       = is_array( $data['object']->current() ) ? key( $data['object']->current() ) : '';
 						$extra_data = $name . ' : ' . $priority;
 					}
 				}
