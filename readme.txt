@@ -6,7 +6,7 @@ Tested up to: 6.2
 Requires PHP: 7.2
 WC requires at least: 5.0.0
 WC tested up to: 7.6.0
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2023.04.26    - version 2.3.2 =
+* Fix           - New improvement in logger logic, to avoid potential PHP issue with some plugins.
+
 = 2023.04.20    - version 2.3.1 =
 * Tweak         - Remove maybeChangeToDibsEasy logic from nets-easy-for-woocommerce.js. This has been moved to nets-easy-utility.js.
 * Fix           - Avoid division by zero issue if fee is 0.
