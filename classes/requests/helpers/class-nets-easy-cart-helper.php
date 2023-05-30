@@ -62,8 +62,9 @@ class Nets_Easy_Cart_Helper {
 					'taxAmount'        => 0,
 					'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 				);
+
+				$items[] = $gift_card;
 			}
-			$items[] = $gift_card;
 		}
 
 		// Smart coupons.
