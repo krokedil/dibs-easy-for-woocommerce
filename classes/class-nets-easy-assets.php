@@ -25,14 +25,20 @@ class Nets_Easy_Assets {
 	 * Dibs_Easy_Assets constructor.
 	 */
 	public function __construct() {
-		$this->settings  = get_option( 'woocommerce_dibs_easy_settings', array() );
-		$this->enabled   = $this->settings['enabled'] ?? 'no';
-		$this->test_mode = $this->settings['test_mode'] ?? 'no';
+		$this->settings      = get_option( 'woocommerce_dibs_easy_settings', array() );
+		$this->enabled       = $this->settings['enabled'] ?? 'no';
+		$this->test_mode     = $this->settings['test_mode'] ?? 'no';
+		$this->checkout_flow = $this->settings['checkout_flow'] ?? '';
 
-		if ( ! ( empty( $this->settings ) ) && 'embedded' === $this->settings['checkout_flow'] ) {
+		if ( 'embedded' === $this->checkout_flow ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'dibs_load_js' ), 10 );
 			add_action( 'wc_dibs_before_checkout_form', array( $this, 'localize_and_enqueue_checkout_script' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'dibs_load_css' ), 10 );
+		}
+
+		if ( 'overlay' === $this->checkout_flow ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'load_overlay_js' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'dibs_overlay_css' ) );
 		}
 
 	}
@@ -120,6 +126,44 @@ class Nets_Easy_Assets {
 	}
 
 	/**
+	 * Loads scripts for the plugin - overlay checkout mode.
+	 */
+	public function load_overlay_js() {
+
+		if ( 'yes' !== $this->enabled ) {
+			return;
+		}
+
+		/* On the 'order-pay' page we redirect the customer to a hosted payment page, and therefore don't need need to enqueue any of the following assets. */
+		if ( ! is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
+			return;
+		}
+
+		// There is no 'thank-you' snippet to show. Use the standard WC template.
+		if ( is_wc_endpoint_url( 'order-received' ) ) {
+			return;
+		}
+
+		// Checkout overlay.
+		wp_register_script(
+			'nets_easy_overlay',
+			WC_DIBS__URL . '/assets/js/nets-easy-overlay.js',
+			array( 'jquery' ),
+			WC_DIBS_EASY_VERSION,
+			true
+		);
+
+		$params = array();
+
+		wp_localize_script(
+			'nets_easy_overlay',
+			'nets_easy_overlay_params',
+			$params
+		);
+		wp_enqueue_script( 'nets_easy_overlay' );
+	}
+
+	/**
 	 * Loads the needed scripts for Nets Easy.
 	 */
 	public function localize_and_enqueue_checkout_script() {
@@ -135,31 +179,34 @@ class Nets_Easy_Assets {
 			}
 		}
 
-		$standard_woo_checkout_fields = apply_filters( 'nets_easy_ignored_checkout_fields', array(
-			'billing_first_name',
-			'billing_last_name',
-			'billing_address_1',
-			'billing_address_2',
-			'billing_postcode',
-			'billing_city',
-			'billing_phone',
-			'billing_email',
-			'billing_state',
-			'billing_country',
-			'billing_company',
-			'shipping_first_name',
-			'shipping_last_name',
-			'shipping_address_1',
-			'shipping_address_2',
-			'shipping_postcode',
-			'shipping_city',
-			'shipping_state',
-			'shipping_country',
-			'shipping_company',
-			'terms',
-			'account_username',
-			'account_password',
-		) );
+		$standard_woo_checkout_fields = apply_filters(
+			'nets_easy_ignored_checkout_fields',
+			array(
+				'billing_first_name',
+				'billing_last_name',
+				'billing_address_1',
+				'billing_address_2',
+				'billing_postcode',
+				'billing_city',
+				'billing_phone',
+				'billing_email',
+				'billing_state',
+				'billing_country',
+				'billing_company',
+				'shipping_first_name',
+				'shipping_last_name',
+				'shipping_address_1',
+				'shipping_address_2',
+				'shipping_postcode',
+				'shipping_city',
+				'shipping_state',
+				'shipping_country',
+				'shipping_company',
+				'terms',
+				'account_username',
+				'account_password',
+			)
+		);
 
 		// todo enable min version.
 		// phpcs:ignore $src                          = WC_DIBS__URL . '/assets/js/checkout' . $script_version . '.js';
@@ -210,6 +257,28 @@ class Nets_Easy_Assets {
 		);
 
 		wp_enqueue_style( 'dibs-style' );
+	}
+
+	/**
+	 * Loads style for the plugin.
+	 */
+	public function dibs_overlay_css() {
+		if ( ! is_checkout() ) {
+			return;
+		}
+		if ( is_order_received_page() ) {
+			return;
+		}
+		$style_version = $this->nets_easy_is_script_debug_enabled();
+		// Load stylesheet for the checkout page.
+		wp_register_style(
+			'nets-easy-overlay-style',
+			WC_DIBS__URL . '/assets/css/nets-easy-overlay.css',
+			array(),
+			WC_DIBS_EASY_VERSION
+		);
+
+		wp_enqueue_style( 'nets-easy-overlay-style' );
 	}
 }
 new Nets_Easy_Assets();

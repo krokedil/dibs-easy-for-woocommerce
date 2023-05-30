@@ -40,8 +40,31 @@ class Nets_Easy_Confirmation {
 	 * DIBS_Confirmation constructor.
 	 */
 	public function __construct() {
+		add_action( 'init', array( $this, 'maybe_reload_page' ), 1 );
 		add_action( 'init', array( $this, 'confirm_order' ), 10, 2 );
 		add_action( 'init', array( $this, 'maybe_confirm_customer_redirected_from_payment_page_order' ), 20 );
+	}
+
+	/**
+	 * Maybe reload the page based on query args.
+	 * We do this via JavaScript and use top.location.
+	 * This is done since the confirmation url is rendered in the iframe located in the overlay
+	 * and we want the customer to come back to the original browser window.
+	 *
+	 * @return void
+	 */
+	public function maybe_reload_page() {
+		$reload = filter_input( INPUT_GET, 'nets_reload', FILTER_SANITIZE_STRING );
+
+		if ( ! empty( $reload ) ) {
+			$url = remove_query_arg( 'nets_reload' );
+			?>
+			<script>
+				top.location = "<?php echo $url; // phpcs:ignore ?>"
+			</script>
+			<?php
+			wp_die();
+		}
 	}
 
 

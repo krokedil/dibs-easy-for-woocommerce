@@ -144,15 +144,13 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
 			return $this->process_embedded_handler( $order_id );
 		}
-		// Redirect flow.
-		$response = Nets_Easy()->api->create_nets_easy_order( 'redirect', $order_id );
-		if ( is_wp_error( $response ) ) {
-			wc_add_notice( $response->get_error_message(), 'error' );
-			return array(
-				'result' => 'error',
-			);
+
+		// Overlay flow.
+		if ( 'overlay' === $this->checkout_flow && ! wp_is_mobile() && ! is_wc_endpoint_url( 'order-pay' ) ) {
+			return $this->process_overlay_handler( $order_id );
 		}
-		return $this->process_redirect_handler( $order_id, $response );
+
+		return $this->process_redirect_handler( $order_id );
 	}
 
 	/**
@@ -258,21 +256,63 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @param int   $order_id The WooCommerce order id.
-	 * @param array $response The response from payment.
+	 * @param int $order_id The WooCommerce order id.
 	 *
 	 * @return array|string[]
 	 */
-	protected function process_redirect_handler( $order_id, $response ) {
+	protected function process_redirect_handler( $order_id ) {
+
+		// Create payment in Nets.
+		$response = Nets_Easy()->api->create_nets_easy_order( 'redirect', $order_id );
+		if ( is_wp_error( $response ) ) {
+			wc_add_notice( $response->get_error_message(), 'error' );
+			return array(
+				'result' => 'error',
+			);
+		}
+
 		$order = wc_get_order( $order_id );
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
-			// All good. Redirect customer to DIBS payment page.
+			// All good. Redirect customer to Nets payment page.
 			$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
 			update_post_meta( $order_id, '_dibs_payment_id', $response['paymentId'] ); // phpcs:ignore
 
 			return array(
 				'result'   => 'success',
 				'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
+			);
+		}
+
+		return array(
+			'result' => 'error',
+		);
+	}
+
+	/**
+	 * @param int $order_id The WooCommerce order id.
+	 *
+	 * @return array|string[]
+	 */
+	protected function process_overlay_handler( $order_id ) {
+
+		// Create payment in Nets.
+		$response = Nets_Easy()->api->create_nets_easy_order( 'overlay', $order_id );
+		if ( is_wp_error( $response ) ) {
+			wc_add_notice( $response->get_error_message(), 'error' );
+			return array(
+				'result' => 'error',
+			);
+		}
+
+		$order = wc_get_order( $order_id );
+		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
+			// All good. Redirect customer to DIBS payment page.
+			$order->add_order_note( __( 'Nets payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
+			update_post_meta( $order_id, '_dibs_payment_id', $response['paymentId'] ); // phpcs:ignore
+
+			return array(
+				'result'   => 'success',
+				'redirect' => '#netseasy:' . base64_encode( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ), // phpcs:ignore
 			);
 		}
 
