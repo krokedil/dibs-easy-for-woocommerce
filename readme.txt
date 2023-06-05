@@ -57,7 +57,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 == CHANGELOG ==
 = 2023.06.05    - version 2.4.0 =
-* Tweak         - Sand WooCommerce order number as order reference to Nets later in the process (when payment is confirmed in Woo) due to changes in Nets API.
+* Tweak         - Send WooCommerce order number as order reference to Nets later in the process (when payment is confirmed in Woo) due to changes in Nets API.
 * Fix           - Improvements in logic to allow multiple YITH giftcards in same order.
 
 = 2023.04.26    - version 2.3.2 =
