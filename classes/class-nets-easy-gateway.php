@@ -293,14 +293,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
 
 			// Update order number in DIBS system if this is the embedded checkout flow.
-			$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
-			update_post_meta( $order_id, '_dibs_payment_id', WC()->session->get( 'dibs_payment_id' ) );
-			$response = Nets_Easy()->api->update_nets_easy_order_reference( WC()->session->get( 'dibs_payment_id' ), $order_id );
-			if ( is_wp_error( $response ) ) {
-				return array(
-					'result' => 'error',
-				);
-			}
+			$payment_id = WC()->session->get( 'dibs_payment_id' );
+			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
+
 			return array(
 				'result'   => 'success',
 				'redirect' => add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ),
