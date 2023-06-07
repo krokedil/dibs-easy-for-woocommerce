@@ -117,7 +117,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			'mustLoginMessage' => $must_login_message,
 		);
 		wp_send_json_success( $response );
-		wp_die();
 	}
 
 	/**
@@ -173,7 +172,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 				$location = $order->get_checkout_order_received_url();
 				Nets_Easy_Logger::log( '$location: ' . $location );
 				wp_send_json_error( array( 'redirect' => $location ) );
-				wp_die();
 			}
 		}
 
@@ -192,8 +190,18 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
-			wp_die();
 		} else {
+
+			// Check if the WC cart total matches the Nets order total.
+			$cart_total       = intval( round( WC()->cart->total * 100 ) );
+			$nets_order_total = $response['payment']['orderDetails']['amount'];
+
+			if ( $cart_total !== $nets_order_total ) {
+				Nets_Easy_Logger::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but cart total does not match Nets order total. WooCommerce form not submitted. Cart total: ' . $cart_total . ', Nets order total: ' . $nets_order_total );
+
+				wp_send_json_error( 'Cart total does not match Nets order total. Please try refreshing the page.' );
+			}
+
 			// All good with the request.
 			// Convert country code from 3 to 2 letters.
 			if ( $response['payment']['consumer']['shippingAddress']['country'] ) {
@@ -207,7 +215,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 			self::prepare_cart_before_form_processing( $response['payment']['consumer']['shippingAddress']['country'] );
 			wp_send_json_success( $response );
-			wp_die();
 		}
 
 	}
@@ -251,7 +258,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			'redirect' => $redirect,
 		);
 		wp_send_json_success( $data );
-		wp_die();
 	}
 
 	/**
@@ -283,7 +289,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		$message        = "Frontend JS: $posted_message";
 		Nets_Easy_Logger::log( $message );
 		wp_send_json_success();
-		wp_die();
 	}
 
 }
