@@ -199,7 +199,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			if ( $cart_total !== $nets_order_total ) {
 				Nets_Easy_Logger::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but cart total does not match Nets order total. WooCommerce form not submitted. Cart total: ' . $cart_total . ', Nets order total: ' . $nets_order_total );
 
-				wp_send_json_error( 'Cart total does not match Nets order total. Please try refreshing the page.' );
+				wp_send_json_error( __( 'Cart total does not match Nets order total. Please try refreshing the page.', 'dibs-easy-for-woocommerce' ) );
 			}
 
 			// All good with the request.
