@@ -196,8 +196,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			$cart_total       = intval( round( WC()->cart->total * 100 ) );
 			$nets_order_total = $response['payment']['orderDetails']['amount'];
 
-			// Allow for a difference of 3 units of the smallest currency unit.
-			if ( abs( $cart_total - $nets_order_total ) > 3 ) {
+			// Allow for a difference, measured in the smallest currency unit (e.g., 300 = 3 SEK).
+			if ( abs( $cart_total - $nets_order_total ) > 300 ) {
 				Nets_Easy_Logger::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but cart total does not match Nets order total. WooCommerce form not submitted. Cart total: ' . $cart_total . ', Nets order total: ' . $nets_order_total );
 
 				wp_send_json_error( __( 'Cart total does not match Nets order total. Please try refreshing the page.', 'dibs-easy-for-woocommerce' ) );
