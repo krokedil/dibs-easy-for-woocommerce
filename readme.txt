@@ -6,7 +6,7 @@ Tested up to: 6.2.2
 Requires PHP: 7.2
 WC requires at least: 5.0.0
 WC tested up to: 7.7.2
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,8 +56,12 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2023.06.12    - version 2.4.1 =
+* Enhancement   - Implemented an extra validation step during the checkout process to avoid any potential price discrepancies between WooCommerce and Nets.
+* Tweak         - Fine-tuned the tax rate calculation in the redirect flow to ensure consistency with the embedded checkout flow.
+
 = 2023.06.05    - version 2.4.0 =
-* Tweak         - Sand WooCommerce order number as order reference to Nets later in the process (when payment is confirmed in Woo) due to changes in Nets API.
+* Tweak         - Send WooCommerce order number as order reference to Nets later in the process (when payment is confirmed in Woo) due to changes in Nets API.
 * Fix           - Improvements in logic to allow multiple YITH giftcards in same order.
 
 = 2023.04.26    - version 2.3.2 =

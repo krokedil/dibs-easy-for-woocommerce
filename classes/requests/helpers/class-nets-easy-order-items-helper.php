@@ -28,7 +28,7 @@ class Nets_Easy_Order_Items_Helper {
 
 		// Get order items.
 		foreach ( $order->get_items() as $order_item ) {
-			$items[] = self::get_item( $order_item );
+			$items[] = self::get_item( $order_item, $order );
 		}
 
 		// Get order fees.
@@ -50,10 +50,11 @@ class Nets_Easy_Order_Items_Helper {
 	/**
 	 * Gets one formatted order line item.
 	 *
-	 * @param array $order_item The WooCommerce order line item.
+	 * @param array  $order_item The WooCommerce order line item.
+	 * @param object $order The WooCommerce order.
 	 * @return array
 	 */
-	public static function get_item( $order_item ) {
+	public static function get_item( $order_item, $order ) {
 		$product = $order_item->get_product();
 		if ( $order_item['variation_id'] ) {
 			$product_id = $order_item['variation_id'];
@@ -67,7 +68,7 @@ class Nets_Easy_Order_Items_Helper {
 			'quantity'         => $order_item['qty'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( ( $order_item->get_total() / $order_item['qty'] ) * 100 ) ),
-			'taxRate'          => ( empty( $order_item->get_total() ) ) ? 0 : intval( round( ( $order_item->get_total_tax() / $order_item->get_total() ) * 10000 ) ),
+			'taxRate'          => self::get_item_tax_rate( $order_item, $order ),
 			'taxAmount'        => intval( round( $order_item->get_total_tax() * 100 ) ),
 			'grossTotalAmount' => intval( round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ) ),
 			'netTotalAmount'   => intval( round( $order_item->get_total() * 100 ) ),
@@ -237,5 +238,26 @@ class Nets_Easy_Order_Items_Helper {
 		}
 
 		return $items;
+	}
+
+	/**
+	 * Gets the tax code for the product.
+	 *
+	 * @param object $order_item The WooCommerce order item.
+	 * @param object $order The WooCommerce order.
+	 * @return intval
+	 */
+	public static function get_item_tax_rate( $order_item, $order ) {
+		$tax_rate = 0;
+		$taxes    = $order_item->get_taxes();
+		if ( ! empty( $taxes['total'] ) ) {
+			foreach ( $taxes['total'] as $tax_id => $tax_amount ) {
+				if ( $tax_amount > 0 ) {
+					$tax_rate = round( WC_Tax::get_rate_percent_value( $tax_id ) * 100, 2 );
+					break;
+				}
+			}
+		}
+		return intval( $tax_rate );
 	}
 }

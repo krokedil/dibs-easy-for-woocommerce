@@ -220,6 +220,7 @@ jQuery( function( $ ) {
 					if ( false === data.success ) {
 						console.log( 'PaymentID already exist in order' );
 						console.log( data );
+						dibsEasyForWoocommerce.failOrder( 'ajax-error', '<div class="woocommerce-error">' + data.data + '</div>', );
 						if ( data.data.redirect ) {
 							window.location.href = data.data.redirect;
 						}
