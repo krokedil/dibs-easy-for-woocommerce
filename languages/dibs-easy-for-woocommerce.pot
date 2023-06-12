@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nets Easy for WooCommerce 2.3.0\n"
+"Project-Id-Version: Nets Easy for WooCommerce 2.4.1\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2023-04-13 09:58:20+00:00\n"
+"POT-Creation-Date: 2023-06-12 13:11:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -47,6 +47,10 @@ msgstr ""
 
 #: classes/class-nets-easy-ajax.php:70
 msgid "An account is already registered with your email address. Please log in."
+msgstr ""
+
+#: classes/class-nets-easy-ajax.php:203
+msgid "Cart total does not match Nets order total. Please try refreshing the page."
 msgstr ""
 
 #: classes/class-nets-easy-api-callbacks.php:156
@@ -148,16 +152,16 @@ msgstr ""
 
 #: classes/class-nets-easy-subscriptions.php:92
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:63
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:86
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:116
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:136
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:163
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:176
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:68
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:107
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:146
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:198
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:231
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:87
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:117
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:137
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:164
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:177
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:69
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:108
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:147
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:199
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:232
 #: classes/requests/helpers/class-nets-easy-payment-method-helper.php:40
 #: classes/requests/helpers/class-nets-easy-refund-helper.php:124
 #: classes/requests/helpers/class-nets-easy-refund-helper.php:183
@@ -210,9 +214,9 @@ msgid "Nets recurring token"
 msgstr ""
 
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:51
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:75
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:190
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:220
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:76
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:191
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:221
 msgid "Gift card:"
 msgstr ""
 
@@ -241,14 +245,19 @@ msgstr ""
 msgid "Nets Easy: Error when confirming order: %s"
 msgstr ""
 
-#: includes/nets-easy-functions.php:237
+#: includes/nets-easy-functions.php:238
+#. translators: %s: Error message
+msgid "Nets Easy: Error when updating order reference to Nets. Error message : %s"
+msgstr ""
+
+#: includes/nets-easy-functions.php:251
 #. Translators: Nets Easy Payment ID.
 msgid ""
 "New payment created in Nets Easy with Payment ID %s. Payment type - %s. "
 "Charge ID %3$s."
 msgstr ""
 
-#: includes/nets-easy-functions.php:240
+#: includes/nets-easy-functions.php:254
 #. Translators: Nets Easy Payment ID.
 msgid ""
 "New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. "
