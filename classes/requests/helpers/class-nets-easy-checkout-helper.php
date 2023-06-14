@@ -49,12 +49,19 @@ class Nets_Easy_Checkout_Helper {
 			$checkout['consumer'] = self::prefill_embedded_customer_data();
 
 		} else {
-			$order                                   = wc_get_order( $order_id );
-			$checkout['returnUrl']                   = add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() );
-			$checkout['integrationType']             = 'HostedPaymentPage';
-			$checkout['cancelUrl']                   = 'admin' === $order->get_created_via() ? $order->get_checkout_payment_url() : wc_get_checkout_url();
-			$checkout['merchantHandlesConsumerData'] = true;
-			$checkout['shipping']['countries']       = array();
+			$order      = wc_get_order( $order_id );
+			$return_url = add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() );
+			$cancel_url = 'admin' === $order->get_created_via() ? $order->get_checkout_payment_url() : wc_get_checkout_url();
+
+			if ( 'overlay' === $checkout_flow ) {
+				$return_url = add_query_arg( array( 'nets_reload' => 'true' ), $return_url );
+			}
+
+			$checkout['returnUrl']                               = $return_url;
+			$checkout['integrationType']                         = 'HostedPaymentPage';
+			$checkout['cancelUrl']                               = $cancel_url;
+			$checkout['merchantHandlesConsumerData']             = true;
+			$checkout['shipping']['countries']                   = array();
 			$checkout['shipping']['merchantHandlesShippingCost'] = false;
 			$checkout['consumer']                                = self::get_consumer_address( $order );
 		}
