@@ -10,12 +10,10 @@
 
 .netseasy-iframe {
 	border:none;
-	margin:10% auto;
-	display:flex;
+	margin:6% auto;
 	display:flex;
 	flex-direction: column;
 	align-items: flex-end;
 	min-width:500px;
-	min-height:28em;
-	height:80vh;
+	height:100vh;
 }
