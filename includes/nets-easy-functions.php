@@ -228,6 +228,20 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 			update_post_meta( $order_id, 'dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan'] );
 		}
 
+		// Update order reference if this is embedded checkout flow.
+		if ( 'embedded' === $checkout_flow ) {
+			$order_reference_response = Nets_Easy()->api->update_nets_easy_order_reference( $payment_id, $order_id );
+			if ( is_wp_error( $order_reference_response ) ) {
+				$order->add_order_note(
+					sprintf(
+						/* translators: %s: Error message */
+						__( 'Nets Easy: Error when updating order reference to Nets. Error message : %s', 'dibs-easy-for-woocommerce' ),
+						$order_reference_response->get_error_message()
+					)
+				);
+			}
+		}
+
 		if ( isset( $request['payment']['charges'][0]['chargeId'] ) && ! empty( $request['payment']['charges'][0]['chargeId'] ) ) {
 			// Get the DIBS order charge ID.
 			$dibs_charge_id = $request['payment']['charges'][0]['chargeId'];
@@ -350,6 +364,7 @@ function nets_easy_get_order_id_by_purchase_id( $payment_id ) {
 		'post_status' => array_keys( wc_get_order_statuses() ),
 		'meta_key'    => '_dibs_payment_id', // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
 		'meta_value'  => sanitize_text_field( wp_unslash( $payment_id ) ), // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
+		'order'       => 'DESC',
 		'date_query'  => array(
 			array(
 				'after' => '30 day ago',
