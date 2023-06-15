@@ -124,8 +124,9 @@ return apply_filters(
 			'options'     => array(
 				'embedded' => __( 'Embedded', 'dibs-easy-for-woocommerce' ),
 				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
+				'overlay'  => __( 'Overlay', 'dibs-easy-for-woocommerce' ),
 			),
-			'description' => __( 'Select how Nets Easy should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nets.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Select how Nets Easy should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nets. <strong>Overlay</strong> – similar logic as redirect flow but the hosted payment window is displayed in an overlay on desktop.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'embedded',
 			'desc_tip'    => false,
 		),

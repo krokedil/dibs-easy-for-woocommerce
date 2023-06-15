@@ -1,0 +1,40 @@
+.netseasy-modal {
+	z-index: 99999;
+	height:100%;
+	width:100%;
+	position: fixed;
+	top:0;
+	left:0;
+	background-color:rgba( 0,0,0,0.6 );
+}
+.netseasy-modal-box {
+	min-width:500px;
+	height:100vh;
+	display: block;
+	margin-top: 20px;
+	position: fixed;
+	z-index: 100;
+	left: 50%;
+	top: 50%;
+	
+	/* Use this for centering if unknown width/height */
+	transform: translate(-50%, -50%);
+}
+.netseasy-iframe {
+	border:none;
+	min-width:500px;
+	height:100vh;
+	
+}
+.close-netseasy-modal {
+    position: absolute;
+    top: 5px;
+    right: 18px; 
+    color: lightgray; 
+    font-size: 24px;  
+    font-weight: bold;
+    cursor: pointer
+  }
+  .close-netseasy-modal:hover {
+    color: darkgray;
+  }
