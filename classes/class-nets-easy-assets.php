@@ -32,7 +32,7 @@ class Nets_Easy_Assets {
 
 		if ( 'embedded' === $this->checkout_flow ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'dibs_load_js' ), 10 );
-			add_action( 'wc_dibs_before_checkout_form', array( $this, 'localize_and_enqueue_checkout_script' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'localize_and_enqueue_checkout_script' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'dibs_load_css' ), 10 );
 		}
 
