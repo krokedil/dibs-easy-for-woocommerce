@@ -6,7 +6,7 @@ Tested up to: 6.2.2
 Requires PHP: 7.2
 WC requires at least: 5.0.0
 WC tested up to: 7.8.0
-Stable tag: 2.5.0
+Stable tag: 2.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2023.07.17    - version 2.5.1 =
+* Fix           - Blocked-based themes should now work as expected with the embedded checkout.
+
 = 2023.06.15    - version 2.5.0 =
 * Feature       - Adds support for Overlay Checkout flow. When selected, customers placing an order from desktop will see the the Nets payment window in an overlay instead of being redirected to the payment page.
 
