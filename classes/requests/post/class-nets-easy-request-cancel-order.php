@@ -22,6 +22,20 @@ class Nets_Easy_Request_Cancel_Order extends Nets_Easy_Request_Post {
 	public $order_id;
 
 	/**
+	 * Reference to the WooCommerce order.
+	 *
+	 * @var WC_Order
+	 */
+	public $order;
+
+	/**
+	 * Transaction ID
+	 *
+	 * @var string
+	 */
+	public $payment_id;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $arguments The request args.

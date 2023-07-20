@@ -22,6 +22,27 @@ class Nets_Easy_Assets {
 	public $settings;
 
 	/**
+	 * Enabled status
+	 *
+	 * @var string
+	 */
+	public $enabled;
+
+	/**
+	 * Test mode status
+	 *
+	 * @var string
+	 */
+	public $test_mode;
+
+	/**
+	 * The checkout flow
+	 *
+	 * @var string
+	 */
+	public $checkout_flow;
+
+	/**
 	 * Dibs_Easy_Assets constructor.
 	 */
 	public function __construct() {
