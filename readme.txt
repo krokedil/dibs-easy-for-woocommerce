@@ -3,10 +3,10 @@ Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
 Tested up to: 6.2.2
-Requires PHP: 7.2
+Requires PHP: 7.3
 WC requires at least: 5.0.0
-WC tested up to: 7.8.0
-Stable tag: 2.5.1
+WC tested up to: 7.9.0
+Stable tag: 2.5.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -51,11 +51,14 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 = Are there any specific requirements? =
 * WooCommerce 5.0 or newer is required.
-* PHP 7.2 or higher is required.
+* PHP 7.3 or higher is required.
 * A SSL Certificate is required.
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2023.07.25    - version 2.5.2 =
+* Fix           - Solves issue with redirect to payment page when changing/updating subscription payment method. Add Nets Easy hosted payment page as allowed external url for wp_safe_redirect.
+
 = 2023.07.17    - version 2.5.1 =
 * Fix           - Blocked-based themes should now work as expected with the embedded checkout.
 
