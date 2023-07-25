@@ -16,6 +16,7 @@ class Nets_Easy_Checkout {
 	 */
 	public function __construct() {
 		add_action( 'woocommerce_after_calculate_totals', array( $this, 'update_nets_easy_order' ), 999999 );
+		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
 	}
 
 	/**
@@ -114,4 +115,17 @@ class Nets_Easy_Checkout {
 			WC()->session->set( 'nets_easy_last_update_hash', $cart_hash );
 		}
 	}
+
+	/**
+	 * Add Nets Easy hosted payment page as allowed external url for wp_safe_redirect.
+	 * We do this because WooCommerce Subscriptions use wp_safe_redirect when processing a payment method change request (from v5.1.0).
+	 *
+	 * @param array $hosts Domains that are allowed when wp_safe_redirect is used.
+	 * @return array
+	 */
+	public function extend_allowed_domains_list( $hosts ) {
+		$hosts[] = 'checkout.dibspayment.eu';
+		return $hosts;
+	}
+
 } new Nets_Easy_Checkout();
