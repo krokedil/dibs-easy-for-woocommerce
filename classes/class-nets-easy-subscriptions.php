@@ -19,6 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @author   Krokedil
  */
 class Nets_Easy_Subscriptions {
+
+	/**
+	 * The subscription type
+	 *
+	 * @var string
+	 */
+	public $subscription_type;
+
 	/**
 	 * Class constructor.
 	 */
