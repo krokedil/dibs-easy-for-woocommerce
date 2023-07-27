@@ -123,7 +123,12 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Subscription payment method change.
 		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_STRING );
 		if ( ! empty( $change_payment_method ) ) {
-			$response = Nets_Easy()->api->create_nets_easy_order( 'redirect', $order_id );
+			$response = Nets_Easy()->api->create_nets_easy_order(
+				array(
+					'checkout_flow' => 'redirect',
+					'order_id'      => $order_id,
+				)
+			);
 			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
 				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
@@ -263,7 +268,12 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	protected function process_redirect_handler( $order_id ) {
 
 		// Create payment in Nets.
-		$response = Nets_Easy()->api->create_nets_easy_order( 'redirect', $order_id );
+		$response = Nets_Easy()->api->create_nets_easy_order(
+			array(
+				'checkout_flow' => 'redirect',
+				'order_id'      => $order_id,
+			)
+		);
 		if ( is_wp_error( $response ) ) {
 			wc_add_notice( $response->get_error_message(), 'error' );
 			return array(
@@ -296,7 +306,12 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	protected function process_overlay_handler( $order_id ) {
 
 		// Create payment in Nets.
-		$response = Nets_Easy()->api->create_nets_easy_order( 'overlay', $order_id );
+		$response = Nets_Easy()->api->create_nets_easy_order(
+			array(
+				'checkout_flow' => 'overlay',
+				'order_id'      => $order_id,
+			)
+		);
 		if ( is_wp_error( $response ) ) {
 			wc_add_notice( $response->get_error_message(), 'error' );
 			return array(

@@ -18,21 +18,15 @@ class Nets_Easy_API {
 
 
 	/**
-	 * Creates a Dibs Easy One Checkout order.
+	 * Creates a Nets Easy Checkout order.
 	 *
-	 * @param string $checkout_flow Checkout type.
-	 * @param int    $order_id The WooCommerce order id.
+	 * @param array $args Data passed to init request.
 	 *
 	 * @return array|mixed
 	 */
-	public function create_nets_easy_order( $checkout_flow = 'embedded', $order_id = null ) {
+	public function create_nets_easy_order( $args ) {
 
-		$request  = new Nets_Easy_Request_Create_Order(
-			array(
-				'checkout_flow' => $checkout_flow,
-				'order_id'      => $order_id,
-			)
-		);
+		$request  = new Nets_Easy_Request_Create_Order( $args );
 		$response = $request->request();
 
 		return $this->check_for_api_error( $response );
