@@ -175,5 +175,17 @@ return apply_filters(
 			'default'     => '',
 			'desc_tip'    => true,
 		),
+		// SE.
+		'payment_method_split_title'   => array(
+			'title'       => __( 'Payment method split', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enable specific payment methods as standalone payment methods in the checkout.', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'title',
+		),
+		'enable_payment_method_card'   => array(
+			'title'   => __( 'Card payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Card payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
 	)
 );
