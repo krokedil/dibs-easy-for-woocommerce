@@ -187,5 +187,11 @@ return apply_filters(
 			'label'   => __( 'Enable Card payment as separate payment method', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
+		'enable_payment_method_swish'  => array(
+			'title'   => __( 'Swish payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Swish payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
 	)
 );

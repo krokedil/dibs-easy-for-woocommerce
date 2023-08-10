@@ -384,5 +384,5 @@ function nets_easy_get_order_id_by_purchase_id( $payment_id ) {
 }
 
 function nets_easy_all_payment_method_ids() {
-	return array( 'dibs_easy', 'nets_easy_card' );
+	return array( 'dibs_easy', 'nets_easy_card', 'nets_easy_swish' );
 }
