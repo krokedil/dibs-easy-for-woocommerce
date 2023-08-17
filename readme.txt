@@ -59,6 +59,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 = 2023.08.17    - version 2.5.3 =
 * Tweak         - Set default request timeout time to 10 seconds and adds nets_easy_set_timeout filter to GET and PUT requests.
+* Fix           - PHP8.1 deprecation notices fix (thanks @oxyc). 
 
 = 2023.07.25    - version 2.5.2 =
 * Fix           - Solves issue with redirect to payment page when changing/updating subscription payment method. Add Nets Easy hosted payment page as allowed external url for wp_safe_redirect.
