@@ -122,32 +122,6 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
-		// Subscription payment method change.
-		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_STRING );
-		if ( ! empty( $change_payment_method ) ) {
-			$response = Nets_Easy()->api->create_nets_easy_order(
-				array(
-					'checkout_flow'                 => 'redirect',
-					'order_id'                      => $order_id,
-					'payment_methods_configuration' => 'Swish',
-				)
-			);
-			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
-				// All good. Redirect customer to DIBS payment page.
-				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
-
-				return array(
-					'result'   => 'success',
-					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
-					// phpcs:ignore
-				);
-			}
-			return array(
-				'result' => 'error',
-			);
-		}
-		// Regular purchase.
-
 		// Overlay flow.
 		if ( 'overlay' === $this->checkout_flow && ! wp_is_mobile() && ! is_wc_endpoint_url( 'order-pay' ) ) {
 			return $this->process_overlay_handler( $order_id );
