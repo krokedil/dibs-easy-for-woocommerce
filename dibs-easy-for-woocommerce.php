@@ -80,10 +80,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * DIBS_Easy constructor.
 		 */
 		public function __construct() {
-			$this->dibs_settings               = get_option( 'woocommerce_dibs_easy_settings' );
-			$this->checkout_flow               = $this->dibs_settings['checkout_flow'] ?? 'embedded';
-			$this->enable_payment_method_card  = $this->dibs_settings['enable_payment_method_card'] ?? 'no';
-			$this->enable_payment_method_swish = $this->dibs_settings['enable_payment_method_swish'] ?? 'no';
+			$this->dibs_settings                = get_option( 'woocommerce_dibs_easy_settings' );
+			$this->checkout_flow                = $this->dibs_settings['checkout_flow'] ?? 'embedded';
+			$this->enable_payment_method_card   = $this->dibs_settings['enable_payment_method_card'] ?? 'no';
+			$this->enable_payment_method_sofort = $this->dibs_settings['enable_payment_method_sofort'] ?? 'no';
+			$this->enable_payment_method_swish  = $this->dibs_settings['enable_payment_method_swish'] ?? 'no';
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 		}
 
@@ -197,6 +198,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			}
 			include_once plugin_basename( 'classes/class-nets-easy-gateway.php' );
 			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-card.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-sofort.php' );
+
 			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-swish.php' );
 
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_dibs_easy' ) );
@@ -233,6 +236,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			// Maybe enable Card payment.
 			if ( 'yes' === $this->enable_payment_method_card ) {
 				$methods[] = Nets_Easy_Gateway_Card::class;
+			}
+
+			// Maybe enable Sofort payment.
+			if ( 'yes' === $this->enable_payment_method_sofort ) {
+				$methods[] = Nets_Easy_Gateway_Sofort::class;
 			}
 
 			// Maybe enable Swish payment.
