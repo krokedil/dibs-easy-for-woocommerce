@@ -80,11 +80,12 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * DIBS_Easy constructor.
 		 */
 		public function __construct() {
-			$this->dibs_settings                = get_option( 'woocommerce_dibs_easy_settings' );
-			$this->checkout_flow                = $this->dibs_settings['checkout_flow'] ?? 'embedded';
-			$this->enable_payment_method_card   = $this->dibs_settings['enable_payment_method_card'] ?? 'no';
-			$this->enable_payment_method_sofort = $this->dibs_settings['enable_payment_method_sofort'] ?? 'no';
-			$this->enable_payment_method_swish  = $this->dibs_settings['enable_payment_method_swish'] ?? 'no';
+			$this->dibs_settings                 = get_option( 'woocommerce_dibs_easy_settings' );
+			$this->checkout_flow                 = $this->dibs_settings['checkout_flow'] ?? 'embedded';
+			$this->enable_payment_method_card    = $this->dibs_settings['enable_payment_method_card'] ?? 'no';
+			$this->enable_payment_method_sofort  = $this->dibs_settings['enable_payment_method_sofort'] ?? 'no';
+			$this->enable_payment_method_trustly = $this->dibs_settings['enable_payment_method_trustly'] ?? 'no';
+			$this->enable_payment_method_swish   = $this->dibs_settings['enable_payment_method_swish'] ?? 'no';
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 		}
 
@@ -199,6 +200,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-gateway.php' );
 			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-card.php' );
 			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-sofort.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-trustly.php' );
 
 			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-swish.php' );
 
@@ -241,6 +243,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			// Maybe enable Sofort payment.
 			if ( 'yes' === $this->enable_payment_method_sofort ) {
 				$methods[] = Nets_Easy_Gateway_Sofort::class;
+			}
+
+			// Maybe enable Trustly payment.
+			if ( 'yes' === $this->enable_payment_method_trustly ) {
+				$methods[] = Nets_Easy_Gateway_Trustly::class;
 			}
 
 			// Maybe enable Swish payment.
