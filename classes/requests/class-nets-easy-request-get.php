@@ -41,6 +41,7 @@ abstract class Nets_Easy_Request_Get extends Nets_Easy_Request {
 			'headers'    => $this->get_request_headers( $this->order_id ),
 			'user-agent' => $this->get_user_agent(),
 			'method'     => $this->method,
+			'timeout'    => apply_filters( 'nets_easy_set_timeout', 10 ),
 		);
 	}
 }

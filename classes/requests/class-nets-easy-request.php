@@ -63,6 +63,13 @@ abstract class Nets_Easy_Request {
 	protected $test_mode;
 
 	/**
+	 * Transaction ID
+	 *
+	 * @var ?string
+	 */
+	public $payment_id;
+
+	/**
 	 * Class constructor.
 	 *
 	 * @param array $arguments The request args.
@@ -212,7 +219,7 @@ abstract class Nets_Easy_Request {
 				}
 			} else {
 				$message       = wp_remote_retrieve_response_message( $response );
-				$error_message = "API Error ${response_code}, message : ${message}";
+				$error_message = "API Error {$response_code}, message : {$message}";
 			}
 			$return = new WP_Error( $response_code, $error_message, $data );
 		} else {

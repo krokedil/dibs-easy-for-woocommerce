@@ -23,6 +23,20 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	public $checkout_flow;
 
 	/**
+	 * The payment gateway icon
+	 *
+	 * @var string
+	 */
+	public $payment_gateway_icon;
+
+	/**
+	 * The payment gateway icon max width
+	 *
+	 * @var string
+	 */
+	public $payment_gateway_icon_max_width;
+
+	/**
 	 * DIBS_Easy_Gateway constructor.
 	 */
 	public function __construct() {
