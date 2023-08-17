@@ -177,7 +177,7 @@ return apply_filters(
 		),
 		// SE.
 		'payment_method_split_title'    => array(
-			'title'       => __( 'Payment method split', 'dibs-easy-for-woocommerce' ),
+			'title'       => __( 'Standalone payment methods', 'dibs-easy-for-woocommerce' ),
 			'description' => __( 'Enable specific payment methods as standalone payment methods in the checkout.', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'title',
 		),
