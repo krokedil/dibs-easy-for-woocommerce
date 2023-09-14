@@ -2,10 +2,10 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
-Tested up to: 6.3
+Tested up to: 6.3.1
 Requires PHP: 7.3
 WC requires at least: 5.0.0
-WC tested up to: 8.0.2
+WC tested up to: 8.1.0
 Stable tag: 2.5.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
