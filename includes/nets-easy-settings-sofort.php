@@ -48,5 +48,17 @@ return apply_filters(
 			'default'     => '',
 			'desc_tip'    => true,
 		),
+		'available_countries'        => array(
+			'title'       => __( 'Available countries', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'multiselect',
+			'class'       => 'wc-enhanced-select',
+			'description' => __( 'Select which countries the payment method should be available for.', 'dibs-easy-for-woocommerce' ),
+			'options'     => array(
+				'AT' => __( 'Austria', 'dibs-easy-for-woocommerce' ),
+				'DE' => __( 'Germany', 'dibs-easy-for-woocommerce' ),
+			),
+			'default'     => '',
+			'desc_tip'    => true,
+		),
 	)
 );

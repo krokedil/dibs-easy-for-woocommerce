@@ -96,7 +96,7 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 			return false;
 		}
 
-		if ( method_exists( WC()->customer, 'get_billing_country' ) ) {
+		if ( WC()->customer && method_exists( WC()->customer, 'get_billing_country' ) ) {
 			if ( 'SE' !== WC()->customer->get_billing_country() ) {
 				return false;
 			}
