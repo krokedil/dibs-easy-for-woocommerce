@@ -24,7 +24,7 @@ class Nets_Easy_API {
 	 *
 	 * @return array|mixed
 	 */
-	public function create_nets_easy_order( $args ) {
+	public function create_nets_easy_order( $args = array() ) {
 
 		$request  = new Nets_Easy_Request_Create_Order( $args );
 		$response = $request->request();
