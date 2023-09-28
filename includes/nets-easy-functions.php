@@ -189,10 +189,17 @@ function wc_dibs_clean_name( $name ) {
  * @return void
  */
 function wc_dibs_confirm_dibs_order( $order_id ) {
-	$order         = wc_get_order( $order_id );
-	$payment_id    = get_post_meta( $order_id, '_dibs_payment_id', true );
-	$settings      = get_option( 'woocommerce_dibs_easy_settings' );
-	$checkout_flow = $settings['checkout_flow'] ?? 'embedded';
+	$order      = wc_get_order( $order_id );
+	$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+	$settings   = get_option( 'woocommerce_dibs_easy_settings' );
+
+	if ( 'dibs_easy' === $order->get_payment_method() ) {
+		// Get checkout flow to see if we need to handle logic for embedded flow.
+		$checkout_flow = $settings['checkout_flow'] ?? 'embedded';
+	} else {
+		// For stand alone payment methods, use redirect.
+		$checkout_flow = 'redirect';
+	}
 
 	if ( null === $payment_id ) {
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
@@ -384,5 +391,5 @@ function nets_easy_get_order_id_by_purchase_id( $payment_id ) {
 }
 
 function nets_easy_all_payment_method_ids() {
-	return array( 'dibs_easy', 'nets_easy_card', 'nets_easy_sofort', 'nets_easy_trustly', 'nets_easy_swish' );
+	return array( 'dibs_easy', 'nets_easy_card', 'nets_easy_sofort', 'nets_easy_trustly', 'nets_easy_swish', 'nets_easy_ratepay_sepa' );
 }
