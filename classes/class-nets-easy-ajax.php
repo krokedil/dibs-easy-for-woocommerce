@@ -137,7 +137,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			define( 'WOOCOMMERCE_CHECKOUT', true );
 		}
 
-		$payment_id = filter_input( INPUT_POST, 'paymentId', FILTER_SANITIZE_STRING );
+		$payment_id = filter_input( INPUT_POST, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( ! $payment_id ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
 		}
@@ -239,7 +239,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		WC()->cart->calculate_totals();
 
 		$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
-		$dibs_easy          = filter_input( INPUT_POST, 'dibs_easy', FILTER_SANITIZE_STRING );
+		$dibs_easy          = filter_input( INPUT_POST, 'dibs_easy', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( 'false' === $dibs_easy ) {
 			// Set chosen payment method to first gateway that is not DIBS Easy.
 			$first_gateway = reset( $available_gateways );
