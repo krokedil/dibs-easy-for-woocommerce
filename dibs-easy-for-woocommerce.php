@@ -80,8 +80,14 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * DIBS_Easy constructor.
 		 */
 		public function __construct() {
-			$this->dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-			$this->checkout_flow = $this->dibs_settings['checkout_flow'] ?? 'embedded';
+			$this->dibs_settings                      = get_option( 'woocommerce_dibs_easy_settings' );
+			$this->checkout_flow                      = $this->dibs_settings['checkout_flow'] ?? 'embedded';
+			$this->enable_payment_method_card         = $this->dibs_settings['enable_payment_method_card'] ?? 'no';
+			$this->enable_payment_method_sofort       = $this->dibs_settings['enable_payment_method_sofort'] ?? 'no';
+			$this->enable_payment_method_trustly      = $this->dibs_settings['enable_payment_method_trustly'] ?? 'no';
+			$this->enable_payment_method_swish        = $this->dibs_settings['enable_payment_method_swish'] ?? 'no';
+			$this->enable_payment_method_ratepay_sepa = $this->dibs_settings['enable_payment_method_ratepay_sepa'] ?? 'no';
+
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 		}
 
@@ -124,6 +130,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
+
 			if ( 'embedded' === $this->checkout_flow ) {
 				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
 			}
@@ -193,6 +200,12 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				return;
 			}
 			include_once plugin_basename( 'classes/class-nets-easy-gateway.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-card.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-sofort.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-trustly.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php' );
+
+			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-swish.php' );
 
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_dibs_easy' ) );
 		}
@@ -223,7 +236,32 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * @return array $methods Payment methods.
 		 */
 		public function add_dibs_easy( $methods ) {
-			$methods[] = 'Nets_Easy_Gateway';
+			$methods[] = Nets_Easy_Gateway::class;
+
+			// Maybe enable Card payment.
+			if ( 'yes' === $this->enable_payment_method_card ) {
+				$methods[] = Nets_Easy_Gateway_Card::class;
+			}
+
+			// Maybe enable Sofort payment.
+			if ( 'yes' === $this->enable_payment_method_sofort ) {
+				$methods[] = Nets_Easy_Gateway_Sofort::class;
+			}
+
+			// Maybe enable Trustly payment.
+			if ( 'yes' === $this->enable_payment_method_trustly ) {
+				$methods[] = Nets_Easy_Gateway_Trustly::class;
+			}
+
+			// Maybe enable Swish payment.
+			if ( 'yes' === $this->enable_payment_method_swish ) {
+				$methods[] = Nets_Easy_Gateway_Swish::class;
+			}
+
+			// Maybe enable Swish payment.
+			if ( 'yes' === $this->enable_payment_method_ratepay_sepa ) {
+				$methods[] = Nets_Easy_Gateway_Ratepay_Sepa::class;
+			}
 
 			return $methods;
 		}

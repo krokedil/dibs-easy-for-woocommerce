@@ -106,10 +106,12 @@ return apply_filters(
 			'default' => 'no',
 		),
 		'debug_mode'                   => array(
-			'title'   => __( 'Debug mode', 'dibs-easy-for-woocommerce' ),
-			'type'    => 'checkbox',
-			'label'   => __( 'Enable Debug mode for Nets Easy', 'dibs-easy-for-woocommerce' ),
-			'default' => 'no',
+			'title'       => __( 'Logging', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'checkbox',
+			'label'       => __( 'Log debug messages', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Save debug messages to the WooCommerce System Status log', 'dibs-easy-for-woocommerce' ),
+			'default'     => 'yes',
+			'desc_tip'    => true,
 		),
 		'dibs_invoice_fee'             => array(
 			'title'       => __( 'Invoice fee ID', 'dibs-easy-for-woocommerce' ),
@@ -175,5 +177,45 @@ return apply_filters(
 			'default'     => '',
 			'desc_tip'    => true,
 		),
+		// SE.
+		'payment_method_split_title'   => array(
+			'title'       => __( 'Standalone payment methods', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enable specific payment methods as standalone payment methods in the checkout.', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'title',
+		),
+		'enable_payment_method_card'   => array(
+			'title'   => __( 'Card payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Card payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		/*
+		'enable_payment_method_sofort'       => array(
+			'title'   => __( 'Sofort payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Sofort payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		'enable_payment_method_trustly'      => array(
+			'title'   => __( 'Trustly payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Trustly payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		*/
+		'enable_payment_method_swish'  => array(
+			'title'   => __( 'Swish payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Swish payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		/*
+		'enable_payment_method_ratepay_sepa' => array(
+			'title'   => __( 'Ratepay SEPA payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Ratepay SEPA payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		*/
 	)
 );
