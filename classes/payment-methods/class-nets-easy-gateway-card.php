@@ -115,7 +115,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		// Subscription payment method change.
-		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_STRING );
+		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( ! empty( $change_payment_method ) ) {
 			$response = Nets_Easy()->api->create_nets_easy_order(
 				array(

@@ -196,7 +196,7 @@ class Nets_Easy_Assets {
 			$checkout_initiated = 'yes';
 		} else {
 			$checkout_initiated = 'no';
-			$easy_confirm       = filter_input( INPUT_GET, 'easy_confirm', FILTER_SANITIZE_STRING );
+			$easy_confirm       = filter_input( INPUT_GET, 'easy_confirm', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 			if ( empty( $easy_confirm ) ) {
 				dibs_easy_maybe_create_order();
 				$checkout_initiated = 'yes';
