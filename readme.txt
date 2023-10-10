@@ -59,9 +59,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 = 2023.10.10    - version 2.6.0 =
 * Feature       - Adds card and Swish payment as standalone payment methods. Each payment method can be activated via the plugin general settings.
-* Filter        - Adds filter nets_easy_embedded_order_reference so initial order reference in embedded checkout flow can be tweaked by merchant.
+* Feature        - Adds filter nets_easy_embedded_order_reference so initial order reference in embedded checkout flow can be tweaked by merchant.
 * Tweak         - Rename setting "Debug" to "Logging".
-* Fix           - PHP8.1 deprecation notices fix. 
+* Fix           - PHP8.1 deprecation notices fix.
 
 = 2023.08.17    - version 2.5.3 =
 * Tweak         - Set default request timeout time to 10 seconds and adds nets_easy_set_timeout filter to GET and PUT requests.
