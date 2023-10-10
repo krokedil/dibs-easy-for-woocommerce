@@ -54,7 +54,7 @@ class Nets_Easy_Confirmation {
 	 * @return void
 	 */
 	public function maybe_reload_page() {
-		$reload = filter_input( INPUT_GET, 'nets_reload', FILTER_SANITIZE_STRING );
+		$reload = filter_input( INPUT_GET, 'nets_reload', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if ( ! empty( $reload ) ) {
 			$url = remove_query_arg( 'nets_reload' );

@@ -49,7 +49,7 @@ class Nets_Easy_Api_Callbacks {
 	 * Handle scheduling of payment completed webhook.
 	 */
 	public function payment_created_scheduler() {
-		$dibs_payment_created_callback = filter_input( INPUT_GET, 'dibs-payment-created-callback', FILTER_SANITIZE_STRING );
+		$dibs_payment_created_callback = filter_input( INPUT_GET, 'dibs-payment-created-callback', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( ! empty( $dibs_payment_created_callback ) && '1' === $dibs_payment_created_callback ) {
 
 			$post_body = file_get_contents( 'php://input' );
@@ -80,7 +80,7 @@ class Nets_Easy_Api_Callbacks {
 		$order_id = '';
 		if ( empty( $order_id ) ) {
 			// We're missing Order ID in callback. Try to get it via query by internal reference.
-			$order_id = $this->get_order_id_from_payment_id( $payment_id );
+			$order_id = nets_easy_get_order_id_by_purchase_id( $payment_id );
 		}
 
 		if ( empty( $order_id ) ) {
@@ -98,44 +98,6 @@ class Nets_Easy_Api_Callbacks {
 			wc_dibs_confirm_dibs_order( $order_id );
 			$this->check_order_totals( $order, $amount );
 		}
-	}
-
-	/**
-	 * Try to retreive order_id from DIBS transaction id.
-	 *
-	 * @param string $payment_id Nets transaction id.
-	 */
-	public function get_order_id_from_payment_id( $payment_id ) {
-
-		if ( empty( $payment_id ) ) {
-			return false;
-		}
-
-		// Let's check so the internal reference doesn't already exist in an existing order.
-		$query  = new WC_Order_Query(
-			array(
-				'limit'          => -1,
-				'orderby'        => 'date',
-				'order'          => 'DESC',
-				'return'         => 'ids',
-				'payment_method' => 'dibs_easy',
-				'date_created'   => '>' . ( time() - MONTH_IN_SECONDS ),
-			)
-		);
-		$orders = $query->get_orders();
-
-		$order_id_match = '';
-		foreach ( $orders as $order_id ) {
-
-			$order_payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
-
-			if ( $order_payment_id === $payment_id ) {
-				$order_id_match = $order_id;
-				Nets_Easy_Logger::log( 'Payment ID ' . $payment_id . ' exist in order ID ' . $order_id_match );
-				break;
-			}
-		}
-		return $order_id_match;
 	}
 
 	/**

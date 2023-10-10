@@ -35,7 +35,7 @@ class Nets_Easy_Order_Helper {
 				'shipping'  => array(
 					'costSpecified' => true,
 				),
-				'reference' => '1',
+				'reference' => apply_filters( 'nets_easy_embedded_order_reference', '1' ),
 			);
 		}
 

@@ -30,11 +30,12 @@ class Nets_Easy_Request_Create_Order extends Nets_Easy_Request_Post {
 	 * @return array
 	 */
 	protected function get_body() {
-		$checkout_flow   = $this->arguments['checkout_flow'] ?? 'embedded';
-		$order_id        = $this->arguments['order_id'] ?? null;
-		$invoice_fee_id  = $this->settings['dibs_invoice_fee'] ?? '';
-		$merchant_number = $this->settings['merchant_number'] ?? '';
-		$request_args    = array(
+		$checkout_flow                 = $this->arguments['checkout_flow'] ?? 'embedded';
+		$order_id                      = $this->arguments['order_id'] ?? null;
+		$payment_methods_configuration = $this->arguments['payment_methods_configuration'] ?? '';
+		$invoice_fee_id                = $this->settings['dibs_invoice_fee'] ?? '';
+		$merchant_number               = $this->settings['merchant_number'] ?? '';
+		$request_args                  = array(
 			'order'         => Nets_Easy_Order_Helper::get_order( $checkout_flow, $order_id ),
 			'checkout'      => Nets_Easy_Checkout_Helper::get_checkout( $checkout_flow, $order_id ),
 			'notifications' => Nets_Easy_Notification_Helper::get_notifications(),
@@ -46,6 +47,13 @@ class Nets_Easy_Request_Create_Order extends Nets_Easy_Request_Post {
 
 		if ( $merchant_number ) {
 			$request_args['merchantNumber'] = $merchant_number;
+		}
+
+		if ( $payment_methods_configuration ) {
+			$request_args['paymentMethodsConfiguration'][] = array(
+				'name'    => $payment_methods_configuration,
+				'enabled' => true,
+			);
 		}
 
 		return apply_filters( 'dibs_easy_create_order_args', $request_args );

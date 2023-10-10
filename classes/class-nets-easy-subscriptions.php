@@ -439,7 +439,7 @@ class Nets_Easy_Subscriptions {
 	public function maybe_change_needs_payment( $wc_result, $order, $valid_order_statuses ) {
 
 		// Only change for Nets Easy orders.
-		if ( 'dibs_easy' !== $order->get_payment_method() ) {
+		if ( ! in_array( $order->get_payment_method(), nets_easy_all_payment_method_ids(), true ) ) {
 			return $wc_result;
 		}
 

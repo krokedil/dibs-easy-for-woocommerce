@@ -44,7 +44,7 @@ class Nets_Easy_Order_Management {
 
 		// Check if dibs was used to make the order.
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
-		if ( 'dibs_easy' === $gateway_used ) {
+		if ( in_array( $gateway_used, nets_easy_all_payment_method_ids(), true ) ) {
 
 			// Bail if the order hasn't been paid in DIBS yet.
 			if ( empty( get_post_meta( $order_id, '_dibs_date_paid', true ) ) ) {
@@ -106,7 +106,7 @@ class Nets_Easy_Order_Management {
 		$wc_order = wc_get_order( $order_id );
 		// Check if dibs was used to make the order.
 		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
-		if ( 'dibs_easy' === $gateway_used ) {
+		if ( in_array( $gateway_used, nets_easy_all_payment_method_ids(), true ) ) {
 
 			// Don't do this if the order hasn't been paid in DIBS.
 			if ( empty( get_post_meta( $order_id, '_dibs_date_paid', true ) ) ) {

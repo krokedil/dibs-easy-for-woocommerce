@@ -2,11 +2,11 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
-Tested up to: 6.3
+Tested up to: 6.3.1
 Requires PHP: 7.3
 WC requires at least: 5.0.0
-WC tested up to: 8.0.2
-Stable tag: 2.5.3
+WC tested up to: 8.1.1
+Stable tag: 2.6.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,12 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+
+= 2023.10.10    - version 2.6.0 =
+* Feature       - Adds card and Swish payment as standalone payment methods. Each payment method can be activated via the plugin general settings.
+* Filter        - Adds filter nets_easy_embedded_order_reference so initial order reference in embedded checkout flow can be tweaked by merchant.
+* Tweak         - Rename setting "Debug" to "Logging".
+* Fix           - PHP8.1 deprecation notices fix. 
 
 = 2023.08.17    - version 2.5.3 =
 * Tweak         - Set default request timeout time to 10 seconds and adds nets_easy_set_timeout filter to GET and PUT requests.

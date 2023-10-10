@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets Gateway class
+ * Nets Gateway Card class
  *
  * @package DIBS_Easy/Classes
  */
@@ -10,10 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Nets_Easy_Gateway class
+ * Nets_Easy_Gateway_Card class
  */
-class Nets_Easy_Gateway extends WC_Payment_Gateway {
-
+class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 
 	/**
 	 * The checkout flow
@@ -23,28 +22,15 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	public $checkout_flow;
 
 	/**
-	 * The payment gateway icon
-	 *
-	 * @var string
-	 */
-	public $payment_gateway_icon;
-
-	/**
-	 * The payment gateway icon max width
-	 *
-	 * @var string
-	 */
-	public $payment_gateway_icon_max_width;
-
-	/**
 	 * DIBS_Easy_Gateway constructor.
 	 */
 	public function __construct() {
-		$this->id = 'dibs_easy';
 
-		$this->method_title = __( 'Nets Easy', 'dibs-easy-for-woocommerce' );
+		$this->id = 'nets_easy_card';
 
-		$this->method_description = __( 'Nets Easy Payment for checkout', 'dibs-easy-for-woocommerce' );
+		$this->method_title = __( 'Nets Easy Card', 'dibs-easy-for-woocommerce' );
+
+		$this->method_description = __( 'Nets Easy Card payment', 'dibs-easy-for-woocommerce' );
 
 		$this->description = $this->get_option( 'description' );
 
@@ -55,7 +41,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Get the settings values.
 		$this->title                          = $this->get_option( 'title' );
 		$this->enabled                        = $this->get_option( 'enabled' );
-		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'embedded';
+		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'redirect';
 		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? 'default';
 		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? '145';
 
@@ -63,6 +49,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 		$this->supports = array(
 			'products',
+			'refunds',
 			'subscriptions',
 			'subscription_cancellation',
 			'subscription_suspension',
@@ -75,14 +62,6 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			'multiple_subscriptions',
 		);
 
-		if ( 'yes' === $this->get_option( 'dibs_manage_orders' ) ) {
-			$this->supports[] = 'refunds';
-		}
-
-		// Add class if DIBS Easy is set as the default gateway.
-		add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
-		add_action( 'woocommerce_thankyou_dibs_easy', array( $this, 'dibs_thankyou' ) );
-		add_action( 'woocommerce_thankyou', array( $this, 'maybe_delete_dibs_sessions' ), 100, 1 );
 	}
 
 	/**
@@ -105,7 +84,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		}
 
 		$icon_html = '<img src="' . $icon_src . '" alt="Nets - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
-		return apply_filters( 'wc_dibs_easy_icon_html', $icon_html );
+		return apply_filters( 'nets_easy_card_icon_html', $icon_html );
 	}
 
 	/**
@@ -114,6 +93,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 * @return bool
 	 */
 	public function is_available() {
+
 		return 'yes' === $this->enabled;
 	}
 
@@ -121,7 +101,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 * Init form fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = include WC_DIBS_PATH . '/includes/nets-easy-settings.php';
+		$this->form_fields = include WC_DIBS_PATH . '/includes/nets-easy-settings-card.php';
 	}
 
 	/**
@@ -139,8 +119,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		if ( ! empty( $change_payment_method ) ) {
 			$response = Nets_Easy()->api->create_nets_easy_order(
 				array(
-					'checkout_flow' => 'redirect',
-					'order_id'      => $order_id,
+					'checkout_flow'                 => 'redirect',
+					'order_id'                      => $order_id,
+					'payment_methods_configuration' => 'Card',
 				)
 			);
 			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
@@ -158,17 +139,13 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			);
 		}
 		// Regular purchase.
-		// Embedded flow.
-		if ( 'embedded' === $this->checkout_flow && ! is_wc_endpoint_url( 'order-pay' ) ) {
-			// Save payment type, card details & run $order->payment_complete() if all looks good.
-			return $this->process_embedded_handler( $order_id );
-		}
 
 		// Overlay flow.
 		if ( 'overlay' === $this->checkout_flow && ! wp_is_mobile() && ! is_wc_endpoint_url( 'order-pay' ) ) {
 			return $this->process_overlay_handler( $order_id );
 		}
 
+		// Redirect flow.
 		return $this->process_redirect_handler( $order_id );
 	}
 
@@ -199,80 +176,8 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 		return false;
 	}
-	/**
-	 * Add Nets Easy body class.
-	 *
-	 * @param  array $class Body classes.
-	 *
-	 * @return array
-	 */
-	public function dibs_add_body_class( $class ) {
-		if ( is_checkout() ) {
-			$available_payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
-			reset( $available_payment_gateways );
-			$first_gateway = key( $available_payment_gateways );
 
-			if ( 'dibs_easy' === $first_gateway ) {
-				$class[] = 'dibs-selected';
-			}
-		}
-		return $class;
-	}
 
-	/**
-	 * Nets easy thank you page hook.
-	 *
-	 * @param  string $order_id WC order id.
-	 *
-	 * @return void
-	 */
-	public function dibs_thankyou( $order_id ) {
-		$order = wc_get_order( $order_id );
-
-		// Embedded or redirect checkout flow.
-		if ( 'embedded' === $this->checkout_flow ) {
-			// Save payment type, card details & run $order->payment_complete() if all looks good.
-			if ( empty( $order->get_date_paid() ) ) {
-				wc_dibs_confirm_dibs_order( $order_id );
-				$order->add_order_note( __( 'Order finalized in thankyou page.', 'dibs-easy-for-woocommerce' ) );
-				WC()->cart->empty_cart();
-			}
-
-			// Clear sessionStorage.
-			echo '<script>sessionStorage.removeItem("DIBSRequiredFields")</script>';
-			echo '<script>sessionStorage.removeItem("DIBSFieldData")</script>';
-
-			// Unset sessions.
-			wc_dibs_unset_sessions();
-		} else {
-			if ( empty( $order->get_date_paid() ) ) {
-				wc_dibs_confirm_dibs_order( $order_id );
-			}
-		}
-
-	}
-
-	/**
-	 * Delete Nets sessions.
-	 *
-	 * @return void
-	 */
-	public function maybe_delete_dibs_sessions() {
-		wc_dibs_unset_sessions();
-	}
-
-	/**
-	 * Check if data is json.
-	 *
-	 * @param string $string Json object.
-	 *
-	 * @return mixed
-	 */
-	public function is_json( $string ) {
-		json_decode( $string );
-
-		return ( json_last_error() === JSON_ERROR_NONE );
-	}
 
 	/**
 	 * @param int $order_id The WooCommerce order id.
@@ -284,8 +189,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Create payment in Nets.
 		$response = Nets_Easy()->api->create_nets_easy_order(
 			array(
-				'checkout_flow' => 'redirect',
-				'order_id'      => $order_id,
+				'checkout_flow'                 => 'redirect',
+				'order_id'                      => $order_id,
+				'payment_methods_configuration' => 'Card',
 			)
 		);
 		if ( is_wp_error( $response ) ) {
@@ -322,8 +228,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Create payment in Nets.
 		$response = Nets_Easy()->api->create_nets_easy_order(
 			array(
-				'checkout_flow' => 'overlay',
-				'order_id'      => $order_id,
+				'checkout_flow'                 => 'overlay',
+				'order_id'                      => $order_id,
+				'payment_methods_configuration' => 'Card',
 			)
 		);
 		if ( is_wp_error( $response ) ) {
@@ -348,28 +255,6 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		return array(
 			'result' => 'error',
 		);
-	}
-
-	/**
-	 * process_embedded_handler
-	 *
-	 * @param int $order_id The WooCommerce order id.
-	 *
-	 * @return string[]|void
-	 */
-	protected function process_embedded_handler( $order_id ) {
-		$order = wc_get_order( $order_id );
-		if ( ! $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-
-			// Update order number in DIBS system if this is the embedded checkout flow.
-			$payment_id = WC()->session->get( 'dibs_payment_id' );
-			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
-
-			return array(
-				'result'   => 'success',
-				'redirect' => add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ),
-			);
-		}
 	}
 
 }
