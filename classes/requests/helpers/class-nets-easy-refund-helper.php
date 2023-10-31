@@ -88,6 +88,7 @@ class Nets_Easy_Refund_Helper {
 			'post_status'    => 'any',
 			'posts_per_page' => -1,
 		);
+		// Montazar ska fixa den här https://app.clickup.com/t/86931cnah
 		$refunds         = get_posts( $query_args );
 		$refund_order_id = array_search( $order_id, $refunds, true );
 		if ( is_array( $refund_order_id ) ) {
@@ -167,7 +168,7 @@ class Nets_Easy_Refund_Helper {
 			}
 
 			$shipping_reference      = 'Shipping';
-			$nets_shipping_reference = get_post_meta( $order_id, '_nets_shipping_reference', true );
+			$nets_shipping_reference = $original_order->get_meta('_nets_shipping_reference');
 			if ( isset( $nets_shipping_reference ) && ! empty( $nets_shipping_reference ) ) {
 				$shipping_reference = $nets_shipping_reference;
 			} else {
