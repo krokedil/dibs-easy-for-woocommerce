@@ -267,6 +267,12 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 	}
 
+	add_action( 'before_woocommerce_init', function() {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+		}
+	} );
+
 	DIBS_Easy::get_instance();
 	/**
 	 * Main instance DIBS_Easy.
