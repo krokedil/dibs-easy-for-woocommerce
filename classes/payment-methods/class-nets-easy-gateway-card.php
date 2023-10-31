@@ -205,8 +205,8 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to Nets payment page.
 			$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
-			update_post_meta( $order_id, '_dibs_payment_id', $response['paymentId'] ); // phpcs:ignore
-
+			$order->update_meta_data('_dibs_payment_id', $response['paymentId']);
+			$order->save();
 			return array(
 				'result'   => 'success',
 				'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
@@ -244,8 +244,8 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to DIBS payment page.
 			$order->add_order_note( __( 'Nets payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
-			update_post_meta( $order_id, '_dibs_payment_id', $response['paymentId'] ); // phpcs:ignore
-
+			$order->update_meta_data('_dibs_payment_id', $response['paymentId']);
+			$order->save();
 			return array(
 				'result'   => 'success',
 				'redirect' => '#netseasy:' . base64_encode( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ), // phpcs:ignore

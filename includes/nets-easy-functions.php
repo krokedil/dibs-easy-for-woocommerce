@@ -225,14 +225,16 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 
 		do_action( 'dibs_easy_process_payment', $order_id, $request );
 
-		update_post_meta( $order_id, 'dibs_payment_type', $request['payment']['paymentDetails']['paymentType'] );
-		update_post_meta( $order_id, 'dibs_payment_method', $request['payment']['paymentDetails']['paymentMethod'] );
-		update_post_meta( $order_id, '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
+		$order->update_meta_data('dibs_payment_type', $request['payment']['paymentDetails']['paymentType']);
+		$order->update_meta_data('dibs_payment_method', $request['payment']['paymentDetails']['paymentMethod']);
+		$order->update_meta_data('_dibs_date_paid', gmdate('Y-m-d H:i:s'));
+		$order->save();
 
 		wc_dibs_maybe_add_invoice_fee( $order );
 
 		if ( 'CARD' === $request['payment']['paymentDetails']['paymentType'] ) { // phpcs:ignore
-			update_post_meta( $order_id, 'dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan'] );
+			$order->update_meta_data('dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan']);
+			$order->save();
 		}
 
 		// Update order reference if this is embedded checkout flow.
@@ -252,7 +254,8 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		if ( isset( $request['payment']['charges'][0]['chargeId'] ) && ! empty( $request['payment']['charges'][0]['chargeId'] ) ) {
 			// Get the DIBS order charge ID.
 			$dibs_charge_id = $request['payment']['charges'][0]['chargeId'];
-			update_post_meta( $order_id, '_dibs_charge_id', $dibs_charge_id );
+			$order->update_meta_data('_dibs_charge_id', $dibs_charge_id);
+			$order->save();
 
 			// Translators: Nets Easy Payment ID.
 			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %s. Payment type - %s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
@@ -279,6 +282,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
  * @return void
  */
 function wc_dibs_save_shipping_reference_to_order( $order_id ) {
+	$order = wc_get_order($order_id);
 	if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
 		$packages        = WC()->shipping->get_packages();
 		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
@@ -286,7 +290,8 @@ function wc_dibs_save_shipping_reference_to_order( $order_id ) {
 		foreach ( $packages as $i => $package ) {
 			foreach ( $package['rates'] as $method ) {
 				if ( $chosen_shipping === $method->id ) {
-					update_post_meta( $order_id, '_nets_shipping_reference', 'shipping|' . $method->id );
+					$order->update_meta_data('_nets_shipping_reference', 'shipping|' . $method->id);
+					$order->save();
 				}
 			}
 		}
@@ -379,7 +384,7 @@ function nets_easy_get_order_id_by_purchase_id( $payment_id ) {
 		),
 	);
 
-	$orders = get_posts( $query_args );
+	$orders = wc_get_orders($query_args);
 
 	if ( $orders ) {
 		$order_id = $orders[0];

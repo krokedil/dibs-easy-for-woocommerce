@@ -299,7 +299,8 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to Nets payment page.
 			$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
-			update_post_meta( $order_id, '_dibs_payment_id', $response['paymentId'] ); // phpcs:ignore
+			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
+			$order->save();
 
 			return array(
 				'result'   => 'success',
@@ -337,7 +338,8 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to DIBS payment page.
 			$order->add_order_note( __( 'Nets payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
-			update_post_meta( $order_id, '_dibs_payment_id', $response['paymentId'] ); // phpcs:ignore
+			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
+			$order->save();
 
 			return array(
 				'result'   => 'success',
@@ -363,8 +365,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 			// Update order number in DIBS system if this is the embedded checkout flow.
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
-			update_post_meta( $order_id, '_dibs_payment_id', $payment_id );
-
+			$order->update_meta_data( '_dibs_payment_id', $payment_id );
+			$order->save();
+			
 			return array(
 				'result'   => 'success',
 				'redirect' => add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ),

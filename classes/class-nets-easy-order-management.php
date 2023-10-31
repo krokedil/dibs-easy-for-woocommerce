@@ -93,7 +93,8 @@ class Nets_Easy_Order_Management {
 				return;
 			}
 			$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy with charge ID %s', 'dibs-easy-for-woocommerce' ), $response['chargeId'] ) ); // phpcs:ignore
-			update_post_meta( $order_id, '_dibs_charge_id', $response['chargeId'] ); // phpcs:ignore
+			$wc_order->update_meta_data( '_dibs_charge_id', $response['chargeId'] );
+			$wc_order->save();
 		}
 	}
 
@@ -204,7 +205,8 @@ class Nets_Easy_Order_Management {
 			$canceled_amount = $nets_easy_order['payment']['summary']['cancelledAmount'];
 			// If cancelledAmount exists, update the post meta value.
 			if ( $canceled_amount ) {
-				update_post_meta( $order_id, '_dibs_canceled_amount_id', $canceled_amount );
+				$wc_order->update_meta_data( '_dibs_canceled_amount_id', $canceled_amount );
+				$wc_order->save();
 				// Translators: 1. Nets Easy Payment id 2. Payment type  3.Charge id.
 				$wc_order->add_order_note( sprintf( __( 'Payment canceled in Nets Easy ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $canceled_amount ) );
 				return true;
@@ -227,7 +229,9 @@ class Nets_Easy_Order_Management {
 			$dibs_charge_id = $nets_easy_order['payment']['charges'][0]['chargeId'];
 			// If charges id exists, update the post meta value.
 			if ( $dibs_charge_id ) {
-				update_post_meta( $order_id, '_dibs_charge_id', $nets_easy_order['payment']['charges'][0]['chargeId'] );
+				$charge_id = $nets_easy_order['payment']['charges'][0]['chargeId'];
+				$order->update_meta_data('_dibs_charge_id', $charge_id);
+				$order->save();				
 				// Translators: 1. Nets Easy Payment id 2. Payment type  3.Charge id.
 				$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
 				return true;
