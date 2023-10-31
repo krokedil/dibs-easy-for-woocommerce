@@ -190,7 +190,7 @@ function wc_dibs_clean_name( $name ) {
  */
 function wc_dibs_confirm_dibs_order( $order_id ) {
 	$order      = wc_get_order( $order_id );
-	$payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+	$payment_id = $order->get_meta('_dibs_payment_id');
 	$settings   = get_option( 'woocommerce_dibs_easy_settings' );
 
 	if ( 'dibs_easy' === $order->get_payment_method() ) {
@@ -302,8 +302,8 @@ function wc_dibs_save_shipping_reference_to_order( $order_id ) {
 function wc_dibs_maybe_add_invoice_fee( $order ) {
 	// Add invoice fee to order.
 	$order_id = $order->get_id();
-	if ( 'INVOICE' === get_post_meta( $order_id, 'dibs_payment_type', true ) ) {
-		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
+	if ( 'INVOICE' === $order->get_meta( 'dibs_payment_type' ) ) {
+			$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		if ( isset( $dibs_settings['dibs_invoice_fee'] ) && ! empty( $dibs_settings['dibs_invoice_fee'] ) ) {
 			$invoice_fee_id = $dibs_settings['dibs_invoice_fee'];
 			$invoice_fee    = wc_get_product( $invoice_fee_id );

@@ -43,23 +43,23 @@ class Nets_Easy_Order_Management {
 		$wc_order = wc_get_order( $order_id );
 
 		// Check if dibs was used to make the order.
-		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
+		$gateway_used = $wc_order->get_meta( '_payment_method' );
 		if ( in_array( $gateway_used, nets_easy_all_payment_method_ids(), true ) ) {
 
 			// Bail if the order hasn't been paid in DIBS yet.
-			if ( empty( get_post_meta( $order_id, '_dibs_date_paid', true ) ) ) {
+			if ( empty( $wc_order->get_meta( '_dibs_date_paid' ) ) ) {
 				return;
 			}
 
 			// Bail if we already have charged the order once in DIBS system.
-			if ( get_post_meta( $order_id, '_dibs_charge_id', true ) ) {
+			if ( $wc_order->get_meta( '_dibs_charge_id' ) ) {
 				return;
 			}
 
-			$payment_type = get_post_meta( $order_id, 'dibs_payment_type', true );
+			$payment_type = $wc_order->get_meta( 'dibs_payment_type' );
 			if ( 'A2A' === $payment_type ) {
 				// This is a account to account purchase (like Swish). No activation is needed/possible.
-				$dibs_payment_method = get_post_meta( $order_id, 'dibs_payment_method', true );
+				$dibs_payment_method = $wc_order->get_meta( 'dibs_payment_method' );
 				/* Translators: Nets payment method for the order. */
 				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nets system since %s is a account to account payment.', 'dibs-easy-for-woocommerce' ), $dibs_payment_method ) );
 				return;
@@ -72,7 +72,7 @@ class Nets_Easy_Order_Management {
 				return;
 			}
 			// get nets easy order.
-			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( get_post_meta( $order_id, '_dibs_payment_id', true ) );
+			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $wc_order->get_meta( '_dibs_payment_id' ) );
 			if ( is_wp_error( $nets_easy_order ) ) {
 				$this->fetching_order_failed( $wc_order, true, $nets_easy_order->get_error_message() );
 				return;
@@ -105,15 +105,15 @@ class Nets_Easy_Order_Management {
 	public function dibs_order_canceled( $order_id ) {
 		$wc_order = wc_get_order( $order_id );
 		// Check if dibs was used to make the order.
-		$gateway_used = get_post_meta( $order_id, '_payment_method', true );
+		$gateway_used = $wc_order->get_meta( '_payment_method' );
 		if ( in_array( $gateway_used, nets_easy_all_payment_method_ids(), true ) ) {
 
 			// Don't do this if the order hasn't been paid in DIBS.
-			if ( empty( get_post_meta( $order_id, '_dibs_date_paid', true ) ) ) {
+			if ( empty( $wc_order->get_meta( '_dibs_date_paid' ) ) ) {
 				return;
 			}
 
-			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( get_post_meta( $order_id, '_dibs_payment_id', true ) );
+			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $wc_order->get_meta( '_dibs_payment_id' ) );
 			if ( is_wp_error( $nets_easy_order ) ) {
 				$this->fetching_order_failed( $wc_order, true, $nets_easy_order->get_error_message() );
 				return;

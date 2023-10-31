@@ -249,24 +249,25 @@ class Nets_Easy_Subscriptions {
 		$subscriptions = wcs_get_subscriptions_for_renewal_order( $order_id );
 
 		// Get recurring token.
-		$recurring_token = get_post_meta( $order_id, '_dibs_recurring_token', true );
+		$recurring_token = $renewal_order->get_meta( '_dibs_recurring_token' );
 
 		// Subscription type.
-		$subscription_type = ! empty( get_post_meta( $order_id, '_dibs_subscription_type', true ) ) ? get_post_meta( $order_id, '_dibs_subscription_type', true ) : $this->subscription_type;
+		$subscription_type = ! empty( $renewal_order->get_meta('_dibs_subscription_type') ) ? $renewal_order->get_meta('_dibs_subscription_type') : $this->subscription_type;
 
 		// If _dibs_recurring_token is missing.
 		if ( empty( $recurring_token ) ) {
 			// Try getting it from parent order.
-			$parent_order_recurring_token = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_dibs_recurring_token', true );
+			$parent_order_recurring_token = wc_get_order(WC_Subscriptions_Renewal_Order::get_parent_order_id($order_id))->get_meta('_dibs_recurring_token');
 			if ( ! empty( $parent_order_recurring_token ) ) {
 				$recurring_token = $parent_order_recurring_token;
 				update_post_meta( $order_id, '_dibs_recurring_token', $recurring_token );
 			} else {
 				// Try to get recurring token from old D2 _dibs_ticket.
-				$dibs_ticket = get_post_meta( $order_id, '_dibs_ticket', true );
+				$dibs_ticket = $renewal_order->get_meta( '_dibs_ticket' );
+
 				if ( empty( $dibs_ticket ) ) {
 					// Try to get recurring token from old D2 _dibs_ticket parent order.
-					$dibs_ticket = get_post_meta( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ), '_dibs_ticket', true );
+					$dibs_ticket = wc_get_order( WC_Subscriptions_Renewal_Order::get_parent_order_id( $order_id ))->get_meta( '_dibs_ticket' );
 				}
 				if ( ! empty( $dibs_ticket ) ) {
 					// We got a _dibs_ticket - try to getting the subscription via the externalreference request.
@@ -385,12 +386,12 @@ class Nets_Easy_Subscriptions {
 	 * @param WC_Order $order WooCommerce order.
 	 */
 	public function show_recurring_token( $order ) {
-		if ( 'shop_subscription' === $order->get_type() && get_post_meta( $order->get_id(), '_dibs_recurring_token' ) ) {
+		if ( 'shop_subscription' === $order->get_type() && $order->get_meta( '_dibs_recurring_token' ) ) {
 			?>
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
 				<?php
-					echo '<p><strong>' . esc_html( __( 'Nets recurring token' ) ) . ':</strong>' . esc_html( get_post_meta( $order->get_id(), '_dibs_recurring_token', true ) ) . '</p>';
+					echo '<p><strong>' . esc_html( __( 'Nets recurring token' ) ) . ':</strong>' . esc_html( $order->get_meta( '_dibs_recurring_token' ) ) . '</p>';
 				?>
 				</div>
 				<div class="edit_address">
@@ -417,8 +418,8 @@ class Nets_Easy_Subscriptions {
 	 */
 	public function save_dibs_recurring_token_update( $post_id, $post ) {
 		$order = wc_get_order( $post_id );
-		if ( 'shop_subscription' === $order->get_type() && get_post_meta( $order->get_id(), '_dibs_recurring_token' ) ) {
-			$dibs_recurring_token = filter_input( INPUT_POST, '_dibs_recurring_token', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		if ( 'shop_subscription' === $order->get_type() && $order->get_meta('_dibs_recurring_token') ) {
+				$dibs_recurring_token = filter_input( INPUT_POST, '_dibs_recurring_token', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 			if ( ! empty( $dibs_recurring_token ) ) {
 				update_post_meta( $post_id, '_dibs_recurring_token', $dibs_recurring_token );
 			}

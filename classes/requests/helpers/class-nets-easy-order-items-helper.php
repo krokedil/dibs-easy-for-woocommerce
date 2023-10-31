@@ -121,7 +121,7 @@ class Nets_Easy_Order_Items_Helper {
 	 * @return array
 	 */
 	public static function get_shipping( $shipping_method ) {
-		$order_id = $shipping_method->get_order_id();
+		$wc_order = wc_get_order($shipping_method->get_order_id());
 
 		$free_shipping = false;
 		if ( 0 === intval( $shipping_method->get_total() ) ) {
@@ -129,7 +129,7 @@ class Nets_Easy_Order_Items_Helper {
 		}
 
 		$shipping_reference      = 'Shipping';
-		$nets_shipping_reference = get_post_meta( $order_id, '_nets_shipping_reference', true );
+		$nets_shipping_reference = $wc_order->get_meta( '_nets_shipping_reference' );
 		if ( isset( $nets_shipping_reference ) && ! empty( $nets_shipping_reference ) ) {
 			$shipping_reference = $nets_shipping_reference;
 		} else {
@@ -183,7 +183,7 @@ class Nets_Easy_Order_Items_Helper {
 	 */
 	public static function process_gift_cards( $order_id, $order, $items ) {
 
-		$yith_giftcards = get_post_meta( $order_id, '_ywgc_applied_gift_cards', true );
+		$yith_giftcards = $order->get_meta( '_ywgc_applied_gift_cards' );
 
 		if ( ! empty( $yith_giftcards ) ) {
 			foreach ( $yith_giftcards as $yith_giftcard_code => $yith_giftcard_value ) {
