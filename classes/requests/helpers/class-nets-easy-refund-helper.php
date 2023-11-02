@@ -33,14 +33,10 @@ class Nets_Easy_Refund_Helper {
 	 * @return int
 	 */
 	public static function get_total_refund_amount( $order_id ) {
-		$refund_order_id = self::get_refunded_order( $order_id );
+		$refund_order        = self::get_refunded_order( $order_id );
+		$total_refund_amount = intval( round( $refund_order->get_total() * 100 ) );
 
-		if ( null !== $refund_order_id ) {
-			$refund_order        = wc_get_order( $refund_order_id );
-			$total_refund_amount = intval( round( $refund_order->get_total() * 100 ) );
-
-			return abs( $total_refund_amount );
-		}
+		return abs( $total_refund_amount );
 	}
 
 	/**
@@ -50,54 +46,38 @@ class Nets_Easy_Refund_Helper {
 	 * @return array
 	 */
 	public static function get_refund_data( $order_id ) {
-		$refund_order_id = self::get_refunded_order( $order_id );
+		$refund_order = self::get_refunded_order( $order_id );
 
-		if ( null !== $refund_order_id ) {
-			// Get refund order data.
-			$refund_order      = wc_get_order( $refund_order_id );
-			$refunded_items    = $refund_order->get_items();
-			$refunded_shipping = $refund_order->get_items( 'shipping' );
-			$refunded_fees     = $refund_order->get_items( 'fee' );
+		// Get refund order data.
+		$refunded_items    = $refund_order->get_items();
+		$refunded_shipping = $refund_order->get_items( 'shipping' );
+		$refunded_fees     = $refund_order->get_items( 'fee' );
 
-			if ( $refunded_items ) {
-				self::get_refunded_items( $order_id, $refunded_items );
-			}
+		if ( $refunded_items ) {
+			self::get_refunded_items( $order_id, $refunded_items );
+		}
 
-			if ( $refunded_shipping ) {
-				self::get_refunded_shipping( $order_id, $refunded_shipping );
-			}
+		if ( $refunded_shipping ) {
+			self::get_refunded_shipping( $order_id, $refunded_shipping );
+		}
 
-			if ( $refunded_fees ) {
-				self::get_refunded_fees( $order_id, $refunded_fees );
-			}
+		if ( $refunded_fees ) {
+			self::get_refunded_fees( $order_id, $refunded_fees );
+		}
 
 			return self::$refund_data;
-		}
 	}
 
 	/**
 	 * Gets refunded order.
 	 *
 	 * @param int $order_id The order id.
-	 * @return string
+	 * @return WC_Order_Refund
 	 */
 	public static function get_refunded_order( $order_id ) {
-		$query_args      = array(
-			'fields'         => 'id=>parent',
-			'post_type'      => 'shop_order_refund',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-		);
-		// Montazar ska fixa den här https://app.clickup.com/t/86931cnah
-		$refunds         = get_posts( $query_args );
-		$refund_order_id = array_search( $order_id, $refunds, true );
-		if ( is_array( $refund_order_id ) ) {
-			foreach ( $refund_order_id as $key => $value ) {
-				$refund_order_id = $value;
-				break;
-			}
-		}
-		return $refund_order_id;
+		$order   = wc_get_order( $order_id );
+		$refunds = $order->get_refunds();
+		return reset( $refunds );
 	}
 
 	/**
@@ -168,7 +148,7 @@ class Nets_Easy_Refund_Helper {
 			}
 
 			$shipping_reference      = 'Shipping';
-			$nets_shipping_reference = $original_order->get_meta('_nets_shipping_reference');
+			$nets_shipping_reference = $original_order->get_meta( '_nets_shipping_reference' );
 			if ( isset( $nets_shipping_reference ) && ! empty( $nets_shipping_reference ) ) {
 				$shipping_reference = $nets_shipping_reference;
 			} else {
