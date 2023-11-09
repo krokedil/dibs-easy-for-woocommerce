@@ -160,15 +160,21 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Regular purchase.
 		// Embedded flow.
 		if ( 'embedded' === $this->checkout_flow && ! is_wc_endpoint_url( 'order-pay' ) ) {
+			$order->update_meta_data( '_dibs_checkout_flow', 'embedded' );
+			$order->save();
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
 			return $this->process_embedded_handler( $order_id );
 		}
 
 		// Overlay flow.
 		if ( 'overlay' === $this->checkout_flow && ! wp_is_mobile() && ! is_wc_endpoint_url( 'order-pay' ) ) {
+			$order->update_meta_data( '_dibs_checkout_flow', 'overlay' );
+			$order->save();
 			return $this->process_overlay_handler( $order_id );
 		}
 
+		$order->update_meta_data( '_dibs_checkout_flow', 'redirect' );
+		$order->save();
 		return $this->process_redirect_handler( $order_id );
 	}
 
