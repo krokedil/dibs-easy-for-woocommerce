@@ -236,6 +236,8 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		}
 
 		// Update order reference if this is embedded checkout flow.
+		$_checkout_flow = $order->get_meta( '_dibs_checkout_flow' );
+		$checkout_flow  = ! empty( $_checkout_flow ) ? $_checkout_flow : $checkout_flow;
 		if ( 'embedded' === $checkout_flow ) {
 			$order_reference_response = Nets_Easy()->api->update_nets_easy_order_reference( $payment_id, $order_id );
 			if ( is_wp_error( $order_reference_response ) ) {
