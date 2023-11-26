@@ -253,9 +253,8 @@ class Nets_Easy_Refund_Helper {
 	 * @return string
 	 */
 	public static function get_sku( $product, $invoice_fee_id ) {
-		if ( get_post_meta( $invoice_fee_id, '_sku', true ) !== '' ) {
-			$part_number = $product->get_sku();
-		} else {
+		$part_number = $product->get_sku();
+		if ( empty( $part_number ) ) {
 			$part_number = $product->get_id();
 		}
 		return substr( $part_number, 0, 32 );

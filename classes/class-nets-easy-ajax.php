@@ -158,8 +158,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		$orders         = $query->get_orders();
 		$order_id_match = null;
 		foreach ( $orders as $order_id ) {
-			$order = wc_get_order($order_id);
-			$order_payment_id = $order->get_meta('_dibs_payment_id');
+			$order            = wc_get_order( $order_id );
+			$order_payment_id = $order->get_meta( '_dibs_payment_id' );
 			if ( strtolower( $order_payment_id ) === strtolower( $payment_id ) ) {
 				$order_id_match = $order_id;
 				break;

@@ -121,7 +121,7 @@ class Nets_Easy_Order_Items_Helper {
 	 * @return array
 	 */
 	public static function get_shipping( $shipping_method ) {
-		$wc_order = wc_get_order($shipping_method->get_order_id());
+		$wc_order = wc_get_order( $shipping_method->get_order_id() );
 
 		$free_shipping = false;
 		if ( 0 === intval( $shipping_method->get_total() ) ) {
@@ -162,9 +162,8 @@ class Nets_Easy_Order_Items_Helper {
 	 */
 	public static function get_sku( $product, $product_id ) {
 		if ( is_object( $product ) ) {
-			if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
-				$part_number = $product->get_sku();
-			} else {
+			$part_number = $product->get_sku();
+			if ( empty( $part_number ) ) {
 				$part_number = $product->get_id();
 			}
 			return substr( $part_number, 0, 32 );
