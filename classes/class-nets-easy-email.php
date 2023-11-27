@@ -35,7 +35,7 @@ if ( ! class_exists( 'Nets_Easy_Email' ) ) :
 			$settings                = get_option( 'woocommerce_dibs_easy_settings' );
 			$email_nets_payment_data = $settings['email_nets_payment_data'] ?? 'yes';
 			$order_id                = $order->get_id();
-			$gateway_used            = $order->get_meta('_payment_method');
+			$gateway_used            = $order->get_payment_method();
 
 			if ( in_array( $gateway_used, nets_easy_all_payment_method_ids(), true ) ) {
 				$payment_id     = $order->get_meta( '_dibs_payment_id' );

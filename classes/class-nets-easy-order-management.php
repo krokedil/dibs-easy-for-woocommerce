@@ -43,7 +43,7 @@ class Nets_Easy_Order_Management {
 		$wc_order = wc_get_order( $order_id );
 
 		// Check if dibs was used to make the order.
-		$gateway_used = $wc_order->get_meta( '_payment_method' );
+		$gateway_used = $wc_order->get_payment_method();
 		if ( in_array( $gateway_used, nets_easy_all_payment_method_ids(), true ) ) {
 
 			// Bail if the order hasn't been paid in DIBS yet.
@@ -106,7 +106,7 @@ class Nets_Easy_Order_Management {
 	public function dibs_order_canceled( $order_id ) {
 		$wc_order = wc_get_order( $order_id );
 		// Check if dibs was used to make the order.
-		$gateway_used = $wc_order->get_meta( '_payment_method' );
+		$gateway_used = $wc_order->get_payment_method();
 		if ( in_array( $gateway_used, nets_easy_all_payment_method_ids(), true ) ) {
 
 			// Don't do this if the order hasn't been paid in DIBS.
