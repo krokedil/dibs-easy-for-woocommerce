@@ -20,7 +20,7 @@
     "grunt-contrib-cssmin": "^4.0.0",
     "grunt-contrib-uglify": "^5.1.0",
     "grunt-wp-i18n": "^1.0.3",
-    "prettier": "2.6.2",
+    "prettier": "npm:wp-prettier@^3.0.3",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.10.0"
   },
@@ -32,7 +32,8 @@
     "makepot": "npx grunt makepot",
     "cssmin": "npx grunt cssmin",
     "jsmin": "npx webpack",
+    "prettier": "npx prettier assets/js --paren-spacing --tab-width 4 --print-width 120 --no-semi --write",
     "webpack:dev": "npx webpack --mode=development --watch",
-    "build": "yarn makepot && yarn cssmin && yarn jsmin"
+    "build": "yarn makepot && yarn cssmin && yarn prettier && yarn jsmin"
   }
 }

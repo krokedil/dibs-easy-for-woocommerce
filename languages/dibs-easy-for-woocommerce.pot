@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nets Easy for WooCommerce 2.5.1\n"
+"Project-Id-Version: Nets Easy for WooCommerce 2.6.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2023-07-17 08:44:20+00:00\n"
+"POT-Creation-Date: 2023-11-13 17:39:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,57 +53,73 @@ msgstr ""
 msgid "Cart total does not match Nets order total. Please try refreshing the page."
 msgstr ""
 
-#: classes/class-nets-easy-api-callbacks.php:156
-#: classes/class-nets-easy-api-callbacks.php:161
+#: classes/class-nets-easy-api-callbacks.php:118
+#: classes/class-nets-easy-api-callbacks.php:123
 #. Translators: Nets order total.
 msgid ""
 "Order needs manual review. WooCommerce order total and Nets order total do "
 "not match. Nets order total: %s."
 msgstr ""
 
-#: classes/class-nets-easy-assets.php:225
+#: classes/class-nets-easy-assets.php:246
 msgid "Please wait while we process your order..."
 msgstr ""
 
-#: classes/class-nets-easy-assets.php:226
+#: classes/class-nets-easy-assets.php:247
 msgid "Please fill in all required checkout fields."
 msgstr ""
 
-#: classes/class-nets-easy-email.php:50
+#: classes/class-nets-easy-email.php:51
 msgid "Nets Payment ID: "
 msgstr ""
 
-#: classes/class-nets-easy-email.php:53
+#: classes/class-nets-easy-email.php:54
 msgid "Payment method: "
 msgstr ""
 
-#: classes/class-nets-easy-email.php:56
+#: classes/class-nets-easy-email.php:57
 msgid "Customer card: "
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:31 includes/nets-easy-settings.php:28
+#: classes/class-nets-easy-gateway.php:45 includes/nets-easy-settings.php:28
 msgid "Nets Easy"
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:33
+#: classes/class-nets-easy-gateway.php:47
 msgid "Nets Easy Payment for checkout"
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:129
-#: classes/class-nets-easy-gateway.php:277
+#: classes/class-nets-easy-gateway.php:148
+#: classes/class-nets-easy-gateway.php:307
+#: classes/payment-methods/class-nets-easy-gateway-card.php:129
+#: classes/payment-methods/class-nets-easy-gateway-card.php:207
+#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:193
+#: classes/payment-methods/class-nets-easy-gateway-sofort.php:193
+#: classes/payment-methods/class-nets-easy-gateway-swish.php:189
+#: classes/payment-methods/class-nets-easy-gateway-trustly.php:186
 msgid "Customer redirected to Nets payment page."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:176
+#: classes/class-nets-easy-gateway.php:201
+#: classes/payment-methods/class-nets-easy-gateway-card.php:172
+#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:158
+#: classes/payment-methods/class-nets-easy-gateway-sofort.php:158
+#: classes/payment-methods/class-nets-easy-gateway-swish.php:154
+#: classes/payment-methods/class-nets-easy-gateway-trustly.php:151
 #. Translators: Nets refund ID.
 msgid "Refund made in Nets Easy with refund ID %s."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:218
+#: classes/class-nets-easy-gateway.php:243
 msgid "Order finalized in thankyou page."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:310
+#: classes/class-nets-easy-gateway.php:345
+#: classes/payment-methods/class-nets-easy-gateway-card.php:246
+#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:232
+#: classes/payment-methods/class-nets-easy-gateway-sofort.php:232
+#: classes/payment-methods/class-nets-easy-gateway-swish.php:228
+#: classes/payment-methods/class-nets-easy-gateway-trustly.php:225
 msgid "Nets payment page displayed in overlay."
 msgstr ""
 
@@ -154,7 +170,7 @@ msgid ""
 "- %2$s. Charge ID %3$s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:92
+#: classes/class-nets-easy-subscriptions.php:100
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:63
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:87
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:117
@@ -173,48 +189,88 @@ msgstr ""
 msgid "pcs"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:200
-#: classes/class-nets-easy-subscriptions.php:217
+#: classes/class-nets-easy-subscriptions.php:208
+#: classes/class-nets-easy-subscriptions.php:225
 msgid "Nets Easy subscription ID/recurring token %s saved."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:287
+#: classes/class-nets-easy-subscriptions.php:295
 #. Translators: Nets Payment ID & Charge ID.
 msgid "Subscription payment made with Nets. Payment ID: %s. Charge ID %s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:295
+#: classes/class-nets-easy-subscriptions.php:303
 #. Translators: Request response from Nets.
 msgid "Subscription payment failed with Nets. Error message: %s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:323
+#: classes/class-nets-easy-subscriptions.php:331
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
 "Nets. Recurring token: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:332
+#: classes/class-nets-easy-subscriptions.php:340
 #. Translators: Request response.
 msgid "Error during Nets_Easy_Request_Get_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:359
+#: classes/class-nets-easy-subscriptions.php:367
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
 "Nets. Recurring token: %s. Subscription type: %s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:368
+#: classes/class-nets-easy-subscriptions.php:376
 #. Translators: Request response.
 msgid ""
 "Error during "
 "Nets_Easy_Request_Get_Unscheduled_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:385
 #: classes/class-nets-easy-subscriptions.php:393
+#: classes/class-nets-easy-subscriptions.php:401
 msgid "Nets recurring token"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-card.php:31
+msgid "Nets Easy Card"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-card.php:33
+msgid "Nets Easy Card payment"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:31
+msgid "Nets Easy Ratepay SEPA"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:33
+msgid "Nets Easy Ratepay SEPA payment"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-sofort.php:31
+msgid "Nets Easy Sofort"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-sofort.php:33
+msgid "Nets Easy Sofort payment"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-swish.php:31
+msgid "Nets Easy Swish"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-swish.php:33
+msgid "Nets Easy Swish payment"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-trustly.php:31
+msgid "Nets Easy Trustly"
+msgstr ""
+
+#: classes/payment-methods/class-nets-easy-gateway-trustly.php:33
+msgid "Nets Easy Trustly payment"
 msgstr ""
 
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:51
@@ -224,19 +280,19 @@ msgstr ""
 msgid "Gift card:"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:106 dibs-easy-for-woocommerce.php:115
+#: dibs-easy-for-woocommerce.php:112 dibs-easy-for-woocommerce.php:121
 msgid "Nope"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:211
+#: dibs-easy-for-woocommerce.php:224
 msgid "Settings"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:212
+#: dibs-easy-for-woocommerce.php:225
 msgid "Docs"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:213
+#: dibs-easy-for-woocommerce.php:226
 msgid "Support"
 msgstr ""
 
@@ -244,52 +300,232 @@ msgstr ""
 msgid "Select another payment method"
 msgstr ""
 
-#: includes/nets-easy-functions.php:210
+#: includes/nets-easy-functions.php:217
 #. translators: %s: Error message
 msgid "Nets Easy: Error when confirming order: %s"
 msgstr ""
 
-#: includes/nets-easy-functions.php:238
+#: includes/nets-easy-functions.php:247
 #. translators: %s: Error message
 msgid "Nets Easy: Error when updating order reference to Nets. Error message : %s"
 msgstr ""
 
-#: includes/nets-easy-functions.php:251
+#: includes/nets-easy-functions.php:260
 #. Translators: Nets Easy Payment ID.
 msgid ""
 "New payment created in Nets Easy with Payment ID %s. Payment type - %s. "
 "Charge ID %3$s."
 msgstr ""
 
-#: includes/nets-easy-functions.php:254
+#: includes/nets-easy-functions.php:263
 #. Translators: Nets Easy Payment ID.
 msgid ""
 "New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. "
 "Awaiting charge."
 msgstr ""
 
+#: includes/nets-easy-settings-card.php:19
+#: includes/nets-easy-settings-ratepay-sepa.php:19
+#: includes/nets-easy-settings-sofort.php:19
+#: includes/nets-easy-settings-swish.php:19
+#: includes/nets-easy-settings-trustly.php:19
 #: includes/nets-easy-settings.php:19
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/nets-easy-settings.php:21
-msgid "Enable Nets Easy"
+#: includes/nets-easy-settings-card.php:21
+msgid "Enable Nets Easy Card"
 msgstr ""
 
+#: includes/nets-easy-settings-card.php:25
+#: includes/nets-easy-settings-ratepay-sepa.php:25
+#: includes/nets-easy-settings-sofort.php:25
+#: includes/nets-easy-settings-swish.php:25
+#: includes/nets-easy-settings-trustly.php:25
 #: includes/nets-easy-settings.php:25
 msgid "Title"
 msgstr ""
 
+#: includes/nets-easy-settings-card.php:27
+#: includes/nets-easy-settings-ratepay-sepa.php:27
+#: includes/nets-easy-settings-sofort.php:27
+#: includes/nets-easy-settings-swish.php:27
+#: includes/nets-easy-settings-trustly.php:27
 #: includes/nets-easy-settings.php:27
 msgid "This is the title that the user sees on the checkout page for Nets Easy."
 msgstr ""
 
+#: includes/nets-easy-settings-card.php:28 includes/nets-easy-settings.php:187
+msgid "Card payment"
+msgstr ""
+
+#: includes/nets-easy-settings-card.php:31
+#: includes/nets-easy-settings-ratepay-sepa.php:31
+#: includes/nets-easy-settings-sofort.php:31
+#: includes/nets-easy-settings-swish.php:31
+#: includes/nets-easy-settings-trustly.php:31
 #: includes/nets-easy-settings.php:31
 msgid "Description"
 msgstr ""
 
+#: includes/nets-easy-settings-card.php:35
+#: includes/nets-easy-settings-ratepay-sepa.php:35
+#: includes/nets-easy-settings-sofort.php:35
+#: includes/nets-easy-settings-swish.php:35
+#: includes/nets-easy-settings-trustly.php:35
 #: includes/nets-easy-settings.php:35
 msgid "This controls the description which the user sees during checkout."
+msgstr ""
+
+#: includes/nets-easy-settings-card.php:38
+#: includes/nets-easy-settings-ratepay-sepa.php:38
+#: includes/nets-easy-settings-sofort.php:38
+#: includes/nets-easy-settings-swish.php:38
+#: includes/nets-easy-settings-trustly.php:38
+#: includes/nets-easy-settings.php:167
+msgid "Payment gateway icon"
+msgstr ""
+
+#: includes/nets-easy-settings-card.php:40
+#: includes/nets-easy-settings-ratepay-sepa.php:40
+#: includes/nets-easy-settings-sofort.php:40
+#: includes/nets-easy-settings-swish.php:40
+#: includes/nets-easy-settings-trustly.php:40
+#: includes/nets-easy-settings.php:169
+msgid ""
+"Enter an URL to the icon you want to display for the payment method. Use "
+"<i>default</i> to display the default Nets logo. Leave blank to not show an "
+"icon at all."
+msgstr ""
+
+#: includes/nets-easy-settings-card.php:45
+#: includes/nets-easy-settings-ratepay-sepa.php:45
+#: includes/nets-easy-settings-sofort.php:45
+#: includes/nets-easy-settings-swish.php:45
+#: includes/nets-easy-settings-trustly.php:45
+#: includes/nets-easy-settings.php:174
+msgid "Payment gateway icon width"
+msgstr ""
+
+#: includes/nets-easy-settings-card.php:47
+#: includes/nets-easy-settings-ratepay-sepa.php:47
+#: includes/nets-easy-settings-sofort.php:47
+#: includes/nets-easy-settings-swish.php:47
+#: includes/nets-easy-settings-trustly.php:47
+#: includes/nets-easy-settings.php:176
+msgid "Specify the max width (in px) of the payment gateway icon."
+msgstr ""
+
+#: includes/nets-easy-settings-ratepay-sepa.php:21
+msgid "Enable Nets Easy Ratepay SEPA"
+msgstr ""
+
+#: includes/nets-easy-settings-ratepay-sepa.php:28
+msgid "Ratepay SEPA payment"
+msgstr ""
+
+#: includes/nets-easy-settings-ratepay-sepa.php:52
+#: includes/nets-easy-settings-sofort.php:52
+#: includes/nets-easy-settings-trustly.php:52
+msgid "Available countries"
+msgstr ""
+
+#: includes/nets-easy-settings-ratepay-sepa.php:55
+#: includes/nets-easy-settings-sofort.php:55
+#: includes/nets-easy-settings-trustly.php:55
+msgid "Select which countries the payment method should be available for."
+msgstr ""
+
+#: includes/nets-easy-settings-ratepay-sepa.php:57
+#: includes/nets-easy-settings-sofort.php:57
+#: includes/nets-easy-settings-trustly.php:57
+msgid "Austria"
+msgstr ""
+
+#: includes/nets-easy-settings-ratepay-sepa.php:58
+#: includes/nets-easy-settings-sofort.php:58
+#: includes/nets-easy-settings-trustly.php:62
+msgid "Germany"
+msgstr ""
+
+#: includes/nets-easy-settings-sofort.php:21
+msgid "Enable Nets Easy Sofort"
+msgstr ""
+
+#: includes/nets-easy-settings-sofort.php:28
+msgid "Sofort payment"
+msgstr ""
+
+#: includes/nets-easy-settings-swish.php:21
+msgid "Enable Nets Easy Swish"
+msgstr ""
+
+#: includes/nets-easy-settings-swish.php:28 includes/nets-easy-settings.php:207
+msgid "Swish payment"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:21
+msgid "Enable Nets Easy Trustly"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:28
+msgid "Trustly payment"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:58
+msgid "Czech Republic"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:59
+msgid "Denmark"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:60
+msgid "Estonia"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:61
+msgid "Finland"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:63
+msgid "Latvia"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:64
+msgid "Lithuania"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:65
+msgid "Norway"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:66
+msgid "Poland"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:67
+msgid "Slovakia"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:68
+msgid "Spain"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:69
+msgid "Sweden"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:70
+msgid "The Netherlands"
+msgstr ""
+
+#: includes/nets-easy-settings-trustly.php:71
+msgid "United Kingdom"
+msgstr ""
+
+#: includes/nets-easy-settings.php:21
+msgid "Enable Nets Easy"
 msgstr ""
 
 #: includes/nets-easy-settings.php:38
@@ -393,41 +629,45 @@ msgid "Enable WooCommerce to manage orders in Nets Easy backend"
 msgstr ""
 
 #: includes/nets-easy-settings.php:109
-msgid "Debug mode"
+msgid "Logging"
 msgstr ""
 
 #: includes/nets-easy-settings.php:111
-msgid "Enable Debug mode for Nets Easy"
+msgid "Log debug messages"
 msgstr ""
 
-#: includes/nets-easy-settings.php:115
-msgid "Invoice fee ID"
+#: includes/nets-easy-settings.php:112
+msgid "Save debug messages to the WooCommerce System Status log"
 msgstr ""
 
 #: includes/nets-easy-settings.php:117
+msgid "Invoice fee ID"
+msgstr ""
+
+#: includes/nets-easy-settings.php:119
 msgid ""
 "Create a hidden (simple) product that acts as the invoice fee. Enter the "
 "product <strong>ID</strong> number in this textfield. Leave blank to "
 "disable."
 msgstr ""
 
-#: includes/nets-easy-settings.php:122
+#: includes/nets-easy-settings.php:124
 msgid "Checkout flow"
 msgstr ""
 
-#: includes/nets-easy-settings.php:125
+#: includes/nets-easy-settings.php:127
 msgid "Embedded"
 msgstr ""
 
-#: includes/nets-easy-settings.php:126
+#: includes/nets-easy-settings.php:128
 msgid "Redirect"
 msgstr ""
 
-#: includes/nets-easy-settings.php:127
+#: includes/nets-easy-settings.php:129
 msgid "Overlay"
 msgstr ""
 
-#: includes/nets-easy-settings.php:129
+#: includes/nets-easy-settings.php:131
 msgid ""
 "Select how Nets Easy should be integrated in WooCommerce. "
 "<strong>Embedded</strong> – the checkout is embedded in the WooCommerce "
@@ -437,32 +677,32 @@ msgid ""
 "but the hosted payment window is displayed in an overlay on desktop."
 msgstr ""
 
-#: includes/nets-easy-settings.php:134
+#: includes/nets-easy-settings.php:136
 msgid "Auto-capture"
 msgstr ""
 
-#: includes/nets-easy-settings.php:136
+#: includes/nets-easy-settings.php:138
 msgid ""
 "Enable Auto-capture. If enabled Nets Easy charges your customer immediately "
 "after payment completion. Only enable for compliant products/services."
 msgstr ""
 
-#: includes/nets-easy-settings.php:140
+#: includes/nets-easy-settings.php:142
 msgid "Other payment method button text"
 msgstr ""
 
-#: includes/nets-easy-settings.php:142
+#: includes/nets-easy-settings.php:144
 msgid ""
 "Customize the <em>Select another payment method</em> button text that is "
 "displayed in checkout if using other payment methods than Nets Easy. Leave "
 "blank to use the default (and translatable) text."
 msgstr ""
 
-#: includes/nets-easy-settings.php:147
+#: includes/nets-easy-settings.php:149
 msgid "Complete payment button text"
 msgstr ""
 
-#: includes/nets-easy-settings.php:160
+#: includes/nets-easy-settings.php:162
 msgid ""
 "Select the text displayed on the complete payment button. (Only applicable "
 "for subscription based payments). Translations for the selections can be "
@@ -472,23 +712,22 @@ msgid ""
 "target=\"_blank\">here.</a>"
 msgstr ""
 
-#: includes/nets-easy-settings.php:165
-msgid "Payment gateway icon"
+#: includes/nets-easy-settings.php:182
+msgid "Standalone payment methods"
 msgstr ""
 
-#: includes/nets-easy-settings.php:167
+#: includes/nets-easy-settings.php:183
 msgid ""
-"Enter an URL to the icon you want to display for the payment method. Use "
-"<i>default</i> to display the default Nets logo. Leave blank to not show an "
-"icon at all."
+"Enable specific payment methods as standalone payment methods in the "
+"checkout."
 msgstr ""
 
-#: includes/nets-easy-settings.php:172
-msgid "Payment gateway icon width"
+#: includes/nets-easy-settings.php:189
+msgid "Enable Card payment as separate payment method"
 msgstr ""
 
-#: includes/nets-easy-settings.php:174
-msgid "Specify the max width (in px) of the payment gateway icon."
+#: includes/nets-easy-settings.php:209
+msgid "Enable Swish payment as separate payment method"
 msgstr ""
 
 #: templates/nets-easy-checkout.php:17
