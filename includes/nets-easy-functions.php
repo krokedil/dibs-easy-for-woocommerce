@@ -190,7 +190,7 @@ function wc_dibs_clean_name( $name ) {
  */
 function wc_dibs_confirm_dibs_order( $order_id ) {
 	$order      = wc_get_order( $order_id );
-	$payment_id = $order->get_meta('_dibs_payment_id');
+	$payment_id = $order->get_meta( '_dibs_payment_id' );
 	$settings   = get_option( 'woocommerce_dibs_easy_settings' );
 
 	if ( 'dibs_easy' === $order->get_payment_method() ) {
@@ -225,15 +225,15 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 
 		do_action( 'dibs_easy_process_payment', $order_id, $request );
 
-		$order->update_meta_data('dibs_payment_type', $request['payment']['paymentDetails']['paymentType']);
-		$order->update_meta_data('dibs_payment_method', $request['payment']['paymentDetails']['paymentMethod']);
-		$order->update_meta_data('_dibs_date_paid', gmdate('Y-m-d H:i:s'));
+		$order->update_meta_data( 'dibs_payment_type', $request['payment']['paymentDetails']['paymentType'] );
+		$order->update_meta_data( 'dibs_payment_method', $request['payment']['paymentDetails']['paymentMethod'] );
+		$order->update_meta_data( '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
 		$order->save();
 
 		wc_dibs_maybe_add_invoice_fee( $order );
 
 		if ( 'CARD' === $request['payment']['paymentDetails']['paymentType'] ) { // phpcs:ignore
-			$order->update_meta_data('dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan']);
+			$order->update_meta_data( 'dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan'] );
 			$order->save();
 		}
 
@@ -256,7 +256,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		if ( isset( $request['payment']['charges'][0]['chargeId'] ) && ! empty( $request['payment']['charges'][0]['chargeId'] ) ) {
 			// Get the DIBS order charge ID.
 			$dibs_charge_id = $request['payment']['charges'][0]['chargeId'];
-			$order->update_meta_data('_dibs_charge_id', $dibs_charge_id);
+			$order->update_meta_data( '_dibs_charge_id', $dibs_charge_id );
 			$order->save();
 
 			// Translators: Nets Easy Payment ID.
@@ -284,7 +284,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
  * @return void
  */
 function wc_dibs_save_shipping_reference_to_order( $order_id ) {
-	$order = wc_get_order($order_id);
+	$order = wc_get_order( $order_id );
 	if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
 		$packages        = WC()->shipping->get_packages();
 		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
@@ -292,7 +292,7 @@ function wc_dibs_save_shipping_reference_to_order( $order_id ) {
 		foreach ( $packages as $i => $package ) {
 			foreach ( $package['rates'] as $method ) {
 				if ( $chosen_shipping === $method->id ) {
-					$order->update_meta_data('_nets_shipping_reference', 'shipping|' . $method->id);
+					$order->update_meta_data( '_nets_shipping_reference', 'shipping|' . $method->id );
 					$order->save();
 				}
 			}
@@ -372,29 +372,20 @@ function dibs_easy_print_error_message( $wp_error ) {
  * @return int The ID of an order, or 0 if the order could not be found.
  */
 function nets_easy_get_order_id_by_purchase_id( $payment_id ) {
-	$query_args = array(
-		'fields'      => 'ids',
-		'post_type'   => wc_get_order_types(),
-		'post_status' => array_keys( wc_get_order_statuses() ),
-		'meta_key'    => '_dibs_payment_id', // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
-		'meta_value'  => sanitize_text_field( wp_unslash( $payment_id ) ), // phpcs:ignore WordPress.DB.SlowDBQuery -- Slow DB Query is ok here, we need to limit to our meta key.
-		'order'       => 'DESC',
-		'date_query'  => array(
-			array(
-				'after' => '30 day ago',
-			),
-		),
+	$key        = '_dibs_payment_id';
+	$payment_id = wc_clean( wp_unslash( $payment_id ) );
+	$orders     = wc_get_orders(
+		array(
+			'meta_key'   => $key,
+			'meta_value' => $payment_id,
+			'limit'      => 1,
+			'orderby'    => 'date',
+			'order'      => 'DESC',
+		)
 	);
 
-	$orders = wc_get_orders($query_args);
-
-	if ( $orders ) {
-		$order_id = $orders[0];
-	} else {
-		$order_id = 0;
-	}
-
-	return $order_id;
+	$order = reset( $orders );
+	return ( ! empty( $order ) && $order->get_meta( $key ) === $payment_id ) ? $order->get_id() : 0;
 }
 
 function nets_easy_all_payment_method_ids() {
