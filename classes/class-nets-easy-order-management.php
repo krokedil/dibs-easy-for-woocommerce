@@ -201,15 +201,15 @@ class Nets_Easy_Order_Management {
 	 */
 	public function is_canceled( $nets_easy_order, $order_id ) {
 		$order = wc_get_order( $order_id );
-		if ( ! is_wp_error( $nets_easy_order ) && $nets_easy_order['payment']['summary'] ) {
-			$canceled_amount = $nets_easy_order['payment']['summary']['cancelledAmount'];
+		if ( ! is_wp_error( $nets_easy_order ) && isset( $nets_easy_order['payment']['summary'] ) ) {
+			$canceled_amount = $nets_easy_order['payment']['summary']['cancelledAmount'] ?? false;
 			// If cancelledAmount exists, update the post meta value.
 			if ( $canceled_amount ) {
 				$order->update_meta_data( '_dibs_canceled_amount_id', $canceled_amount );
 				// Translators: 1. Nets Easy Payment id 2. Payment type  3.Charge id.
 				$order->add_order_note( sprintf( __( 'Payment canceled in Nets Easy ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $canceled_amount ) );
 				$order->save();
-        return true;
+				return true;
 			}
 		}
 		return false;
@@ -230,7 +230,7 @@ class Nets_Easy_Order_Management {
 			// If charges id exists, update the post meta value.
 			if ( $dibs_charge_id ) {
 				$charge_id = $nets_easy_order['payment']['charges'][0]['chargeId'];
-				$wc_order->update_meta_data('_dibs_charge_id', $charge_id);
+				$wc_order->update_meta_data( '_dibs_charge_id', $charge_id );
 				$wc_order->save();
 				// Translators: 1. Nets Easy Payment id 2. Payment type  3.Charge id.
 				$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
