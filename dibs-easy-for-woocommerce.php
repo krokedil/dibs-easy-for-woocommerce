@@ -16,7 +16,7 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    5.0.0
- * WC tested up to:         8.2.0
+ * WC tested up to:         8.3.1
  * Copyright:               © 2017-2023 Krokedil AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -178,7 +178,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-api.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-checkout.php' );
 
-			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 
 			$this->init_gateway();
 
@@ -188,7 +188,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			$this->order_management = new Nets_Easy_Order_Management();
 
 			$this->api = new Nets_Easy_API();
-
 		}
 
 
@@ -267,11 +266,14 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		}
 	}
 
-	add_action( 'before_woocommerce_init', function() {
-		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+	add_action(
+		'before_woocommerce_init',
+		function () {
+			if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+				\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			}
 		}
-	} );
+	);
 
 	DIBS_Easy::get_instance();
 	/**
