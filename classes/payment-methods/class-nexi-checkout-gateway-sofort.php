@@ -113,7 +113,7 @@ class Nets_Easy_Gateway_Sofort extends WC_Payment_Gateway {
 	 * Init form fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = include WC_DIBS_PATH . '/includes/nets-easy-settings-sofort.php';
+		$this->form_fields = include WC_DIBS_PATH . '/includes/nexi-checkout-settings-sofort.php';
 	}
 
 	/**

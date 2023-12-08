@@ -74,8 +74,10 @@ class Nets_Easy_Templates {
 
 				if ( locate_template( 'woocommerce/nets-easy-checkout.php' ) ) {
 					$dibs_easy_checkout_template = locate_template( 'woocommerce/nets-easy-checkout.php' );
+				} elseif ( locate_template( 'woocommerce/nexi-checkout.php' ) ) {
+					$dibs_easy_checkout_template = locate_template( 'woocommerce/nexi-checkout.php' );
 				} else {
-					$dibs_easy_checkout_template = WC_DIBS_PATH . '/templates/nets-easy-checkout.php';
+					$dibs_easy_checkout_template = WC_DIBS_PATH . '/templates/nexi-checkout.php';
 				}
 
 				// DIBS Easy checkout page.

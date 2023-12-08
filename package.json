@@ -25,7 +25,7 @@
     "webpack-cli": "^4.10.0"
   },
   "scripts": {
-    "lintjs": "npx eslint --config ./.eslintrc.json --ext .js assets/js/nets-easy-for-woocommerce.js --fix",
+    "lintjs": "npx eslint --config ./.eslintrc.json --ext .js assets/js/nexi-checkout-for-woocommerce.js --fix",
     "lintphp": "composer run lint-fix",
     "clear:transients": "docker-compose run --rm wp-cli wp wc tool run clear_transients --user=1",
     "clear:session": "docker-compose run --rm wp-cli wp wc tool run clear_sessions --user=1",

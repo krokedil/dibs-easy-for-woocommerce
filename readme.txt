@@ -27,7 +27,7 @@ https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 = Get started =
 To get started with Nexi Checkout you need to [sign up](https://www.nets.eu/en/payments/online/) for an account.
 
-More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
+More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/nexi-checkout-for-woocommerce/).
 
 = Connect Nexi Checkout to your webshop by setting up a test account. It is free and created immediately =
 With a test account, you will see how the Nexi Checkout administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).  
@@ -39,7 +39,7 @@ With a test account, you will see how the Nexi Checkout administration portal wo
 3. Upload the entire plugin directory to your /wp-content/plugins/ directory.
 4. Activate the plugin through the 'Plugins' menu in WordPress Administration.
 5. Go WooCommerce Settings --> Payment Gateways and configure your Nexi Checkout settings.
-6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
+6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/nexi-checkout-for-woocommerce/).
 
 
 == Frequently Asked Questions ==
@@ -47,7 +47,7 @@ With a test account, you will see how the Nexi Checkout administration portal wo
 Available for merchants in Denmark, Sweden and Norway.
 
 = Where can I find Nexi Checkout for WooCommerce documentation? =
-For help setting up and configuring Nexi Checkout for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
+For help setting up and configuring Nexi Checkout for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/nexi-checkout-for-woocommerce/).
 
 = Are there any specific requirements? =
 * WooCommerce 5.0 or newer is required.

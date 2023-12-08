@@ -87,7 +87,7 @@ class Nets_Easy_Checkout_Helper {
 		}
 
 		// Capture transaction directly when reservation has been accepted?
-		// https://developers.nets.eu/nets-easy/en-EU/api/payment-v1/#v1-payments-post-body-checkout-charge.
+		// https://developers.nets.eu/nexi-checkout/en-EU/api/payment-v1/#v1-payments-post-body-checkout-charge.
 		if ( 'yes' === $auto_capture ) {
 			$checkout['charge'] = true;
 		}

@@ -115,9 +115,9 @@ class Nets_Easy_Assets {
 
 		// Plugin checkout script. Registered here, but localized and enqueued on the wc_dibs_before_checkout_form hook.
 		$script_version = $this->nets_easy_is_script_debug_enabled();
-		$src            = WC_DIBS__URL . '/assets/js/nets-easy-for-woocommerce' . $script_version . '.js';
+		$src            = WC_DIBS__URL . '/assets/js/nexi-checkout-for-woocommerce' . $script_version . '.js';
 		wp_register_script(
-			'nets-easy-checkout',
+			'nexi-checkout-checkout',
 			$src,
 			array(
 				'jquery',
@@ -130,7 +130,7 @@ class Nets_Easy_Assets {
 		// Checkout utility (change to Nexi Checkout payment method in checkout).
 		wp_register_script(
 			'nets_easy_utility',
-			WC_DIBS__URL . '/assets/js/nets-easy-utility.js',
+			WC_DIBS__URL . '/assets/js/nexi-checkout-utility.js',
 			array( 'jquery' ),
 			WC_DIBS_EASY_VERSION,
 			true
@@ -171,7 +171,7 @@ class Nets_Easy_Assets {
 		// Checkout overlay.
 		wp_register_script(
 			'nets_easy_overlay',
-			WC_DIBS__URL . '/assets/js/nets-easy-overlay.js',
+			WC_DIBS__URL . '/assets/js/nexi-checkout-overlay.js',
 			array( 'jquery' ),
 			WC_DIBS_EASY_VERSION,
 			true
@@ -237,7 +237,7 @@ class Nets_Easy_Assets {
 
 		$private_key = 'yes' === $this->test_mode ? $this->settings['dibs_test_checkout_key'] : $this->settings['dibs_checkout_key'];
 		wp_localize_script(
-			'nets-easy-checkout',
+			'nexi-checkout-checkout',
 			'wcDibsEasy',
 			array(
 				'dibs_payment_id'                  => WC()->session->get( 'dibs_payment_id' ),
@@ -257,7 +257,7 @@ class Nets_Easy_Assets {
 				'locale'                           => wc_dibs_get_locale(),
 			)
 		);
-		wp_enqueue_script( 'nets-easy-checkout' );
+		wp_enqueue_script( 'nexi-checkout-checkout' );
 	}
 
 
@@ -296,13 +296,13 @@ class Nets_Easy_Assets {
 		$style_version = $this->nets_easy_is_script_debug_enabled();
 		// Load stylesheet for the checkout page.
 		wp_register_style(
-			'nets-easy-overlay-style',
-			WC_DIBS__URL . '/assets/css/nets-easy-overlay.css',
+			'nexi-checkout-overlay-style',
+			WC_DIBS__URL . '/assets/css/nexi-checkout-overlay.css',
 			array(),
 			WC_DIBS_EASY_VERSION
 		);
 
-		wp_enqueue_style( 'nets-easy-overlay-style' );
+		wp_enqueue_style( 'nexi-checkout-overlay-style' );
 	}
 }
 new Nets_Easy_Assets();

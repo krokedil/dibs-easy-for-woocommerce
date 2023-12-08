@@ -2,7 +2,7 @@ const path = require( 'path' );
 module.exports = {
 	mode: 'production', // production
 	entry: {
-		'nets-easy-for-woocommerce': './assets/js/nets-easy-for-woocommerce',
+		'nexi-checkout-for-woocommerce': './assets/js/nexi-checkout-for-woocommerce',
 	},
 
 	output: {

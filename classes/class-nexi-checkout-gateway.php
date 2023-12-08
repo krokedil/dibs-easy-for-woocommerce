@@ -121,7 +121,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 * Init form fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = include WC_DIBS_PATH . '/includes/nets-easy-settings.php';
+		$this->form_fields = include WC_DIBS_PATH . '/includes/nexi-checkout-settings.php';
 	}
 
 	/**

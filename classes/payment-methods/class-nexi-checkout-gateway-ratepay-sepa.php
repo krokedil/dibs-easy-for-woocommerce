@@ -113,7 +113,7 @@ class Nets_Easy_Gateway_Ratepay_Sepa extends WC_Payment_Gateway {
 	 * Init form fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = include WC_DIBS_PATH . '/includes/nets-easy-settings-ratepay-sepa.php';
+		$this->form_fields = include WC_DIBS_PATH . '/includes/nexi-checkout-settings-ratepay-sepa.php';
 	}
 
 	/**

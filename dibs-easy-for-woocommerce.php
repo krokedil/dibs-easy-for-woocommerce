@@ -6,7 +6,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:             Nexi Checkout for WooCommerce
- * Plugin URI:              https://krokedil.se/produkt/nets-easy/
+ * Plugin URI:              https://krokedil.se/produkt/nexi-checkout/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nexi Checkout</a> checkout for WooCommerce.
  * Version:                 2.6.1
  * Author:                  Krokedil
@@ -132,51 +132,51 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			}
 
 			if ( 'embedded' === $this->checkout_flow ) {
-				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
+				include_once plugin_basename( 'classes/class-nexi-checkout-templates.php' );
 			}
 
-			include_once plugin_basename( 'classes/class-nets-easy-ajax.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-order-management.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-admin-notices.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-api-callbacks.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-confirmation.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-logger.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-email.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-ajax.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-order-management.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-admin-notices.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-api-callbacks.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-confirmation.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-logger.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-email.php' );
 
-			include_once plugin_basename( 'classes/class-nets-easy-subscriptions.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-subscriptions.php' );
 
-			include_once plugin_basename( 'includes/nets-easy-country-converter.php' );
-			include_once plugin_basename( 'includes/nets-easy-functions.php' );
+			include_once plugin_basename( 'includes/nexi-checkout-country-converter.php' );
+			include_once plugin_basename( 'includes/nexi-checkout-functions.php' );
 
-			include_once plugin_basename( 'classes/requests/class-nets-easy-request.php' );
-			include_once plugin_basename( 'classes/requests/class-nets-easy-request-post.php' );
-			include_once plugin_basename( 'classes/requests/class-nets-easy-request-put.php' );
-			include_once plugin_basename( 'classes/requests/class-nets-easy-request-get.php' );
-			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-create-order.php' );
-			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-update-order.php' );
-			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-update-order-reference.php' );
-			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-activate-order.php' );
-			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-cancel-order.php' );
-			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-refund-order.php' );
-			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-order.php' );
-			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-charge-subscription.php' );
-			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-charge-unscheduled-subscription.php' );
-			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-subscription-bulk-charge-id.php' );
-			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-subscription.php' );
-			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-subscription-by-external-reference.php' );
-			include_once plugin_basename( 'classes/requests/get/class-nets-easy-request-get-unscheduled-subscription-by-external-reference.php' );
+			include_once plugin_basename( 'classes/requests/class-nexi-checkout-request.php' );
+			include_once plugin_basename( 'classes/requests/class-nexi-checkout-request-post.php' );
+			include_once plugin_basename( 'classes/requests/class-nexi-checkout-request-put.php' );
+			include_once plugin_basename( 'classes/requests/class-nexi-checkout-request-get.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nexi-checkout-request-create-order.php' );
+			include_once plugin_basename( 'classes/requests/put/class-nexi-checkout-request-update-order.php' );
+			include_once plugin_basename( 'classes/requests/put/class-nexi-checkout-request-update-order-reference.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nexi-checkout-request-activate-order.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nexi-checkout-request-cancel-order.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nexi-checkout-request-refund-order.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nexi-checkout-request-get-order.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nexi-checkout-request-charge-subscription.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nexi-checkout-request-charge-unscheduled-subscription.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nexi-checkout-request-get-subscription-bulk-charge-id.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nexi-checkout-request-get-subscription.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nexi-checkout-request-get-subscription-by-external-reference.php' );
+			include_once plugin_basename( 'classes/requests/get/class-nexi-checkout-request-get-unscheduled-subscription-by-external-reference.php' );
 
-			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-checkout-helper.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-cart-helper.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-order-items-helper.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-order-helper.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-notification-helper.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-order-helper.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-payment-method-helper.php' );
-			include_once plugin_basename( 'classes/requests/helpers/class-nets-easy-refund-helper.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-assets.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-api.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-checkout.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nexi-checkout-checkout-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nexi-checkout-cart-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nexi-checkout-order-items-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nexi-checkout-order-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nexi-checkout-notification-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nexi-checkout-order-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nexi-checkout-payment-method-helper.php' );
+			include_once plugin_basename( 'classes/requests/helpers/class-nexi-checkout-refund-helper.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-assets.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-api.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-checkout.php' );
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 
@@ -198,13 +198,13 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
-			include_once plugin_basename( 'classes/class-nets-easy-gateway.php' );
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-card.php' );
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-sofort.php' );
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-trustly.php' );
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php' );
+			include_once plugin_basename( 'classes/class-nexi-checkout-gateway.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nexi-checkout-gateway-card.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nexi-checkout-gateway-sofort.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nexi-checkout-gateway-trustly.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nexi-checkout-gateway-ratepay-sepa.php' );
 
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-swish.php' );
+			include_once plugin_basename( 'classes/payment-methods/class-nexi-checkout-gateway-swish.php' );
 
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_dibs_easy' ) );
 		}

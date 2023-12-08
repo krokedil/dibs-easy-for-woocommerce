@@ -109,7 +109,7 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 	 * Init form fields.
 	 */
 	public function init_form_fields() {
-		$this->form_fields = include WC_DIBS_PATH . '/includes/nets-easy-settings-swish.php';
+		$this->form_fields = include WC_DIBS_PATH . '/includes/nexi-checkout-settings-swish.php';
 	}
 
 	/**
