@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Nets_Easy_Ajax extends WC_AJAX {
 
 	/**
-	 * $private_key. Nets private key.
+	 * $private_key. Nexi private key.
 	 *
 	 * @var string
 	 */
@@ -71,7 +71,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
-		// Get customer data from Nets.
+		// Get customer data from Nexi.
 		$address   = filter_input( INPUT_POST, 'address', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 		$country   = dibs_get_iso_2_country( $address['countryCode'] );
 		$post_code = $address['postalCode'];
@@ -120,7 +120,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 	}
 
 	/**
-	 * Get Nets order data, right before WC form is submitted in checkout.
+	 * Get Nexi order data, right before WC form is submitted in checkout.
 	 *
 	 * @return void
 	 * @throws Exception When query validation fails.
@@ -184,24 +184,24 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			if ( is_wp_error( $response ) ) {
 				$message = $response->get_error_message();
 			} else {
-				$message = 'Empty response from Nets.';
+				$message = 'Empty response from Nexi.';
 			}
 
-			Nets_Easy_Logger::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . wp_json_encode( $message ) );
+			Nets_Easy_Logger::log( 'processWooCheckout triggered for Nexi payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . wp_json_encode( $message ) );
 
 			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
 		} else {
 
-			// Check if the WC cart total matches the Nets order total.
+			// Check if the WC cart total matches the Nexi order total.
 			$cart_total       = intval( round( WC()->cart->total * 100 ) );
 			$nets_order_total = $response['payment']['orderDetails']['amount'];
 
 			// Allow for a difference, measured in the smallest currency unit (e.g., 300 = 3 SEK).
 			if ( abs( $cart_total - $nets_order_total ) > 300 ) {
-				Nets_Easy_Logger::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but cart total does not match Nets order total. WooCommerce form not submitted. Cart total: ' . $cart_total . ', Nets order total: ' . $nets_order_total );
+				Nets_Easy_Logger::log( 'processWooCheckout triggered for Nexi payment ID ' . $payment_id . ', but cart total does not match Nexi order total. WooCommerce form not submitted. Cart total: ' . $cart_total . ', Nexi order total: ' . $nets_order_total );
 
-				wp_send_json_error( __( 'Cart total does not match Nets order total. Please try refreshing the page.', 'dibs-easy-for-woocommerce' ) );
+				wp_send_json_error( __( 'Cart total does not match Nexi order total. Please try refreshing the page.', 'dibs-easy-for-woocommerce' ) );
 			}
 
 			// All good with the request.
@@ -213,7 +213,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			// Store the order data in a sesstion. We might need it if form processing in Woo fails.
 			WC()->session->set( 'dibs_order_data', $response );
 
-			Nets_Easy_Logger::log( 'processWooCheckout triggered and checkout form about to be submitted for Nets payment ID ' . $payment_id );
+			Nets_Easy_Logger::log( 'processWooCheckout triggered and checkout form about to be submitted for Nexi payment ID ' . $payment_id );
 
 			self::prepare_cart_before_form_processing( $response['payment']['consumer']['shippingAddress']['country'] );
 			wp_send_json_success( $response );

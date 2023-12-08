@@ -1,6 +1,6 @@
 <?php
 /**
- * Formats the order information sent to Nets.
+ * Formats the order information sent to Nexi.
  *
  * @package DIBS_Easy/Classes/Requests/Helpers
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * DIBS_Requests_Order class.
  *
- * Class that formats the order information sent to Nets.
+ * Class that formats the order information sent to Nexi.
  */
 class Nets_Easy_Order_Helper {
 

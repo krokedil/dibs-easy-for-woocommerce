@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles subscription payments with Nets.
+ * Handles subscription payments with Nexi.
  *
  * @package DIBS_Easy/Classes
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Handles subscription payments with Nets.
+ * Handles subscription payments with Nexi.
  *
  * @class    Nets_Easy_Subscriptions
  * @version  1.0
@@ -48,9 +48,9 @@ class Nets_Easy_Subscriptions {
 	}
 
 	/**
-	 * Marks the order as a recurring order for Nets Easy
+	 * Marks the order as a recurring order for Nexi Checkout
 	 *
-	 * @param array $request_args The Nets Easy request arguments.
+	 * @param array $request_args The Nexi Checkout request arguments.
 	 * @return array
 	 */
 	public function maybe_add_subscription( $request_args ) {
@@ -173,7 +173,7 @@ class Nets_Easy_Subscriptions {
 	}
 
 	/**
-	 * Returns the SKU used in Nets for the prodct.
+	 * Returns the SKU used in Nexi for the prodct.
 	 *
 	 * @param object $product WooCommerce product.
 	 * @param string $product_id WooCommerce product id.
@@ -193,7 +193,7 @@ class Nets_Easy_Subscriptions {
 	 * Sets the recurring token for the subscription order
 	 *
 	 * @param string $order_id WooCommerce order id.
-	 * @param array  $dibs_order Nets order.
+	 * @param array  $dibs_order Nexi order.
 	 *
 	 * @return array|false On success the same $dibs_order is returned, otherwise FALSE if something goes wrong.
 	 */
@@ -208,7 +208,7 @@ class Nets_Easy_Subscriptions {
 				$subscription_id   = $dibs_order['payment']['unscheduledSubscription']['unscheduledSubscriptionId'];
 				$subscription_type = 'unscheduled_subscription';
 			}
-			$wc_order->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
+			$wc_order->add_order_note( sprintf( __( 'Nexi Checkout subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 			$wc_order->update_meta_data( '_dibs_recurring_token', $subscription_id );
 			$wc_order->update_meta_data( '_dibs_subscription_type', $subscription_type );
 
@@ -225,7 +225,7 @@ class Nets_Easy_Subscriptions {
 			) || wcs_is_subscription( $wc_order ) ) ) {
 				$subscriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 				foreach ( $subscriptions as $subscription ) {
-					$subscription->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
+					$subscription->add_order_note( sprintf( __( 'Nexi Checkout subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 					$subscription->update_meta_data( '_dibs_recurring_token', $subscription_id );
 					$subscription->update_meta_data( '_dibs_subscription_type', $subscription_type );
 					$subscription->save();
@@ -301,8 +301,8 @@ class Nets_Easy_Subscriptions {
 			$order->update_meta_data( '_dibs_charge_id', $response['chargeId'] );
 			$order->update_meta_data( '_dibs_subscription_type', $subscription_type );
 			$order->save();
-			/* Translators: Nets Payment ID & Charge ID. */
-			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Payment ID: %s. Charge ID %s.', 'dibs-easy-for-woocommerce' ), $response['paymentId'], $response['chargeId'] ) ); // phpcs:ignore
+			/* Translators: Nexi Payment ID & Charge ID. */
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nexi. Payment ID: %s. Charge ID %s.', 'dibs-easy-for-woocommerce' ), $response['paymentId'], $response['chargeId'] ) ); // phpcs:ignore
 
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_complete( $response['paymentId'] ); // phpcs:ignore
@@ -310,8 +310,8 @@ class Nets_Easy_Subscriptions {
 				$subscription->save();
 			}
 		} else {
-			/* Translators: Request response from Nets. */
-			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nets. Error message: %s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response->get_error_message() ) ) );// TODO check the type.
+			/* Translators: Request response from Nexi. */
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment failed with Nexi. Error message: %s.', 'dibs-easy-for-woocommerce' ), wp_json_encode( $response->get_error_message() ) ) );// TODO check the type.
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_failed();
 			}
@@ -342,7 +342,7 @@ class Nets_Easy_Subscriptions {
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->update_meta_data( '_dibs_recurring_token', $recurring_token );
 				$subscription->save();
-				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response['subscriptionId'] ) ); // phpcs:ignore
+				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nexi. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response['subscriptionId'] ) ); // phpcs:ignore
 			}
 			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
 				// Save card data in renewal order.
@@ -382,7 +382,7 @@ class Nets_Easy_Subscriptions {
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->update_meta_data( '_dibs_recurring_token', $recurring_token );
 				$subscription->save();
-				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s. Subscription type: %s.', 'dibs-easy-for-woocommerce' ), $recurring_token, 'Unscheduled' ) ); // phpcs:ignore
+				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nexi. Recurring token: %s. Subscription type: %s.', 'dibs-easy-for-woocommerce' ), $recurring_token, 'Unscheduled' ) ); // phpcs:ignore
 			}
 			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
 				// Save card data in renewal order.
@@ -409,7 +409,7 @@ class Nets_Easy_Subscriptions {
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
 				<?php
-					echo '<p><strong>' . esc_html( __( 'Nets recurring token' ) ) . ':</strong>' . esc_html( $order->get_meta( '_dibs_recurring_token' ) ) . '</p>';
+					echo '<p><strong>' . esc_html( __( 'Nexi recurring token' ) ) . ':</strong>' . esc_html( $order->get_meta( '_dibs_recurring_token' ) ) . '</p>';
 				?>
 				</div>
 				<div class="edit_address">
@@ -417,7 +417,7 @@ class Nets_Easy_Subscriptions {
 					woocommerce_wp_text_input(
 						array(
 							'id'            => '_dibs_recurring_token',
-							'label'         => __( 'Nets recurring token' ),
+							'label'         => __( 'Nexi recurring token' ),
 							'wrapper_class' => '_billing_company_field',
 						)
 					);
@@ -458,7 +458,7 @@ class Nets_Easy_Subscriptions {
 	 */
 	public function maybe_change_needs_payment( $wc_result, $order, $valid_order_statuses ) {
 
-		// Only change for Nets Easy orders.
+		// Only change for Nexi Checkout orders.
 		if ( ! in_array( $order->get_payment_method(), nets_easy_all_payment_method_ids(), true ) ) {
 			return $wc_result;
 		}

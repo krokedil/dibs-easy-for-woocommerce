@@ -182,7 +182,7 @@ jQuery( function ( $ ) {
         },
         /**
          * Triggers when customer clicks the pay button.
-         * Gets the Nets Easy order and starts the order submission
+         * Gets the Nexi Checkout order and starts the order submission
          *
          * @param {string} paymentId
          */
@@ -228,7 +228,7 @@ jQuery( function ( $ ) {
          * @param {Object} data
          */
         setAddressData( data ) {
-            dibsEasyForWoocommerce.logToFile( 'Received "customer data" from Nets Easy' )
+            dibsEasyForWoocommerce.logToFile( 'Received "customer data" from Nexi Checkout' )
             const consumer = data.data.payment.consumer
             const { billingAddress, shippingAddress } = consumer
 

@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Nets_Easy_Request_Update_Order_Reference extends Nets_Easy_Request_Put {
 
 	/**
-	 * $payment_id. Nets Payment ID.
+	 * $payment_id. Nexi Payment ID.
 	 *
 	 * @var string
 	 */

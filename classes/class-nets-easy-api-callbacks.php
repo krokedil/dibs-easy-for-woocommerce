@@ -70,9 +70,9 @@ class Nets_Easy_Api_Callbacks {
 	/**
 	 * Handle execution of payment created cronjob.
 	 *
-	 * @param string $payment_id Nets payment id.
+	 * @param string $payment_id Nexi payment id.
 	 * @param string $order_number WC order number.
-	 * @param string $amount Nets order amount.
+	 * @param string $amount Nexi order amount.
 	 */
 	public function execute_dibs_payment_created_callback( $payment_id, $order_number, $amount ) {
 
@@ -104,7 +104,7 @@ class Nets_Easy_Api_Callbacks {
 	 * Check order totals.
 	 *
 	 * @param object $order WC order.
-	 * @param string $dibs_order_total Order total amount from Nets.
+	 * @param string $dibs_order_total Order total amount from Nexi.
 	 */
 	public function check_order_totals( $order, $dibs_order_total ) {
 
@@ -114,14 +114,14 @@ class Nets_Easy_Api_Callbacks {
 		$woo_order_total = intval( round( $order->get_total() * 100 ) );
 
 		if ( $woo_order_total > $dibs_order_total && ( $woo_order_total - $dibs_order_total ) > 30 ) {
-			/* Translators: Nets order total. */
-			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
-			Nets_Easy_Logger::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
+			/* Translators: Nexi order total. */
+			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nexi order total do not match. Nexi order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
+			Nets_Easy_Logger::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nexi order total: ' . $dibs_order_total );
 			$order_totals_match = false;
 		} elseif ( $dibs_order_total > $woo_order_total && ( $dibs_order_total - $woo_order_total ) > 30 ) {
-			/* Translators: Nets order total. */
-			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nets order total do not match. Nets order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
-			Nets_Easy_Logger::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nets order total: ' . $dibs_order_total );
+			/* Translators: Nexi order total. */
+			$order->update_status( 'on-hold', sprintf( __( 'Order needs manual review. WooCommerce order total and Nexi order total do not match. Nexi order total: %s.', 'dibs-easy-for-woocommerce' ), $dibs_order_total ) );
+			Nets_Easy_Logger::log( 'Order total missmatch in order:' . $order->get_order_number() . '. Woo order total: ' . $woo_order_total . '. Nexi order total: ' . $dibs_order_total );
 			$order_totals_match = false;
 		}
 

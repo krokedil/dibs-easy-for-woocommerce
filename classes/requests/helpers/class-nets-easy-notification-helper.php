@@ -1,6 +1,6 @@
 <?php
 /**
- * Formats the webhook sent to Nets.
+ * Formats the webhook sent to Nexi.
  *
  * @package DIBS_Easy/Classes/Requests/Helpers
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * DIBS_Requests_Notifications class.
  *
- * Class that formats the webhook information sent to Nets.
+ * Class that formats the webhook information sent to Nexi.
  */
 class Nets_Easy_Notification_Helper {
 

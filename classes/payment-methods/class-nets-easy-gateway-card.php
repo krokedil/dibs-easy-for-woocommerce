@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets Gateway Card class
+ * Nexi Gateway Card class
  *
  * @package DIBS_Easy/Classes
  */
@@ -28,9 +28,9 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 
 		$this->id = 'nets_easy_card';
 
-		$this->method_title = __( 'Nets Easy Card', 'dibs-easy-for-woocommerce' );
+		$this->method_title = __( 'Nexi Checkout Card', 'dibs-easy-for-woocommerce' );
 
-		$this->method_description = __( 'Nets Easy Card payment', 'dibs-easy-for-woocommerce' );
+		$this->method_description = __( 'Nexi Checkout Card payment', 'dibs-easy-for-woocommerce' );
 
 		$this->description = $this->get_option( 'description' );
 
@@ -83,7 +83,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 			$icon_width = $this->payment_gateway_icon_max_width;
 		}
 
-		$icon_html = '<img src="' . $icon_src . '" alt="Nets - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
+		$icon_html = '<img src="' . $icon_src . '" alt="Nexi - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
 		return apply_filters( 'nets_easy_card_icon_html', $icon_html );
 	}
 
@@ -126,7 +126,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 			);
 			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
-				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
+				$order->add_order_note( __( 'Customer redirected to Nexi payment page.', 'dibs-easy-for-woocommerce' ) );
 
 				return array(
 					'result'   => 'success',
@@ -168,8 +168,8 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		}
 
 		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
-			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
+			// Translators: Nexi refund ID.
+			$order->add_order_note( sprintf( __( 'Refund made in Nexi Checkout with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
 
 			return true;
 		}
@@ -186,7 +186,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 	 */
 	protected function process_redirect_handler( $order_id ) {
 
-		// Create payment in Nets.
+		// Create payment in Nexi.
 		$response = Nets_Easy()->api->create_nets_easy_order(
 			array(
 				'checkout_flow'                 => 'redirect',
@@ -203,9 +203,9 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 
 		$order = wc_get_order( $order_id );
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
-			// All good. Redirect customer to Nets payment page.
-			$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
-			$order->update_meta_data('_dibs_payment_id', $response['paymentId']);
+			// All good. Redirect customer to Nexi payment page.
+			$order->add_order_note( __( 'Customer redirected to Nexi payment page.', 'dibs-easy-for-woocommerce' ) );
+			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
 			$order->save();
 			return array(
 				'result'   => 'success',
@@ -225,7 +225,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 	 */
 	protected function process_overlay_handler( $order_id ) {
 
-		// Create payment in Nets.
+		// Create payment in Nexi.
 		$response = Nets_Easy()->api->create_nets_easy_order(
 			array(
 				'checkout_flow'                 => 'overlay',
@@ -243,8 +243,8 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to DIBS payment page.
-			$order->add_order_note( __( 'Nets payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
-			$order->update_meta_data('_dibs_payment_id', $response['paymentId']);
+			$order->add_order_note( __( 'Nexi payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
+			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
 			$order->save();
 			return array(
 				'result'   => 'success',

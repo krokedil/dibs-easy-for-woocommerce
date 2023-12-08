@@ -1,6 +1,6 @@
 <?php
 /**
- * Formats the order items sent to Nets. Used with redirect checkout flow.
+ * Formats the order items sent to Nexi. Used with redirect checkout flow.
  *
  * @package DIBS_Easy/Classes/Requests/Helpers
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * DIBS_Requests_Get_Order_Items class.
  *
- * Class that formats the order items sent to Nets. Used with redirect checkout flow.
+ * Class that formats the order items sent to Nexi. Used with redirect checkout flow.
  */
 class Nets_Easy_Order_Items_Helper {
 
@@ -177,7 +177,7 @@ class Nets_Easy_Order_Items_Helper {
 	 *
 	 * @param string $order_id The WooCommerce order ID.
 	 * @param object $order The WooCommerce order.
-	 * @param array  $items The items about to be sent to Nets.
+	 * @param array  $items The items about to be sent to Nexi.
 	 * @return array
 	 */
 	public static function process_gift_cards( $order_id, $order, $items ) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets settings class.
+ * Nexi settings class.
  *
  * @package DIBS_Easy/Classes
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Settings for Nets Easy
+ * Settings for Nexi Checkout
  */
 return apply_filters(
 	'dibs_easy_sofort_settings',
@@ -18,13 +18,13 @@ return apply_filters(
 		'enabled'                    => array(
 			'title'   => __( 'Enable/Disable', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Nets Easy Sofort', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Nexi Checkout Sofort', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'title'                      => array(
 			'title'       => __( 'Title', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'This is the title that the user sees on the checkout page for Nets Easy.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'This is the title that the user sees on the checkout page for Nexi Checkout.', 'dibs-easy-for-woocommerce' ),
 			'default'     => __( 'Sofort payment', 'dibs-easy-for-woocommerce' ),
 		),
 		'description'                => array(
@@ -37,7 +37,7 @@ return apply_filters(
 		'payment_gateway_icon'       => array(
 			'title'       => __( 'Payment gateway icon', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nets logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nexi logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'default',
 			'desc_tip'    => false,
 		),

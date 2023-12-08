@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets checkout functions
+ * Nexi checkout functions
  *
  * @package DIBS_Easy/Classes
  */
@@ -120,7 +120,7 @@ function wc_dibs_unset_sessions() {
 }
 
 /**
- * Get Nets locale.
+ * Get Nexi locale.
  *
  * @return string
  */
@@ -169,7 +169,7 @@ function wc_dibs_get_locale() {
 
 
 /**
- * Get name cleaned for Nets.
+ * Get name cleaned for Nexi.
  *
  * @param string $name Name to be cleaned.
  */
@@ -214,7 +214,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		$order->add_order_note(
 			sprintf(
 				/* translators: %s: Error message */
-				__( 'Nets Easy: Error when confirming order: %s', 'dibs-easy-for-woocommerce' ),
+				__( 'Nexi Checkout: Error when confirming order: %s', 'dibs-easy-for-woocommerce' ),
 				$request->get_error_message()
 			)
 		);
@@ -246,7 +246,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 				$order->add_order_note(
 					sprintf(
 						/* translators: %s: Error message */
-						__( 'Nets Easy: Error when updating order reference to Nets. Error message : %s', 'dibs-easy-for-woocommerce' ),
+						__( 'Nexi Checkout: Error when updating order reference to Nexi. Error message : %s', 'dibs-easy-for-woocommerce' ),
 						$order_reference_response->get_error_message()
 					)
 				);
@@ -259,11 +259,11 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 			$order->update_meta_data( '_dibs_charge_id', $dibs_charge_id );
 			$order->save();
 
-			// Translators: Nets Easy Payment ID.
-			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %s. Payment type - %s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
+			// Translators: Nexi Checkout Payment ID.
+			$order->add_order_note( sprintf( __( 'New payment created in Nexi Checkout with Payment ID %s. Payment type - %s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
 		} else {
-			// Translators: Nets Easy Payment ID.
-			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentType'] ) );
+			// Translators: Nexi Checkout Payment ID.
+			$order->add_order_note( sprintf( __( 'New payment created in Nexi Checkout with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentType'] ) );
 		}
 		$order->payment_complete( $payment_id );
 
@@ -366,9 +366,9 @@ function dibs_easy_print_error_message( $wp_error ) {
 }
 
 /**
- * Finds an Order ID based on a payment ID (the Nets order number).
+ * Finds an Order ID based on a payment ID (the Nexi order number).
  *
- * @param string $payment_id Nets order number saved as Payment ID in WC order.
+ * @param string $payment_id Nexi order number saved as Payment ID in WC order.
  * @return int The ID of an order, or 0 if the order could not be found.
  */
 function nets_easy_get_order_id_by_purchase_id( $payment_id ) {

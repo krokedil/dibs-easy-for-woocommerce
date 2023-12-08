@@ -47,8 +47,8 @@ msgid "Order date: "
 msgstr "Orderdatum: "
 
 #: dibs-easy-for-woocommerce.php:281
-msgid "Nets Payment ID: "
-msgstr "Nets betalnings ID:"
+msgid "Nexi Payment ID: "
+msgstr "Nexi betalnings ID:"
 
 #: dibs-easy-for-woocommerce.php:284
 msgid "Payment method: "
@@ -59,7 +59,7 @@ msgid "Customer card: "
 msgstr "Kortnummer: "
 
 #: dibs-easy-for-woocommerce.php:294
-msgid "There was a problem paying with Nets."
+msgid "There was a problem paying with Nexi."
 msgstr ""
 
 #: classes/class-dibs-subscriptions.php:71
@@ -81,7 +81,7 @@ msgstr "st"
 #, php-format
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
-"Nets. Recurring token: %s"
+"Nexi. Recurring token: %s"
 msgstr ""
 
 #: classes/class-dibs-subscriptions.php:221
@@ -91,20 +91,20 @@ msgstr ""
 
 #: classes/class-dibs-subscriptions.php:235
 #, php-format
-msgid "Subscription payment made with Nets. Payment ID: %s. Charge ID %s."
+msgid "Subscription payment made with Nexi. Payment ID: %s. Charge ID %s."
 msgstr ""
-"Prenumerationsbetalning gjord hos Nets. Betalnings ID: %s. Debiterings ID "
+"Prenumerationsbetalning gjord hos Nexi. Betalnings ID: %s. Debiterings ID "
 "%s."
 
 #: classes/class-dibs-subscriptions.php:241
 #, php-format
-msgid "Subscription payment failed with Nets. Error message: %s."
-msgstr "Prenumerationsbetalning misslyckades hos Nets. Felmeddelande: %s."
+msgid "Subscription payment failed with Nexi. Error message: %s."
+msgstr "Prenumerationsbetalning misslyckades hos Nexi. Felmeddelande: %s."
 
 #: classes/class-dibs-subscriptions.php:276
 #, php-format
-msgid "Subscription payment made with Nets. Nets order id: %s"
-msgstr "Prenumerationsbetalning genomförd hos Nets. Nets order id: %s"
+msgid "Subscription payment made with Nexi. Nexi order id: %s"
+msgstr "Prenumerationsbetalning genomförd hos Nexi. Nexi order id: %s"
 
 #: classes/class-dibs-subscriptions.php:282
 #, php-format
@@ -114,62 +114,62 @@ msgstr ""
 
 #: classes/class-dibs-subscriptions.php:288
 msgid ""
-"Subscription payment failed with Nets during scheduled request. No paymentId "
+"Subscription payment failed with Nexi during scheduled request. No paymentId "
 "found in response"
 msgstr ""
 
 #: classes/class-dibs-api-callbacks.php:148
 #, php-format
-msgid "Failed trying to receive the order from Nets. Error message: %s."
+msgid "Failed trying to receive the order from Nexi. Error message: %s."
 msgstr ""
 
 #: classes/class-dibs-api-callbacks.php:176
 #: classes/class-dibs-api-callbacks.php:180
 #, php-format
 msgid ""
-"Order needs manual review. WooCommerce order total and Nets order total do "
-"not match. Nets order total: %s."
+"Order needs manual review. WooCommerce order total and Nexi order total do "
+"not match. Nexi order total: %s."
 msgstr ""
 
 #: classes/class-dibs-api-callbacks.php:292
 msgid ""
-"Order created via Nets Easy API callback. Please verify the order in Nets "
+"Order created via Nexi Checkout API callback. Please verify the order in Nexi "
 "system."
 msgstr ""
 
-#. Nets Easy Payment ID.
+#. Nexi Checkout Payment ID.
 #: classes/class-dibs-api-callbacks.php:312
 #: classes/class-dibs-api-callbacks.php:315
 #: includes/dibs-checkout-functions.php:222
 #: includes/dibs-checkout-functions.php:225
 #, php-format
 msgid ""
-"New payment created in Nets Easy with Payment ID %s. Payment type - %s. "
+"New payment created in Nexi Checkout with Payment ID %s. Payment type - %s. "
 "Awaiting charge."
 msgstr ""
 
 #: classes/class-dibs-api-callbacks.php:326
 #, php-format
 msgid ""
-"Order needs manual review, WooCommerce total and Nets total do not match. "
-"Nets order total: %s."
+"Order needs manual review, WooCommerce total and Nexi total do not match. "
+"Nexi order total: %s."
 msgstr ""
 
 #: classes/class-dibs-admin-notices.php:45
 #, php-format
 msgid ""
 "You need to <a href=\"%s\" target=\"_blank\">specify a terms page</a> in "
-"WooCommerce Settings to be able to use Nets Easy."
+"WooCommerce Settings to be able to use Nexi Checkout."
 msgstr ""
 
 #: classes/class-dibs-admin-notices.php:59
-msgid "You need to enable and configure https to be able to use Nets Easy."
+msgid "You need to enable and configure https to be able to use Nexi Checkout."
 msgstr ""
 
 #: classes/class-dibs-admin-notices.php:74
 #, php-format
 msgid ""
-"To be able to use Nets Easy correctly you need to tick the checkbox <i>When "
+"To be able to use Nexi Checkout correctly you need to tick the checkbox <i>When "
 "creating an account, automatically generate a username from the customer's "
 "email address</i> when having the <i>Allow customers to create an account "
 "during checkout</i> setting activated. This can be changed in the <a "
@@ -179,7 +179,7 @@ msgstr ""
 #: classes/class-dibs-admin-notices.php:80
 #, php-format
 msgid ""
-"To be able to use Nets Easy correctly you need to tick the checkbox <i>When "
+"To be able to use Nexi Checkout correctly you need to tick the checkbox <i>When "
 "creating an account, automatically generate an account password</i> when "
 "having the <i>Allow customers to create an account during checkout</i> "
 "setting activated. This can be changed in the <a href=\"%s\">Accounts & "
@@ -187,21 +187,21 @@ msgid ""
 msgstr ""
 
 #: classes/class-dibs-easy-gateway.php:13 includes/dibs-settings.php:23
-msgid "Nets Easy"
+msgid "Nexi Checkout"
 msgstr ""
 
 #: classes/class-dibs-easy-gateway.php:15
-msgid "Nets Easy Payment for checkout"
+msgid "Nexi Checkout Payment for checkout"
 msgstr ""
 
 #: classes/class-dibs-easy-gateway.php:88
 #: classes/class-dibs-easy-gateway.php:137
-msgid "Customer redirected to Nets payment page."
+msgid "Customer redirected to Nexi payment page."
 msgstr ""
 
 #: classes/class-dibs-easy-gateway.php:103
 #: classes/class-dibs-easy-gateway.php:153
-msgid "An error occured during communication with Nets. Please try again."
+msgid "An error occured during communication with Nexi. Please try again."
 msgstr ""
 
 #: classes/class-dibs-easy-gateway.php:105
@@ -210,12 +210,12 @@ msgstr ""
 msgid "%s"
 msgstr ""
 
-#. Nets refund ID.
+#. Nexi refund ID.
 #: classes/class-dibs-easy-gateway.php:169
 #, php-format
-msgid "Refund made in Nets Easy with refund ID %s. Reason: %s"
+msgid "Refund made in Nexi Checkout with refund ID %s. Reason: %s"
 msgstr ""
-"Återbetalnings genomförd i Nets Easy med återbetalnings ID %s. Orsak: %s"
+"Återbetalnings genomförd i Nexi Checkout med återbetalnings ID %s. Orsak: %s"
 
 #: classes/class-dibs-easy-gateway.php:197
 msgid "Order finalized in thankyou page."
@@ -224,9 +224,9 @@ msgstr ""
 #: classes/class-dibs-order-submission-failure.php:51
 #, php-format
 msgid ""
-"New payment created in Nets Easy with Payment ID %s. Payment type - %s."
+"New payment created in Nexi Checkout with Payment ID %s. Payment type - %s."
 msgstr ""
-"Ny betalning skapad i Nets Easy med betalnings ID %s. Betalsätt - %s."
+"Ny betalning skapad i Nexi Checkout med betalnings ID %s. Betalsätt - %s."
 
 #: classes/class-dibs-order-submission-failure.php:56
 msgid ""
@@ -237,27 +237,27 @@ msgstr ""
 #: classes/class-dibs-post-checkout.php:41
 #, php-format
 msgid ""
-"No charge needed in Nets system since %s is a account to account payment."
+"No charge needed in Nexi system since %s is a account to account payment."
 msgstr ""
 
-#. Nets Charge ID.
+#. Nexi Charge ID.
 #: classes/class-dibs-post-checkout.php:52
 #, php-format
-msgid "Payment charged in Nets Easy with charge ID %s"
-msgstr "Betalning debiterad i Nets Easy med debiterings ID %s"
+msgid "Payment charged in Nexi Checkout with charge ID %s"
+msgstr "Betalning debiterad i Nexi Checkout med debiterings ID %s"
 
 #: classes/class-dibs-post-checkout.php:93
-msgid "Order has been canceled in Nets"
+msgid "Order has been canceled in Nexi"
 msgstr ""
 
 #: classes/class-dibs-post-checkout.php:102
 #, php-format
-msgid "There was a problem canceling the order in Nets: %s"
+msgid "There was a problem canceling the order in Nexi: %s"
 msgstr ""
 
 #: classes/class-dibs-post-checkout.php:109
 #, php-format
-msgid "Nets Error: %s"
+msgid "Nexi Error: %s"
 msgstr ""
 
 #: includes/dibs-checkout-functions.php:46
@@ -269,7 +269,7 @@ msgid "Enable/Disable"
 msgstr "Aktivera/avaktivera"
 
 #: includes/dibs-settings.php:16
-msgid "Enable Nets Easy"
+msgid "Enable Nexi Checkout"
 msgstr ""
 
 #: includes/dibs-settings.php:20
@@ -278,7 +278,7 @@ msgstr "Titel"
 
 #: includes/dibs-settings.php:22
 msgid ""
-"This is the title that the user sees on the checkout page for Nets Easy."
+"This is the title that the user sees on the checkout page for Nexi Checkout."
 msgstr ""
 
 #: includes/dibs-settings.php:26
@@ -286,7 +286,7 @@ msgid "Live Secret key"
 msgstr ""
 
 #: includes/dibs-settings.php:28
-msgid "Enter your Nets Easy live key"
+msgid "Enter your Nexi Checkout live key"
 msgstr ""
 
 #: includes/dibs-settings.php:33
@@ -294,7 +294,7 @@ msgid "Live Checkout key"
 msgstr ""
 
 #: includes/dibs-settings.php:35
-msgid "Enter your Nets Easy Checkout key"
+msgid "Enter your Nexi Checkout Checkout key"
 msgstr ""
 
 #: includes/dibs-settings.php:40
@@ -302,7 +302,7 @@ msgid "Test Secret key"
 msgstr ""
 
 #: includes/dibs-settings.php:42
-msgid "Enter your Nets Easy Test key if you want to run in test mode."
+msgid "Enter your Nexi Checkout Test key if you want to run in test mode."
 msgstr ""
 
 #: includes/dibs-settings.php:47
@@ -310,7 +310,7 @@ msgid "Test Checkout key"
 msgstr ""
 
 #: includes/dibs-settings.php:49
-msgid "Enter your Nets Easy Test checkout key"
+msgid "Enter your Nexi Checkout Test checkout key"
 msgstr ""
 
 #: includes/dibs-settings.php:54
@@ -318,7 +318,7 @@ msgid "Test mode"
 msgstr ""
 
 #: includes/dibs-settings.php:56
-msgid "Enable Test mode for Nets Easy"
+msgid "Enable Test mode for Nexi Checkout"
 msgstr ""
 
 #: includes/dibs-settings.php:60
@@ -368,7 +368,7 @@ msgid "Debug mode"
 msgstr ""
 
 #: includes/dibs-settings.php:87
-msgid "Enable Debug mode for Nets Easy"
+msgid "Enable Debug mode for Nexi Checkout"
 msgstr ""
 
 #: includes/dibs-settings.php:91
@@ -398,7 +398,7 @@ msgid ""
 "Select how Easy should be integrated in WooCommerce. <strong>"
 "Embedded</strong> – the checkout is embedded in the WooCommerce checkout "
 "page and partially replaces the checkout form. <strong>Redirect</strong> – "
-"the customer is redirected to a payment page hosted by Nets."
+"the customer is redirected to a payment page hosted by Nexi."
 msgstr ""
 
 #: includes/dibs-settings.php:109
@@ -407,7 +407,7 @@ msgstr ""
 
 #: includes/dibs-settings.php:111
 msgid ""
-"Enable Auto-capture. If enabled Nets Easy charges your customer immediately "
+"Enable Auto-capture. If enabled Nexi Checkout charges your customer immediately "
 "after payment completion. Only enable for compliant products/services."
 msgstr ""
 
@@ -424,13 +424,13 @@ msgid ""
 msgstr ""
 
 #. Name of the plugin
-msgid "Nets Easy for WooCommerce"
+msgid "Nexi Checkout for WooCommerce"
 msgstr ""
 
 #. Description of the plugin
 msgid ""
 "Extends WooCommerce. Provides a <a href=\"http://www.dibspayment.com/\" "
-"target=\"_blank\">Nets Easy</a> checkout for WooCommerce."
+"target=\"_blank\">Nexi Checkout</a> checkout for WooCommerce."
 msgstr ""
 
 #. URI of the plugin

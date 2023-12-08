@@ -168,7 +168,7 @@ class Nets_Easy_Checkout_Helper {
 	}
 
 	/**
-	 * Gets customer phone prefix formatted for Nets.
+	 * Gets customer phone prefix formatted for Nexi.
 	 *
 	 * @param object $order The WooCommerce order.
 	 * @return string
@@ -184,7 +184,7 @@ class Nets_Easy_Checkout_Helper {
 	}
 
 	/**
-	 * Gets customer phone number formatted for Nets.
+	 * Gets customer phone number formatted for Nexi.
 	 *
 	 * @param object $order The WooCommerce order.
 	 * @return string
@@ -258,7 +258,7 @@ class Nets_Easy_Checkout_Helper {
 	}
 
 	/**
-	 * Gets customer phone prefix formatted for Nets.
+	 * Gets customer phone prefix formatted for Nexi.
 	 *
 	 * @return string
 	 */
@@ -274,7 +274,7 @@ class Nets_Easy_Checkout_Helper {
 	}
 
 	/**
-	 * Gets customer phone number formatted for Nets.
+	 * Gets customer phone number formatted for Nexi.
 	 *
 	 * @return string
 	 */

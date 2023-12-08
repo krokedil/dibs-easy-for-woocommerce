@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets templates class.
+ * Nexi templates class.
  *
  * @package DIBS_Easy/Classes
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Formats the invoice fee sent to Nets.
+ * Formats the invoice fee sent to Nexi.
  *
  * @package DIBS_Easy/Classes/Requests/Helpers
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Nets_Easy_Payment_Method_Helper class.
  *
- * Class that formats the invoice fee sent to Nets.
+ * Class that formats the invoice fee sent to Nexi.
  */
 class Nets_Easy_Payment_Method_Helper {
 

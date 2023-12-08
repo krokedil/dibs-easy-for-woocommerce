@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets Easy Checkout page
+ * Nexi Checkout Checkout page
  *
  * Overrides /checkout/form-checkout.php.
  *

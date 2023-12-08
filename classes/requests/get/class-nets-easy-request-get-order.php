@@ -1,6 +1,6 @@
 <?php
 /**
- * Get Nets order request class
+ * Get Nexi order request class
  *
  * @package DIBS_Easy/Classes/Requests
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Get Nets order request class
+ * Get Nexi order request class
  */
 class Nets_Easy_Request_Get_Order extends Nets_Easy_Request_Get {
 

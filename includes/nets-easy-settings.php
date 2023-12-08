@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets settings class.
+ * Nexi settings class.
  *
  * @package DIBS_Easy/Classes
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Settings for Nets Easy
+ * Settings for Nexi Checkout
  */
 return apply_filters(
 	'dibs_easy_settings',
@@ -18,14 +18,14 @@ return apply_filters(
 		'enabled'                      => array(
 			'title'   => __( 'Enable/Disable', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Nets Easy', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Nexi Checkout', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'title'                        => array(
 			'title'       => __( 'Title', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'This is the title that the user sees on the checkout page for Nets Easy.', 'dibs-easy-for-woocommerce' ),
-			'default'     => __( 'Nets Easy', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'This is the title that the user sees on the checkout page for Nexi Checkout.', 'dibs-easy-for-woocommerce' ),
+			'default'     => __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' ),
 		),
 		'description'                  => array(
 			'title'       => __( 'Description', 'dibs-easy-for-woocommerce' ),
@@ -37,41 +37,41 @@ return apply_filters(
 		'merchant_number'              => array(
 			'title'       => __( 'Merchant ID', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'The stores Nets Easy Merchant ID. Only required if you are a partner and initiating the checkout with your partner keys.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'The stores Nexi Checkout Merchant ID. Only required if you are a partner and initiating the checkout with your partner keys.', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 		),
 		'dibs_live_key'                => array(
 			'title'       => __( 'Live Secret key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter your Nets Easy live key', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter your Nexi Checkout live key', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
 		'dibs_checkout_key'            => array(
 			'title'       => __( 'Live Checkout key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter your Nets Easy Checkout key', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter your Nexi Checkout Checkout key', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
 		'dibs_test_key'                => array(
 			'title'       => __( 'Test Secret key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter your Nets Easy Test key if you want to run in test mode.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter your Nexi Checkout Test key if you want to run in test mode.', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
 		'dibs_test_checkout_key'       => array(
 			'title'       => __( 'Test Checkout key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter your Nets Easy Test checkout key', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter your Nexi Checkout Test checkout key', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
 		'test_mode'                    => array(
 			'title'   => __( 'Test mode', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Test mode for Nets Easy', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Test mode for Nexi Checkout', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'allowed_customer_types'       => array(
@@ -96,13 +96,13 @@ return apply_filters(
 		'email_nets_payment_data'      => array(
 			'title'   => __( 'Email payment data', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Add Nets payment data to order confirmation email.', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Add Nexi payment data to order confirmation email.', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'dibs_manage_orders'           => array(
 			'title'   => __( 'Manage orders', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable WooCommerce to manage orders in Nets Easy backend', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable WooCommerce to manage orders in Nexi Checkout backend', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'debug_mode'                   => array(
@@ -128,20 +128,20 @@ return apply_filters(
 				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
 				'overlay'  => __( 'Overlay', 'dibs-easy-for-woocommerce' ),
 			),
-			'description' => __( 'Select how Nets Easy should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nets. <strong>Overlay</strong> – similar logic as redirect flow but the hosted payment window is displayed in an overlay on desktop.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Select how Nexi Checkout should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nexi. <strong>Overlay</strong> – similar logic as redirect flow but the hosted payment window is displayed in an overlay on desktop.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'embedded',
 			'desc_tip'    => false,
 		),
 		'auto_capture'                 => array(
 			'title'   => __( 'Auto-capture', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Auto-capture. If enabled Nets Easy charges your customer immediately after payment completion. Only enable for compliant products/services.', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Auto-capture. If enabled Nexi Checkout charges your customer immediately after payment completion. Only enable for compliant products/services.', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'select_another_method_text'   => array(
 			'title'       => __( 'Other payment method button text', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Customize the <em>Select another payment method</em> button text that is displayed in checkout if using other payment methods than Nets Easy. Leave blank to use the default (and translatable) text.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Customize the <em>Select another payment method</em> button text that is displayed in checkout if using other payment methods than Nexi Checkout. Leave blank to use the default (and translatable) text.', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
@@ -166,7 +166,7 @@ return apply_filters(
 		'payment_gateway_icon'         => array(
 			'title'       => __( 'Payment gateway icon', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nets logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nexi logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'default',
 			'desc_tip'    => false,
 		),

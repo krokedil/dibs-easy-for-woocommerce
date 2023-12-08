@@ -1,6 +1,6 @@
 <?php
 /**
- * Formats the cart items sent to Nets.
+ * Formats the cart items sent to Nexi.
  *
  * @package DIBS_Easy/Classes/Requests/Helpers
  */
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * DIBS_Requests_Items class.
  *
- * Class that formats the cart items sent to Nets.
+ * Class that formats the cart items sent to Nexi.
  */
 class Nets_Easy_Cart_Helper {
 

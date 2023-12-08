@@ -28,14 +28,14 @@ abstract class Nets_Easy_Request {
 	protected $log_title;
 
 	/**
-	 * $key. Nets API request key.
+	 * $key. Nexi API request key.
 	 *
 	 * @var string
 	 */
 	public $key;
 
 	/**
-	 * $endpoint. Nets API endpoint.
+	 * $endpoint. Nexi API endpoint.
 	 *
 	 * @var string
 	 */
@@ -82,7 +82,7 @@ abstract class Nets_Easy_Request {
 	}
 
 	/**
-	 * Loads the Nets Easy settings and sets them to be used here.
+	 * Loads the Nexi Checkout settings and sets them to be used here.
 	 *
 	 * @return void
 	 */

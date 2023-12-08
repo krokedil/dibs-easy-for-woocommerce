@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Post Nets refund order request class
+ * Post Nexi refund order request class
  */
 class Nets_Easy_Request_Refund_Order extends Nets_Easy_Request_Post {
 
@@ -22,7 +22,7 @@ class Nets_Easy_Request_Refund_Order extends Nets_Easy_Request_Post {
 	public $order_id;
 
 	/**
-	 * $charge_id. Nets Easy charge ID for the order.
+	 * $charge_id. Nexi Checkout charge ID for the order.
 	 *
 	 * @var string
 	 */
@@ -71,7 +71,7 @@ class Nets_Easy_Request_Refund_Order extends Nets_Easy_Request_Post {
 	 * @return string
 	 */
 	protected function get_request_url() {
-		$charge_id = wc_get_order($this->order_id)->get_meta('_dibs_charge_id');
+		$charge_id = wc_get_order( $this->order_id )->get_meta( '_dibs_charge_id' );
 		return $this->endpoint . 'charges/' . $charge_id . '/refunds';
 	}
 }
