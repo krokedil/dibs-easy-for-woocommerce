@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout for WooCommerce 2.6.0\n"
+"Project-Id-Version: Nexi Checkout for WooCommerce 2.6.1\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2023-11-13 17:39:24+00:00\n"
+"POT-Creation-Date: 2023-12-12 15:53:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,19 +28,19 @@ msgstr ""
 #: classes/class-nexi-checkout-admin-notices.php:110
 #. Translators: url to account settings tab
 msgid ""
-"To be able to use Nexi Checkout correctly you need to tick the checkbox <i>When "
-"creating an account, automatically generate a username from the customer's "
-"email address</i> when having the <i>Allow customers to create an account "
-"during checkout</i> setting activated. This can be changed in the <a "
-"href=\"%s\">Accounts & Privacy tab</a>."
+"To be able to use Nexi Checkout correctly you need to tick the checkbox "
+"<i>When creating an account, automatically generate a username from the "
+"customer's email address</i> when having the <i>Allow customers to create "
+"an account during checkout</i> setting activated. This can be changed in "
+"the <a href=\"%s\">Accounts & Privacy tab</a>."
 msgstr ""
 
 #: classes/class-nexi-checkout-admin-notices.php:117
 #. Translators: url to account and privacy tab
 msgid ""
-"To be able to use Nexi Checkout correctly you need to tick the checkbox <i>When "
-"creating an account, automatically generate an account password</i> when "
-"having the <i>Allow customers to create an account during checkout</i> "
+"To be able to use Nexi Checkout correctly you need to tick the checkbox "
+"<i>When creating an account, automatically generate an account password</i> "
+"when having the <i>Allow customers to create an account during checkout</i> "
 "setting activated. This can be changed in the <a href=\"%s\">Accounts & "
 "Privacy tab</a>."
 msgstr ""
@@ -49,7 +49,7 @@ msgstr ""
 msgid "An account is already registered with your email address. Please log in."
 msgstr ""
 
-#: classes/class-nexi-checkout-ajax.php:203
+#: classes/class-nexi-checkout-ajax.php:204
 msgid "Cart total does not match Nexi order total. Please try refreshing the page."
 msgstr ""
 
@@ -70,7 +70,7 @@ msgid "Please fill in all required checkout fields."
 msgstr ""
 
 #: classes/class-nexi-checkout-email.php:51
-msgid "Nexi Payment ID: "
+msgid "Nets Payment ID: "
 msgstr ""
 
 #: classes/class-nexi-checkout-email.php:54
@@ -81,7 +81,8 @@ msgstr ""
 msgid "Customer card: "
 msgstr ""
 
-#: classes/class-nexi-checkout-gateway.php:45 includes/nexi-checkout-settings.php:28
+#: classes/class-nexi-checkout-gateway.php:45
+#: includes/nexi-checkout-settings.php:28
 msgid "Nexi Checkout"
 msgstr ""
 
@@ -114,12 +115,12 @@ msgstr ""
 msgid "Order finalized in thankyou page."
 msgstr ""
 
-#: classes/class-nexi-checkout-gateway.php:345
+#: classes/class-nexi-checkout-gateway.php:346
 #: classes/payment-methods/class-nexi-checkout-gateway-card.php:246
 #: classes/payment-methods/class-nexi-checkout-gateway-ratepay-sepa.php:232
-#: classes/payment-methods/class-nexi-checkout-gateway-sofort.php:232
-#: classes/payment-methods/class-nexi-checkout-gateway-swish.php:228
-#: classes/payment-methods/class-nexi-checkout-gateway-trustly.php:225
+#: classes/payment-methods/class-nexi-checkout-gateway-sofort.php:233
+#: classes/payment-methods/class-nexi-checkout-gateway-swish.php:229
+#: classes/payment-methods/class-nexi-checkout-gateway-trustly.php:226
 msgid "Nexi payment page displayed in overlay."
 msgstr ""
 
@@ -141,33 +142,33 @@ msgstr ""
 msgid "Payment charged in Nexi Checkout with charge ID %s"
 msgstr ""
 
-#: classes/class-nexi-checkout-order-management.php:133
+#: classes/class-nexi-checkout-order-management.php:134
 msgid "There was a problem canceling the order in Nexi"
 msgstr ""
 
-#: classes/class-nexi-checkout-order-management.php:137
+#: classes/class-nexi-checkout-order-management.php:138
 msgid "Order has been canceled in Nexi"
 msgstr ""
 
-#: classes/class-nexi-checkout-order-management.php:150
-#: classes/class-nexi-checkout-order-management.php:168
-#: classes/class-nexi-checkout-order-management.php:184
+#: classes/class-nexi-checkout-order-management.php:151
+#: classes/class-nexi-checkout-order-management.php:169
+#: classes/class-nexi-checkout-order-management.php:185
 #. Translators: Nexi message.
 msgid "Nexi Error: %s"
 msgstr ""
 
-#: classes/class-nexi-checkout-order-management.php:209
+#: classes/class-nexi-checkout-order-management.php:210
 #. Translators: 1. Nexi Checkout Payment id 2. Payment type  3.Charge id.
 msgid ""
-"Payment canceled in Nexi Checkout ( Portal ) with Payment ID %1$s. Payment type "
-"- %2$s. Charge ID %3$s."
+"Payment canceled in Nexi Checkout ( Portal ) with Payment ID %1$s. Payment "
+"type - %2$s. Charge ID %3$s."
 msgstr ""
 
-#: classes/class-nexi-checkout-order-management.php:232
+#: classes/class-nexi-checkout-order-management.php:236
 #. Translators: 1. Nexi Checkout Payment id 2. Payment type  3.Charge id.
 msgid ""
-"Payment charged in Nexi Checkout ( Portal ) with Payment ID %1$s. Payment type "
-"- %2$s. Charge ID %3$s."
+"Payment charged in Nexi Checkout ( Portal ) with Payment ID %1$s. Payment "
+"type - %2$s. Charge ID %3$s."
 msgstr ""
 
 #: classes/class-nexi-checkout-subscriptions.php:100
@@ -180,56 +181,56 @@ msgstr ""
 #: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:69
 #: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:108
 #: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:147
-#: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:199
-#: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:232
+#: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:198
+#: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:231
 #: classes/requests/helpers/class-nexi-checkout-payment-method-helper.php:40
-#: classes/requests/helpers/class-nexi-checkout-refund-helper.php:124
-#: classes/requests/helpers/class-nexi-checkout-refund-helper.php:183
-#: classes/requests/helpers/class-nexi-checkout-refund-helper.php:244
+#: classes/requests/helpers/class-nexi-checkout-refund-helper.php:105
+#: classes/requests/helpers/class-nexi-checkout-refund-helper.php:164
+#: classes/requests/helpers/class-nexi-checkout-refund-helper.php:225
 msgid "pcs"
 msgstr ""
 
-#: classes/class-nexi-checkout-subscriptions.php:208
-#: classes/class-nexi-checkout-subscriptions.php:225
+#: classes/class-nexi-checkout-subscriptions.php:211
+#: classes/class-nexi-checkout-subscriptions.php:228
 msgid "Nexi Checkout subscription ID/recurring token %s saved."
 msgstr ""
 
-#: classes/class-nexi-checkout-subscriptions.php:295
+#: classes/class-nexi-checkout-subscriptions.php:305
 #. Translators: Nexi Payment ID & Charge ID.
 msgid "Subscription payment made with Nexi. Payment ID: %s. Charge ID %s."
 msgstr ""
 
-#: classes/class-nexi-checkout-subscriptions.php:303
+#: classes/class-nexi-checkout-subscriptions.php:314
 #. Translators: Request response from Nexi.
 msgid "Subscription payment failed with Nexi. Error message: %s."
 msgstr ""
 
-#: classes/class-nexi-checkout-subscriptions.php:331
+#: classes/class-nexi-checkout-subscriptions.php:345
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
 "Nexi. Recurring token: %s"
 msgstr ""
 
-#: classes/class-nexi-checkout-subscriptions.php:340
+#: classes/class-nexi-checkout-subscriptions.php:355
 #. Translators: Request response.
 msgid "Error during Nets_Easy_Request_Get_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nexi-checkout-subscriptions.php:367
+#: classes/class-nexi-checkout-subscriptions.php:385
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
 "Nexi. Recurring token: %s. Subscription type: %s."
 msgstr ""
 
-#: classes/class-nexi-checkout-subscriptions.php:376
+#: classes/class-nexi-checkout-subscriptions.php:395
 #. Translators: Request response.
 msgid ""
 "Error during "
 "Nets_Easy_Request_Get_Unscheduled_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nexi-checkout-subscriptions.php:393
-#: classes/class-nexi-checkout-subscriptions.php:401
+#: classes/class-nexi-checkout-subscriptions.php:412
+#: classes/class-nexi-checkout-subscriptions.php:420
 msgid "Nexi recurring token"
 msgstr ""
 
@@ -275,8 +276,8 @@ msgstr ""
 
 #: classes/requests/helpers/class-nexi-checkout-cart-helper.php:51
 #: classes/requests/helpers/class-nexi-checkout-cart-helper.php:76
-#: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:191
-#: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:221
+#: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:190
+#: classes/requests/helpers/class-nexi-checkout-order-items-helper.php:220
 msgid "Gift card:"
 msgstr ""
 
@@ -284,15 +285,15 @@ msgstr ""
 msgid "Nope"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:224
+#: dibs-easy-for-woocommerce.php:223
 msgid "Settings"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:225
+#: dibs-easy-for-woocommerce.php:224
 msgid "Docs"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:226
+#: dibs-easy-for-woocommerce.php:225
 msgid "Support"
 msgstr ""
 
@@ -305,23 +306,25 @@ msgstr ""
 msgid "Nexi Checkout: Error when confirming order: %s"
 msgstr ""
 
-#: includes/nexi-checkout-functions.php:247
+#: includes/nexi-checkout-functions.php:249
 #. translators: %s: Error message
-msgid "Nexi Checkout: Error when updating order reference to Nexi. Error message : %s"
+msgid ""
+"Nexi Checkout: Error when updating order reference to Nexi. Error message : "
+"%s"
 msgstr ""
 
-#: includes/nexi-checkout-functions.php:260
+#: includes/nexi-checkout-functions.php:263
 #. Translators: Nexi Checkout Payment ID.
 msgid ""
 "New payment created in Nexi Checkout with Payment ID %s. Payment type - %s. "
 "Charge ID %3$s."
 msgstr ""
 
-#: includes/nexi-checkout-functions.php:263
+#: includes/nexi-checkout-functions.php:266
 #. Translators: Nexi Checkout Payment ID.
 msgid ""
-"New payment created in Nexi Checkout with Payment ID %1$s. Payment type - %2$s. "
-"Awaiting charge."
+"New payment created in Nexi Checkout with Payment ID %1$s. Payment type - "
+"%2$s. Awaiting charge."
 msgstr ""
 
 #: includes/nexi-checkout-settings-card.php:19
@@ -355,7 +358,8 @@ msgstr ""
 msgid "This is the title that the user sees on the checkout page for Nexi Checkout."
 msgstr ""
 
-#: includes/nexi-checkout-settings-card.php:28 includes/nexi-checkout-settings.php:187
+#: includes/nexi-checkout-settings-card.php:28
+#: includes/nexi-checkout-settings.php:187
 msgid "Card payment"
 msgstr ""
 
@@ -460,7 +464,8 @@ msgstr ""
 msgid "Enable Nexi Checkout Swish"
 msgstr ""
 
-#: includes/nexi-checkout-settings-swish.php:28 includes/nexi-checkout-settings.php:207
+#: includes/nexi-checkout-settings-swish.php:28
+#: includes/nexi-checkout-settings.php:207
 msgid "Swish payment"
 msgstr ""
 
@@ -534,8 +539,8 @@ msgstr ""
 
 #: includes/nexi-checkout-settings.php:40
 msgid ""
-"The stores Nexi Checkout Merchant ID. Only required if you are a partner and "
-"initiating the checkout with your partner keys."
+"The stores Nexi Checkout Merchant ID. Only required if you are a partner "
+"and initiating the checkout with your partner keys."
 msgstr ""
 
 #: includes/nexi-checkout-settings.php:44
@@ -683,8 +688,9 @@ msgstr ""
 
 #: includes/nexi-checkout-settings.php:138
 msgid ""
-"Enable Auto-capture. If enabled Nexi Checkout charges your customer immediately "
-"after payment completion. Only enable for compliant products/services."
+"Enable Auto-capture. If enabled Nexi Checkout charges your customer "
+"immediately after payment completion. Only enable for compliant "
+"products/services."
 msgstr ""
 
 #: includes/nexi-checkout-settings.php:142
@@ -694,8 +700,8 @@ msgstr ""
 #: includes/nexi-checkout-settings.php:144
 msgid ""
 "Customize the <em>Select another payment method</em> button text that is "
-"displayed in checkout if using other payment methods than Nexi Checkout. Leave "
-"blank to use the default (and translatable) text."
+"displayed in checkout if using other payment methods than Nexi Checkout. "
+"Leave blank to use the default (and translatable) text."
 msgstr ""
 
 #: includes/nexi-checkout-settings.php:149
@@ -730,7 +736,7 @@ msgstr ""
 msgid "Enable Swish payment as separate payment method"
 msgstr ""
 
-#: templates/nexi-checkout-checkout.php:17
+#: templates/nexi-checkout.php:17
 msgid "You must be logged in to checkout."
 msgstr ""
 
