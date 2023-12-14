@@ -115,11 +115,11 @@ class Nets_Easy_Cart_Helper {
 			'name'             => wc_dibs_clean_name( $product->get_name() ),
 			'quantity'         => $cart_item['quantity'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => intval( round( ( $cart_item['line_total'] / $cart_item['quantity'] ) * 100 ) ),
+			'unitPrice'        => self::format_price( self::get_item_unit_price( $cart_item ) ),
 			'taxRate'          => self::get_item_tax_rate( $cart_item, $product ),
-			'taxAmount'        => intval( round( $cart_item['line_tax'] * 100, 2 ) ),
-			'grossTotalAmount' => intval( round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 ) ),
-			'netTotalAmount'   => intval( round( $cart_item['line_total'] * 100 ) ),
+			'taxAmount'        => self::format_price( self::get_item_tax_amount( $cart_item ) ),
+			'grossTotalAmount' => self::format_price( self::get_item_gross_total_amount( $cart_item ) ),
+			'netTotalAmount'   => self::format_price( self::get_item_net_total_amount( $cart_item ) ),
 		);
 	}
 
@@ -230,5 +230,67 @@ class Nets_Easy_Cart_Helper {
 			$item_tax_rate = 0;
 		}
 		return round( $item_tax_rate );
+	}
+
+	/**
+	 * Gets the unit price for one item. Price excluding tax.
+	 *
+	 * @param  array $cart_item Cart item.
+	 * @return float
+	 */
+	public static function get_item_unit_price( $cart_item ) {
+		// return intval( round( ( $cart_item['line_total'] / $cart_item['quantity'] ) * 100 ) );
+		return round( $cart_item['line_total'] / $cart_item['quantity'], 2 );
+	}
+
+	/**
+	 * Gets the price excluding tax for one order line.
+	 *
+	 * @param  array $cart_item Cart item.
+	 * @return float
+	 */
+	public static function get_item_net_total_amount( $cart_item ) {
+		return self::get_item_unit_price( $cart_item ) * $cart_item['quantity'];
+	}
+
+	/**
+	 * Gets the price including tax for one order line.
+	 *
+	 * @param  array $cart_item Cart item.
+	 * @return float
+	 */
+	public static function get_item_gross_total_amount( $cart_item ) {
+		return round( ( $cart_item['line_total'] + $cart_item['line_tax'] ), 2 );
+	}
+
+	/**
+	 * Gets the tax amount for one order line.
+	 *
+	 * @param  array $cart_item Cart item.
+	 * @return float
+	 */
+	public static function get_item_tax_amount( $cart_item ) {
+		return round( $cart_item['line_tax'], 2 );
+	}
+
+	/**
+	 * Formats the price from major units according to either the config provided or the price_format passed.
+	 *
+	 * @param int|float|string $price The price to be formatted.
+	 * @param string|null      $price_format The price format to be used, either minor or major as a string.
+	 *
+	 * @return int|float
+	 */
+	public static function format_price( $price, $price_format = null ) {
+		$price_format   = $price_format ? $price_format : 'minor';
+		$decimal_points = $price_format === 'minor' ? 0 : 2;
+
+		if ( 'minor' === $price_format ) {
+			$price = floatval( $price ) * 100;
+		}
+
+		$formatted_price = wc_format_decimal( $price, $decimal_points );
+
+		return $price_format === 'minor' ? intval( $formatted_price ) : floatval( $formatted_price );
 	}
 }
