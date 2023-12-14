@@ -154,26 +154,6 @@ class Nets_Easy_Order_Items_Helper {
 	}
 
 	/**
-	 * Gets the sku for one item.
-	 *
-	 * @param object $product The WooCommerce product.
-	 * @param string $product_id The WooCommerce product ID.
-	 * @return string
-	 */
-	public static function get_sku( $product, $product_id ) {
-		if ( is_object( $product ) ) {
-			if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
-				$part_number = $product->get_sku();
-			} else {
-				$part_number = $product->get_id();
-			}
-			return substr( $part_number, 0, 32 );
-		}
-
-		return false;
-	}
-
-	/**
 	 * Process gift cards.
 	 *
 	 * @param string $order_id The WooCommerce order ID.
@@ -238,6 +218,26 @@ class Nets_Easy_Order_Items_Helper {
 		}
 
 		return $items;
+	}
+
+	/**
+	 * Gets the sku for one item.
+	 *
+	 * @param object $product The WooCommerce product.
+	 * @param string $product_id The WooCommerce product ID.
+	 * @return string
+	 */
+	public static function get_sku( $product, $product_id ) {
+		if ( is_object( $product ) ) {
+			if ( get_post_meta( $product_id, '_sku', true ) !== '' ) {
+				$part_number = $product->get_sku();
+			} else {
+				$part_number = $product->get_id();
+			}
+			return substr( $part_number, 0, 32 );
+		}
+
+		return false;
 	}
 
 	/**
