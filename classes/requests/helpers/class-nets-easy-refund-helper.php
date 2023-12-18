@@ -33,7 +33,7 @@ class Nets_Easy_Refund_Helper {
 	 * @return int
 	 */
 	public static function get_total_refund_amount( $order_id ) {
-		$refund_order_id = self::get_refunded_order( $order_id );
+		$refund_order_id = self::get_refunded_order_id( $order_id );
 
 		if ( null !== $refund_order_id ) {
 			$refund_order        = wc_get_order( $refund_order_id );
@@ -50,11 +50,12 @@ class Nets_Easy_Refund_Helper {
 	 * @return array
 	 */
 	public static function get_refund_data( $order_id ) {
-		$refund_order_id = self::get_refunded_order( $order_id );
+		$refund_order_id = self::get_refunded_order_id( $order_id );
 
 		if ( null !== $refund_order_id ) {
 			// Get refund order data.
-			$refund_order      = wc_get_order( $refund_order_id );
+			$refund_order = wc_get_order( $refund_order_id );
+
 			$refunded_items    = $refund_order->get_items();
 			$refunded_shipping = $refund_order->get_items( 'shipping' );
 			$refunded_fees     = $refund_order->get_items( 'fee' );
@@ -76,27 +77,16 @@ class Nets_Easy_Refund_Helper {
 	}
 
 	/**
-	 * Gets refunded order.
+	 * Returns the id of the refunded order.
 	 *
-	 * @param int $order_id The order id.
+	 * @param int $order_id The WooCommerce order id.
 	 * @return string
 	 */
-	public static function get_refunded_order( $order_id ) {
-		$query_args      = array(
-			'fields'         => 'id=>parent',
-			'post_type'      => 'shop_order_refund',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-		);
-		$refunds         = get_posts( $query_args );
-		$refund_order_id = array_search( $order_id, $refunds, true );
-		if ( is_array( $refund_order_id ) ) {
-			foreach ( $refund_order_id as $key => $value ) {
-				$refund_order_id = $value;
-				break;
-			}
-		}
-		return $refund_order_id;
+	public static function get_refunded_order_id( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		/* Always retrieve the most recent (current) refund (index 0). */
+		return $order->get_refunds()[0]->get_id();
 	}
 
 	/**
