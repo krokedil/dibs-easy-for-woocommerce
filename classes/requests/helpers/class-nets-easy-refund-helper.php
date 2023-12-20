@@ -33,10 +33,14 @@ class Nets_Easy_Refund_Helper {
 	 * @return int
 	 */
 	public static function get_total_refund_amount( $order_id ) {
-		$refund_order        = self::get_refunded_order( $order_id );
-		$total_refund_amount = intval( round( $refund_order->get_total() * 100 ) );
+		$refund_order_id = self::get_refunded_order_id( $order_id );
 
-		return abs( $total_refund_amount );
+		if ( null !== $refund_order_id ) {
+			$refund_order        = wc_get_order( $refund_order_id );
+			$total_refund_amount = intval( round( $refund_order->get_total() * 100 ) );
+
+			return abs( $total_refund_amount );
+		}
 	}
 
 	/**
@@ -46,38 +50,43 @@ class Nets_Easy_Refund_Helper {
 	 * @return array
 	 */
 	public static function get_refund_data( $order_id ) {
-		$refund_order = self::get_refunded_order( $order_id );
+		$refund_order_id = self::get_refunded_order_id( $order_id );
 
-		// Get refund order data.
-		$refunded_items    = $refund_order->get_items();
-		$refunded_shipping = $refund_order->get_items( 'shipping' );
-		$refunded_fees     = $refund_order->get_items( 'fee' );
+		if ( null !== $refund_order_id ) {
+			// Get refund order data.
+			$refund_order = wc_get_order( $refund_order_id );
 
-		if ( $refunded_items ) {
-			self::get_refunded_items( $order_id, $refunded_items );
-		}
+			$refunded_items    = $refund_order->get_items();
+			$refunded_shipping = $refund_order->get_items( 'shipping' );
+			$refunded_fees     = $refund_order->get_items( 'fee' );
 
-		if ( $refunded_shipping ) {
-			self::get_refunded_shipping( $order_id, $refunded_shipping );
-		}
+			if ( $refunded_items ) {
+				self::get_refunded_items( $order_id, $refunded_items );
+			}
 
-		if ( $refunded_fees ) {
-			self::get_refunded_fees( $order_id, $refunded_fees );
-		}
+			if ( $refunded_shipping ) {
+				self::get_refunded_shipping( $order_id, $refunded_shipping );
+			}
+
+			if ( $refunded_fees ) {
+				self::get_refunded_fees( $order_id, $refunded_fees );
+			}
 
 			return self::$refund_data;
+		}
 	}
 
 	/**
-	 * Gets refunded order.
+	 * Returns the id of the refunded order.
 	 *
-	 * @param int $order_id The order id.
-	 * @return WC_Order_Refund
+	 * @param int $order_id The WooCommerce order id.
+	 * @return string
 	 */
-	public static function get_refunded_order( $order_id ) {
-		$order   = wc_get_order( $order_id );
-		$refunds = $order->get_refunds();
-		return reset( $refunds );
+	public static function get_refunded_order_id( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		/* Always retrieve the most recent (current) refund (index 0). */
+		return $order->get_refunds()[0]->get_id();
 	}
 
 	/**
