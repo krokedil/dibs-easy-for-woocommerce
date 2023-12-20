@@ -366,26 +366,45 @@ function dibs_easy_print_error_message( $wp_error ) {
 }
 
 /**
- * Finds an Order ID based on a payment ID (the Nets order number).
+ * Finds an order based on a payment ID (the Nets order number).
  *
  * @param string $payment_id Nets order number saved as Payment ID in WC order.
- * @return int The ID of an order, or 0 if the order could not be found.
+ * @return object|bool The WooCommerce order, or false if the order could not be found.
  */
-function nets_easy_get_order_id_by_purchase_id( $payment_id ) {
-	$key        = '_dibs_payment_id';
-	$payment_id = wc_clean( wp_unslash( $payment_id ) );
-	$orders     = wc_get_orders(
-		array(
-			'meta_key'   => $key,
-			'meta_value' => $payment_id,
-			'limit'      => 1,
-			'orderby'    => 'date',
-			'order'      => 'DESC',
-		)
+function nets_easy_get_order_by_purchase_id( $payment_id, $date_after = null ) {
+
+	$args = array(
+		'meta_key'     => '_dibs_payment_id',
+		'meta_value'   => wc_clean( wp_unslash( $payment_id ) ),
+		'meta_compare' => '=',
+		'order'        => 'DESC',
+		'orderby'      => 'date',
+		'limit'        => 1,
 	);
 
+	if ( $date_after ) {
+		$args['date_after'] = $date_after;
+	}
+
+	$orders = wc_get_orders( $args );
+
+	// If the orders array is empty, return false.
+	if ( empty( $orders ) ) {
+		return false;
+	}
+
+	// Get the first order in the array.
 	$order = reset( $orders );
-	return ( ! empty( $order ) && $order->get_meta( $key ) === $payment_id ) ? $order->get_id() : 0;
+
+	// Validate that the order actual has the metadata we're looking for, and that it is the same.
+	$meta_value = $order->get_meta( '_dibs_payment_id', true );
+
+	// If the meta value is not the same as the Nexi payment id, return false.
+	if ( $meta_value !== $payment_id ) {
+		return false;
+	}
+
+	return $order;
 }
 
 function nets_easy_all_payment_method_ids() {
