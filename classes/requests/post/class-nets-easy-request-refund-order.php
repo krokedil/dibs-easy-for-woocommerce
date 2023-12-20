@@ -71,7 +71,7 @@ class Nets_Easy_Request_Refund_Order extends Nets_Easy_Request_Post {
 	 * @return string
 	 */
 	protected function get_request_url() {
-		$charge_id = get_post_meta( $this->order_id, '_dibs_charge_id', true );
+		$charge_id = wc_get_order($this->order_id)->get_meta('_dibs_charge_id');
 		return $this->endpoint . 'charges/' . $charge_id . '/refunds';
 	}
 }

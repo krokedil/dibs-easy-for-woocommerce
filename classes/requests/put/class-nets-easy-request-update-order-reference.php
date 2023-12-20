@@ -66,7 +66,7 @@ class Nets_Easy_Request_Update_Order_Reference extends Nets_Easy_Request_Put {
 				$reference = $sequential->get_order_number( $order->get_order_number(), $order );
 			} elseif ( class_exists( 'WC_Seq_Order_Number' ) ) {
 				$sequential = new WC_Seq_Order_Number();
-				$sequential->set_sequential_order_number( $order_id, get_post( $order_id ) );
+				$sequential->set_sequential_order_number( $order_id, wc_get_order( $order_id ) );
 				$reference = $sequential->get_order_number( $order->get_order_number(), $order );
 			} else {
 				$reference = $order->get_order_number();
