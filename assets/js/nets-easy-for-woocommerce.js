@@ -166,6 +166,38 @@ jQuery( function ( $ ) {
             }
         },
         /**
+         * Triggers whenever customer updates address information from ApplePay windoww.
+         *
+         */
+        applePayAddressChanged( address ) {
+            console.log( "applepay-contact-updated", address )
+            dibsEasyForWoocommerce.logToFile( "ApplePay address changed is triggered." )
+            if ( address ) {
+                console.log( "applepay-contact-updated" )
+                $.ajax( {
+                    type: "POST",
+                    dataType: "json",
+                    async: true,
+                    url: wcDibsEasy.customer_address_updated_url,
+                    data: {
+                        action: "customer_address_updated",
+                        address,
+                        nonce: wcDibsEasy.nets_checkout_nonce,
+                    },
+                    success( response ) {},
+                    error( response ) {},
+                    complete( response ) {
+                        console.log( "COMPLETED" )
+                        console.log( "customer_address_updated " )
+                        console.log( response.responseJSON.data )
+                        dibsEasyForWoocommerce.updateAddress( response.responseJSON.data )
+                        dibsEasyForWoocommerce.dibsCheckout.completeApplePayShippingContactUpdate( response.responseJSON.data.cart_total )
+                    },
+                } )
+            }
+            
+        },
+        /**
          * Init Dibs Easy Checkout
          */
         initDibsCheckout() {
@@ -179,6 +211,7 @@ jQuery( function ( $ ) {
             dibsEasyForWoocommerce.dibsCheckout.on( "pay-initialized", dibsEasyForWoocommerce.getDibsEasyOrder )
             dibsEasyForWoocommerce.dibsCheckout.on( "payment-completed", dibsEasyForWoocommerce.paymentCompleted )
             dibsEasyForWoocommerce.dibsCheckout.on( "address-changed", dibsEasyForWoocommerce.addressChanged )
+            dibsEasyForWoocommerce.dibsCheckout.on( "applepay-contact-updated", dibsEasyForWoocommerce.applePayAddressChanged )
         },
         /**
          * Triggers when customer clicks the pay button.
