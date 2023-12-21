@@ -257,7 +257,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				$methods[] = Nets_Easy_Gateway_Swish::class;
 			}
 
-			// Maybe enable Swish payment.
+			// Maybe enable Ratepay payment.
 			if ( 'yes' === $this->enable_payment_method_ratepay_sepa ) {
 				$methods[] = Nets_Easy_Gateway_Ratepay_Sepa::class;
 			}
