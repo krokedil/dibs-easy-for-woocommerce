@@ -77,6 +77,41 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		public $order_management;
 
 		/**
+		 * Enable Payment Method Card
+		 *
+		 * @var $enable_payment_method_card
+		 */
+		public $enable_payment_method_card;
+
+		/**
+		 * Enable Payment Method Sofort payment.
+		 *
+		 * @var $enable_payment_method_sofort
+		 */
+		public $enable_payment_method_sofort;
+
+		/**
+		 * Enable Payment Method Trustly payment.
+		 *
+		 * @var $enable_payment_method_trustly
+		 */
+		public $enable_payment_method_trustly;
+
+		/**
+		 * Enable Payment Method Swish payment.
+		 *
+		 * @var $enable_payment_method_swish
+		 */
+		public $enable_payment_method_swish;
+
+		/**
+		 * Enable Payment Method Ratepay payment.
+		 *
+		 * @var $enable_payment_method_ratepay_sepa
+		 */
+		public $enable_payment_method_ratepay_sepa;
+
+		/**
 		 * DIBS_Easy constructor.
 		 */
 		public function __construct() {
