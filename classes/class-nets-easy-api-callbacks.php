@@ -77,25 +77,20 @@ class Nets_Easy_Api_Callbacks {
 	public function execute_dibs_payment_created_callback( $payment_id, $order_number, $amount ) {
 
 		Nets_Easy_Logger::log( 'Execute Payment created API callback. Payment ID:' . $payment_id . '. Order number: ' . $order_number . '. Amount: ' . $amount );
-		$order_id = '';
-		if ( empty( $order_id ) ) {
-			// We're missing Order ID in callback. Try to get it via query by internal reference.
-			$order_id = nets_easy_get_order_id_by_purchase_id( $payment_id );
-		}
 
-		if ( empty( $order_id ) ) {
-			Nets_Easy_Logger::log( 'No coresponding order ID was found for Payment ID ' . $payment_id );
+		$order = nets_easy_get_order_by_purchase_id( $payment_id );
+
+		if ( empty( $order ) ) {
+			Nets_Easy_Logger::log( 'No corresponding order ID was found for Payment ID ' . $payment_id );
 			return;
 		}
 
-		$order = wc_get_order( $order_id );
-
 		// Maybe abort the callback (if the order already has been processed in Woo).
 		if ( ! empty( $order->get_date_paid() ) ) {
-			Nets_Easy_Logger::log( 'Aborting Payment created API callback. Order ' . $order->get_order_number() . '(order ID ' . $order_id . ') already processed.' );
+			Nets_Easy_Logger::log( 'Aborting Payment created API callback. Order ' . $order->get_order_number() . '(order ID ' . $order->get_id() . ') already processed.' );
 		} else {
 			Nets_Easy_Logger::log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
-			wc_dibs_confirm_dibs_order( $order_id );
+			wc_dibs_confirm_dibs_order( $order->get_id() );
 			$this->check_order_totals( $order, $amount );
 		}
 	}
