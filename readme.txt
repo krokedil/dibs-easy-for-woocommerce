@@ -56,6 +56,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2023.12.18    - version 2.6.2 =
+* Fix           - Updates helper function to get refund order id due to changes in WP query. Fixes potential error triggered in refund request. 
+
 = 2023.11.13    - version 2.6.1 =
 * Fix           - Fixed an issue related to pay for order when attempting to update the merchant reference.
 * Fix           - Fixed an undefined index.
