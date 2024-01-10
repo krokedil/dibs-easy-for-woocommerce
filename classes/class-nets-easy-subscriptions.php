@@ -211,14 +211,6 @@ class Nets_Easy_Subscriptions {
 			$wc_order->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 			$wc_order->update_meta_data( '_dibs_recurring_token', $subscription_id );
 			$wc_order->update_meta_data( '_dibs_subscription_type', $subscription_type );
-
-			// This is probably needed for subscription payment method change logic. Might need some more tweak.
-			$wc_order->update_meta_data( 'dibs_payment_type', $dibs_order['payment']['paymentDetails']['paymentType'] );
-			$wc_order->update_meta_data( 'dibs_payment_method', $dibs_order['payment']['paymentDetails']['paymentMethod'] );
-			if ( 'CARD' === $dibs_order['payment']['paymentDetails']['paymentType'] ) {
-				$wc_order->update_meta_data( 'dibs_customer_card', $dibs_order['payment']['paymentDetails']['cardDetails']['maskedPan'] );
-			}
-
 			$wc_order->save();
 
 			// This function is run after WCS has created the subscription order.
@@ -237,6 +229,12 @@ class Nets_Easy_Subscriptions {
 					$subscription->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 					$subscription->update_meta_data( '_dibs_recurring_token', $subscription_id );
 					$subscription->update_meta_data( '_dibs_subscription_type', $subscription_type );
+
+					$subscription->update_meta_data( 'dibs_payment_type', $dibs_order['payment']['paymentDetails']['paymentType'] );
+					$subscription->update_meta_data( 'dibs_payment_method', $dibs_order['payment']['paymentDetails']['paymentMethod'] );
+					if ( 'CARD' === $dibs_order['payment']['paymentDetails']['paymentType'] ) {
+						$subscription->update_meta_data( 'dibs_customer_card', $dibs_order['payment']['paymentDetails']['cardDetails']['maskedPan'] );
+					}
 					$subscription->save();
 				}
 			}
