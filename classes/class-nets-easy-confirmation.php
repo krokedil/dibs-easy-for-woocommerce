@@ -122,26 +122,25 @@ class Nets_Easy_Confirmation {
 
 		if ( isset( $request['payment']['summary']['reservedAmount'] ) || isset( $request['payment']['summary']['chargedAmount'] ) || isset( $request['payment']['subscription']['id'] ) ) {
 
-			$order_id = nets_easy_get_order_id_by_purchase_id( $payment_id );
-			$order    = wc_get_order( $order_id );
+			$order = nets_easy_get_order_by_purchase_id( $payment_id );
 
 			if ( ! is_object( $order ) ) {
 				return;
 			}
 
-			Nets_Easy_Logger::log( $payment_id . '. Customer redirected back to checkout. Payment created. Order ID ' . $order_id );
+			Nets_Easy_Logger::log( $payment_id . '. Customer redirected back to checkout. Payment created. Order ID ' . $order->get_id() );
 
 			if ( empty( $order->get_date_paid() ) ) {
 
-				Nets_Easy_Logger::log( $payment_id . '. Order ID ' . $order_id . '. Confirming the order.' );
+				Nets_Easy_Logger::log( $payment_id . '. Order ID ' . $order->get_id() . '. Confirming the order.' );
 				// Confirm the order.
-				wc_dibs_confirm_dibs_order( $order_id );
+				wc_dibs_confirm_dibs_order( $order->get_id() );
 				wc_dibs_unset_sessions();
 				wp_safe_redirect( html_entity_decode( $order->get_checkout_order_received_url() ) );
 				exit;
 
 			} else {
-				Nets_Easy_Logger::log( $payment_id . '. Order ID ' . $order_id . '. Order already confirmed.' );
+				Nets_Easy_Logger::log( $payment_id . '. Order ID ' . $order->get_id() . '. Order already confirmed.' );
 				return;
 			}
 		} else {

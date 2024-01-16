@@ -157,7 +157,7 @@ class Nets_Easy_Refund_Helper {
 			}
 
 			$shipping_reference      = 'Shipping';
-			$nets_shipping_reference = get_post_meta( $order_id, '_nets_shipping_reference', true );
+			$nets_shipping_reference = $original_order->get_meta( '_nets_shipping_reference' );
 			if ( isset( $nets_shipping_reference ) && ! empty( $nets_shipping_reference ) ) {
 				$shipping_reference = $nets_shipping_reference;
 			} else {
@@ -262,9 +262,8 @@ class Nets_Easy_Refund_Helper {
 	 * @return string
 	 */
 	public static function get_sku( $product, $invoice_fee_id ) {
-		if ( get_post_meta( $invoice_fee_id, '_sku', true ) !== '' ) {
-			$part_number = $product->get_sku();
-		} else {
+		$part_number = $product->get_sku();
+		if ( empty( $part_number ) ) {
 			$part_number = $product->get_id();
 		}
 		return substr( $part_number, 0, 32 );

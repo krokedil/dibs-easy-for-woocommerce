@@ -125,6 +125,7 @@ class Nets_Easy_Checkout {
 	 */
 	public function extend_allowed_domains_list( $hosts ) {
 		$hosts[] = 'checkout.dibspayment.eu';
+		$hosts[] = 'test.checkout.dibspayment.eu';
 		return $hosts;
 	}
 

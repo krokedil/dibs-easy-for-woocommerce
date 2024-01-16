@@ -73,7 +73,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 		// Get customer data from Nets.
 		$address   = filter_input( INPUT_POST, 'address', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-		$country   = dibs_get_iso_2_country( $address['countryCode'] );
+		$country   = strlen( $address['countryCode'] ) > 2 ? dibs_get_iso_2_country( $address['countryCode'] ) : sanitize_text_field( $address['countryCode'] ); // Country code returned with 2 letters from ApplePay.
 		$post_code = $address['postalCode'];
 
 		// If customer is not logged in and this is a subscription purchase - get customer email from DIBS.
@@ -99,6 +99,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			if ( WC()->customer->get_shipping_postcode() !== $post_code ) {
 				$update_needed = 'yes';
 			}
+
 			// Set customer data in Woo.
 			WC()->customer->set_billing_country( $country );
 			WC()->customer->set_shipping_country( $country );
@@ -108,6 +109,9 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 			WC()->cart->calculate_totals();
 
+			$items      = Nets_Easy_Cart_Helper::get_items();
+			$cart_total = Nets_Easy_Order_Helper::get_order_total( $items );
+
 		}
 		$response = array(
 			'updateNeeded'     => $update_needed,
@@ -115,6 +119,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			'postCode'         => $post_code,
 			'mustLogin'        => $must_login,
 			'mustLoginMessage' => $must_login_message,
+			'cart_total'       => $cart_total,
 		);
 		wp_send_json_success( $response );
 	}
@@ -158,7 +163,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		$orders         = $query->get_orders();
 		$order_id_match = null;
 		foreach ( $orders as $order_id ) {
-			$order_payment_id = get_post_meta( $order_id, '_dibs_payment_id', true );
+			$order            = wc_get_order( $order_id );
+			$order_payment_id = $order->get_meta( '_dibs_payment_id' );
 			if ( strtolower( $order_payment_id ) === strtolower( $payment_id ) ) {
 				$order_id_match = $order_id;
 				break;
