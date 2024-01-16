@@ -5,8 +5,8 @@ Requires at least: 5.0
 Tested up to: 6.4.2
 Requires PHP: 7.3
 WC requires at least: 5.0.0
-WC tested up to: 8.5.0
-Stable tag: 2.6.1
+WC tested up to: 8.5.1
+Stable tag: 2.7.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,14 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2024.01.16    - version 2.7.0 =
+* Feature       - The plugin now supports WooCommerce's "High-Performance Order Storage" ("HPOS") feature.
+* Tweak         - Adds support for updating customer and session in Woo when applepay-contact-updated event is triggered.
+* Tweak         - Adds class properties for PHP 8.2 compatibility (thanks @Stian).
+* Tweak         - Change helper function nets_easy_get_order_id_by_purchase_id to nets_easy_get_order_by_purchase_id. Uses the same logic that Krokedil have in other payment plugins.
+* Tweak         - Tweaks in logic how payment data is saved in subscription in set_recurring_token_for_order function.
+* Fix           - Adds Nets Easy test environment hosted payment page as allowed external url for wp_safe_redirect.
+
 = 2023.12.18    - version 2.6.2 =
 * Fix           - Updates helper function to get refund order id due to changes in WP query. Fixes potential error triggered in refund request. 
 
