@@ -111,7 +111,7 @@ class Nets_Easy_Checkout_Helper {
 		if ( $order_id ) {
 			$country = wc_get_order( $order_id )->get_billing_country();
 		} else {
-			$country = get_locale();
+			$country = strtoupper(get_locale());
 			if ( strpos($country, '_') !== false ) {
 				$country = explode('_', $country)[1];
 			}
