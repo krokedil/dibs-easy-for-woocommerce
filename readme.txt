@@ -2,11 +2,11 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 Requires PHP: 7.3
 WC requires at least: 5.0.0
-WC tested up to: 8.5.1
-Stable tag: 2.7.0
+WC tested up to: 8.5.2
+Stable tag: 2.7.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2024.02.05    - version 2.7.1 =
+* Tweak         - Scroll customer to shipping area in Woo when address-changed event has been triggered by Nets and user is on mobile.
+
 = 2024.01.16    - version 2.7.0 =
 * Feature       - The plugin now supports WooCommerce's "High-Performance Order Storage" ("HPOS") feature.
 * Tweak         - Adds support for updating customer and session in Woo when applepay-contact-updated event is triggered.
