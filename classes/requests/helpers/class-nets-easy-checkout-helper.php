@@ -25,8 +25,9 @@ class Nets_Easy_Checkout_Helper {
 	 * @return array
 	 */
 	public static function get_checkout( $checkout_flow = 'embedded', $order_id = null ) {
-		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
-		$auto_capture  = $dibs_settings['auto_capture'] ?? 'no';
+		$dibs_settings                   = get_option( 'woocommerce_dibs_easy_settings' );
+		$auto_capture                    = $dibs_settings['auto_capture'] ?? 'no';
+		$enable_separate_billing_address = $dibs_settings['enable_separate_billing_address'] ?? 'no';
 
 		$checkout = array(
 			'termsUrl' => wc_get_page_permalink( 'terms' ),
@@ -40,6 +41,13 @@ class Nets_Easy_Checkout_Helper {
 				$checkout['shipping']['merchantHandlesShippingCost'] = true;
 			} else {
 				$checkout['shipping']['merchantHandlesShippingCost'] = false;
+			}
+
+			// Enable separate billing address field?
+			if ( 'yes' === $enable_separate_billing_address ) {
+				$checkout['shipping']['enableBillingAddress'] = true;
+			} else {
+				$checkout['shipping']['enableBillingAddress'] = false;
 			}
 
 			if ( 'all' !== get_option( 'woocommerce_allowed_countries' ) ) {
