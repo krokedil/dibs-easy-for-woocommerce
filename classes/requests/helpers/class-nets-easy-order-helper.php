@@ -19,7 +19,7 @@ class Nets_Easy_Order_Helper {
 	/**
 	 * Gets formatted order.
 	 *
-	 * @param string $checkout_flow The checkout flow selected in settings (or set in plugin for specific occations).
+	 * @param string $checkout_flow The checkout flow selected in settings (or set in plugin for specific occasions).
 	 * @param mixed  $order_id The WooCommerce order ID if one order exist.
 	 *
 	 * @return array
@@ -53,7 +53,7 @@ class Nets_Easy_Order_Helper {
 	/**
 	 * Gets order total by calculating the sum of all order lines.
 	 *
-	 * @param array $items The order/cart line tems.
+	 * @param array $items The order/cart line items.
 	 *
 	 * @return string
 	 */

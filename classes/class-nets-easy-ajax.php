@@ -146,8 +146,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		if ( ! $payment_id ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
 		}
-		// Set the endpoint sufix.
-		$endpoint_sufix = 'payments/' . $payment_id;
 
 		// Prevent duplicate orders if payment complete event is triggered twice or if order already exist in Woo (via webhook).
 		$query          = new WC_Order_Query(
@@ -215,7 +213,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 				$response['payment']['consumer']['shippingAddress']['country'] = dibs_get_iso_2_country( $response['payment']['consumer']['shippingAddress']['country'] );
 			}
 
-			// Store the order data in a sesstion. We might need it if form processing in Woo fails.
+			// Store the order data in a session. We might need it if form processing in Woo fails.
 			WC()->session->set( 'dibs_order_data', $response );
 
 			Nets_Easy_Logger::log( 'processWooCheckout triggered and checkout form about to be submitted for Nets payment ID ' . $payment_id );

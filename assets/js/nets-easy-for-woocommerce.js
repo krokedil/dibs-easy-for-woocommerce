@@ -175,7 +175,7 @@ jQuery(function ($) {
             }
         },
         /**
-         * Triggers whenever customer updates address information from ApplePay windoww.
+         * Triggers whenever customer updates address information from ApplePay window.
          *
          */
         applePayAddressChanged(address) {
@@ -471,7 +471,7 @@ jQuery(function ($) {
 
             // Send false and cancel
             dibsEasyForWoocommerce.dibsCheckout.send("payment-order-finalized", false)
-            // Renable the form.
+            // Reenable the form.
             dibsEasyForWoocommerce.bodyEl.trigger("updated_checkout")
             $(dibsEasyForWoocommerce.checkoutFormSelector).removeClass("processing")
             // $( dibsEasyForWoocommerce.checkoutFormSelector ).unblock();

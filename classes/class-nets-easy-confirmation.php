@@ -97,11 +97,11 @@ class Nets_Easy_Confirmation {
 	 * This function is used when customer is redirected from a payment page.
 	 * The main reason for this is when a purchase is done on mobile phone with a non default browser.
 	 * Bank ID/Vipps/Swish might then redirect the customer back to the stores checkout page,
-	 * but in the default browser. In this scenario it dosesnt exist a cart session in WooCommerce.
+	 * but in the default browser. In this scenario it doesn't exist a cart session in WooCommerce.
 	 * Instead of trying to display the embedded checkout we grab the payment_id and check the status.
 	 * If payment is created, we redirect the customer to the order thankyou page.
 	 *
-	 * This function is trigggered on init - on priority 20.
+	 * This function is triggered on init - on priority 20.
 	 * It needs to be triggered after similar logic in the subscription class (dibs_payment_method_changed).
 	 */
 	public function maybe_confirm_customer_redirected_from_payment_page_order() {
