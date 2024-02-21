@@ -50,7 +50,7 @@ class Nets_Easy_Order_Items_Helper {
 	/**
 	 * Gets one formatted order line item.
 	 *
-	 * @param array  $order_item The WooCommerce order line item.
+	 * @param object $order_item The WooCommerce order line item.
 	 * @param object $order The WooCommerce order.
 	 * @return array
 	 */
@@ -188,7 +188,7 @@ class Nets_Easy_Order_Items_Helper {
 			foreach ( $yith_giftcards as $yith_giftcard_code => $yith_giftcard_value ) {
 
 				$label        = apply_filters( 'yith_ywgc_cart_totals_gift_card_label', esc_html( __( 'Gift card:', 'yith-woocommerce-gift-cards' ) . ' ' . $yith_giftcard_code ), $yith_giftcard_code );
-				$giftcard_sku = apply_filters( 'nets_yith_gift_card_sku', esc_html( $yith_giftcard_code ), $code );
+				$giftcard_sku = apply_filters( 'nets_yith_gift_card_sku', esc_html( $yith_giftcard_code ), $yith_giftcard_code );
 
 				$yith_giftcard_value = $yith_giftcard_value * 100 * -1;
 				$items[]             = array(

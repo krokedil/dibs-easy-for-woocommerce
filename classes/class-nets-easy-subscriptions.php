@@ -175,7 +175,7 @@ class Nets_Easy_Subscriptions {
 	}
 
 	/**
-	 * Returns the SKU used in Nets for the prodct.
+	 * Returns the SKU used in Nets for the product.
 	 *
 	 * @param object $product WooCommerce product.
 	 * @param string $product_id WooCommerce product id.
