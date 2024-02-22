@@ -134,6 +134,11 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
+		// If the order was created using WooCommerce blocks checkout, then we need to force the checkout flow to be redirect.
+		if ( 'store-api' === $order->get_created_via() ) {
+			$this->checkout_flow = 'redirect';
+		}
+
 		// Subscription payment method change.
 		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( ! empty( $change_payment_method ) ) {
@@ -250,12 +255,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 			// Unset sessions.
 			wc_dibs_unset_sessions();
-		} else {
-			if ( empty( $order->get_date_paid() ) ) {
+		} elseif ( empty( $order->get_date_paid() ) ) {
 				wc_dibs_confirm_dibs_order( $order_id );
-			}
 		}
-
 	}
 
 	/**
@@ -373,12 +375,11 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
 			$order->update_meta_data( '_dibs_payment_id', $payment_id );
 			$order->save();
-			
+
 			return array(
 				'result'   => 'success',
 				'redirect' => add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ),
 			);
 		}
 	}
-
 }

@@ -75,7 +75,6 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 			'subscription_payment_method_change',
 			'multiple_subscriptions',
 		);
-
 	}
 
 	/**
@@ -127,6 +126,11 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
+
+		// If the order was created using WooCommerce blocks checkout, then we need to force the checkout flow to be redirect.
+		if ( 'store-api' === $order->get_created_via() ) {
+			$this->checkout_flow = 'redirect';
+		}
 
 		// Subscription payment method change.
 		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
@@ -270,5 +274,4 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 			'result' => 'error',
 		);
 	}
-
 }
