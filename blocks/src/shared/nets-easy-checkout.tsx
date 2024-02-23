@@ -18,9 +18,24 @@ export const NetsEasyCheckout: React.FC<NetsEasyCheckoutProps> = (props) => {
 
 type LabelProps = {
   title: string;
+  icon: string;
 };
 
 export const Label: React.FC<LabelProps> = (props) => {
-  const { title } = props;
-  return <span>{title}</span>;
+  const { title, icon } = props;
+  // Print the title and icon as a single line.
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: 16,
+        width: "100%",
+        justifyContent: "space-between",
+        paddingRight: 16,
+      }}
+    >
+      <span>{title}</span>
+      <img src={icon} alt={title} />
+    </div>
+  );
 };
