@@ -64,13 +64,26 @@ class Nets_Easy_Checkout_Block extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_data() {
-		$data = array();
+		$data     = array();
+		$gateways = WC()->payment_gateways->payment_gateways();
 		foreach ( $this->payment_methods as $id => $enabled ) {
 			if ( ! $enabled ) {
 				continue;
 			}
 
-			$data[ $id ] = get_option( "woocommerce_{$id}_settings", array() );
+			// Get the actual payment method from WooCommerce.
+			$gateway = $gateways[ $id ];
+
+			// Get the icon.
+			$icon = $gateway->get_icon();
+
+			// Get the url from the anchor tag.
+			if ( preg_match( '/src="([^"]+)"/', $icon, $matches ) ) {
+				$icon = $matches[1];
+			}
+
+			$data[ $id ]         = get_option( "woocommerce_{$id}_settings", array() );
+			$data[ $id ]['icon'] = $icon;
 		}
 
 		return $data;
