@@ -65,7 +65,6 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 			'products',
 			'refunds',
 		);
-
 	}
 
 	/**
@@ -135,6 +134,11 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
+
+		// If the order was created using WooCommerce blocks checkout, then we need to force the checkout flow to be redirect.
+		if ( 'store-api' === $order->get_created_via() ) {
+			$this->checkout_flow = 'redirect';
+		}
 
 		// Overlay flow.
 		if ( 'overlay' === $this->checkout_flow && ! wp_is_mobile() && ! is_wc_endpoint_url( 'order-pay' ) ) {
@@ -253,5 +257,4 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 			'result' => 'error',
 		);
 	}
-
 }

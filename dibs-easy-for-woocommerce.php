@@ -124,6 +124,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			$this->enable_payment_method_ratepay_sepa = $this->dibs_settings['enable_payment_method_ratepay_sepa'] ?? 'no';
 
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
+			add_action( 'woocommerce_blocks_loaded', array( $this, 'register_block_method' ) );
 		}
 
 		/**
@@ -298,6 +299,37 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			}
 
 			return $methods;
+		}
+
+		/**
+		 * Register the Checkout blocks method.
+		 *
+		 * @return void
+		 */
+		public function register_block_method() {
+			if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
+				require_once __DIR__ . '/blocks/src/checkout/class-nets-easy-checkout-block.php';
+
+				$settings = get_option( 'woocommerce_dibs_easy_settings', array() );
+
+				$payment_methods = array(
+					'dibs_easy'              => 'yes' === $settings['enabled'],
+					'nets_easy_card'         => 'yes' === $this->enable_payment_method_card,
+					'nets_easy_sofort'       => 'yes' === $this->enable_payment_method_sofort,
+					'nets_easy_trustly'      => 'yes' === $this->enable_payment_method_trustly,
+					'nets_easy_swish'        => 'yes' === $this->enable_payment_method_swish,
+					'nets_easy_ratepay_sepa' => 'yes' === $this->enable_payment_method_ratepay_sepa,
+				);
+
+				add_action(
+					'woocommerce_blocks_payment_method_type_registration',
+					function ( $payment_method_registry ) use ( $payment_methods ) {
+						foreach ( $payment_methods as $payment_method ) {
+							$payment_method_registry->register( new Nets_Easy_Checkout_Block( $payment_methods ) );
+						}
+					}
+				);
+			}
 		}
 	}
 

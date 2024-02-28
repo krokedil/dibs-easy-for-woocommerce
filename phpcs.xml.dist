@@ -1,36 +1,50 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress (Krokedil) Coding Standards">
-    <description>A custom set of code standard rules to check for Krokedil WordPress coding standards.</description>
+<ruleset name="Krokedil Coding Standards">
+    <description>WooCommerce dev PHP_CodeSniffer ruleset.</description>
 
-    <!-- Exclude the Composer Vendor directory. -->
+    <!-- Exclude vendor and node_modules from all rules -->
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
-    <!-- Exclude the Node Modules directory. -->
-    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <!-- Exclude the tests folder -->
+    <exclude-pattern>tests/*</exclude-pattern>
 
-    <!-- Pass some flags to PHPCS:
-         p flag: Show progress of the run.
-         s flag: Show sniff codes in all reports.
-    -->
-    <arg value="ps"/>
+    <!-- Configs - Maybe? -->
+    <config name="minimum_supported_wp_version" value="6.2" />
+    <config name="testVersion" value="7.3-" />
 
-    <!-- Check up to 8 files simultaneously. -->
-    <arg name="parallel" value="100"/>
+    <!-- Use Wordpress Coding standards -->
+    <rule ref="Wordpress" />
 
-    <rule ref="WordPress-Core">
-        <!-- Ignore filenames. Without this exclusion file name like taxonomy-custom_taxonomy.php would not be allowed, since it contains underscore -->
-        <exclude name="WordPress.Files.FileName"/>
-
-        <!-- Allow shorthand array syntax -->
-        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found"/>
-
-        <!-- Allow to skip the translator comment -->
-        <exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
+    <!-- Enforce the correct text-domain -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array" value="dibs-easy-for-woocommerce" />
+        </properties>
     </rule>
 
-    <!-- Loads the PHP Compatibility ruleset. -->
-    <rule ref="PHPCompatibilityWP" />
+    <!--  Remove WordPress.Files.FileName.InvalidClassFileName checks to allow for PSR-4 naming convention -->
+    <rule ref="WordPress.Files.FileName.InvalidClassFileName">
+        <exclude-pattern>src/</exclude-pattern>
+    </rule>
 
-    <!-- PHP version check. -->
-    <config name="testVersion" value="7.2-"/>
+    <!-- Remove WordPress.Files.FileName.NotHyphenatedLowercase checks to allow for PSR-4 naming convention -->
+    <rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+        <exclude-pattern>src/</exclude-pattern>
+    </rule>
+
+    <!-- Remove need for package tag in file block comments -->
+    <rule ref="Squiz.Commenting.FileComment.MissingPackageTag">
+        <exclude-pattern>src/</exclude-pattern>
+    </rule>
+
+    <!-- Remove need for file comment -->
+    <rule ref="Squiz.Commenting.FileComment.Missing">
+        <exclude-pattern>src/</exclude-pattern>
+    </rule>
+
+    <!-- Allow the usage of shorthand arrays -->
+    <rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
+        <exclude-pattern>src/</exclude-pattern>
+    </rule>
 </ruleset>
