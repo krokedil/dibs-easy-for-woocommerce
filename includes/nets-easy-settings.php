@@ -146,7 +146,7 @@ return apply_filters(
 			'desc_tip'    => true,
 		),
 		'complete_payment_button_text' => array(
-			'title'       => __( 'Complete payment button text', 'dibs-easy-for-woocommerce' ),
+			'title'       => __( 'Subscription payment button text', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'select',
 			'options'     => array(
 				'pay'       => 'Pay',
@@ -159,8 +159,19 @@ return apply_filters(
 				'accept'    => 'Accept',
 
 			),
-			'description' => __( 'Select the text displayed on the complete payment button. (Only applicable for subscription based payments). Translations for the selections can be found <a href="https://docs.krokedil.com/nets-easy-for-woocommerce/get-started/subscription-support/#custom-button-text-for-subscription-payments" target="_blank">here.</a>', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Select the text displayed on the complete payment button. Only applicable for subscription based payments. Translations for the selections can be found <a href="https://docs.krokedil.com/nets-easy-for-woocommerce/get-started/subscription-support/#custom-button-text-for-subscription-payments" target="_blank">here.</a>', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'subscribe',
+			'desc_tip'    => false,
+		),
+		'subscription_type'            => array(
+			'title'       => __( 'Subscription type', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'select',
+			'options'     => array(
+				'scheduled_subscription'   => __( 'Scheduled subscriptions', 'dibs-easy-for-woocommerce' ),
+				'unscheduled_subscription' => __( 'Unscheduled subscriptions', 'dibs-easy-for-woocommerce' ),
+			),
+			'description' => sprintf( __( 'If using Nets Easy together with Woo Subscriptions, select the subscription type to use. Read more about scheduled vs unscheduled subscriptions <a href="%s" target="_blank">here</a>.', 'dibs-easy-for-woocommerce' ), 'https://ecom.nets.eu/subscriptions/' ),
+			'default'     => 'scheduled_subscription',
 			'desc_tip'    => false,
 		),
 		'payment_gateway_icon'         => array(

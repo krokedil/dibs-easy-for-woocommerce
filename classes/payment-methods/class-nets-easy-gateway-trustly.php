@@ -22,6 +22,27 @@ class Nets_Easy_Gateway_Trustly extends WC_Payment_Gateway {
 	public $checkout_flow;
 
 	/**
+	 * The payment gateway icon.
+	 *
+	 * @var string
+	 */
+	public $payment_gateway_icon;
+
+	/**
+	 * The payment gateway icon width.
+	 *
+	 * @var string
+	 */
+	public $payment_gateway_icon_max_width;
+
+	/**
+	 * Customer countries where the payment method is available.
+	 *
+	 * @var array
+	 */
+	public $available_countries;
+
+	/**
 	 * DIBS_Easy_Gateway constructor.
 	 */
 	public function __construct() {
@@ -52,7 +73,6 @@ class Nets_Easy_Gateway_Trustly extends WC_Payment_Gateway {
 			'products',
 			'refunds',
 		);
-
 	}
 
 	/**
@@ -119,6 +139,11 @@ class Nets_Easy_Gateway_Trustly extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
+		// If the order was created using WooCommerce blocks checkout, then we need to force the checkout flow to be redirect.
+		if ( 'store-api' === $order->get_created_via() ) {
+			$this->checkout_flow = 'redirect';
+		}
+
 		// Overlay flow.
 		if ( 'overlay' === $this->checkout_flow && ! wp_is_mobile() && ! is_wc_endpoint_url( 'order-pay' ) ) {
 			return $this->process_overlay_handler( $order_id );
@@ -184,7 +209,7 @@ class Nets_Easy_Gateway_Trustly extends WC_Payment_Gateway {
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to Nets payment page.
 			$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
-			$order->update_meta_data('_dibs_payment_id', $response['paymentId']);
+			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
 			$order->save();
 
 			return array(
@@ -224,9 +249,9 @@ class Nets_Easy_Gateway_Trustly extends WC_Payment_Gateway {
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to DIBS payment page.
 			$order->add_order_note( __( 'Nets payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
-			$order->update_meta_data('_dibs_payment_id', $response['paymentId']);
+			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
 			$order->save();
-			
+
 			return array(
 				'result'   => 'success',
 				'redirect' => '#netseasy:' . base64_encode( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ), // phpcs:ignore
@@ -237,5 +262,4 @@ class Nets_Easy_Gateway_Trustly extends WC_Payment_Gateway {
 			'result' => 'error',
 		);
 	}
-
 }

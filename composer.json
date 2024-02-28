@@ -11,11 +11,13 @@
     "php": ">=7.2"
   },
   "require-dev": {
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "squizlabs/php_codesniffer": "^3.5.4",
     "php-stubs/woocommerce-stubs": "^7.6",
-    "wp-coding-standards/wpcs": "^2.3"
+    "wp-coding-standards/wpcs": "^3.0.0",
+    "woocommerce/woocommerce-sniffs": "^1.0",
+    "woocommerce/qit-cli": "^0.4.0"
   },
   "scripts": {
     "lint": "./vendor/bin/phpcs --standard=phpcs.xml.dist --colors --encoding=utf-8 -p `git ls-files --others --exclude-standard -c|grep \\.php`",
@@ -23,5 +25,10 @@
     "install-codestandards": [
       "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }

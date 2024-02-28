@@ -22,6 +22,20 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 	public $checkout_flow;
 
 	/**
+	 * The payment gateway icon.
+	 *
+	 * @var string
+	 */
+	public $payment_gateway_icon;
+
+	/**
+	 * The payment gateway icon width.
+	 *
+	 * @var string
+	 */
+	public $payment_gateway_icon_max_width;
+
+	/**
 	 * DIBS_Easy_Gateway constructor.
 	 */
 	public function __construct() {
@@ -61,7 +75,6 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 			'subscription_payment_method_change',
 			'multiple_subscriptions',
 		);
-
 	}
 
 	/**
@@ -113,6 +126,11 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
+
+		// If the order was created using WooCommerce blocks checkout, then we need to force the checkout flow to be redirect.
+		if ( 'store-api' === $order->get_created_via() ) {
+			$this->checkout_flow = 'redirect';
+		}
 
 		// Subscription payment method change.
 		$change_payment_method = filter_input( INPUT_GET, 'change_payment_method', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
@@ -205,7 +223,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to Nets payment page.
 			$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
-			$order->update_meta_data('_dibs_payment_id', $response['paymentId']);
+			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
 			$order->save();
 			return array(
 				'result'   => 'success',
@@ -244,7 +262,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to DIBS payment page.
 			$order->add_order_note( __( 'Nets payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
-			$order->update_meta_data('_dibs_payment_id', $response['paymentId']);
+			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
 			$order->save();
 			return array(
 				'result'   => 'success',
@@ -256,5 +274,4 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 			'result' => 'error',
 		);
 	}
-
 }

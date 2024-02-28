@@ -44,7 +44,9 @@ class Nets_Easy_Subscriptions {
 
 		add_filter( 'woocommerce_order_needs_payment', array( $this, 'maybe_change_needs_payment' ), 999, 3 );
 
-		$this->subscription_type = apply_filters( 'nets_easy_subscription_type', 'scheduled_subscription' );
+		$this->dibs_settings     = get_option( 'woocommerce_dibs_easy_settings' );
+		$subscription_type       = $this->dibs_settings['subscription_type'] ?? 'scheduled_subscription';
+		$this->subscription_type = apply_filters( 'nets_easy_subscription_type', $subscription_type );
 	}
 
 	/**
@@ -173,7 +175,7 @@ class Nets_Easy_Subscriptions {
 	}
 
 	/**
-	 * Returns the SKU used in Nets for the prodct.
+	 * Returns the SKU used in Nets for the product.
 	 *
 	 * @param object $product WooCommerce product.
 	 * @param string $product_id WooCommerce product id.

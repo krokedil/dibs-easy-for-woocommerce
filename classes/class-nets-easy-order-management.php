@@ -225,19 +225,23 @@ class Nets_Easy_Order_Management {
 	 */
 	public function is_completed( $nets_easy_order, $order_id ) {
 		$wc_order = wc_get_order( $order_id );
-		if ( ! is_wp_error( $nets_easy_order ) && ! empty( $nets_easy_order['payment']['charges'] ) ) {
-			$dibs_charge_id = $nets_easy_order['payment']['charges'][0]['chargeId'];
-			// If charges id exists, update the post meta value.
-			if ( $dibs_charge_id ) {
-				$charge_id = $nets_easy_order['payment']['charges'][0]['chargeId'];
-				$wc_order->update_meta_data( '_dibs_charge_id', $charge_id );
-				$wc_order->save();
-				// Translators: 1. Nets Easy Payment id 2. Payment type  3.Charge id.
-				$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
-				return true;
-			}
+		if ( is_wp_error( $nets_easy_order ) || empty( $wc_order ) || empty( $nets_easy_order['payment']['charges'] ?? false ) ) {
+			return false;
 		}
 
-		return false;
+		$dibs_charge_id = $nets_easy_order['payment']['charges'][0]['chargeId'] ?? false;
+		if ( empty( $dibs_charge_id ) ) {
+			return false;
+		}
+
+		$charge_id = $nets_easy_order['payment']['charges'][0]['chargeId'];
+		$wc_order->update_meta_data( '_dibs_charge_id', $charge_id );
+		$wc_order->save();
+
+		// Translators: 1. Nets Easy Payment id 2. Payment type  3.Charge id.
+		$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
+
+		return true;
 	}
+
 }
