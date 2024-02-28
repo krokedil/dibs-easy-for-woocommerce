@@ -6,7 +6,7 @@ Tested up to: 6.4.3
 Requires PHP: 7.3
 WC requires at least: 5.0.0
 WC tested up to: 8.6.1
-Stable tag: 2.8.0
+Stable tag: 2.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,9 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2024.02.28    - version 2.8.1 =
+* Fix           - Fix issue with ignored files when publishing to WordPress.org.
+
 = 2024.02.28    - version 2.8.0 =
 * Feature       - Adds support for WooCommerce blocks checkout using the redirect flow.
 * Feature       - Adds support for switching between Scheduled and Unscheduled subscriptions in the payment method settings.

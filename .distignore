@@ -3,7 +3,6 @@
 /.github
 /node_modules
 /vendor
-/blocks/src
 .babelrc
 .distignore
 .eslintrc.json
