@@ -3,6 +3,7 @@
 /.github
 /node_modules
 /vendor
+/blocks/src
 .babelrc
 .distignore
 .eslintrc.json
@@ -19,3 +20,4 @@ phpcs.xml.dist
 phpunit.xml
 webpack.config.js
 yarn.lock
+tsconfig.json

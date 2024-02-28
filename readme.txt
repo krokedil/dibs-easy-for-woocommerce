@@ -6,7 +6,7 @@ Tested up to: 6.4.3
 Requires PHP: 7.3
 WC requires at least: 5.0.0
 WC tested up to: 8.6.1
-Stable tag: 2.7.1
+Stable tag: 2.8.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,7 +20,7 @@ https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 
 *All-in-one* -  One agreement for all payment options including card acquiring agreements makes it easy to get started. At the moment, we offer card and invoice payments.
 
-*Easy checkout* - Quick and mobile optimised payments for your customers with full freedom to choose payment options and the possibility of saving multiple payment cards. Returning customers also pay with just one click. Embedded in every step ensuring a smooth shopping experience.      
+*Easy checkout* - Quick and mobile optimised payments for your customers with full freedom to choose payment options and the possibility of saving multiple payment cards. Returning customers also pay with just one click. Embedded in every step ensuring a smooth shopping experience.
 
 *Easy administration* - Track sales in our user-friendly administration portal and get all payments collected in a report. It saves time in account reconsiliation and bookkeeping.
 
@@ -30,7 +30,7 @@ To get started with Nets Easy you need to [sign up](https://www.nets.eu/en/payme
 More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 = Connect Nets Easy to your webshop by setting up a test account. It is free and created immediately =
-With a test account, you will see how the Nets Easy administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).  
+With a test account, you will see how the Nets Easy administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).
 
 
 == INSTALLATION	 ==
@@ -56,6 +56,11 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2024.02.28    - version 2.8.0 =
+* Feature       - Adds support for WooCommerce blocks checkout using the redirect flow.
+* Feature       - Adds support for switching between Scheduled and Unscheduled subscriptions in the payment method settings.
+* Fix           - Fixes a potential fatal error when the WooCommerce order was not found when making a capture call.
+
 = 2024.02.05    - version 2.7.1 =
 * Tweak         - Scroll customer to shipping area in Woo when address-changed event has been triggered by Nets and user is on mobile.
 
@@ -68,7 +73,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * Fix           - Adds Nets Easy test environment hosted payment page as allowed external url for wp_safe_redirect.
 
 = 2023.12.18    - version 2.6.2 =
-* Fix           - Updates helper function to get refund order id due to changes in WP query. Fixes potential error triggered in refund request. 
+* Fix           - Updates helper function to get refund order id due to changes in WP query. Fixes potential error triggered in refund request.
 
 = 2023.11.13    - version 2.6.1 =
 * Fix           - Fixed an issue related to pay for order when attempting to update the merchant reference.
@@ -82,7 +87,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 = 2023.08.17    - version 2.5.3 =
 * Tweak         - Set default request timeout time to 10 seconds and adds nets_easy_set_timeout filter to GET and PUT requests.
-* Fix           - PHP8.1 deprecation notices fix (thanks @oxyc). 
+* Fix           - PHP8.1 deprecation notices fix (thanks @oxyc).
 
 = 2023.07.25    - version 2.5.2 =
 * Fix           - Solves issue with redirect to payment page when changing/updating subscription payment method. Add Nets Easy hosted payment page as allowed external url for wp_safe_redirect.
@@ -117,7 +122,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * Tweak         - Reload checkout page and try to send update request again to Nets if response code is 409 on an update.
 * Tweak         - Change logic for auto capture. We now send charge = true in the create request and look for a charge id in payment confirmation, instead of making an activation request in payment confirmation sequenze.
 * Tweak         - Improved logic for enqueuing of js files to avoid creation of Nets payment ID when checkout page is rendered but Nets Easy isn't the selected payment gateway.
-* Tweak         - Change sku sent for YITH giftcard. Now we use giftcard code to allow multiple cift card used n one order. 
+* Tweak         - Change sku sent for YITH giftcard. Now we use giftcard code to allow multiple cift card used n one order.
 * Tweak         - Tweak to YITH giftcard name sent to Nets, use the format Gift card: {gifdcard_code}.
 * Tweak         - Adds payment ID to log for charge order, cancel order and update cart requests.
 * Tweak         - Tweak in refund message logged as order note. Reason not needed.
@@ -130,7 +135,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 = 2022.12.14    - version 2.2.1 =
 * Tweak         - Improvement in logic regarding product & shipping method name cleaning. We now remove specific characters not supported by Nets.
-* Fix           - Avoid fatal error in confirmation sequence if request to Nets fails. 
+* Fix           - Avoid fatal error in confirmation sequence if request to Nets fails.
 * Fix           - Avoid fatal error in process payment sequence (redirect checkout flow) if request to Nets fails.
 
 = 2022.11.09    - version 2.2.0 =
@@ -173,7 +178,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * Enhancement   - Internal rewrite of plugin to better follow WP & Krokedil standards.
 * Enhancement   - Improved the speed of update calls to Nets to enhance the checkout experience for the customer.
 * Enhancement   - Adds minification of js & css files.
-* Fix           - Create new session if subscription product is added to or removed from cart after initial request. This way the place order button text should always be correct. 
+* Fix           - Create new session if subscription product is added to or removed from cart after initial request. This way the place order button text should always be correct.
 
 = 2022.04.11    - version 1.26.0 =
 * Tweak         - The argnum in format specifier for translatable strings is removed to offer better compatibility with third-party translation API.
@@ -211,7 +216,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 
 = 2021.05.25    - version 1.23.2 =
 * Tweak         - Use Action scheduler instead of WP cron for queuing payment created webhook handling. This is a more reliable solution.
-* Tweak         - Only try to send the customer data to Nets that actually exist in WooCommerce order. Improves redirect flow where the store doesn't enable full address collecting. 
+* Tweak         - Only try to send the customer data to Nets that actually exist in WooCommerce order. Improves redirect flow where the store doesn't enable full address collecting.
 
 = 2021.05.10    - version 1.23.1 =
 * Tweak         - Only send information about completePaymentButtonText if cart contain subscription. Solves issue where "Subscribe" text could be displayed in pay button even for regular purchases.
@@ -221,7 +226,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * Tweak         - Change DIBS to Nets in readme and settings.
 * Tweak         - Remove old/unused code related to backup order creation.
 * Tweak         - Remove code for saving order note field & extra checkout field data in session storage. Not needed in current embedded checkout flow.
-* Fix           - Improved logic for handling payment processing on API callback. Fixes issues with Swish/Vipps payments where customer never returns to store/browser after completed payment. 
+* Fix           - Improved logic for handling payment processing on API callback. Fixes issues with Swish/Vipps payments where customer never returns to store/browser after completed payment.
 * Fix           - Improve function get_order_id_from_payment_id. Don't try to make a query to db if missing payment_id.
 
 = 2021.03.09    - version 1.22.0 =
@@ -301,7 +306,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * Tweak         - Set postalCode as null in request sent to Nets if we do not have a wc billing postcode.
 * Tweak         - Change product->get_name() to order_item->get_name() in requests sent to Nets.
 * Fix           - Improved phone number prefix handling. Now supports all countries that WooCommerce supports.
-* Fix           - Only try to get a sku from the product (in requests to Nets) if we have an instance of the product object. 
+* Fix           - Only try to get a sku from the product (in requests to Nets) if we have an instance of the product object.
 
 = 2020.04.01    - version 1.15.1 =
 * Tweak         - Only register webhook if host is not local (127.0.0.1 or ::1).
@@ -325,7 +330,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 = 2020.01.22    - version 1.13.1 =
 * Tweak         - Added support for changing payment method on a subscription for customers.
 * Fix           - Format phone number sent to Nets correct on redirect checkout flow.
-* Fix           - Tweak in logic for the GTM fix added in v1.13.0. 
+* Fix           - Tweak in logic for the GTM fix added in v1.13.0.
 
 = 2019.12.12    - version 1.13.0 =
 * Feature       - Added support for partial refunds.
@@ -457,7 +462,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * Tweak			- Added WooEasyKrokedil as commercePlatformTag in header sent to DIBS.
 * Tweak			- Plugin WordPress 5.0 compatible.
 * Fix			- Updated how available shipping countries are sent to DIBS to reflect DIBS API changes.
-* Fix			- Do not limit number of shipping countries to 5. No limits in DIBS API anymore. 
+* Fix			- Do not limit number of shipping countries to 5. No limits in DIBS API anymore.
 * Fix			- Improved handling of allowed characters in product names sent to DIBS. Also added unicode handler.
 
 = 2018.11.21    - version 1.6.1 =
@@ -511,7 +516,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * fix			- Changes to avoid duplicate orders during checkout form processing in Woo.
 * Fix			- Added fix for double order_comment fields causing js error.
 * Fix			- Make sure all prices are sent as integers.
-* Fix			- PHP notice fix. 
+* Fix			- PHP notice fix.
 
 = 2018.09.04    - version 1.4.2 =
 * Tweak			- Added fees when sending order lines to DIBS.
@@ -520,7 +525,7 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * Tweak			- Plugin now requires https.
 * Tweak			- Added admin notice if https is note set in store.
 * Tweak			- Added WooCommerce account settings check. To avoid issues during finalizing of checkout form submission.
-* Fix			- Only allow payment method to be available is currency is DKK, NOK or SEK. 
+* Fix			- Only allow payment method to be available is currency is DKK, NOK or SEK.
 
 = 2018.08.15    - version 1.4.0 =
 * Feature 		- Added support for listening to DIBS shipping update event (possibility to update shipping methods/shipping depending on entered customer data in Easy iframe).
