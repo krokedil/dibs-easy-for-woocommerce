@@ -324,9 +324,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				add_action(
 					'woocommerce_blocks_payment_method_type_registration',
 					function ( $payment_method_registry ) use ( $payment_methods ) {
-						foreach ( $payment_methods as $payment_method ) {
-							$payment_method_registry->register( new Nets_Easy_Checkout_Block( $payment_methods ) );
-						}
+						$payment_method_registry->register( new Nets_Easy_Checkout_Block( $payment_methods ) );
 					}
 				);
 			}
