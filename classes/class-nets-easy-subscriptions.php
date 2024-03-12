@@ -21,6 +21,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Nets_Easy_Subscriptions {
 
 	/**
+	 * Reference to dibs_settings.
+	 *
+	 * @var $array
+	 */
+	public $dibs_settings;
+
+	/**
 	 * The subscription type
 	 *
 	 * @var string
