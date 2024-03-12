@@ -8,7 +8,7 @@
  * Plugin Name:             Nets Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/produkt/nets-easy/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
- * Version:                 2.8.1
+ * Version:                 2.8.2
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -16,7 +16,7 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    5.0.0
- * WC tested up to:         8.6.1
+ * WC tested up to:         8.7.0
  * Copyright:               © 2017-2024 Krokedil AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '2.8.1' );
+define( 'WC_DIBS_EASY_VERSION', '2.8.2' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -324,9 +324,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				add_action(
 					'woocommerce_blocks_payment_method_type_registration',
 					function ( $payment_method_registry ) use ( $payment_methods ) {
-						foreach ( $payment_methods as $payment_method ) {
-							$payment_method_registry->register( new Nets_Easy_Checkout_Block( $payment_methods ) );
-						}
+						$payment_method_registry->register( new Nets_Easy_Checkout_Block( $payment_methods ) );
 					}
 				);
 			}
