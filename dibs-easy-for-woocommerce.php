@@ -310,10 +310,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
 				require_once __DIR__ . '/blocks/src/checkout/class-nets-easy-checkout-block.php';
 
-				$settings = get_option( 'woocommerce_dibs_easy_settings', array() );
+				$settings                    = get_option( 'woocommerce_dibs_easy_settings', array() );
+				$main_payment_method_enabled = $settings['enabled'] ?? 'no';
 
 				$payment_methods = array(
-					'dibs_easy'              => 'yes' === $settings['enabled'],
+					'dibs_easy'              => 'yes' === $main_payment_method_enabled,
 					'nets_easy_card'         => 'yes' === $this->enable_payment_method_card,
 					'nets_easy_sofort'       => 'yes' === $this->enable_payment_method_sofort,
 					'nets_easy_trustly'      => 'yes' === $this->enable_payment_method_trustly,
