@@ -271,7 +271,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		// Purchase not finalized in DIBS.
 		// If this is a redirect checkout flow let's redirect the customer to cart page.
 		if ( 'embedded' !== $checkout_flow ) {
-			wp_safe_redirect( html_entity_decode( $order->get_cancel_order_url() ) );
+			wp_safe_redirect( html_entity_decode( $order->get_cancel_order_url(), ENT_QUOTES ) );
 			exit;
 		}
 	}

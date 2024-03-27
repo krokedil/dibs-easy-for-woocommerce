@@ -136,7 +136,7 @@ class Nets_Easy_Confirmation {
 				// Confirm the order.
 				wc_dibs_confirm_dibs_order( $order->get_id() );
 				wc_dibs_unset_sessions();
-				wp_safe_redirect( html_entity_decode( $order->get_checkout_order_received_url() ) );
+				wp_safe_redirect( html_entity_decode( $order->get_checkout_order_received_url(), ENT_QUOTES ) );
 				exit;
 
 			} else {
