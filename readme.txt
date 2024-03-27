@@ -4,7 +4,7 @@ Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
 Tested up to: 6.4.3
 Requires PHP: 7.3
-WC requires at least: 5.0.0
+WC requires at least: 5.6.0
 WC tested up to: 8.7.0
 Stable tag: 2.8.2
 License: GPLv3

@@ -15,7 +15,7 @@
  * Developer URI:           https://krokedil.se/
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
- * WC requires at least:    5.0.0
+ * WC requires at least:    5.6.0
  * WC tested up to:         8.7.0
  * Copyright:               © 2017-2024 Krokedil AB.
  * License:                 GNU General Public License v3.0
