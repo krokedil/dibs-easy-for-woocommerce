@@ -170,6 +170,7 @@ return apply_filters(
 				'scheduled_subscription'   => __( 'Scheduled subscriptions', 'dibs-easy-for-woocommerce' ),
 				'unscheduled_subscription' => __( 'Unscheduled subscriptions', 'dibs-easy-for-woocommerce' ),
 			),
+			// Translators: URL to Nets with info about subscriptions.
 			'description' => sprintf( __( 'If using Nets Easy together with Woo Subscriptions, select the subscription type to use. Read more about scheduled vs unscheduled subscriptions <a href="%s" target="_blank">here</a>.', 'dibs-easy-for-woocommerce' ), 'https://ecom.nets.eu/subscriptions/' ),
 			'default'     => 'scheduled_subscription',
 			'desc_tip'    => false,

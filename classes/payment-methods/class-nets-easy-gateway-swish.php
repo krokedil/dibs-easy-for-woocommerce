@@ -180,6 +180,8 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 
 
 	/**
+	 * Process the payment via redirect flow.
+	 *
 	 * @param int $order_id The WooCommerce order id.
 	 *
 	 * @return array|string[]
@@ -220,6 +222,8 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Process the payment via overlay flow.
+	 *
 	 * @param int $order_id The WooCommerce order id.
 	 *
 	 * @return array|string[]

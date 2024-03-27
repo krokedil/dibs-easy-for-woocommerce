@@ -22,6 +22,8 @@ class Nets_Easy_Request_Charge_Subscription extends Nets_Easy_Request_Post {
 	public $order_id;
 
 	/**
+	 * The Nets recurring token.
+	 *
 	 * @var mixed
 	 */
 	public $recurring_token;

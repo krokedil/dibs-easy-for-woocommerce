@@ -260,7 +260,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 			$order->save();
 
 			// Translators: Nets Easy Payment ID.
-			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %s. Payment type - %s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
+			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
 		} else {
 			// Translators: Nets Easy Payment ID.
 			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentType'] ) );

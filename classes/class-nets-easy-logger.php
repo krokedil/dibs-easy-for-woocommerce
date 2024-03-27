@@ -101,7 +101,7 @@ class Nets_Easy_Logger {
 				'body' => $response['body'],
 				'code' => $code,
 			),
-			'timestamp'      => date( 'Y-m-d H:i:s' ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
+			'timestamp'      => gmdate( 'Y-m-d H:i:s' ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
 			'stack'          => self::get_stack(),
 			'plugin_version' => WC_DIBS_EASY_VERSION,
 		);
