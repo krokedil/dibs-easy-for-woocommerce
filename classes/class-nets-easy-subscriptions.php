@@ -11,12 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Handles subscription payments with Nets.
- *
- * @class    Nets_Easy_Subscriptions
- * @version  1.0
- * @package  DIBS/Classes
- * @category Class
- * @author   Krokedil
  */
 class Nets_Easy_Subscriptions {
 
@@ -33,6 +27,13 @@ class Nets_Easy_Subscriptions {
 	 * @var string
 	 */
 	public $subscription_type;
+
+	/**
+	 * Plugin settings.
+	 *
+	 * @var string
+	 */
+	public $dibs_settings;
 
 	/**
 	 * Class constructor.
@@ -217,6 +218,7 @@ class Nets_Easy_Subscriptions {
 				$subscription_id   = $dibs_order['payment']['unscheduledSubscription']['unscheduledSubscriptionId'];
 				$subscription_type = 'unscheduled_subscription';
 			}
+			// Translators: Nets subscription recurring token.
 			$wc_order->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 			$wc_order->update_meta_data( '_dibs_recurring_token', $subscription_id );
 			$wc_order->update_meta_data( '_dibs_subscription_type', $subscription_type );
@@ -235,6 +237,7 @@ class Nets_Easy_Subscriptions {
 			) || wcs_is_subscription( $wc_order ) ) ) {
 				$subscriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 				foreach ( $subscriptions as $subscription ) {
+					// Translators: Nets subscription recurring token.
 					$subscription->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 					$subscription->update_meta_data( '_dibs_recurring_token', $subscription_id );
 					$subscription->update_meta_data( '_dibs_subscription_type', $subscription_type );
@@ -310,7 +313,7 @@ class Nets_Easy_Subscriptions {
 			$order->update_meta_data( '_dibs_subscription_type', $subscription_type );
 			$order->save();
 			/* Translators: Nets Payment ID & Charge ID. */
-			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Payment ID: %s. Charge ID %s.', 'dibs-easy-for-woocommerce' ), $response['paymentId'], $response['chargeId'] ) ); // phpcs:ignore
+			$renewal_order->add_order_note( sprintf( __( 'Subscription payment made with Nets. Payment ID: %1$s. Charge ID %2$s.', 'dibs-easy-for-woocommerce' ), $response['paymentId'], $response['chargeId'] ) ); // phpcs:ignore
 
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->payment_complete( $response['paymentId'] ); // phpcs:ignore
@@ -350,7 +353,8 @@ class Nets_Easy_Subscriptions {
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->update_meta_data( '_dibs_recurring_token', $recurring_token );
 				$subscription->save();
-				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response['subscriptionId'] ) ); // phpcs:ignore
+				// Translators: Nets recurring token.
+				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s', 'dibs-easy-for-woocommerce' ), $response['subscriptionId'] ) );
 			}
 			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
 				// Save card data in renewal order.
@@ -390,7 +394,8 @@ class Nets_Easy_Subscriptions {
 			foreach ( $subscriptions as $subscription ) {
 				$subscription->update_meta_data( '_dibs_recurring_token', $recurring_token );
 				$subscription->save();
-				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token: %s. Subscription type: %s.', 'dibs-easy-for-woocommerce' ), $recurring_token, 'Unscheduled' ) ); // phpcs:ignore
+				// Translators: Recurring token & subscription type.
+				$subscription->add_order_note( sprintf( __( 'Saved _dibs_recurring_token in subscription by externalreference request to Nets. Recurring token:%1$s. Subscription type: %2$s.', 'dibs-easy-for-woocommerce' ), $recurring_token, 'Unscheduled' ) ); // phpcs:ignore
 			}
 			if ( 'CARD' === $response['paymentDetails']['paymentType'] ) { // phpcs:ignore
 				// Save card data in renewal order.

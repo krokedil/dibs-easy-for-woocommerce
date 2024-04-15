@@ -38,7 +38,6 @@ class Nets_Easy_Logger {
 		if ( isset( $data['response']['code'] ) && ( $data['response']['code'] < 200 || $data['response']['code'] > 299 ) ) {
 			self::log_to_db( $data );
 		}
-
 	}
 
 	/**

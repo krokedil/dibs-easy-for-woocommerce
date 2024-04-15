@@ -1,0 +1,11 @@
+*** Nexi Checkout Changelog ***
+2024-03-12  - version 2.8.2
+* Fix       - Removed a unnecessary loop when registering blocks payment methods that generated a PHP notice.
+
+2024-02-28  - version 2.8.1
+* Fix       - Fix issue with ignored files when publishing to WordPress.org.
+
+2024-02-28  - version 2.8.0
+* Feature   - Adds support for WooCommerce blocks checkout using the redirect flow.
+* Feature   - Adds support for switching between Scheduled and Unscheduled subscriptions in the payment method settings.
+* Fix       - Fixes a potential fatal error when the WooCommerce order was not found when making a capture call.

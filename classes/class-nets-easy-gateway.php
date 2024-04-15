@@ -283,6 +283,8 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Process the payment via redirect flow.
+	 *
 	 * @param int $order_id The WooCommerce order id.
 	 *
 	 * @return array|string[]
@@ -322,6 +324,8 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Process the payment via overlay flow.
+	 *
 	 * @param int $order_id The WooCommerce order id.
 	 *
 	 * @return array|string[]
@@ -361,7 +365,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * process_embedded_handler
+	 * Process the payment via embedded flow.
 	 *
 	 * @param int $order_id The WooCommerce order id.
 	 *

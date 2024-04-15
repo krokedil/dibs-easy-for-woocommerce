@@ -12,10 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get DIBS refund data.
  *
- * @class    DIBS_Get_Refund_Data
+ * @class    Nets_Easy_Refund_Helper
  * @package  DIBS/Classes/Requests/Helpers
- * @category Class
- * @author   Krokedil <info@krokedil.se>
  */
 class Nets_Easy_Refund_Helper {
 

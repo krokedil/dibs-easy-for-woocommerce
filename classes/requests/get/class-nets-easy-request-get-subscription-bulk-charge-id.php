@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- *
+ * Get Subscription Bulk Charge ID class.
  */
 class Nets_Easy_Request_Get_Subscription_Bulk_Charge_Id extends Nets_Easy_Request_Get {
 
