@@ -29,13 +29,6 @@ class Nets_Easy_Subscriptions {
 	public $subscription_type;
 
 	/**
-	 * Plugin settings.
-	 *
-	 * @var string
-	 */
-	public $dibs_settings;
-
-	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
@@ -456,7 +449,6 @@ class Nets_Easy_Subscriptions {
 				$order->save();
 			}
 		}
-
 	}
 
 	/**
