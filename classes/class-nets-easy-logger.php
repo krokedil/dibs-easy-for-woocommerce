@@ -38,7 +38,6 @@ class Nets_Easy_Logger {
 		if ( isset( $data['response']['code'] ) && ( $data['response']['code'] < 200 || $data['response']['code'] > 299 ) ) {
 			self::log_to_db( $data );
 		}
-
 	}
 
 	/**
@@ -101,7 +100,7 @@ class Nets_Easy_Logger {
 				'body' => $response['body'],
 				'code' => $code,
 			),
-			'timestamp'      => gmdate( 'Y-m-d H:i:s' ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
+			'timestamp'      => date( 'Y-m-d H:i:s' ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions -- Date is not used for display.
 			'stack'          => self::get_stack(),
 			'plugin_version' => WC_DIBS_EASY_VERSION,
 		);
