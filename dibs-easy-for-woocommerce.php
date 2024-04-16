@@ -7,7 +7,7 @@
  * @wordpress-plugin
  * Plugin Name:             Nets Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/produkt/nets-easy/
- * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
+ * Description:             Extends WooCommerce. Provides a <a href="http://developer.nexigroup.com/nexi-checkout/en-EU/docs/checkout-for-woocommerce/" target="_blank">Nets Easy</a> checkout for WooCommerce.
  * Version:                 2.8.2
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
