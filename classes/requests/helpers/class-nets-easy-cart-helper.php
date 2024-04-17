@@ -207,7 +207,6 @@ class Nets_Easy_Cart_Helper {
 	 * Calculate item tax percentage.
 	 *
 	 * @since  1.8.2
-	 * @access public
 	 *
 	 * @param  array  $cart_item Cart item.
 	 * @param  object $product   Product object.

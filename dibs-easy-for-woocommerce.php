@@ -8,15 +8,15 @@
  * Plugin Name:             Nets Easy for WooCommerce
  * Plugin URI:              https://krokedil.se/produkt/nets-easy/
  * Description:             Extends WooCommerce. Provides a <a href="http://www.dibspayment.com/" target="_blank">Nets Easy</a> checkout for WooCommerce.
- * Version:                 2.8.2
+ * Version:                 2.9.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
  * Developer URI:           https://krokedil.se/
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
- * WC requires at least:    5.0.0
- * WC tested up to:         8.7.0
+ * WC requires at least:    5.6.0
+ * WC tested up to:         8.8.0
  * Copyright:               © 2017-2024 Krokedil AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '2.8.2' );
+define( 'WC_DIBS_EASY_VERSION', '2.9.0' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -310,10 +310,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
 				require_once __DIR__ . '/blocks/src/checkout/class-nets-easy-checkout-block.php';
 
-				$settings = get_option( 'woocommerce_dibs_easy_settings', array() );
+				$settings                    = get_option( 'woocommerce_dibs_easy_settings', array() );
+				$main_payment_method_enabled = $settings['enabled'] ?? 'no';
 
 				$payment_methods = array(
-					'dibs_easy'              => 'yes' === $settings['enabled'],
+					'dibs_easy'              => 'yes' === $main_payment_method_enabled,
 					'nets_easy_card'         => 'yes' === $this->enable_payment_method_card,
 					'nets_easy_sofort'       => 'yes' === $this->enable_payment_method_sofort,
 					'nets_easy_trustly'      => 'yes' === $this->enable_payment_method_trustly,

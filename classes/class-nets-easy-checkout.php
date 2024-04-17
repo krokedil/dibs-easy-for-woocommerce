@@ -129,4 +129,5 @@ class Nets_Easy_Checkout {
 		return $hosts;
 	}
 
-} new Nets_Easy_Checkout();
+}
+new Nets_Easy_Checkout();

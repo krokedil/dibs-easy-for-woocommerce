@@ -15,8 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class    Nets_Easy_Admin_Notices
  * @version  1.0
  * @package  DIBS_Easy/Classes
- * @category Class
- * @author   Krokedil
  */
 class Nets_Easy_Admin_Notices {
 
@@ -55,15 +53,9 @@ class Nets_Easy_Admin_Notices {
 	 * Hook into different actions to check how the stores setting is configured.
 	 */
 	public function check_settings() {
-		if ( ! empty( $_POST ) ) { // phpcs:ignore
-			add_action( 'woocommerce_settings_saved', array( $this, 'check_terms' ) );
-			add_action( 'woocommerce_settings_saved', array( $this, 'check_account' ) );
-
-		} else {
-			add_action( 'admin_notices', array( $this, 'check_terms' ) );
-			add_action( 'admin_notices', array( $this, 'check_https' ) );
-			add_action( 'admin_notices', array( $this, 'check_account' ) );
-		}
+		add_action( 'admin_notices', array( $this, 'check_terms' ) );
+		add_action( 'admin_notices', array( $this, 'check_https' ) );
+		add_action( 'admin_notices', array( $this, 'check_account' ) );
 	}
 
 	/**

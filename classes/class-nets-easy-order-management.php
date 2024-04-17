@@ -92,6 +92,7 @@ class Nets_Easy_Order_Management {
 				$this->charge_failed( $wc_order, true, __( 'Unable to activate the order!' ) . ' ' . $response->get_error_message() );
 				return;
 			}
+			// Translators: Nets payment charge ID.
 			$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy with charge ID %s', 'dibs-easy-for-woocommerce' ), $response['chargeId'] ) ); // phpcs:ignore
 			$wc_order->update_meta_data( '_dibs_charge_id', $response['chargeId'] );
 			$wc_order->save();
