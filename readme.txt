@@ -3,10 +3,10 @@ Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
 Requires at least: 5.0
 Tested up to: 6.5.2
-Requires PHP: 7.3
+Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 8.8.0
-Stable tag: 2.8.2
+Stable tag: 2.9.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,10 @@ For help setting up and configuring Nets Easy for WooCommerce please refer to ou
 * This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
 
 == CHANGELOG ==
+= 2024.04.17    - version 2.9.0 =
+* Tweak         - Tweaks related to PHPCS & WPCS before release on woo.com.
+* Fix           - PHP8.1 compatibility fix. Add missing subscription class prop (thanks @khlieng).
+
 = 2024.03.12    - version 2.8.2 =
 * Fix           - Removed a unnecessary loop when registering blocks payment methods that generated a PHP notice.
 

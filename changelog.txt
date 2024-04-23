@@ -1,4 +1,8 @@
 *** Nexi Checkout Changelog ***
+2024-04-17  - version 2.9.0
+* Tweak     - Tweaks related to PHPCS & WPCS before release on woo.com.
+* Fix       - PHP8.1 compatibility fix. Add missing subscription class prop (thanks @khlieng).
+
 2024-03-12  - version 2.8.2
 * Fix       - Removed a unnecessary loop when registering blocks payment methods that generated a PHP notice.
 
