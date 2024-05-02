@@ -49,9 +49,9 @@ class Nets_Easy_Gateway_Trustly extends WC_Payment_Gateway {
 
 		$this->id = 'nets_easy_trustly';
 
-		$this->method_title = __( 'Nets Easy Trustly', 'dibs-easy-for-woocommerce' );
+		$this->method_title = __( 'Nexi Checkout Trustly', 'dibs-easy-for-woocommerce' );
 
-		$this->method_description = __( 'Nets Easy Trustly payment', 'dibs-easy-for-woocommerce' );
+		$this->method_description = __( 'Nexi Checkout Trustly payment', 'dibs-easy-for-woocommerce' );
 
 		$this->description = $this->get_option( 'description' );
 
@@ -173,7 +173,7 @@ class Nets_Easy_Gateway_Trustly extends WC_Payment_Gateway {
 
 		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
 			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
+			$order->add_order_note( sprintf( __( 'Refund made in Nexi with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
 
 			return true;
 		}

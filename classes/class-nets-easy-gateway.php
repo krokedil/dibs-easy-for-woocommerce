@@ -42,9 +42,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	public function __construct() {
 		$this->id = 'dibs_easy';
 
-		$this->method_title = __( 'Nets Easy', 'dibs-easy-for-woocommerce' );
+		$this->method_title = __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' );
 
-		$this->method_description = __( 'Nets Easy Payment for checkout', 'dibs-easy-for-woocommerce' );
+		$this->method_description = __( 'Nexi Checkout Payment for checkout', 'dibs-easy-for-woocommerce' );
 
 		$this->description = $this->get_option( 'description' );
 
@@ -203,7 +203,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
 			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
+			$order->add_order_note( sprintf( __( 'Refund made in Nexi Checkout with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
 
 			return true;
 		}
@@ -211,7 +211,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		return false;
 	}
 	/**
-	 * Add Nets Easy body class.
+	 * Add Nexi Checkout body class.
 	 *
 	 * @param  array $class Body classes.
 	 *
@@ -231,7 +231,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Nets easy thank you page hook.
+	 * Nexi Checkout thank you page hook.
 	 *
 	 * @param  string $order_id WC order id.
 	 *

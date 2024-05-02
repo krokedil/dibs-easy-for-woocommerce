@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Settings for Nets Easy
+ * Settings for Nexi Checkout
  */
 return apply_filters(
 	'dibs_easy_trustly_settings',
@@ -18,13 +18,13 @@ return apply_filters(
 		'enabled'                    => array(
 			'title'   => __( 'Enable/Disable', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Nets Easy Trustly', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Nexi Checkout Trustly', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'title'                      => array(
 			'title'       => __( 'Title', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'This is the title that the user sees on the checkout page for Nets Easy.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'This is the title that the user sees on the checkout page for Nexi Checkout.', 'dibs-easy-for-woocommerce' ),
 			'default'     => __( 'Trustly payment', 'dibs-easy-for-woocommerce' ),
 		),
 		'description'                => array(

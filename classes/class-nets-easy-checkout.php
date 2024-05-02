@@ -106,7 +106,7 @@ class Nets_Easy_Checkout {
 
 			if ( is_wp_error( $updated_nets_easy_order ) && 409 === $updated_nets_easy_order->get_error_code() ) {
 				// 409 response - try again.
-				Nets_Easy_Logger::log( $payment_id . '. Nets Easy update order request resulted in 409 response. Reloading the checkout page and try to update again.' );
+				Nets_Easy_Logger::log( $payment_id . '. Nexi Checkout update order request resulted in 409 response. Reloading the checkout page and try to update again.' );
 				WC()->session->reload_checkout = true;
 				return;
 			}
@@ -128,6 +128,5 @@ class Nets_Easy_Checkout {
 		$hosts[] = 'test.checkout.dibspayment.eu';
 		return $hosts;
 	}
-
 }
 new Nets_Easy_Checkout();
