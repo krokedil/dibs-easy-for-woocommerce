@@ -118,12 +118,14 @@ class Nets_Easy_Subscriptions {
 						$request_args['order'] = $order_lines;
 
 						// Modify return url.
-						$request_args['checkout']['returnUrl'] = add_query_arg(
-							array(
-								'dibs-action'        => 'subs-payment-changed',
-								'wc-subscription-id' => $order_id,
-							),
-							$wc_order->get_view_order_url()
+						$request_args['checkout']['returnUrl'] = esc_url_raw(
+							add_query_arg(
+								array(
+									'dibs-action'        => 'subs-payment-changed',
+									'wc-subscription-id' => $order_id,
+								),
+								$wc_order->get_view_order_url()
+							)
 						);
 
 						unset( $request_args['notifications'] );

@@ -57,7 +57,7 @@ class Nets_Easy_Checkout_Helper {
 				$return_url = add_query_arg( array( 'nets_reload' => 'true' ), $return_url );
 			}
 
-			$checkout['returnUrl']                               = $return_url;
+			$checkout['returnUrl']                               = esc_url_raw( $return_url );
 			$checkout['integrationType']                         = 'HostedPaymentPage';
 			$checkout['cancelUrl']                               = $cancel_url;
 			$checkout['merchantHandlesConsumerData']             = true;
