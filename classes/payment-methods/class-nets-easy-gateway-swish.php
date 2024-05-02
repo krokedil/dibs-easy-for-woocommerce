@@ -79,14 +79,14 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 		}
 
 		if ( 'default' === strtolower( $this->payment_gateway_icon ) ) {
-			$icon_src   = 'https://cdn.dibspayment.com/logo/checkout/combo/horiz/DIBS_checkout_kombo_horizontal_04.png';
-			$icon_width = '145';
+			$icon_src   = WC_DIBS__URL . '/assets/images/nexi-icon-visa-mastercard.png';
+			$icon_width = '100';
 		} else {
 			$icon_src   = $this->payment_gateway_icon;
 			$icon_width = $this->payment_gateway_icon_max_width;
 		}
 
-		$icon_html = '<img src="' . $icon_src . '" alt="Nets - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
+		$icon_html = '<img src="' . $icon_src . '" alt="Nexi - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
 		return apply_filters( 'nets_easy_swish_icon_html', $icon_html );
 	}
 
