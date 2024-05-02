@@ -22,7 +22,7 @@ class Nets_Easy_Request_Refund_Order extends Nets_Easy_Request_Post {
 	public $order_id;
 
 	/**
-	 * $charge_id. Nets Easy charge ID for the order.
+	 * $charge_id. Nexi Checkout charge ID for the order.
 	 *
 	 * @var string
 	 */
@@ -45,7 +45,6 @@ class Nets_Easy_Request_Refund_Order extends Nets_Easy_Request_Post {
 	 * @return array
 	 */
 	public function request_body() {
-		$order = wc_get_order( $this->order_id );
 		return array(
 			'amount'     => Nets_Easy_Refund_Helper::get_total_refund_amount( $this->order_id ),
 			'orderItems' => Nets_Easy_Refund_Helper::get_refund_data( $this->order_id ),
@@ -71,7 +70,7 @@ class Nets_Easy_Request_Refund_Order extends Nets_Easy_Request_Post {
 	 * @return string
 	 */
 	protected function get_request_url() {
-		$charge_id = wc_get_order($this->order_id)->get_meta('_dibs_charge_id');
+		$charge_id = wc_get_order( $this->order_id )->get_meta( '_dibs_charge_id' );
 		return $this->endpoint . 'charges/' . $charge_id . '/refunds';
 	}
 }
