@@ -20,7 +20,7 @@ class Nets_Easy_Checkout {
 	}
 
 	/**
-	 * Update the Nets Easy order after calculations from WooCommerce has run.
+	 * Update the Nexi Checkout order after calculations from WooCommerce has run.
 	 *
 	 * @param WC_Cart $cart The WooCommerce cart.
 	 * @return void
@@ -117,7 +117,7 @@ class Nets_Easy_Checkout {
 	}
 
 	/**
-	 * Add Nets Easy hosted payment page as allowed external url for wp_safe_redirect.
+	 * Add Nexi Checkout hosted payment page as allowed external url for wp_safe_redirect.
 	 * We do this because WooCommerce Subscriptions use wp_safe_redirect when processing a payment method change request (from v5.1.0).
 	 *
 	 * @param array $hosts Domains that are allowed when wp_safe_redirect is used.

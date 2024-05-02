@@ -71,7 +71,7 @@ class Nets_Easy_Order_Management {
 				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nexi system since the order total is %s.', 'dibs-easy-for-woocommerce' ), $wc_order->get_total() ) );
 				return;
 			}
-			// get nets easy order.
+			// Get Nexi Checkout order.
 			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $wc_order->get_meta( '_dibs_payment_id' ) );
 			if ( is_wp_error( $nets_easy_order ) ) {
 				$this->fetching_order_failed( $wc_order, true, $nets_easy_order->get_error_message() );
@@ -81,7 +81,7 @@ class Nets_Easy_Order_Management {
 				return;
 			}
 
-			// try to activate.
+			// Try to activate.
 			$response = Nets_Easy()->api->activate_nets_easy_order( $order_id );
 			if ( is_wp_error( $response ) ) {
 				/**

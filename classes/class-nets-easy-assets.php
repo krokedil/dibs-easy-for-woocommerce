@@ -127,7 +127,7 @@ class Nets_Easy_Assets {
 			false
 		);
 
-		// Checkout utility (change to Nets Easy payment method in checkout).
+		// Checkout utility (change to Nexi Checkout payment method in checkout).
 		wp_register_script(
 			'nets_easy_utility',
 			WC_DIBS__URL . '/assets/js/nets-easy-utility.js',
@@ -188,7 +188,7 @@ class Nets_Easy_Assets {
 	}
 
 	/**
-	 * Loads the needed scripts for Nets Easy.
+	 * Loads the needed scripts for Nexi Checkout.
 	 */
 	public function localize_and_enqueue_checkout_script() {
 
