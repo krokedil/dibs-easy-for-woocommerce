@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets settings class.
+ * Nexi settings class.
  *
  * @package DIBS_Easy/Classes
  */
@@ -96,7 +96,7 @@ return apply_filters(
 		'email_nets_payment_data'      => array(
 			'title'   => __( 'Email payment data', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Add Nets payment data to order confirmation email.', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Add Nexi payment data to order confirmation email.', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'dibs_manage_orders'           => array(
@@ -128,7 +128,7 @@ return apply_filters(
 				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
 				'overlay'  => __( 'Overlay', 'dibs-easy-for-woocommerce' ),
 			),
-			'description' => __( 'Select how Nexi Checkout should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nets. <strong>Overlay</strong> – similar logic as redirect flow but the hosted payment window is displayed in an overlay on desktop.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Select how Nexi Checkout should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nexi. <strong>Overlay</strong> – similar logic as redirect flow but the hosted payment window is displayed in an overlay on desktop.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'embedded',
 			'desc_tip'    => false,
 		),
@@ -170,7 +170,7 @@ return apply_filters(
 				'scheduled_subscription'   => __( 'Scheduled subscriptions', 'dibs-easy-for-woocommerce' ),
 				'unscheduled_subscription' => __( 'Unscheduled subscriptions', 'dibs-easy-for-woocommerce' ),
 			),
-			// Translators: URL to Nets with info about subscriptions.
+			// Translators: URL to Nexi with info about subscriptions.
 			'description' => sprintf( __( 'If using Nexi Checkout together with Woo Subscriptions, select the subscription type to use. Read more about scheduled vs unscheduled subscriptions <a href="%s" target="_blank">here</a>.', 'dibs-easy-for-woocommerce' ), 'https://ecom.nets.eu/subscriptions/' ),
 			'default'     => 'scheduled_subscription',
 			'desc_tip'    => false,
@@ -178,7 +178,7 @@ return apply_filters(
 		'payment_gateway_icon'         => array(
 			'title'       => __( 'Payment gateway icon', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nets logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nexi logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'default',
 			'desc_tip'    => false,
 		),

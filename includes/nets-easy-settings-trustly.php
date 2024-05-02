@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets settings class.
+ * Nexi settings class.
  *
  * @package DIBS_Easy/Classes
  */
@@ -37,7 +37,7 @@ return apply_filters(
 		'payment_gateway_icon'       => array(
 			'title'       => __( 'Payment gateway icon', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nets logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nexi logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'default',
 			'desc_tip'    => false,
 		),
