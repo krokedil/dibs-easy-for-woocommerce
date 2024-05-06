@@ -1,13 +1,13 @@
 <?php // phpcs:ignore
 /**
- * Nets Easy for WooCommerce
+ * Nexi Checkout
  *
  * @package WC_Dibs_Easy
  *
  * @wordpress-plugin
- * Plugin Name:             Nets Easy for WooCommerce
+ * Plugin Name:             Nexi Checkout
  * Plugin URI:              https://krokedil.se/produkt/nets-easy/
- * Description:             Extends WooCommerce. Provides a <a href="http://developer.nexigroup.com/nexi-checkout/en-EU/docs/checkout-for-woocommerce/" target="_blank">Nets Easy</a> checkout for WooCommerce.
+ * Description:             Extends WooCommerce. Provides a <a href="http://developer.nexigroup.com/nexi-checkout/en-EU/docs/checkout-for-woocommerce/" target="_blank">Nexi Checkout</a> payment solution for WooCommerce.
  * Version:                 2.9.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/

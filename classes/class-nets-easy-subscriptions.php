@@ -51,9 +51,9 @@ class Nets_Easy_Subscriptions {
 	}
 
 	/**
-	 * Marks the order as a recurring order for Nets Easy
+	 * Marks the order as a recurring order for Nexi Checkout
 	 *
-	 * @param array $request_args The Nets Easy request arguments.
+	 * @param array $request_args The Nexi Checkout request arguments.
 	 * @return array
 	 */
 	public function maybe_add_subscription( $request_args ) {
@@ -212,7 +212,7 @@ class Nets_Easy_Subscriptions {
 				$subscription_type = 'unscheduled_subscription';
 			}
 			// Translators: Nets subscription recurring token.
-			$wc_order->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
+			$wc_order->add_order_note( sprintf( __( 'Nexi Checkout subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 			$wc_order->update_meta_data( '_dibs_recurring_token', $subscription_id );
 			$wc_order->update_meta_data( '_dibs_subscription_type', $subscription_type );
 			$wc_order->save();
@@ -231,7 +231,7 @@ class Nets_Easy_Subscriptions {
 				$subscriptions = wcs_get_subscriptions_for_order( $order_id, array( 'order_type' => 'any' ) );
 				foreach ( $subscriptions as $subscription ) {
 					// Translators: Nets subscription recurring token.
-					$subscription->add_order_note( sprintf( __( 'Nets Easy subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
+					$subscription->add_order_note( sprintf( __( 'Nexi Checkout subscription ID/recurring token %s saved.', 'dibs-easy-for-woocommerce' ), $subscription_id ) );
 					$subscription->update_meta_data( '_dibs_recurring_token', $subscription_id );
 					$subscription->update_meta_data( '_dibs_subscription_type', $subscription_type );
 
@@ -463,7 +463,7 @@ class Nets_Easy_Subscriptions {
 	 */
 	public function maybe_change_needs_payment( $wc_result, $order, $valid_order_statuses ) {
 
-		// Only change for Nets Easy orders.
+		// Only change for Nexi Checkout orders.
 		if ( ! in_array( $order->get_payment_method(), nets_easy_all_payment_method_ids(), true ) ) {
 			return $wc_result;
 		}

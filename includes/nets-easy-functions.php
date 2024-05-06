@@ -214,7 +214,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		$order->add_order_note(
 			sprintf(
 				/* translators: %s: Error message */
-				__( 'Nets Easy: Error when confirming order: %s', 'dibs-easy-for-woocommerce' ),
+				__( 'Nexi Checkout: Error when confirming order: %s', 'dibs-easy-for-woocommerce' ),
 				$request->get_error_message()
 			)
 		);
@@ -246,7 +246,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 				$order->add_order_note(
 					sprintf(
 						/* translators: %s: Error message */
-						__( 'Nets Easy: Error when updating order reference to Nets. Error message : %s', 'dibs-easy-for-woocommerce' ),
+						__( 'Nexi Checkout: Error when updating order reference to Nets. Error message : %s', 'dibs-easy-for-woocommerce' ),
 						$order_reference_response->get_error_message()
 					)
 				);
@@ -259,11 +259,11 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 			$order->update_meta_data( '_dibs_charge_id', $dibs_charge_id );
 			$order->save();
 
-			// Translators: Nets Easy Payment ID.
-			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
+			// Translators: Nexi Checkout Payment ID.
+			$order->add_order_note( sprintf( __( 'New payment created in Nexi Checkout with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
 		} else {
-			// Translators: Nets Easy Payment ID.
-			$order->add_order_note( sprintf( __( 'New payment created in Nets Easy with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentType'] ) );
+			// Translators: Nexi Checkout Payment ID.
+			$order->add_order_note( sprintf( __( 'New payment created in Nexi Checkout with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentType'] ) );
 		}
 		$order->payment_complete( $payment_id );
 
@@ -358,10 +358,8 @@ function dibs_easy_print_error_message( $wp_error ) {
 		if ( function_exists( 'wc_add_notice' ) ) {
 			wc_add_notice( $error_message, 'error' );
 		}
-	} else {
-		if ( function_exists( 'wc_print_notice' ) ) {
+	} elseif ( function_exists( 'wc_print_notice' ) ) {
 			wc_print_notice( $error_message, 'error' );
-		}
 	}
 }
 

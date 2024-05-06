@@ -85,7 +85,7 @@ class Nets_Easy_Confirmation {
 
 		if ( empty( $order->get_date_paid() ) ) {
 
-			Nets_Easy_Logger::log( $order_id . ': Confirm the Nets order from the confirmation page.' );
+			Nets_Easy_Logger::log( $order_id . ': Confirm the Nexi order from the confirmation page.' );
 
 			// Confirm the order.
 			wc_dibs_confirm_dibs_order( $order_id );
@@ -146,7 +146,6 @@ class Nets_Easy_Confirmation {
 		} else {
 			Nets_Easy_Logger::log( $payment_id . '. Customer redirected back to checkout. Payment status is NOT paid.' );
 		}
-
 	}
 }
 Nets_Easy_Confirmation::get_instance();

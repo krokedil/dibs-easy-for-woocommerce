@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets Easy Country Converter Functions
+ * Nexi Checkout Country Converter Functions
  *
  * Helper functions for switching between 2 & 3 letter country codes.
  *
