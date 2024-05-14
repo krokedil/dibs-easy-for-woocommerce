@@ -23,6 +23,8 @@ jQuery(function ($) {
         shippingSelector: ".woocommerce-checkout-review-order-table",
         standardWooFields: wcDibsEasy.standard_woo_checkout_fields,
         wooTerms: "form.checkout #terms",
+        // We only want to scroll to once.
+        skipScroll: false,
 
         /**
          * Initialize the gateway
@@ -34,6 +36,7 @@ jQuery(function ($) {
                 dibsEasyForWoocommerce.selectAnotherSelector,
                 dibsEasyForWoocommerce.changeFromDibsEasy
             )
+            this.skipScroll = true
         },
 
         /**
@@ -142,8 +145,7 @@ jQuery(function ($) {
         addressChanged(address) {
             dibsEasyForWoocommerce.logToFile("Address changed is triggered.")
             if (address) {
-                console.log("address-changed")
-                console.log(address)
+                console.log("address-changed", address)
                 $.ajax({
                     type: "POST",
                     dataType: "json",
@@ -161,15 +163,17 @@ jQuery(function ($) {
                         console.log("customer_address_updated ")
                         console.log(response.responseJSON.data)
                         dibsEasyForWoocommerce.updateAddress(response.responseJSON.data)
-                        // Scroll to top if
-                        if (wcDibsEasy.isMobile) {
+                        if (!dibsEasyForWoocommerce.skipScroll && wcDibsEasy.isMobile) {
                             $("html, body").animate(
                                 {
                                     scrollTop: $(wcDibsEasy.shippingSelector).offset().top - 10,
                                 },
                                 1000
                             )
+
                         }
+                        
+                        dibsEasyForWoocommerce.skipScroll = false
                     },
                 })
             }
