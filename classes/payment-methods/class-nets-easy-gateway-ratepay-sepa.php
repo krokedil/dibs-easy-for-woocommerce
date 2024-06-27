@@ -229,7 +229,7 @@ class Nets_Easy_Gateway_Ratepay_Sepa extends WC_Payment_Gateway {
 			$order->save();
 			return array(
 				'result'   => 'success',
-				'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
+				'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 			);
 		}
 

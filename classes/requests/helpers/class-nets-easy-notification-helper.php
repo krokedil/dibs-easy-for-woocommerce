@@ -42,7 +42,7 @@ class Nets_Easy_Notification_Helper {
 		} else {
 			$web_hooks[] = array(
 				'eventName'     => 'payment.checkout.completed',
-				'url'           => add_query_arg( array( 'dibs-payment-created-callback' => '1' ), get_home_url() . '/wc-api/DIBS_Api_Callbacks/' ),
+				'url'           => esc_url_raw( add_query_arg( array( 'dibs-payment-created-callback' => '1' ), get_home_url() . '/wc-api/DIBS_Api_Callbacks/' ) ),
 				'authorization' => wp_create_nonce( 'dibs_web_hooks' ),
 			);
 			return $web_hooks;
