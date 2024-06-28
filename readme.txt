@@ -12,7 +12,8 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 
 == DESCRIPTION ==
-Nexi Checkout is a plugin that extends WooCommerce, allowing you to take payments via Nets/Nexi's payment method Nexi Checkout.
+Nexi Checkout (formerly known as Nets Easy checkout) online payment solution for e-commerce offers you a full embedded checkout with all popular payment methods. For more sales and less abandoned shopping carts!
+Nets is part of Nexi group – for Nordic customers, the checkout is better known as Nets Easy checkout. The online payment solution from Nexi is the quickest and easiest way to increase your online sales. Up to 30% of online shoppers abandon their shopping cart because of a poor checkout experience. We help you fix that with one integration and one agreement, so you can sell more for years to come
 
 Nexi Checkout is an exceptionally quick checkout for consumers. A single agreement for all payment methods. These are just some of the benefits to look forward to when choosing our new Nexi Checkout payment solution for your online store.
 
@@ -27,7 +28,8 @@ https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 = Get started =
 To get started with Nexi Checkout you need to [sign up](https://www.nets.eu/en/payments/online/) for an account.
 
-More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
+
+More information on how to get started can be found in the [plugin documentation](https://docs.krokedil.com/nexi-checkout/).
 
 = Connect Nexi Checkout to your webshop by setting up a test account. It is free and created immediately =
 With a test account, you will see how the Nexi Checkout administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).
