@@ -12,6 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 
 == DESCRIPTION ==
+Nexi Checkout is a plugin that extends WooCommerce, allowing you to take payments via Nets/Nexi's payment method Nexi Checkout.
 Nexi Checkout (formerly known as Nets Easy checkout) online payment solution for e-commerce offers you a full embedded checkout with all popular payment methods. For more sales and less abandoned shopping carts!
 Nets is part of Nexi group – for Nordic customers, the checkout is better known as Nets Easy checkout. The online payment solution from Nexi is the quickest and easiest way to increase your online sales. Up to 30% of online shoppers abandon their shopping cart because of a poor checkout experience. We help you fix that with one integration and one agreement, so you can sell more for years to come
 
