@@ -1,4 +1,10 @@
 *** Nexi Checkout Changelog ***
+2024-07-02  - version 2.9.1
+* Fix       - Fixed missing payment gateway icons.
+* Fix       - Escape redirect URLs for redirect and overlay checkout flow.
+* Tweak     - Rebranding from Nets to Nexi.
+* Tweak     - Updated links related to rebranding from Nets to Nexi.
+
 2024-04-17  - version 2.9.0
 * Tweak     - Tweaks related to PHPCS & WPCS before release on woo.com.
 * Fix       - PHP8.1 compatibility fix. Add missing subscription class prop (thanks @khlieng).

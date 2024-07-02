@@ -20,7 +20,7 @@ class Nets_Easy_Checkout {
 	}
 
 	/**
-	 * Update the Nets Easy order after calculations from WooCommerce has run.
+	 * Update the Nexi Checkout order after calculations from WooCommerce has run.
 	 *
 	 * @param WC_Cart $cart The WooCommerce cart.
 	 * @return void
@@ -106,7 +106,7 @@ class Nets_Easy_Checkout {
 
 			if ( is_wp_error( $updated_nets_easy_order ) && 409 === $updated_nets_easy_order->get_error_code() ) {
 				// 409 response - try again.
-				Nets_Easy_Logger::log( $payment_id . '. Nets Easy update order request resulted in 409 response. Reloading the checkout page and try to update again.' );
+				Nets_Easy_Logger::log( $payment_id . '. Nexi Checkout update order request resulted in 409 response. Reloading the checkout page and try to update again.' );
 				WC()->session->reload_checkout = true;
 				return;
 			}
@@ -117,7 +117,7 @@ class Nets_Easy_Checkout {
 	}
 
 	/**
-	 * Add Nets Easy hosted payment page as allowed external url for wp_safe_redirect.
+	 * Add Nexi Checkout hosted payment page as allowed external url for wp_safe_redirect.
 	 * We do this because WooCommerce Subscriptions use wp_safe_redirect when processing a payment method change request (from v5.1.0).
 	 *
 	 * @param array $hosts Domains that are allowed when wp_safe_redirect is used.
@@ -128,6 +128,5 @@ class Nets_Easy_Checkout {
 		$hosts[] = 'test.checkout.dibspayment.eu';
 		return $hosts;
 	}
-
 }
 new Nets_Easy_Checkout();

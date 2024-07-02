@@ -82,7 +82,7 @@ abstract class Nets_Easy_Request {
 	}
 
 	/**
-	 * Loads the Nets Easy settings and sets them to be used here.
+	 * Loads the Nexi Checkout settings and sets them to be used here.
 	 *
 	 * @return void
 	 */

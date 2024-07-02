@@ -42,9 +42,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	public function __construct() {
 		$this->id = 'dibs_easy';
 
-		$this->method_title = __( 'Nets Easy', 'dibs-easy-for-woocommerce' );
+		$this->method_title = __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' );
 
-		$this->method_description = __( 'Nets Easy Payment for checkout', 'dibs-easy-for-woocommerce' );
+		$this->method_description = __( 'Nexi Checkout Payment for checkout', 'dibs-easy-for-woocommerce' );
 
 		$this->description = $this->get_option( 'description' );
 
@@ -97,14 +97,14 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		}
 
 		if ( 'default' === strtolower( $this->payment_gateway_icon ) ) {
-			$icon_src   = 'https://cdn.dibspayment.com/logo/checkout/combo/horiz/DIBS_checkout_kombo_horizontal_04.png';
-			$icon_width = '145';
+			$icon_src   = WC_DIBS__URL . '/assets/images/nexi-icon-visa-mastercard.png';
+			$icon_width = '100';
 		} else {
 			$icon_src   = $this->payment_gateway_icon;
 			$icon_width = $this->payment_gateway_icon_max_width;
 		}
 
-		$icon_html = '<img src="' . $icon_src . '" alt="Nets - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
+		$icon_html = '<img src="' . $icon_src . '" alt="Nexi - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
 		return apply_filters( 'wc_dibs_easy_icon_html', $icon_html );
 	}
 
@@ -154,8 +154,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 				return array(
 					'result'   => 'success',
-					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
-					// phpcs:ignore
+					'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 				);
 			}
 			return array(
@@ -203,7 +202,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
 			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
+			$order->add_order_note( sprintf( __( 'Refund made in Nexi Checkout with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
 
 			return true;
 		}
@@ -211,7 +210,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		return false;
 	}
 	/**
-	 * Add Nets Easy body class.
+	 * Add Nexi Checkout body class.
 	 *
 	 * @param  array $class Body classes.
 	 *
@@ -231,7 +230,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Nets easy thank you page hook.
+	 * Nexi Checkout thank you page hook.
 	 *
 	 * @param  string $order_id WC order id.
 	 *
@@ -314,7 +313,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 			return array(
 				'result'   => 'success',
-				'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
+				'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 			);
 		}
 
@@ -382,7 +381,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 
 			return array(
 				'result'   => 'success',
-				'redirect' => add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ),
+				'redirect' => esc_url_raw( add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ) ),
 			);
 		}
 	}

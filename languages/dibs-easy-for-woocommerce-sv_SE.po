@@ -429,7 +429,7 @@ msgstr ""
 
 #. Description of the plugin
 msgid ""
-"Extends WooCommerce. Provides a <a href=\"http://www.dibspayment.com/\" "
+"Extends WooCommerce. Provides a <a href=\"http://developer.nexigroup.com/nexi-checkout/en-EU/docs/checkout-for-woocommerce/\" "
 "target=\"_blank\">Nets Easy</a> checkout for WooCommerce."
 msgstr ""
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Nets Easy Checkout Block
+ * Nexi Checkout Block
  *
  * @package DIBS_Easy/Blocks
  */

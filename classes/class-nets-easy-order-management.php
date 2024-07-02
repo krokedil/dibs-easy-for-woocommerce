@@ -61,17 +61,17 @@ class Nets_Easy_Order_Management {
 				// This is a account to account purchase (like Swish). No activation is needed/possible.
 				$dibs_payment_method = $wc_order->get_meta( 'dibs_payment_method' );
 				/* Translators: Nets payment method for the order. */
-				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nets system since %s is a account to account payment.', 'dibs-easy-for-woocommerce' ), $dibs_payment_method ) );
+				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nexi system since %s is a account to account payment.', 'dibs-easy-for-woocommerce' ), $dibs_payment_method ) );
 				return;
 			}
 
 			// Bail if order total is 0. Can happen for 0 value initial subscription orders.
 			if ( round( 0, 2 ) === round( $wc_order->get_total(), 2 ) ) {
 				/* Translators: WC order total for the order. */
-				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nets system since the order total is %s.', 'dibs-easy-for-woocommerce' ), $wc_order->get_total() ) );
+				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nexi system since the order total is %s.', 'dibs-easy-for-woocommerce' ), $wc_order->get_total() ) );
 				return;
 			}
-			// get nets easy order.
+			// Get Nexi Checkout order.
 			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $wc_order->get_meta( '_dibs_payment_id' ) );
 			if ( is_wp_error( $nets_easy_order ) ) {
 				$this->fetching_order_failed( $wc_order, true, $nets_easy_order->get_error_message() );
@@ -81,7 +81,7 @@ class Nets_Easy_Order_Management {
 				return;
 			}
 
-			// try to activate.
+			// Try to activate.
 			$response = Nets_Easy()->api->activate_nets_easy_order( $order_id );
 			if ( is_wp_error( $response ) ) {
 				/**
@@ -93,7 +93,7 @@ class Nets_Easy_Order_Management {
 				return;
 			}
 			// Translators: Nets payment charge ID.
-			$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy with charge ID %s', 'dibs-easy-for-woocommerce' ), $response['chargeId'] ) ); // phpcs:ignore
+			$wc_order->add_order_note( sprintf( __( 'Payment charged in Nexi with charge ID %s', 'dibs-easy-for-woocommerce' ), $response['chargeId'] ) ); // phpcs:ignore
 			$wc_order->update_meta_data( '_dibs_charge_id', $response['chargeId'] );
 			$wc_order->save();
 		}
@@ -132,11 +132,11 @@ class Nets_Easy_Order_Management {
 				 *
 				 * @var string|array WP_Error $response
 				 */
-				$this->cancel_failed( $wc_order, true, __( 'There was a problem canceling the order in Nets' ) . ' ' . $response->get_error_message() );
+				$this->cancel_failed( $wc_order, true, __( 'There was a problem canceling the order in Nexi' ) . ' ' . $response->get_error_message() );
 				return;
 			}
 			$wc_order = wc_get_order( $order_id );
-			$wc_order->add_order_note( sprintf( __( 'Order has been canceled in Nets', 'dibs-easy-for-woocommerce' ) ) );
+			$wc_order->add_order_note( sprintf( __( 'Order has been canceled in Nexi', 'dibs-easy-for-woocommerce' ) ) );
 		}
 	}
 
@@ -147,9 +147,9 @@ class Nets_Easy_Order_Management {
 	 * @param  bool     $fail Failed or not.
 	 * @param  string   $message Message for the order note.
 	 */
-	public function charge_failed( $order, $fail = true, $message = 'Payment failed in Nets' ) {
+	public function charge_failed( $order, $fail = true, $message = 'Payment failed in Nexi' ) {
 		/* Translators: Nets message. */
-		$order->add_order_note( sprintf( __( 'Nets Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+		$order->add_order_note( sprintf( __( 'Nexi Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 		if ( true === $fail ) {
 			$order->update_status( apply_filters( 'dibs_easy_failed_charge_status', 'on-hold', $order ) );
 			$order->save();
@@ -165,9 +165,9 @@ class Nets_Easy_Order_Management {
 	 *
 	 * @return void
 	 */
-	public function cancel_failed( $order, $fail = true, $message = 'Payment failed in Nets' ) {
+	public function cancel_failed( $order, $fail = true, $message = 'Payment failed in Nexi' ) {
 		/* Translators: Nets message. */
-		$order->add_order_note( sprintf( __( 'Nets Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+		$order->add_order_note( sprintf( __( 'Nexi Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 		if ( true === $fail ) {
 			$order->update_status( apply_filters( 'dibs_easy_failed_cancel_status', 'on-hold', $order ) );
 			$order->save();
@@ -183,7 +183,7 @@ class Nets_Easy_Order_Management {
 	 */
 	public function fetching_order_failed( $order, $fail = true, $message = 'Unable to get the order' ) {
 		/* Translators: Nets message. */
-		$order->add_order_note( sprintf( __( 'Nets Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
+		$order->add_order_note( sprintf( __( 'Nexi Error: %s', 'dibs-easy-for-woocommerce' ), $message ) );
 		if ( true === $fail ) {
 			$order->update_status( apply_filters( 'dibs_easy_failed_get_status', 'on-hold', $order ) );
 			$order->save();
@@ -195,7 +195,7 @@ class Nets_Easy_Order_Management {
 	/**
 	 * Check if order is already canceled, and sets post meta.
 	 *
-	 * @param array $nets_easy_order The Nets easy order.
+	 * @param array $nets_easy_order The Nexi Checkout order.
 	 * @param int   $order_id The WooCommerce order id.
 	 *
 	 * @return bool
@@ -207,8 +207,8 @@ class Nets_Easy_Order_Management {
 			// If cancelledAmount exists, update the post meta value.
 			if ( $canceled_amount ) {
 				$order->update_meta_data( '_dibs_canceled_amount_id', $canceled_amount );
-				// Translators: 1. Nets Easy Payment id 2. Payment type  3.Charge id.
-				$order->add_order_note( sprintf( __( 'Payment canceled in Nets Easy ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $canceled_amount ) );
+				// Translators: 1. Nexi Checkout Payment id 2. Payment type  3.Charge id.
+				$order->add_order_note( sprintf( __( 'Payment canceled in Nexi ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $canceled_amount ) );
 				$order->save();
 				return true;
 			}
@@ -219,7 +219,7 @@ class Nets_Easy_Order_Management {
 	/**
 	 * Check if order is already completed, and sets post meta.
 	 *
-	 * @param array $nets_easy_order The Nets easy order.
+	 * @param array $nets_easy_order The Nexi Checkout order.
 	 * @param int   $order_id The WooCommerce order id.
 	 *
 	 * @return bool
@@ -239,10 +239,9 @@ class Nets_Easy_Order_Management {
 		$wc_order->update_meta_data( '_dibs_charge_id', $charge_id );
 		$wc_order->save();
 
-		// Translators: 1. Nets Easy Payment id 2. Payment type  3.Charge id.
-		$wc_order->add_order_note( sprintf( __( 'Payment charged in Nets Easy ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
+		// Translators: 1. Nexi Checkout Payment id 2. Payment type  3.Charge id.
+		$wc_order->add_order_note( sprintf( __( 'Payment charged in Nexi ( Portal ) with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $nets_easy_order['payment']['paymentId'], $nets_easy_order['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
 
 		return true;
 	}
-
 }

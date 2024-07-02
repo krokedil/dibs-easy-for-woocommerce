@@ -42,9 +42,9 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 
 		$this->id = 'nets_easy_card';
 
-		$this->method_title = __( 'Nets Easy Card', 'dibs-easy-for-woocommerce' );
+		$this->method_title = __( 'Nexi Checkout Card', 'dibs-easy-for-woocommerce' );
 
-		$this->method_description = __( 'Nets Easy Card payment', 'dibs-easy-for-woocommerce' );
+		$this->method_description = __( 'Nexi Checkout Card payment', 'dibs-easy-for-woocommerce' );
 
 		$this->description = $this->get_option( 'description' );
 
@@ -89,14 +89,14 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		}
 
 		if ( 'default' === strtolower( $this->payment_gateway_icon ) ) {
-			$icon_src   = 'https://cdn.dibspayment.com/logo/checkout/combo/horiz/DIBS_checkout_kombo_horizontal_04.png';
-			$icon_width = '145';
+			$icon_src   = WC_DIBS__URL . '/assets/images/nexi-icon-visa-mastercard.png';
+			$icon_width = '100';
 		} else {
 			$icon_src   = $this->payment_gateway_icon;
 			$icon_width = $this->payment_gateway_icon_max_width;
 		}
 
-		$icon_html = '<img src="' . $icon_src . '" alt="Nets - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
+		$icon_html = '<img src="' . $icon_src . '" alt="Nexi - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
 		return apply_filters( 'nets_easy_card_icon_html', $icon_html );
 	}
 
@@ -144,12 +144,11 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 			);
 			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
-				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
+				$order->add_order_note( __( 'Customer redirected to Nexi payment page.', 'dibs-easy-for-woocommerce' ) );
 
 				return array(
 					'result'   => 'success',
-					'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
-					// phpcs:ignore
+					'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 				);
 			}
 			return array(
@@ -187,7 +186,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 
 		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
 			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
+			$order->add_order_note( sprintf( __( 'Refund made in Nexi with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
 
 			return true;
 		}
@@ -224,12 +223,12 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to Nets payment page.
-			$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
+			$order->add_order_note( __( 'Customer redirected to Nexi payment page.', 'dibs-easy-for-woocommerce' ) );
 			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
 			$order->save();
 			return array(
 				'result'   => 'success',
-				'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
+				'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 			);
 		}
 
@@ -265,7 +264,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to DIBS payment page.
-			$order->add_order_note( __( 'Nets payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
+			$order->add_order_note( __( 'Nexi payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
 			$order->update_meta_data( '_dibs_payment_id', $response['paymentId'] );
 			$order->save();
 			return array(

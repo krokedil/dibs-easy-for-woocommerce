@@ -56,9 +56,9 @@ class Nets_Easy_Gateway_Ratepay_Sepa extends WC_Payment_Gateway {
 
 		$this->id = 'nets_easy_ratepay_sepa';
 
-		$this->method_title = __( 'Nets Easy Ratepay SEPA', 'dibs-easy-for-woocommerce' );
+		$this->method_title = __( 'Nexi Checkout Ratepay SEPA', 'dibs-easy-for-woocommerce' );
 
-		$this->method_description = __( 'Nets Easy Ratepay SEPA payment', 'dibs-easy-for-woocommerce' );
+		$this->method_description = __( 'Nexi Checkout Ratepay SEPA payment', 'dibs-easy-for-woocommerce' );
 
 		$this->description = $this->get_option( 'description' );
 
@@ -95,14 +95,14 @@ class Nets_Easy_Gateway_Ratepay_Sepa extends WC_Payment_Gateway {
 		}
 
 		if ( 'default' === strtolower( $this->payment_gateway_icon ) ) {
-			$icon_src   = 'https://cdn.dibspayment.com/logo/checkout/combo/horiz/DIBS_checkout_kombo_horizontal_04.png';
-			$icon_width = '145';
+			$icon_src   = WC_DIBS__URL . '/assets/images/nexi-icon-visa-mastercard.png';
+			$icon_width = '100';
 		} else {
 			$icon_src   = $this->payment_gateway_icon;
 			$icon_width = $this->payment_gateway_icon_max_width;
 		}
 
-		$icon_html = '<img src="' . $icon_src . '" alt="Nets - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
+		$icon_html = '<img src="' . $icon_src . '" alt="Nexi - Payments made easy" style="max-width:' . $icon_width . 'px"/>';
 		return apply_filters( 'nets_easy_ratepay_sepa_icon_html', $icon_html );
 	}
 
@@ -187,7 +187,7 @@ class Nets_Easy_Gateway_Ratepay_Sepa extends WC_Payment_Gateway {
 
 		if ( array_key_exists( 'refundId', $response ) ) { // Payment success
 			// Translators: Nets refund ID.
-			$order->add_order_note( sprintf( __( 'Refund made in Nets Easy with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
+			$order->add_order_note( sprintf( __( 'Refund made in Nexi with refund ID %s.', 'dibs-easy-for-woocommerce' ), $response['refundId'] ) ); // phpcs:ignore
 
 			return true;
 		}
@@ -229,7 +229,7 @@ class Nets_Easy_Gateway_Ratepay_Sepa extends WC_Payment_Gateway {
 			$order->save();
 			return array(
 				'result'   => 'success',
-				'redirect' => add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ),
+				'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 			);
 		}
 

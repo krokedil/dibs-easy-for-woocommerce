@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Nets_Easy_API class.
  *
- * Class that has functions for the Nets Easy communication.
+ * Class that has functions for the Nexi Checkout communication.
  */
 class Nets_Easy_API {
 
 
 	/**
-	 * Creates a Nets Easy Checkout order.
+	 * Creates a Nexi Checkout order.
 	 *
 	 * @param array $args Data passed to init request.
 	 *

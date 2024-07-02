@@ -1,20 +1,22 @@
-=== Nets Easy for WooCommerce ===
+=== Nexi Checkout ===
 Contributors: dibspayment, krokedil, NiklasHogefjord
-Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets
+Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets, nexi
 Requires at least: 5.0
-Tested up to: 6.5.2
+Tested up to: 6.5.4
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 8.8.0
-Stable tag: 2.9.0
+WC tested up to: 9.0.0
+Stable tag: 2.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 
 == DESCRIPTION ==
-Nets Easy for WooCommerce is a plugin that extends WooCommerce, allowing you to take payments via Nets payment method Nets Easy.
+Nexi Checkout is a plugin that extends WooCommerce, allowing you to take payments via Nets/Nexi's payment method Nexi Checkout.
+Nexi Checkout (formerly known as Nets Easy checkout) online payment solution for e-commerce offers you a full embedded checkout with all popular payment methods. For more sales and less abandoned shopping carts!
+Nets is part of Nexi group – for Nordic customers, the checkout is better known as Nets Easy checkout. The online payment solution from Nexi is the quickest and easiest way to increase your online sales. Up to 30% of online shoppers abandon their shopping cart because of a poor checkout experience. We help you fix that with one integration and one agreement, so you can sell more for years to come
 
-Nets Easy is an exceptionally quick checkout for consumers. A single agreement for all payment methods. These are just some of the benefits to look forward to when choosing our new Nets Easy payment solution for your online store.
+Nexi Checkout is an exceptionally quick checkout for consumers. A single agreement for all payment methods. These are just some of the benefits to look forward to when choosing our new Nexi Checkout payment solution for your online store.
 
 https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 
@@ -25,12 +27,13 @@ https://www.youtube.com/watch?time_continue=11&v=8ipfSYPteDI
 *Easy administration* - Track sales in our user-friendly administration portal and get all payments collected in a report. It saves time in account reconsiliation and bookkeeping.
 
 = Get started =
-To get started with Nets Easy you need to [sign up](https://www.nets.eu/en/payments/online/) for an account.
+To get started with Nexi Checkout you need to [sign up](https://www.nets.eu/en/payments/online/) for an account.
 
-More information on how to get started can be found in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
-= Connect Nets Easy to your webshop by setting up a test account. It is free and created immediately =
-With a test account, you will see how the Nets Easy administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).
+More information on how to get started can be found in the [plugin documentation](https://docs.krokedil.com/nexi-checkout/).
+
+= Connect Nexi Checkout to your webshop by setting up a test account. It is free and created immediately =
+With a test account, you will see how the Nexi Checkout administration portal works. In the portal, you get a full overview of your payments, access to debiting, return payments and download of reports. You also get access to integration keys used when connecting your webshop to Easy. [Click here to create a test account](https://portal.dibspayment.eu/test-user-create).
 
 
 == INSTALLATION	 ==
@@ -38,7 +41,7 @@ With a test account, you will see how the Nets Easy administration portal works.
 2. If you use the WordPress plugin uploader to install this plugin skip to step 4.
 3. Upload the entire plugin directory to your /wp-content/plugins/ directory.
 4. Activate the plugin through the 'Plugins' menu in WordPress Administration.
-5. Go WooCommerce Settings --> Payment Gateways and configure your Nets Easy settings.
+5. Go WooCommerce Settings --> Payment Gateways and configure your Nexi Checkout settings.
 6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 
@@ -46,16 +49,22 @@ With a test account, you will see how the Nets Easy administration portal works.
 = Which countries does this payment gateway support? =
 Available for merchants in Denmark, Sweden and Norway.
 
-= Where can I find Nets Easy for WooCommerce documentation? =
-For help setting up and configuring Nets Easy for WooCommerce please refer to our [documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
+= Where can I find Nexi Checkout documentation? =
+For help setting up and configuring Nexi Checkout please refer to our [documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
 
 = Are there any specific requirements? =
 * WooCommerce 5.0 or newer is required.
 * PHP 7.3 or higher is required.
 * A SSL Certificate is required.
-* This plugin integrates with Nets Easy. You need an agreement with Nets specific to the Nets Easy platform to use this plugin.
+* This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2024.07.02    - version 2.9.1 =
+* Fix           - Fixed missing payment gateway icons.
+* Fix           - Escape redirect URLs for redirect and overlay checkout flow.
+* Tweak         - Rebranding from Nets to Nexi.
+* Tweak         - Updated links related to rebranding from Nets to Nexi.
+
 = 2024.04.17    - version 2.9.0 =
 * Tweak         - Tweaks related to PHPCS & WPCS before release on woo.com.
 * Fix           - PHP8.1 compatibility fix. Add missing subscription class prop (thanks @khlieng).

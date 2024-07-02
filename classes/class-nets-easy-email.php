@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the possibility to add Nets Easy data to the end of order confirmation emails.
+ * Adds the possibility to add Nexi Checkout data to the end of order confirmation emails.
  *
  * @package Dibs_Easy_For_WooCommerce/Classes
  */
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'Nets_Easy_Email' ) ) :
 	/**
-	 * The class for email handling for Nets Easy..
+	 * The class for email handling for Nexi Checkout.
 	 */
 	class Nets_Easy_Email {
 
@@ -23,7 +23,7 @@ if ( ! class_exists( 'Nets_Easy_Email' ) ) :
 		}
 
 		/**
-		 * Add Nets Easy related information to WooCommerce order emails.
+		 * Add Nexi Checkout related information to WooCommerce order emails.
 		 *
 		 * @param  object $order WooCommerce order.
 		 * @param  bool   $sent_to_admin Email to admin or not.
