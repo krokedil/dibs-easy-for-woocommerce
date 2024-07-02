@@ -6,7 +6,7 @@ Tested up to: 6.5.4
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.0.0
-Stable tag: 2.9.0
+Stable tag: 2.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,12 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2024.07.02    - version 2.9.1 =
+* Fix           - Fixed missing payment gateway icons.
+* Fix           - Escape redirect URLs for redirect and overlay checkout flow.
+* Tweak         - Rebranding from Nets to Nexi.
+* Tweak         - Updated links related to rebranding from Nets to Nexi.
+
 = 2024.04.17    - version 2.9.0 =
 * Tweak         - Tweaks related to PHPCS & WPCS before release on woo.com.
 * Fix           - PHP8.1 compatibility fix. Add missing subscription class prop (thanks @khlieng).
