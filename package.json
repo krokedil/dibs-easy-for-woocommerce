@@ -1,6 +1,6 @@
 {
   "name": "dibs-easy-for-woocommerce",
-  "version": "1.0.0",
+  "version": "2.9.2",
   "main": "index.js",
   "repository": "git@github.com:krokedil/dibs-easy-one-for-woocommerce.git",
   "author": "Krokedil <info@krokedil.se>",
@@ -23,9 +23,9 @@
     "babel-loader": "^8.2.4",
     "css-loader": "^6.10.0",
     "eslint": "8.13.0",
-    "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-prettier": "4.0.0",
+    "eslint-config-prettier": "^8.0.0",
+    "eslint-plugin-import": "^2.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "file-loader": "^6.2.0",
     "glob": "^10.3.10",
     "grunt": "^1.5.2",
@@ -43,18 +43,18 @@
     "webpack-dev-server": "^4.15.1"
   },
   "scripts": {
-    "lintjs": "npx eslint --config ./.eslintrc.json --ext .js assets/js/nets-easy-for-woocommerce.js --fix",
+    "lintjs": "pnpx eslint --config ./.eslintrc.json --ext .js assets/js/nets-easy-for-woocommerce.js --fix",
     "lintphp": "composer run lint-fix",
     "clear:transients": "docker-compose run --rm wp-cli wp wc tool run clear_transients --user=1",
     "clear:session": "docker-compose run --rm wp-cli wp wc tool run clear_sessions --user=1",
-    "makepot": "npx grunt makepot",
-    "cssmin": "npx grunt cssmin",
-    "jsmin": "npx webpack",
-    "prettier": "npx prettier assets/js --paren-spacing --tab-width 4 --print-width 120 --no-semi --write",
-    "webpack:dev": "npx webpack --mode=development --watch",
-    "build": "yarn makepot && yarn cssmin && yarn prettier && yarn jsmin",
+    "makepot": "pnpx grunt makepot",
+    "cssmin": "pnpx grunt cssmin",
+    "jsmin": "pnpx webpack",
+    "prettier": "pnpx prettier assets/js --paren-spacing --tab-width 4 --print-width 120 --no-semi --write",
+    "webpack:dev": "pnpx webpack --mode=development --watch",
+    "build": "pnpm makepot && pnpm cssmin && pnpm prettier && pnpm jsmin",
     "start:webpack": "wp-scripts start",
     "dev": "npm run start:webpack",
-    "build:webpack": "npx wp-scripts build"
+    "build:webpack": "pnpx wp-scripts build"
   }
 }
