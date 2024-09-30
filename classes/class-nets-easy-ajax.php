@@ -151,6 +151,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
 		}
 
+		if ( empty( $payment_id ) ) {
 			Nets_Easy_Logger::log( 'No payment ID found in the get order data request.' );
 			return;
 		}
