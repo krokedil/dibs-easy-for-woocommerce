@@ -43,6 +43,7 @@ class Nets_Easy_Checkout {
 
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 		if ( empty( $payment_id ) ) {
+			Nets_Easy_Logger::log( 'No payment ID found in the update order request.' );
 			return;
 		}
 

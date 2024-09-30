@@ -204,6 +204,12 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	if ( null === $payment_id ) {
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 	}
+
+	if ( empty( $payment_id ) ) {
+		Nets_Easy_Logger::log( 'No payment ID found in the confirmation request.' );
+		return;
+	}
+
 	if ( '' !== $order->get_shipping_method() ) {
 		wc_dibs_save_shipping_reference_to_order( $order_id );
 	}

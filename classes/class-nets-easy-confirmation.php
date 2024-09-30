@@ -109,6 +109,7 @@ class Nets_Easy_Confirmation {
 		$payment_id = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if ( empty( $payment_id ) ) {
+			Nets_Easy_Logger::log( 'No payment ID found for customer redirected back to checkout.' );
 			return;
 		}
 
