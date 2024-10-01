@@ -80,7 +80,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		if ( ! is_user_logged_in() && ( ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
 			if ( empty( $payment_id ) ) {
-				Nets_Easy_Logger::log( 'No payment ID found while trying to get customer email.' );
+				$session_id = WC()->session->get_session_cookie()[0];
+				Nets_Easy_Logger::log( 'No payment ID found while trying to get customer email for WooCommerce session ID: ' . $session_id );
 				return;
 			}
 			$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
@@ -152,7 +153,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		}
 
 		if ( empty( $payment_id ) ) {
-			Nets_Easy_Logger::log( 'No payment ID found in the get order data request.' );
+			$session_id = WC()->session->get_session_cookie()[0];
+			Nets_Easy_Logger::log( 'No payment ID found in the get order data request for WooCommerce session ID: ' . $session_id );
 			return;
 		}
 

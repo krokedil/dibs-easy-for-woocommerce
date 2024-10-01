@@ -43,7 +43,8 @@ class Nets_Easy_Checkout {
 
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 		if ( empty( $payment_id ) ) {
-			Nets_Easy_Logger::log( 'No payment ID found in the update order request.' );
+			$session_id = WC()->session->get_session_cookie()[0];
+			Nets_Easy_Logger::log( 'No payment ID found in the update order request for cart for WooCommerce session ID: ' . $session_id );
 			return;
 		}
 

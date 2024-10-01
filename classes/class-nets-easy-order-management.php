@@ -74,7 +74,7 @@ class Nets_Easy_Order_Management {
 
 			$payment_id = $wc_order->get_meta( '_dibs_payment_id' );
 			if ( empty( $payment_id ) ) {
-				Nets_Easy_Logger::log( 'No payment ID found in the order completed request.' );
+				Nets_Easy_Logger::log( 'No payment ID found in the order completed request for WooCommerce order ID: ' . $order_id );
 				return;
 			}
 
@@ -124,7 +124,7 @@ class Nets_Easy_Order_Management {
 
 			$payment_id = $wc_order->get_meta( '_dibs_payment_id' );
 			if ( empty( $payment_id ) ) {
-				Nets_Easy_Logger::log( 'No payment ID found in the order canceled request.' );
+				Nets_Easy_Logger::log( 'No payment ID found in the order canceled request for WooCommerce order ID: ' . $order_id );
 				return;
 			}
 
