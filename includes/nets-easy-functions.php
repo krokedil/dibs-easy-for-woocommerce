@@ -206,7 +206,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	}
 
 	if ( empty( $payment_id ) ) {
-		Nets_Easy_Logger::log( 'No payment ID found in the confirmation request for WooCommerce order ID: ' . $order_id );
+		Nets_Easy_Logger::log( 'No payment ID found in the confirmation request for WooCommerce order number: ' . $order->get_order_number() );
 		return;
 	}
 

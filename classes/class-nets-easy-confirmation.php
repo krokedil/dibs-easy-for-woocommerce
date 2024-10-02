@@ -109,8 +109,7 @@ class Nets_Easy_Confirmation {
 		$payment_id = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if ( empty( $payment_id ) ) {
-			$session_cookie = WC()->session->get_session_cookie()[0];
-			Nets_Easy_Logger::log( 'No payment ID found for customer redirected back to checkout for WooCommerce session ID: ' . $session_cookie );
+			Nets_Easy_Logger::log( 'No payment ID found on customer redirect back to checkout.' );
 			return;
 		}
 
