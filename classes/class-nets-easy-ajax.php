@@ -80,9 +80,9 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		if ( ! is_user_logged_in() && ( ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
 			if ( empty( $payment_id ) ) {
-				Nets_Easy_Logger::log( 'No payment ID found while trying to update the customer address.' );
-				return;
+				wp_send_json_error( 'Failed to update customer address. Payment ID missing.' );
 			}
+
 			$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 			if ( ! is_wp_error( $response ) ) {
 				$email = $response['payment']['consumer']['privatePerson']['email'];
@@ -152,8 +152,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		}
 
 		if ( empty( $payment_id ) ) {
-			Nets_Easy_Logger::log( 'No payment ID found while attempting to get the Nexi order data.' );
-			return;
+			wp_send_json_error( 'Failed to get the Nexi order data. Payment ID missing.' );
 		}
 
 		// Prevent duplicate orders if payment complete event is triggered twice or if order already exist in Woo (via webhook).

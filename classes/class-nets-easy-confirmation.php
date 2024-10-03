@@ -107,9 +107,11 @@ class Nets_Easy_Confirmation {
 	public function maybe_confirm_customer_redirected_from_payment_page_order() {
 
 		$payment_id = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		if ( empty( $payment_id ) ) {
+			$payment_id = WC()->session->get( 'dibs_payment_id' );
+		}
 
 		if ( empty( $payment_id ) ) {
-			Nets_Easy_Logger::log( 'No payment ID found on customer redirect back to checkout.' );
 			return;
 		}
 
