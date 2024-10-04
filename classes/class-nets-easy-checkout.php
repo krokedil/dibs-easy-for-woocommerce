@@ -43,7 +43,7 @@ class Nets_Easy_Checkout {
 
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 		if ( empty( $payment_id ) ) {
-			wp_send_json_error( 'Failed to update the Nexi order. Payment ID missing.' );
+			return;
 		}
 
 		// Trigger get if the ajax event is among the approved ones.

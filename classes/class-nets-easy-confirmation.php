@@ -108,10 +108,6 @@ class Nets_Easy_Confirmation {
 
 		$payment_id = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( empty( $payment_id ) ) {
-			$payment_id = WC()->session->get( 'dibs_payment_id' );
-		}
-
-		if ( empty( $payment_id ) ) {
 			return;
 		}
 
