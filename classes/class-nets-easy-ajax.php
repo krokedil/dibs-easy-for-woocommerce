@@ -79,7 +79,11 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		// If customer is not logged in and this is a subscription purchase - get customer email from DIBS.
 		if ( ! is_user_logged_in() && ( ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
-			$response   = Nets_Easy()->api->get_nets_easy_order( $payment_id );
+			if ( empty( $payment_id ) ) {
+				wp_send_json_error( 'Failed to update customer address. Payment ID missing.' );
+			}
+
+			$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 			if ( ! is_wp_error( $response ) ) {
 				$email = $response['payment']['consumer']['privatePerson']['email'];
 				if ( email_exists( $email ) ) {
@@ -145,6 +149,10 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		$payment_id = filter_input( INPUT_POST, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( ! $payment_id ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
+		}
+
+		if ( empty( $payment_id ) ) {
+			wp_send_json_error( 'Failed to get the Nexi order data. Payment ID missing.' );
 		}
 
 		// Prevent duplicate orders if payment complete event is triggered twice or if order already exist in Woo (via webhook).
@@ -221,7 +229,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			self::prepare_cart_before_form_processing( $response['payment']['consumer']['shippingAddress']['country'] );
 			wp_send_json_success( $response );
 		}
-
 	}
 
 	/**
@@ -295,7 +302,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		Nets_Easy_Logger::log( $message );
 		wp_send_json_success();
 	}
-
 }
 
 Nets_Easy_Ajax::init();

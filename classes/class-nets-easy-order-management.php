@@ -71,8 +71,16 @@ class Nets_Easy_Order_Management {
 				$wc_order->add_order_note( sprintf( __( 'No charge needed in Nexi system since the order total is %s.', 'dibs-easy-for-woocommerce' ), $wc_order->get_total() ) );
 				return;
 			}
+
+			$payment_id = $wc_order->get_meta( '_dibs_payment_id' );
+			if ( empty( $payment_id ) ) {
+				Nets_Easy_Logger::log( 'No payment ID found in the order completed request for WooCommerce order number: ' . $wc_order->get_order_number() );
+				$this->fetching_order_failed( $wc_order, true, 'No payment ID found in the order completed request for WooCommerce order number: ' . $wc_order->get_order_number() );
+				return;
+			}
+
 			// Get Nexi Checkout order.
-			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $wc_order->get_meta( '_dibs_payment_id' ) );
+			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 			if ( is_wp_error( $nets_easy_order ) ) {
 				$this->fetching_order_failed( $wc_order, true, $nets_easy_order->get_error_message() );
 				return;
@@ -115,7 +123,14 @@ class Nets_Easy_Order_Management {
 				return;
 			}
 
-			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $wc_order->get_meta( '_dibs_payment_id' ) );
+			$payment_id = $wc_order->get_meta( '_dibs_payment_id' );
+			if ( empty( $payment_id ) ) {
+				Nets_Easy_Logger::log( 'No payment ID found in the order canceled request for WooCommerce order number: ' . $wc_order->get_order_number() );
+				$this->fetching_order_failed( $wc_order, true, 'No payment ID found in the order canceled request for WooCommerce order number: ' . $wc_order->get_order_number() );
+				return;
+			}
+
+			$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 			if ( is_wp_error( $nets_easy_order ) ) {
 				$this->fetching_order_failed( $wc_order, true, $nets_easy_order->get_error_message() );
 				return;
