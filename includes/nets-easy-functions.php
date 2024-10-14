@@ -204,6 +204,12 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 	if ( null === $payment_id ) {
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 	}
+
+	if ( empty( $payment_id ) ) {
+		Nets_Easy_Logger::log( 'No payment ID found in the confirmation request for WooCommerce order number: ' . $order->get_order_number() );
+		return;
+	}
+
 	if ( '' !== $order->get_shipping_method() ) {
 		wc_dibs_save_shipping_reference_to_order( $order_id );
 	}
@@ -225,14 +231,18 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 
 		do_action( 'dibs_easy_process_payment', $order_id, $request );
 
-		$order->update_meta_data( 'dibs_payment_type', $request['payment']['paymentDetails']['paymentType'] );
-		$order->update_meta_data( 'dibs_payment_method', $request['payment']['paymentDetails']['paymentMethod'] );
+		$payment_method = $request['payment']['paymentDetails']['paymentMethod'];
+		$payment_type   = $request['payment']['paymentDetails']['paymentType'];
+
+		$order->update_meta_data( 'dibs_payment_type', $payment_type );
+		$order->update_meta_data( 'dibs_payment_method', $payment_method );
 		$order->update_meta_data( '_dibs_date_paid', gmdate( 'Y-m-d H:i:s' ) );
+		$order->set_payment_method_title( nexi_get_payment_method_title( $order, $payment_method, $payment_type ) );
 		$order->save();
 
 		wc_dibs_maybe_add_invoice_fee( $order );
 
-		if ( 'CARD' === $request['payment']['paymentDetails']['paymentType'] ) { // phpcs:ignore
+		if ( 'CARD' === $payment_type ) { // phpcs:ignore
 			$order->update_meta_data( 'dibs_customer_card', $request['payment']['paymentDetails']['cardDetails']['maskedPan'] );
 			$order->save();
 		}
@@ -260,20 +270,18 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 			$order->save();
 
 			// Translators: Nexi Checkout Payment ID.
-			$order->add_order_note( sprintf( __( 'New payment created in Nexi Checkout with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentMethod'], $dibs_charge_id ) );
+			$order->add_order_note( sprintf( __( 'New payment created in Nexi Checkout with Payment ID %1$s. Payment type - %2$s. Charge ID %3$s.', 'dibs-easy-for-woocommerce' ), $payment_id, $payment_method, $dibs_charge_id ) );
 		} else {
 			// Translators: Nexi Checkout Payment ID.
-			$order->add_order_note( sprintf( __( 'New payment created in Nexi Checkout with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $request['payment']['paymentDetails']['paymentType'] ) );
+			$order->add_order_note( sprintf( __( 'New payment created in Nexi Checkout with Payment ID %1$s. Payment type - %2$s. Awaiting charge.', 'dibs-easy-for-woocommerce' ), $payment_id, $payment_type ) );
 		}
 		$order->payment_complete( $payment_id );
 
 	} else {
 		// Purchase not finalized in DIBS.
 		// If this is a redirect checkout flow let's redirect the customer to cart page.
-		if ( 'embedded' !== $checkout_flow ) {
-			wp_safe_redirect( html_entity_decode( $order->get_cancel_order_url(), ENT_QUOTES ) );
-			exit;
-		}
+		wp_safe_redirect( html_entity_decode( $order->get_cancel_order_url(), ENT_QUOTES ) );
+		exit;
 	}
 }
 
@@ -407,4 +415,27 @@ function nets_easy_get_order_by_purchase_id( $payment_id, $date_after = null ) {
 
 function nets_easy_all_payment_method_ids() {
 	return array( 'dibs_easy', 'nets_easy_card', 'nets_easy_sofort', 'nets_easy_trustly', 'nets_easy_swish', 'nets_easy_ratepay_sepa' );
+}
+
+
+/**
+ * Get payment method title.
+ *
+ * @param WC_Order $order The WooCommerce order.
+ * @param string   $method Payment method.
+ * @param string   $type Payment type.
+ * @return string The payment method title.
+ */
+function nexi_get_payment_method_title( $order, $method, $type ) {
+	$gateway = $order->get_payment_method_title();
+
+	// Split on capital letter (e.g., "EasyInvoice" → "Easy Invoice").
+	$method = preg_replace( '/(?<!^)([A-Z])/', ' $1', $method );
+	// Check if same words appear in method and type (e.g., "EasyInvoice" and "Invoice" → "Easy Invoice" and "").
+	$type = strtolower( end( explode( ' ', $method ) ) ) === strtolower( $type ) ? '' : $type;
+
+	// Change first letter to uppercase only (e.g., "CARD" → "Card").
+	$type = ucfirst( strtolower( $type ) );
+
+	return "$gateway / $method $type";
 }
