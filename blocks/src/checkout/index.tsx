@@ -19,7 +19,7 @@ const title: string = decodeEntities(settings.title || "Nets Easy");
 
 // Loop each key in settings and register the payment method with the key as the name
 Object.keys(settings).forEach((key) => {
-  const { enabled, title, description, icon } = settings[key];
+  const { enabled, title, description, icon, buttonLabel } = settings[key];
   console.log(
     "Registering payment method",
     key,
@@ -29,18 +29,12 @@ Object.keys(settings).forEach((key) => {
     icon
   );
 
-  const orderButtonText = applyFilters(
-    'nexi_blocks_order_button_label',
-    `Pay with ${title}`,
-    key
-  );
-
   const options = {
     name: key,
     label: <Label title={title} icon={icon} />,
     content: <NetsEasyCheckout description={description} />,
     edit: <NetsEasyCheckout description={description} />,
-    placeOrderButtonLabel: orderButtonText,
+    placeOrderButtonLabel: buttonLabel,
     canMakePayment: () => enabled,
     ariaLabel: title,
   };
