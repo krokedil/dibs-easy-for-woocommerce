@@ -190,17 +190,20 @@ class Nets_Easy_Checkout_Helper {
 	 * @return string
 	 */
 	public static function get_phone_number( $order ) {
-		$phone_number = null;
-		if ( substr( $order->get_billing_phone(), 0, 1 ) === '+' ) {
-			$phone_number = substr( $order->get_billing_phone(), strlen( self::get_phone_prefix( $order ) ) );
-			$phone_number = str_replace( ' ', '', $phone_number );
-		} else {
-			$phone_number = str_replace( '-', '', $order->get_billing_phone() );
-			$phone_number = str_replace( ' ', '', $phone_number );
+		$phone_number = $order->get_billing_phone();
+
+		if ( ! $phone_number ) {
+			return null;
 		}
+
+		if ( substr( $phone_number, 0, 1 ) === '+' ) {
+			$phone_number = substr( $phone_number, strlen( self::get_phone_prefix( $order ) ) );
+		}
+
+		$phone_number = str_replace( array( '-', ' ' ), '', $phone_number );
+
 		return $phone_number;
 	}
-
 
 	/**
 	 * Prefill customer data in embedded checkout.
