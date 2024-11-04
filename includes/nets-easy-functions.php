@@ -427,6 +427,10 @@ function nets_easy_all_payment_method_ids() {
  * @return string The payment method title.
  */
 function nexi_get_payment_method_title( $order, $method, $type ) {
+	if ( apply_filters( 'nexi_custom_payment_method_title', false ) ) {
+		return apply_filters( 'nexi_custom_payment_method_title', $order, $method, $type );
+	}
+
 	$gateway = $order->get_payment_method_title();
 
 	// Split on capital letter (e.g., "EasyInvoice" → "Easy Invoice").
