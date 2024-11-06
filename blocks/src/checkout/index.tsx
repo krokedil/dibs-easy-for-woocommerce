@@ -11,7 +11,6 @@ import { decodeEntities } from "@wordpress/html-entities";
 import { registerPaymentMethod } from "@woocommerce/blocks-registry";
 // @ts-ignore - Cant avoid this issue, but its loaded in by Webpack
 import { getSetting } from "@woocommerce/settings";
-import { applyFilters } from "@wordpress/hooks";
 import { Label, NetsEasyCheckout } from "../shared/nets-easy-checkout";
 
 const settings: any = getSetting("nets_easy_data", {});
