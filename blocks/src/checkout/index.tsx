@@ -18,7 +18,7 @@ const title: string = decodeEntities(settings.title || "Nets Easy");
 
 // Loop each key in settings and register the payment method with the key as the name
 Object.keys(settings).forEach((key) => {
-  const { enabled, title, description, icon } = settings[key];
+  const { enabled, title, description, icon, buttonLabel } = settings[key];
   console.log(
     "Registering payment method",
     key,
@@ -33,7 +33,7 @@ Object.keys(settings).forEach((key) => {
     label: <Label title={title} icon={icon} />,
     content: <NetsEasyCheckout description={description} />,
     edit: <NetsEasyCheckout description={description} />,
-    placeOrderButtonLabel: `Pay with ${title}`,
+    placeOrderButtonLabel: buttonLabel,
     canMakePayment: () => enabled,
     ariaLabel: title,
   };
