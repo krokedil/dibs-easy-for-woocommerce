@@ -6,7 +6,7 @@ Tested up to: 6.6.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.2.0
-Stable tag: 2.9.3
+Stable tag: 2.9.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,11 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2024.11.11    - version 2.9.4 =
+* Feature       - Added the 'nexi_order_button_label' filter to allow changing the text of the payment button on block-based checkout pages.
+* Feature       - Added the 'nexi_custom_payment_method_title' filter to allow changing the payment method title.
+* Fix           - Fixed checkout validation failing if the phone number included hyphens without specifying a country calling code.
+
 = 2024.10.14    - version 2.9.3 =
 * Fix           - Prevented a 405 error when the payment ID is missing.
 * Tweak         - Added payment method name and type to the title.
