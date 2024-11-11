@@ -437,5 +437,5 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
 	// Change first letter to uppercase only (e.g., "CARD" → "Card").
 	$type = ucfirst( strtolower( $type ) );
 
-	return "$gateway / $method $type";
+	return apply_filters( 'nexi_custom_payment_method_title', "$gateway / $method $type", $order, $method, $type );
 }

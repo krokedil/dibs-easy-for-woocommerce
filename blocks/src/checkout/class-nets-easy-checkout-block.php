@@ -82,8 +82,9 @@ class Nets_Easy_Checkout_Block extends AbstractPaymentMethodType {
 				$icon = $matches[1];
 			}
 
-			$data[ $id ]         = get_option( "woocommerce_{$id}_settings", array() );
-			$data[ $id ]['icon'] = $icon;
+			$data[ $id ]                 = get_option( "woocommerce_{$id}_settings", array() );
+			$data[ $id ]['icon']         = $icon;
+			$data [ $id ]['buttonLabel'] = apply_filters( 'nexi_order_button_label', 'Pay with ' . $data[ $id ]['title'], $id );
 		}
 
 		return $data;
