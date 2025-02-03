@@ -52,7 +52,7 @@
     "jsmin": "pnpx webpack",
     "prettier": "pnpx prettier assets/js --paren-spacing --tab-width 4 --print-width 120 --no-semi --write",
     "webpack:dev": "pnpx webpack --mode=development --watch",
-    "build": "pnpm makepot && pnpm cssmin && pnpm prettier && pnpm jsmin",
+    "build": "npm makepot && npm cssmin && npm prettier && npm jsmin",
     "start:webpack": "wp-scripts start",
     "dev": "npm run start:webpack",
     "build:webpack": "pnpx wp-scripts build"
