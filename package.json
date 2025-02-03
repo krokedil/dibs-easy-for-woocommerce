@@ -42,19 +42,19 @@
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.15.1"
   },
-  "scripts": {
-    "lintjs": "pnpx eslint --config ./.eslintrc.json --ext .js assets/js/nets-easy-for-woocommerce.js --fix",
-    "lintphp": "composer run lint-fix",
-    "clear:transients": "docker-compose run --rm wp-cli wp wc tool run clear_transients --user=1",
-    "clear:session": "docker-compose run --rm wp-cli wp wc tool run clear_sessions --user=1",
-    "makepot": "pnpx grunt makepot",
-    "cssmin": "pnpx grunt cssmin",
-    "jsmin": "pnpx webpack",
-    "prettier": "pnpx prettier assets/js --paren-spacing --tab-width 4 --print-width 120 --no-semi --write",
-    "webpack:dev": "pnpx webpack --mode=development --watch",
-    "build": "npm makepot && npm cssmin && npm prettier && npm jsmin",
-    "start:webpack": "wp-scripts start",
-    "dev": "npm run start:webpack",
-    "build:webpack": "pnpx wp-scripts build"
-  }
+"scripts": {
+  "lintjs": "pnpx eslint --config ./.eslintrc.json --ext .js assets/js/nets-easy-for-woocommerce.js --fix",
+  "lintphp": "composer run lint-fix",
+  "clear:transients": "docker-compose run --rm wp-cli wp wc tool run clear_transients --user=1",
+  "clear:session": "docker-compose run --rm wp-cli wp wc tool run clear_sessions --user=1",
+  "makepot": "pnpx grunt makepot",
+  "cssmin": "pnpx grunt cssmin",
+  "jsmin": "pnpx webpack",
+  "prettier": "pnpx prettier assets/js --paren-spacing --tab-width 4 --print-width 120 --no-semi --write",
+  "webpack:dev": "pnpx webpack --mode=development --watch",
+  "build": "npm run makepot && npm run cssmin && npm run prettier && npm run jsmin",
+  "start:webpack": "wp-scripts start",
+  "dev": "npm run start:webpack",
+  "build:webpack": "pnpx wp-scripts build"
+}
 }
