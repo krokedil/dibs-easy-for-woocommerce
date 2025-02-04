@@ -63,27 +63,7 @@ class Nets_Easy_Assets {
 		if ( 'overlay' === $this->checkout_flow ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_overlay_js' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'dibs_overlay_css' ) );
-			add_action(
-				'wp_print_scripts',
-				function () {
-					if ( ! isset( $_GET['nets_overlay'] ) ) {
-						return;
-					}
-					$nonce = wp_create_nonce( 'nexi-close-overlay' )
-					?>
-				<script>
-					message = {
-						event: 'nexi-close-overlay',
-						nonce: "<?php echo $nonce; ?>"
-					}
-					console.log('child: ', message)
-					window.parent.postMessage(message, {
-						targetOrigin: "<?php echo esc_url( ( home_url() ) ); ?>"
-					})
-				</script>
-					<?php
-				}
-			);
+			add_action( 'wp_print_scripts', array( $this, 'inject_iframe_script' ) );
 		}
 	}
 
@@ -108,6 +88,25 @@ class Nets_Easy_Assets {
 			return 'https://test.checkout.dibspayment.eu/v1/checkout.js?v=1';
 		}
 		return 'https://checkout.dibspayment.eu/v1/checkout.js?v=1';
+	}
+
+	/**
+	 * Injects the iframe script.
+	 */
+	public function inject_iframe_script() {
+		if ( ! isset( $_GET['nexi_overlay'] ) ) {
+			return;
+		}
+		?>
+		<script>
+			message = {
+				event: 'nexi-close-overlay',
+			}
+			window.parent.postMessage(message, {
+				targetOrigin: "<?php echo esc_url( ( home_url() ) ); ?>"
+			})
+		</script>
+		<?php
 	}
 
 	/**

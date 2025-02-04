@@ -3,18 +3,7 @@ jQuery(function ($) {
     var netsEasyForWooCommerce = {
         init: function () {
             window.addEventListener("hashchange", netsEasyForWooCommerce.handleHashChange)
-            window.addEventListener('message', function (evt) {
-                if (evt.origin !== this.window.location.origin) {
-                    return
-                }
-
-                const events = ['nexi-close-overlay']
-                if (!events.includes(evt.data.event)) {
-                    return
-                }
-
-                netsEasyForWooCommerce.closeOverlay()
-            })
+            window.addEventListener("message", netsEasyForWooCommerce.handleMessage)
         },
 
         handleHashChange: function () {
@@ -24,6 +13,20 @@ jQuery(function ($) {
                 var url = atob(splittedHash[1])
                 netsEasyForWooCommerce.addIframe(url)
             }
+        },
+
+        // Handle messages from the iframe.
+        handleMessage: function (evt) {
+            if (evt.origin !== this.window.location.origin) {
+                return
+            }
+
+            const events = ["nexi-close-overlay"]
+            if (!events.includes(evt.data.event)) {
+                return
+            }
+
+            netsEasyForWooCommerce.closeOverlay()
         },
 
         addIframe: function (url) {
@@ -39,7 +42,7 @@ jQuery(function ($) {
             $("form.checkout").removeClass("processing").unblock()
             $(".woocommerce-checkout-review-order-table").unblock()
             $("form.checkout").unblock()
-        }
+        },
     }
 
     netsEasyForWooCommerce.init()
