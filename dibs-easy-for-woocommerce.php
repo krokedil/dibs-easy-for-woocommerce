@@ -35,6 +35,8 @@ define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
 define( 'DIBS_API_TEST_ENDPOINT', 'https://test.api.dibspayment.eu/v1/' );
 
+use KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
+
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 	/**
 	 * Class DIBS_Easy
@@ -110,6 +112,13 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * @var $enable_payment_method_ratepay_sepa
 		 */
 		public $enable_payment_method_ratepay_sepa;
+
+		/**
+		 * The WooCommerce package from Krokedil
+		 *
+		 * @var KrokedilWooCommerce|null
+		 */
+		private $wc = null;
 
 		/**
 		 * DIBS_Easy constructor.
@@ -226,6 +235,12 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			// Set variables for shorthand access to classes.
 			$this->order_management = new Nets_Easy_Order_Management();
+			$this->wc               = new KrokedilWooCommerce(
+				array(
+					'slug'         => 'dibs-easy-for-woocommerce',
+					'price_format' => 'minor',
+				)
+			);
 
 			$this->api = new Nets_Easy_API();
 		}
@@ -373,6 +388,15 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					}
 				);
 			}
+		}
+
+		/**
+		 * Get WooCommerce package.
+		 *
+		 * @return KrokedilWooCommerce
+		 */
+		public function WC() {
+			return $this->wc;
 		}
 	}
 
