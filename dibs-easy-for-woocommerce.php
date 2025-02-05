@@ -163,6 +163,10 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		public function init() {
 
+			if ( ! $this->init_composer() ) {
+				return;
+			}
+
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
@@ -226,7 +230,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			$this->api = new Nets_Easy_API();
 		}
 
-
 		/**
 		 * Add the gateway to WooCommerce
 		 */
@@ -243,6 +246,47 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-swish.php' );
 
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_dibs_easy' ) );
+		}
+
+		/**
+		 * Initialize composers autoloader.
+		 *
+		 * @return bool
+		 */
+		public function init_composer() {
+			$autoloader = WC_DIBS_PATH . '/dependencies/scoper-autoload.php';
+
+			if ( ! is_readable( $autoloader ) ) {
+				return false;
+			}
+
+			$autoloader_result = require $autoloader;
+			return ! $autoloader_result ? false : true;
+		}
+
+		/**
+		 * Checks if the autoloader is missing and displays an admin notice.
+		 *
+		 * @return void
+		 */
+		protected static function missing_autoloader() {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( // phpcs:ignore
+					esc_html__( 'Your installation of Nexi Checkout is not complete. If you installed this plugin directly from Github please refer to the README.DEV.md file in the plugin.', 'dibs-easy-for-woocommerce' )
+				);
+			}
+			add_action(
+				'admin_notices',
+				function () {
+					?>
+					<div class="notice notice-error">
+						<p>
+							<?php echo esc_html__( 'Your installation of Nexi Checkout is not complete. If you installed this plugin directly from Github please refer to the README.DEV.md file in the plugin.', 'dibs-easy-for-woocommerce' ); ?>
+						</p>
+					</div>
+					<?php
+				}
+			);
 		}
 
 		/**
