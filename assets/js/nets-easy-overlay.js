@@ -1,5 +1,5 @@
 /* global netseasyParams */
-jQuery(function ($) {
+jQuery( function ( $ ) {
     var netsEasyForWooCommerce = {
         init: function () {
             window.addEventListener("hashchange", netsEasyForWooCommerce.handleHashChange)
@@ -8,10 +8,10 @@ jQuery(function ($) {
 
         handleHashChange: function () {
             var currentHash = location.hash
-            var splittedHash = currentHash.split(":")
-            if (splittedHash[0] === "#netseasy") {
-                var url = atob(splittedHash[1])
-                netsEasyForWooCommerce.addIframe(url)
+            var splittedHash = currentHash.split( ":" )
+            if ( splittedHash[ 0 ] === "#netseasy" ) {
+                var url = atob( splittedHash[ 1 ] )
+                netsEasyForWooCommerce.addIframe( url )
             }
         },
 
@@ -46,4 +46,4 @@ jQuery(function ($) {
     }
 
     netsEasyForWooCommerce.init()
-})
+} )

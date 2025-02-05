@@ -9,7 +9,7 @@ const isProduction = process.env.NODE_ENV == "production";
 const jsConfig = {
   mode: isProduction ? "production" : "development",
   entry: {
-    "nets-easy-for-woocommerce": "./assets/js/nets-easy-for-woocommerce",
+    "nets-easy-for-woocommerce": "./assets/js/nets-easy-for-woocommerce.js",
   },
 
   output: {
