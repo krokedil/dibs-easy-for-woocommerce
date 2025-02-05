@@ -55,6 +55,7 @@ class Nets_Easy_Checkout_Helper {
 
 			if ( 'overlay' === $checkout_flow ) {
 				$return_url = add_query_arg( array( 'nets_reload' => 'true' ), $return_url );
+				$cancel_url = add_query_arg( array( 'nexi_overlay' => 'true' ), home_url() );
 			}
 
 			$checkout['returnUrl']                               = esc_url_raw( $return_url );
