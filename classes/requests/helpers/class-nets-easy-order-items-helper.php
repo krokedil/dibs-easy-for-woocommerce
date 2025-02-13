@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\OrderLineData as OrderLine;
+
 /**
  * DIBS_Requests_Get_Order_Items class.
  *
@@ -29,6 +31,18 @@ class Nets_Easy_Order_Items_Helper {
 		// Get order items.
 		foreach ( $order->get_items() as $order_item ) {
 			$items[] = self::get_item( $order_item, $order );
+		}
+
+		// Get coupons/gift cards.
+		foreach ( Nets_Easy()->WC()->compatibility()->giftcards() as $giftcards ) {
+			if ( false !== ( strpos( get_class( $giftcards ), 'WCGiftCards', true ) ) && ! function_exists( 'WC_GC' ) ) {
+				continue;
+			}
+
+			$retrieved_giftcards = $giftcards->get_order_giftcards( $order );
+			foreach ( $retrieved_giftcards as $retrieved_giftcard ) {
+				$items[] = self::get_discount( $retrieved_giftcard );
+			}
 		}
 
 		// Get order fees.
@@ -72,6 +86,26 @@ class Nets_Easy_Order_Items_Helper {
 			'taxAmount'        => intval( round( $order_item->get_total_tax() * 100 ) ),
 			'grossTotalAmount' => intval( round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ) ),
 			'netTotalAmount'   => intval( round( $order_item->get_total() * 100 ) ),
+		);
+	}
+
+	/**
+	 * Gets a formatted discount item (e.g., coupon, gift card).
+	 *
+	 * @param OrderLine $item The WooCommerce order line item.
+	 * @return array
+	 */
+	public static function get_discount( $item ) {
+		return array(
+			'reference'        => $item->get_sku(),
+			'name'             => $item->get_name(),
+			'quantity'         => 1,
+			'unitPrice'        => $item->get_unit_price() + $item->get_unit_tax_amount(),
+			'taxRate'          => 0,
+			'grossTotalAmount' => $item->get_total_amount() + $item->get_total_tax_amount(),
+			'netTotalAmount'   => $item->get_total_amount(),
+			'taxAmount'        => 0,
+			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 		);
 	}
 
@@ -132,12 +166,10 @@ class Nets_Easy_Order_Items_Helper {
 		$nets_shipping_reference = $wc_order->get_meta( '_nets_shipping_reference' );
 		if ( isset( $nets_shipping_reference ) && ! empty( $nets_shipping_reference ) ) {
 			$shipping_reference = $nets_shipping_reference;
-		} else {
-			if ( null !== $shipping_method->get_instance_id() ) {
+		} elseif ( null !== $shipping_method->get_instance_id() ) {
 				$shipping_reference = 'shipping|' . $shipping_method->get_method_id() . ':' . $shipping_method->get_instance_id();
-			} else {
-				$shipping_reference = 'shipping|' . $shipping_method->get_method_id();
-			}
+		} else {
+			$shipping_reference = 'shipping|' . $shipping_method->get_method_id();
 		}
 
 		return array(
@@ -181,30 +213,6 @@ class Nets_Easy_Order_Items_Helper {
 	 * @return array
 	 */
 	public static function process_gift_cards( $order_id, $order, $items ) {
-
-		$yith_giftcards = $order->get_meta( '_ywgc_applied_gift_cards' );
-
-		if ( ! empty( $yith_giftcards ) ) {
-			foreach ( $yith_giftcards as $yith_giftcard_code => $yith_giftcard_value ) {
-
-				$label        = apply_filters( 'yith_ywgc_cart_totals_gift_card_label', esc_html( __( 'Gift card:', 'yith-woocommerce-gift-cards' ) . ' ' . $yith_giftcard_code ), $yith_giftcard_code );
-				$giftcard_sku = apply_filters( 'nets_yith_gift_card_sku', esc_html( $yith_giftcard_code ), $yith_giftcard_code );
-
-				$yith_giftcard_value = $yith_giftcard_value * 100 * -1;
-				$items[]             = array(
-					'reference'        => $giftcard_sku,
-					'name'             => $label,
-					'quantity'         => '1',
-					'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-					'unitPrice'        => $yith_giftcard_value,
-					'taxRate'          => 0,
-					'taxAmount'        => 0,
-					'grossTotalAmount' => $yith_giftcard_value,
-					'netTotalAmount'   => $yith_giftcard_value,
-				);
-			}
-		}
-
 		// Smart coupons.
 		if ( ! empty( $order->get_items( 'coupon' ) ) ) {
 			foreach ( $order->get_items( 'coupon' ) as $item_id => $item ) {
