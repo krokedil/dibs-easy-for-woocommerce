@@ -465,7 +465,7 @@ jQuery( function ( $ ) {
          */
         unblockUI: () => {
             $( ".woocommerce-checkout-review-order-table" ).unblock()
-            $( "form.checkout" ).removeClass( "processing" ).unblock()
+            $( "#consumer_details" ).removeClass( "processing" ).unblock()
         },
 
         /**
@@ -507,9 +507,8 @@ jQuery( function ( $ ) {
             dibsEasyForWoocommerce.dibsCheckout.send( "payment-order-finalized", false )
             // Reenable the form.
             dibsEasyForWoocommerce.bodyEl.trigger( "updated_checkout" )
-            $( dibsEasyForWoocommerce.checkoutFormSelector ).removeClass( "processing" )
-            // $( dibsEasyForWoocommerce.checkoutFormSelector ).unblock();
-            // $( '.woocommerce-checkout-review-order-table' ).unblock();
+            $(dibsEasyForWoocommerce.checkoutFormSelector).removeClass("processing")
+            dibsEasyForWoocommerce.unblockUI()
 
             // Print error messages, and trigger checkout_error, and scroll to notices.
             $( ".woocommerce-NoticeGroup-checkout," + ".woocommerce-error," + ".woocommerce-message" ).remove()
