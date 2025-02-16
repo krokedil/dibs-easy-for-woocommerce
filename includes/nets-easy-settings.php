@@ -125,9 +125,11 @@ return apply_filters(
 			'type'        => 'select',
 			'options'     => array(
 				'embedded' => __( 'Embedded', 'dibs-easy-for-woocommerce' ),
+				'inline'   => __( 'Embedded (inline)', 'dibs-easy-for-woocommerce' ),
 				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
 				'overlay'  => __( 'Overlay', 'dibs-easy-for-woocommerce' ),
 			),
+			// TODO: Add explanation for "inline" (placeholder name).
 			'description' => __( 'Select how Nexi Checkout should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nexi. <strong>Overlay</strong> – similar logic as redirect flow but the hosted payment window is displayed in an overlay on desktop.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'embedded',
 			'desc_tip'    => false,

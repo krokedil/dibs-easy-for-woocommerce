@@ -6,6 +6,7 @@ jQuery( function ( $ ) {
     if ( typeof wcDibsEasy === "undefined" ) {
         return false
     }
+
     /**
      * The main object.
      *
@@ -346,13 +347,8 @@ jQuery( function ( $ ) {
          * Submit the order using the WooCommerce AJAX function.
          */
         submitOrder() {
-            $( ".woocommerce-checkout-review-order-table" ).block( {
-                message: null,
-                overlayCSS: {
-                    background: "#fff",
-                    opacity: 0.6,
-                },
-            } )
+            dibsEasyForWoocommerce.blockUI()
+
             $.ajax( {
                 type: "POST",
                 url: wcDibsEasy.submitOrder,
@@ -390,6 +386,8 @@ jQuery( function ( $ ) {
                         "ajax-error",
                         '<div class="woocommerce-error">Internal Server Error</div>',
                     )
+
+                    dibsEasyForWoocommerce.unblockUI()
                 },
             } )
         },
@@ -461,6 +459,40 @@ jQuery( function ( $ ) {
                 },
             } )
         },
+        /**
+         * Unblocks the UI.
+         * @returns {void}
+         */
+        unblockUI: () => {
+            $( ".woocommerce-checkout-review-order-table" ).unblock()
+            $( "form.checkout" ).removeClass( "processing" ).unblock()
+        },
+
+        /**
+         * Blocks the UI.
+         * @returns {void}
+         */
+        blockUI: () => {
+            /* Order review. */
+            $( ".woocommerce-checkout-review-order-table" ).block( {
+                message: null,
+                overlayCSS: {
+                    background: "#fff",
+                    opacity: 0.6,
+                },
+            } )
+
+            // form.checkout will block the inlined Nexi payment form.
+            $( "#customer_details" ).addClass( "processing" )
+            $( "#customer_details" ).block( {
+                message: null,
+                overlayCSS: {
+                    background: "#fff",
+                    opacity: 0.6,
+                },
+            } )
+        },
+
         /**
          * Fails the order with Dibs Easy on a checkout error and timeout.
          *

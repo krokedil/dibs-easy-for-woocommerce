@@ -51,7 +51,7 @@ class Nets_Easy_Assets {
 		$this->test_mode     = $this->settings['test_mode'] ?? 'no';
 		$this->checkout_flow = $this->settings['checkout_flow'] ?? '';
 
-		if ( 'embedded' === $this->checkout_flow ) {
+		if ( nexi_is_embedded( $this->checkout_flow ) ) {
 
 			/* For block-based themes, the template process is processed BEFORE the `wp_enqueue_script`. We need to enqueue the scripts in 'dibs_load_js' before the localized script is enqueued which depends on the former. The `init` hook cannot be used since `is_checkout` always returns false. With `template_redirect`, `is_checkout` returns the correct value, and is processed before the localization script is enqueued. */
 			add_action( 'template_redirect', array( $this, 'dibs_load_js' ), 10 );
@@ -113,7 +113,6 @@ class Nets_Easy_Assets {
 	 * Loads scripts for the plugin.
 	 */
 	public function dibs_load_js() {
-
 		if ( 'yes' !== $this->enabled ) {
 			return;
 		}
@@ -155,7 +154,9 @@ class Nets_Easy_Assets {
 			true
 		);
 
-		$params = array(
+		$settings = get_option( 'woocommerce_dibs_easy_settings', array() );
+		$params   = array(
+			'checkout_flow'             => $settings['checkout_flow'] ?? 'embedded',
 			'change_payment_method_url' => WC_AJAX::get_endpoint( 'change_payment_method' ),
 			'nets_checkout_nonce'       => wp_create_nonce( 'nets_checkout' ),
 		);
@@ -172,7 +173,6 @@ class Nets_Easy_Assets {
 	 * Loads scripts for the plugin - overlay checkout mode.
 	 */
 	public function load_overlay_js() {
-
 		if ( 'yes' !== $this->enabled ) {
 			return;
 		}

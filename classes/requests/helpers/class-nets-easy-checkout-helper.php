@@ -31,7 +31,7 @@ class Nets_Easy_Checkout_Helper {
 		$checkout = array(
 			'termsUrl' => wc_get_page_permalink( 'terms' ),
 		);
-		if ( 'embedded' === $checkout_flow ) {
+		if ( nexi_is_embedded( $checkout_flow ) ) {
 			$checkout['url']                   = wc_get_checkout_url();
 			$checkout['shipping']['countries'] = array();
 
@@ -48,6 +48,9 @@ class Nets_Easy_Checkout_Helper {
 
 			$checkout['consumer'] = self::prefill_embedded_customer_data();
 
+			if ( 'inline' === $checkout_flow ) {
+				$checkout['merchantHandlesConsumerData'] = true;
+			}
 		} else {
 			$order      = wc_get_order( $order_id );
 			$return_url = add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() );

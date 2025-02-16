@@ -180,9 +180,12 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				return;
 			}
 
-			if ( 'embedded' === $this->checkout_flow ) {
+			if ( in_array( $this->checkout_flow, array( 'embedded', 'inline' ), true ) ) {
 				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
 			}
+
+			// Functions are used in the files below.
+			include_once plugin_basename( 'includes/nets-easy-functions.php' );
 
 			include_once plugin_basename( 'classes/class-nets-easy-ajax.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-order-management.php' );
@@ -195,7 +198,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-subscriptions.php' );
 
 			include_once plugin_basename( 'includes/nets-easy-country-converter.php' );
-			include_once plugin_basename( 'includes/nets-easy-functions.php' );
 
 			include_once plugin_basename( 'classes/requests/class-nets-easy-request.php' );
 			include_once plugin_basename( 'classes/requests/class-nets-easy-request-post.php' );

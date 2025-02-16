@@ -163,8 +163,8 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		}
 		// Regular purchase.
 		// Embedded flow.
-		if ( 'embedded' === $this->checkout_flow && ! is_wc_endpoint_url( 'order-pay' ) ) {
-			$order->update_meta_data( '_dibs_checkout_flow', 'embedded' );
+		if ( nexi_is_embedded( $this->checkout_flow ) && ! is_wc_endpoint_url( 'order-pay' ) ) {
+			$order->update_meta_data( '_dibs_checkout_flow', $this->checkout_flow );
 			$order->save();
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
 			return $this->process_embedded_handler( $order_id );
@@ -240,7 +240,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		$order = wc_get_order( $order_id );
 
 		// Embedded or redirect checkout flow.
-		if ( 'embedded' === $this->checkout_flow ) {
+		if ( nexi_is_embedded( $this->checkout_flow ) ) {
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
 			if ( empty( $order->get_date_paid() ) ) {
 				wc_dibs_confirm_dibs_order( $order_id );
