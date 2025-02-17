@@ -6,7 +6,7 @@ Tested up to: 6.6.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.2.0
-Stable tag: 2.10.0
+Stable tag: 2.10.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,9 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2025.02.17    - version 2.10.1 =
+* Fix           - Added missing dependencies folder.
+
 = 2025.02.17    - version 2.10.0 =
 * Feature       - Added support for the gift card plugins "Gift Cards" by Woo, "PW WooCommerce Gift Cards" by Pimwick, "YITH WooCommerce Gift Cards" by YITH, and "WooCommerce Smart Coupons" by StoreApps.
 * Fix           - The overlay should now close as intended when the customer clicks on the return to store button.
