@@ -1,15 +1,15 @@
-# Copyright (C) 2024 Krokedil
+# Copyright (C) 2025 Krokedil
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout 2.9.4\n"
+"Project-Id-Version: Nexi Checkout 2.10.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2024-11-09 03:39:43+00:00\n"
+"POT-Creation-Date: 2025-02-17 09:40:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
@@ -61,11 +61,11 @@ msgid ""
 "not match. Nexi order total: %s."
 msgstr ""
 
-#: classes/class-nets-easy-assets.php:246
+#: classes/class-nets-easy-assets.php:265
 msgid "Please wait while we process your order..."
 msgstr ""
 
-#: classes/class-nets-easy-assets.php:247
+#: classes/class-nets-easy-assets.php:266
 msgid "Please fill in all required checkout fields."
 msgstr ""
 
@@ -164,17 +164,16 @@ msgid ""
 msgstr ""
 
 #: classes/class-nets-easy-subscriptions.php:103
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:63
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:87
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:117
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:137
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:164
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:177
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:69
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:83
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:108
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:123
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:150
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:163
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:83
 #: classes/requests/helpers/class-nets-easy-order-items-helper.php:108
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:147
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:198
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:231
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:142
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:179
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:239
 #: classes/requests/helpers/class-nets-easy-payment-method-helper.php:40
 #: classes/requests/helpers/class-nets-easy-refund-helper.php:112
 #: classes/requests/helpers/class-nets-easy-refund-helper.php:171
@@ -287,26 +286,30 @@ msgstr ""
 msgid "Nexi Checkout Trustly payment"
 msgstr ""
 
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:51
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:76
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:190
-#: classes/requests/helpers/class-nets-easy-order-items-helper.php:220
+#: classes/requests/helpers/class-nets-easy-order-items-helper.php:228
 msgid "Gift card:"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:148 dibs-easy-for-woocommerce.php:157
+#: dibs-easy-for-woocommerce.php:157 dibs-easy-for-woocommerce.php:166
 msgid "Nope"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:259
+#: dibs-easy-for-woocommerce.php:290 dibs-easy-for-woocommerce.php:299
+msgid ""
+"Your installation of Nexi Checkout is not complete. If you installed this "
+"plugin directly from Github please refer to the README.DEV.md file in the "
+"plugin."
+msgstr ""
+
+#: dibs-easy-for-woocommerce.php:318
 msgid "Settings"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:260
+#: dibs-easy-for-woocommerce.php:319
 msgid "Docs"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:261
+#: dibs-easy-for-woocommerce.php:320
 msgid "Support"
 msgstr ""
 

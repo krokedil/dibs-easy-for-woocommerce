@@ -19,21 +19,21 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 	 *
 	 * @var string
 	 */
-	public $checkout_flow;
+	public $checkout_flow = 'redirect';
 
 	/**
 	 * The payment gateway icon.
 	 *
 	 * @var string
 	 */
-	public $payment_gateway_icon;
+	public $payment_gateway_icon = 'default';
 
 	/**
 	 * The payment gateway icon width.
 	 *
 	 * @var string
 	 */
-	public $payment_gateway_icon_max_width;
+	public $payment_gateway_icon_max_width = '145';
 
 	/**
 	 * DIBS_Easy_Gateway constructor.
@@ -46,18 +46,18 @@ class Nets_Easy_Gateway_Swish extends WC_Payment_Gateway {
 
 		$this->method_description = __( 'Nexi Checkout Swish payment', 'dibs-easy-for-woocommerce' );
 
-		$this->description = $this->get_option( 'description' );
+		$this->description = $this->get_option( 'description', $this->method_description );
 
 		// Load the form fields.
 		$this->init_form_fields();
 		// Load the settings.
 		$this->init_settings();
 		// Get the settings values.
-		$this->title                          = $this->get_option( 'title' );
+		$this->title                          = $this->get_option( 'title', $this->method_title );
 		$this->enabled                        = $this->get_option( 'enabled' );
-		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'redirect';
-		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? 'default';
-		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? '145';
+		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? $this->checkout_flow;
+		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? $this->payment_gateway_icon;
+		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? $this->payment_gateway_icon_max_width;
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
