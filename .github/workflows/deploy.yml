@@ -8,6 +8,9 @@ jobs:
     name: New tag
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+
       # Build the plugin with dev dependencies to scope the dependency packages.
       - name: Composer Install (Dev)
         run: composer install
@@ -15,6 +18,12 @@ jobs:
       # Build the plugin for release.
       - name: Composer Install (Prod)
         run: composer install --no-dev
+
+      # Install SVN ( Subversion )
+      - name: Install SVN ( Subversion )
+        run: |
+          sudo apt-get update
+          sudo apt-get install subversion
 
       - uses: actions/checkout@master
       - name: WordPress Plugin Deploy
