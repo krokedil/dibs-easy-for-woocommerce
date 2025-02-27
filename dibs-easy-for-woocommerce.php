@@ -272,6 +272,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			$autoloader = WC_DIBS_PATH . '/dependencies/scoper-autoload.php';
 
 			if ( ! is_readable( $autoloader ) ) {
+				self::missing_autoloader();
 				return false;
 			}
 
