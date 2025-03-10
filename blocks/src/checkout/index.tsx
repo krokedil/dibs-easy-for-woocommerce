@@ -14,11 +14,11 @@ import { getSetting } from "@woocommerce/settings";
 import { Label, NetsEasyCheckout } from "../shared/nets-easy-checkout";
 
 const settings: any = getSetting("nets_easy_data", {});
-const title: string = decodeEntities(settings.title || "Nets Easy");
 
 // Loop each key in settings and register the payment method with the key as the name
 Object.keys(settings).forEach((key) => {
-  const { enabled, title, description, icon, buttonLabel } = settings[key];
+
+  const { enabled, title, description, icon, buttonLabel, features } = settings[key];
   console.log(
     "Registering payment method",
     key,
@@ -36,9 +36,16 @@ Object.keys(settings).forEach((key) => {
     placeOrderButtonLabel: buttonLabel,
     canMakePayment: () => enabled,
     ariaLabel: title,
+    supports: {
+      features
+    }
   };
 
+  console.log('features %s', features)
+  console.log('settings', settings)
   console.log(registerPaymentMethod);
 
   registerPaymentMethod(options);
+
+
 });
