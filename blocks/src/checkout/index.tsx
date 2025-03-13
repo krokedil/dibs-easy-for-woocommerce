@@ -41,8 +41,6 @@ Object.keys(settings).forEach((key) => {
     }
   };
 
-  console.log('features %s', features)
-  console.log('settings', settings)
   console.log(registerPaymentMethod);
 
   registerPaymentMethod(options);
