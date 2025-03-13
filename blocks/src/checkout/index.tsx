@@ -19,14 +19,6 @@ const settings: any = getSetting("nets_easy_data", {});
 Object.keys(settings).forEach((key) => {
 
   const { enabled, title, description, icon, buttonLabel, features } = settings[key];
-  console.log(
-    "Registering payment method",
-    key,
-    enabled,
-    title,
-    description,
-    icon
-  );
 
   const options = {
     name: key,
@@ -41,9 +33,5 @@ Object.keys(settings).forEach((key) => {
     }
   };
 
-  console.log(registerPaymentMethod);
-
   registerPaymentMethod(options);
-
-
 });
