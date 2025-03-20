@@ -60,8 +60,8 @@ class Nets_Easy_Templates {
 	public function override_template( $template, $template_name ) {
 		if ( is_checkout() ) {
 
-			// Don't display DIBS Easy template if we have a cart that doesn't needs payment.
-			if ( ! WC()->cart->needs_payment() ) {
+			// If the cart doesn't exist, this is probably the checkout edit page. To prevent the page from blanking, we'll just return the default template.
+			if ( ! isset( WC()->cart ) || ! WC()->cart->needs_payment() ) {
 				return $template;
 			}
 
