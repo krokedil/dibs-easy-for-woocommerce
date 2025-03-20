@@ -35,6 +35,8 @@ jQuery( function ( $ ) {
                 dibsEasyForWoocommerce.selectAnotherSelector,
                 dibsEasyForWoocommerce.changeFromDibsEasy,
             )
+
+            $('#nexi-inline-close-modal').on('click', dibsEasyForWoocommerce.toggleInlineOverlay)
         },
 
         /**
@@ -228,6 +230,11 @@ jQuery( function ( $ ) {
                 "applepay-contact-updated",
                 dibsEasyForWoocommerce.applePayAddressChanged,
             )
+
+            dibsEasyForWoocommerce.dibsCheckout.on("pay-initialized", () => { 
+                dibsEasyForWoocommerce.toggleInlineOverlay()
+                dibsEasyForWoocommerce.logToFile("Pay initialized event is triggered.")
+            } )
         },
         /**
          * Triggers when customer clicks the pay button.
@@ -340,7 +347,7 @@ jQuery( function ( $ ) {
             if ( $( dibsEasyForWoocommerce.wooTerms ).length > 0 ) {
                 $( dibsEasyForWoocommerce.wooTerms ).prop( "checked", true )
             }
-            $( "input#ship-to-different-address-checkbox" ).prop( "checked", true )
+            $("input#ship-to-different-address-checkbox").prop("checked", true)
             dibsEasyForWoocommerce.submitOrder()
         },
         /**
@@ -465,7 +472,7 @@ jQuery( function ( $ ) {
          */
         unblockUI: () => {
             $( ".woocommerce-checkout-review-order-table" ).unblock()
-            $( "#consumer_details" ).removeClass( "processing" ).unblock()
+            $("#consumer_details").removeClass("processing").unblock()
         },
 
         /**
@@ -490,7 +497,7 @@ jQuery( function ( $ ) {
                     background: "#fff",
                     opacity: 0.6,
                 },
-            } )
+            })
         },
 
         /**
@@ -529,6 +536,11 @@ jQuery( function ( $ ) {
                 1000,
             )
         },
+
+        toggleInlineOverlay: () => { 
+            $('#nexi-inline-modal').toggleClass('netseasy-modal')
+            $('#nexi-inline-modal-box').toggleClass('netseasy-modal-box')
+        }
     }
 
     dibsEasyForWoocommerce.init()

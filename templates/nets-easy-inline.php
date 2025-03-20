@@ -9,16 +9,21 @@
 
 do_action( 'wc_dibs_before_checkout_form' );
 ?>
-<div class="form-row place-order">
-	<div id="dibs-wrapper">
-		<div id="dibs-iframe">
-			<?php do_action( 'wc_dibs_before_snippet' ); ?>
-			<div id="dibs-complete-checkout"></div>
-			<?php do_action( 'wc_dibs_after_snippet' ); ?>
+<div id="nexi-inline-modal">
+	<div id="nexi-inline-modal-box">
+		<span id="nexi-inline-close-modal" class="close-netseasy-modal">&times;</span>
+		<div class="form-row place-order">
+			<div id="dibs-wrapper">
+				<div id="dibs-iframe">
+					<?php do_action( 'wc_dibs_before_snippet' ); ?>
+					<div id="dibs-complete-checkout"></div>
+					<?php do_action( 'wc_dibs_after_snippet' ); ?>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>
 
+</div>
 <?php
 do_action( 'wc_dibs_after_checkout_form' );
 ?>
