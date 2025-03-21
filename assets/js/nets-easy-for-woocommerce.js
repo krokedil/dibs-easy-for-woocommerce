@@ -473,7 +473,7 @@ jQuery( function ( $ ) {
          */
         unblockUI: () => {
             $( ".woocommerce-checkout-review-order-table" ).unblock()
-            $("#consumer_details").removeClass("processing").unblock()
+            $("#customer_details").removeClass("processing").unblock()
         },
 
         /**
