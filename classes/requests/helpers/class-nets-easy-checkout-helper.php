@@ -123,7 +123,7 @@ class Nets_Easy_Checkout_Helper {
 	/**
 	 * Gets customer address.
 	 *
-	 * @param object $order The WooCommerce order.
+	 * @param WC_Order $order The WooCommerce order.
 	 * @return array
 	 */
 	public static function get_consumer_address( $order ) {
@@ -249,8 +249,8 @@ class Nets_Easy_Checkout_Helper {
 			$consumer['shippingAddress']['addressLine2'] = $customer->get_billing_address_2();
 		}
 
-		$has_address = array_filter( $consumer['shippingAddress'] ?? array() );
-		if ( count( $has_address ) <= 1 ) {
+		$has_address = isset( $consumer['shippingAddress']['addressLine1'] );
+		if ( ! $has_address ) {
 			unset( $consumer['shippingAddress'] );
 		}
 
