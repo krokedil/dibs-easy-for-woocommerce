@@ -223,7 +223,6 @@ jQuery( function ( $ ) {
                 containerId: "dibs-complete-checkout",
                 language: wcDibsEasy.locale,
             } )
-            dibsEasyForWoocommerce.dibsCheckout.on( "pay-initialized", dibsEasyForWoocommerce.getDibsEasyOrder )
             dibsEasyForWoocommerce.dibsCheckout.on( "payment-completed", dibsEasyForWoocommerce.paymentCompleted )
             dibsEasyForWoocommerce.dibsCheckout.on( "address-changed", dibsEasyForWoocommerce.addressChanged )
             dibsEasyForWoocommerce.dibsCheckout.on(
@@ -233,7 +232,6 @@ jQuery( function ( $ ) {
 
             dibsEasyForWoocommerce.dibsCheckout.on("pay-initialized", (paymentId) => {
                 dibsEasyForWoocommerce.getDibsEasyOrder(paymentId)
-                dibsEasyForWoocommerce.toggleInlineOverlay()
                 dibsEasyForWoocommerce.logToFile("Pay initialized event is triggered.")
             } )
         },
@@ -362,7 +360,9 @@ jQuery( function ( $ ) {
                 url: wcDibsEasy.submitOrder,
                 data: $( "form.checkout" ).serialize(),
                 dataType: "json",
-                success( data ) {
+                success(data) {
+
+                    dibsEasyForWoocommerce.toggleInlineOverlay()
                     try {
                         if ( "success" === data.result ) {
                             dibsEasyForWoocommerce.logToFile( "Successfully placed order." )
