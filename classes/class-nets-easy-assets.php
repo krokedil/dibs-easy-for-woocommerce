@@ -67,7 +67,6 @@ class Nets_Easy_Assets {
 		}
 
 		if ( 'inline' === $this->checkout_flow ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'load_overlay_js' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'dibs_overlay_css' ) );
 			add_action( 'wp_print_scripts', array( $this, 'inject_iframe_script' ) );
 		}
