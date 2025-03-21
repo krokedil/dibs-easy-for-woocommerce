@@ -36,7 +36,10 @@ jQuery( function ( $ ) {
                 dibsEasyForWoocommerce.changeFromDibsEasy,
             )
 
-            $('#nexi-inline-close-modal').on('click', dibsEasyForWoocommerce.toggleInlineOverlay)
+            $('#nexi-inline-close-modal').on('click', () => { 
+                dibsEasyForWoocommerce.toggleInlineOverlay()
+                dibsEasyForWoocommerce.unblockUI()
+            })
         },
 
         /**
