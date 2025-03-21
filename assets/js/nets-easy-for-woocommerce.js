@@ -231,7 +231,8 @@ jQuery( function ( $ ) {
                 dibsEasyForWoocommerce.applePayAddressChanged,
             )
 
-            dibsEasyForWoocommerce.dibsCheckout.on("pay-initialized", () => { 
+            dibsEasyForWoocommerce.dibsCheckout.on("pay-initialized", (paymentId) => {
+                dibsEasyForWoocommerce.getDibsEasyOrder(paymentId)
                 dibsEasyForWoocommerce.toggleInlineOverlay()
                 dibsEasyForWoocommerce.logToFile("Pay initialized event is triggered.")
             } )
