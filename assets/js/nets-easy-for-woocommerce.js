@@ -365,12 +365,12 @@ jQuery( function ( $ ) {
                 dataType: "json",
                 success(data) {
 
-                    dibsEasyForWoocommerce.toggleInlineOverlay()
                     try {
                         if ( "success" === data.result ) {
                             dibsEasyForWoocommerce.logToFile( "Successfully placed order." )
                             window.sessionStorage.setItem( "redirectNets", data.redirect )
                             dibsEasyForWoocommerce.dibsCheckout.send( "payment-order-finalized", true )
+                            dibsEasyForWoocommerce.toggleInlineOverlay()
                         } else {
                             throw "Result failed"
                         }
