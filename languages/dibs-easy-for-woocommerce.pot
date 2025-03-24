@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout 2.10.0\n"
+"Project-Id-Version: Nexi Checkout 2.10.3\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2025-02-17 09:40:57+00:00\n"
+"POT-Creation-Date: 2025-03-24 09:23:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -294,22 +294,22 @@ msgstr ""
 msgid "Nope"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:290 dibs-easy-for-woocommerce.php:299
+#: dibs-easy-for-woocommerce.php:291 dibs-easy-for-woocommerce.php:300
 msgid ""
 "Your installation of Nexi Checkout is not complete. If you installed this "
 "plugin directly from Github please refer to the README.DEV.md file in the "
 "plugin."
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:318
+#: dibs-easy-for-woocommerce.php:319
 msgid "Settings"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:319
+#: dibs-easy-for-woocommerce.php:320
 msgid "Docs"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:320
+#: dibs-easy-for-woocommerce.php:321
 msgid "Support"
 msgstr ""
 

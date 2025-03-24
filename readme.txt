@@ -6,7 +6,7 @@ Tested up to: 6.7.2
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.7.0
-Stable tag: 2.10.2
+Stable tag: 2.10.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,11 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2025.03.24    - version 2.10.3 =
+* Fix           - Declared support for subscriptions in blocks.
+* Fix           - Fixed checkout page in admin pages from blanking.
+* Fix           - Removed redundant console logging.
+
 = 2025.03.12    - version 2.10.2 =
 * Tweak         - Added an admin notice for missing dependencies when needed.
 
