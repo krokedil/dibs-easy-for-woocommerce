@@ -6,7 +6,6 @@ jQuery( function ( $ ) {
     if ( typeof wcDibsEasy === "undefined" ) {
         return false
     }
-
     /**
      * The main object.
      *
@@ -35,11 +34,6 @@ jQuery( function ( $ ) {
                 dibsEasyForWoocommerce.selectAnotherSelector,
                 dibsEasyForWoocommerce.changeFromDibsEasy,
             )
-
-            $('#nexi-inline-close-modal').on('click', () => { 
-                dibsEasyForWoocommerce.toggleInlineOverlay()
-                dibsEasyForWoocommerce.unblockUI()
-            })
         },
 
         /**
@@ -226,17 +220,13 @@ jQuery( function ( $ ) {
                 containerId: "dibs-complete-checkout",
                 language: wcDibsEasy.locale,
             } )
+            dibsEasyForWoocommerce.dibsCheckout.on( "pay-initialized", dibsEasyForWoocommerce.getDibsEasyOrder )
             dibsEasyForWoocommerce.dibsCheckout.on( "payment-completed", dibsEasyForWoocommerce.paymentCompleted )
             dibsEasyForWoocommerce.dibsCheckout.on( "address-changed", dibsEasyForWoocommerce.addressChanged )
             dibsEasyForWoocommerce.dibsCheckout.on(
                 "applepay-contact-updated",
                 dibsEasyForWoocommerce.applePayAddressChanged,
             )
-
-            dibsEasyForWoocommerce.dibsCheckout.on("pay-initialized", (paymentId) => {
-                dibsEasyForWoocommerce.getDibsEasyOrder(paymentId)
-                dibsEasyForWoocommerce.logToFile("Pay initialized event is triggered.")
-            } )
         },
         /**
          * Triggers when customer clicks the pay button.
@@ -349,28 +339,31 @@ jQuery( function ( $ ) {
             if ( $( dibsEasyForWoocommerce.wooTerms ).length > 0 ) {
                 $( dibsEasyForWoocommerce.wooTerms ).prop( "checked", true )
             }
-            $("input#ship-to-different-address-checkbox").prop("checked", true)
+            $( "input#ship-to-different-address-checkbox" ).prop( "checked", true )
             dibsEasyForWoocommerce.submitOrder()
         },
         /**
          * Submit the order using the WooCommerce AJAX function.
          */
         submitOrder() {
-            dibsEasyForWoocommerce.blockUI()
-
+            $( ".woocommerce-checkout-review-order-table" ).block( {
+                message: null,
+                overlayCSS: {
+                    background: "#fff",
+                    opacity: 0.6,
+                },
+            } )
             $.ajax( {
                 type: "POST",
                 url: wcDibsEasy.submitOrder,
                 data: $( "form.checkout" ).serialize(),
                 dataType: "json",
-                success(data) {
-
+                success( data ) {
                     try {
                         if ( "success" === data.result ) {
                             dibsEasyForWoocommerce.logToFile( "Successfully placed order." )
                             window.sessionStorage.setItem( "redirectNets", data.redirect )
                             dibsEasyForWoocommerce.dibsCheckout.send( "payment-order-finalized", true )
-                            dibsEasyForWoocommerce.toggleInlineOverlay()
                         } else {
                             throw "Result failed"
                         }
@@ -397,8 +390,6 @@ jQuery( function ( $ ) {
                         "ajax-error",
                         '<div class="woocommerce-error">Internal Server Error</div>',
                     )
-
-                    dibsEasyForWoocommerce.unblockUI()
                 },
             } )
         },
@@ -471,40 +462,6 @@ jQuery( function ( $ ) {
             } )
         },
         /**
-         * Unblocks the UI.
-         * @returns {void}
-         */
-        unblockUI: () => {
-            $( ".woocommerce-checkout-review-order-table" ).unblock()
-            $("#customer_details").removeClass("processing").unblock()
-        },
-
-        /**
-         * Blocks the UI.
-         * @returns {void}
-         */
-        blockUI: () => {
-            /* Order review. */
-            $( ".woocommerce-checkout-review-order-table" ).block( {
-                message: null,
-                overlayCSS: {
-                    background: "#fff",
-                    opacity: 0.6,
-                },
-            } )
-
-            // form.checkout will block the inlined Nexi payment form.
-            $( "#customer_details" ).addClass( "processing" )
-            $( "#customer_details" ).block( {
-                message: null,
-                overlayCSS: {
-                    background: "#fff",
-                    opacity: 0.6,
-                },
-            })
-        },
-
-        /**
          * Fails the order with Dibs Easy on a checkout error and timeout.
          *
          * @param {string} event
@@ -518,8 +475,9 @@ jQuery( function ( $ ) {
             dibsEasyForWoocommerce.dibsCheckout.send( "payment-order-finalized", false )
             // Reenable the form.
             dibsEasyForWoocommerce.bodyEl.trigger( "updated_checkout" )
-            $(dibsEasyForWoocommerce.checkoutFormSelector).removeClass("processing")
-            dibsEasyForWoocommerce.unblockUI()
+            $( dibsEasyForWoocommerce.checkoutFormSelector ).removeClass( "processing" )
+            // $( dibsEasyForWoocommerce.checkoutFormSelector ).unblock();
+            // $( '.woocommerce-checkout-review-order-table' ).unblock();
 
             // Print error messages, and trigger checkout_error, and scroll to notices.
             $( ".woocommerce-NoticeGroup-checkout," + ".woocommerce-error," + ".woocommerce-message" ).remove()
@@ -540,11 +498,6 @@ jQuery( function ( $ ) {
                 1000,
             )
         },
-
-        toggleInlineOverlay: () => { 
-            $('#nexi-inline-modal').toggleClass('netseasy-modal')
-            $('#nexi-inline-modal-box').toggleClass('netseasy-modal-box')
-        }
     }
 
     dibsEasyForWoocommerce.init()
