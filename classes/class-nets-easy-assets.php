@@ -133,8 +133,7 @@ class Nets_Easy_Assets {
 		$script_url = $this->get_script_url();
 		wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
 
-		$script_version = $this->nets_easy_is_script_debug_enabled();
-		$src            = WC_DIBS__URL . '/assets/js/nexi-checkout-inline' . $script_version . '.js';
+		$src = WC_DIBS__URL . '/assets/js/nexi-checkout-inline.js';
 		wp_register_script(
 			'nexi-checkout-inline',
 			$src,
