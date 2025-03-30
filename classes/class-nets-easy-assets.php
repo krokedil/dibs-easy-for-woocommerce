@@ -120,7 +120,17 @@ class Nets_Easy_Assets {
 	 * @return void
 	 */
 	public function nexi_inline_js() {
-		if ( ! is_checkout() ) {
+		if ( 'yes' !== $this->enabled ) {
+			return;
+		}
+
+		/* On the 'order-pay' page we redirect the customer to a hosted payment page, and therefore don't need need to enqueue any of the following assets. */
+		if ( ! is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
+			return;
+		}
+
+		// There is no 'thank-you' snippet to show. Use the standard WC template.
+		if ( is_wc_endpoint_url( 'order-received' ) ) {
 			return;
 		}
 
