@@ -180,10 +180,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				return;
 			}
 
-			if ( in_array( $this->checkout_flow, array( 'embedded', 'inline' ), true ) ) {
-				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
-			}
-
 			// Functions are used in the files below.
 			include_once plugin_basename( 'includes/nets-easy-functions.php' );
 
@@ -228,6 +224,10 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-assets.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-api.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-checkout.php' );
+
+			if ( nexi_is_embedded( $this->checkout_flow ) ) {
+				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
+			}
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 
