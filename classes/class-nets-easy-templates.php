@@ -61,11 +61,12 @@ class Nets_Easy_Templates {
 			return $template;
 		}
 
-		if ( ! WC()->cart->needs_payment() ) {
+		// If the cart doesn't exist, this is probably the checkout edit page. To prevent the page from blanking, we'll just return the default template.
+		if ( ! isset( WC()->cart ) || ! WC()->cart->needs_payment() ) {
 			return $template;
 		}
 
-		if ( is_wc_endpoint_url( 'order-pay' ) ) {
+		if ( is_checkout_pay_page() ) {
 			return $template;
 		}
 
