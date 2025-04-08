@@ -3,6 +3,12 @@ jQuery( function ( $ ) {
         return false
     }
 
+    const log = (...args) => {
+        if (nexiCheckoutParams.debug) { 
+            console.log(...args)
+        }
+    }
+
     /**
      * The main object.
      *
@@ -71,10 +77,10 @@ jQuery( function ( $ ) {
          *
          */
         applePayAddressChanged( address ) {
-            console.log( "applepay-contact-updated", address )
+            log( "applepay-contact-updated", address )
             wcNexiCheckout.logToFile( "ApplePay address changed is triggered." )
             if ( address ) {
-                console.log( "applepay-contact-updated" )
+                log( "applepay-contact-updated" )
                 $.ajax( {
                     type: "POST",
                     dataType: "json",
@@ -88,9 +94,9 @@ jQuery( function ( $ ) {
                     success( response ) {},
                     error( response ) {},
                     complete( response ) {
-                        console.log( "COMPLETED" )
-                        console.log( "customer_address_updated " )
-                        console.log( response.responseJSON.data )
+                        log( "COMPLETED" )
+                        log( "customer_address_updated " )
+                        log( response.responseJSON.data )
                         wcNexiCheckout.updateAddress( response.responseJSON.data )
                         wcNexiCheckout.nexiCheckout.completeApplePayShippingContactUpdate(
                             response.responseJSON.data.cart_total,
@@ -199,8 +205,8 @@ jQuery( function ( $ ) {
                 success( data ) {},
                 error( data ) {},
                 complete( data ) {
-                    console.log( "Change payment method success" )
-                    console.log( data.responseJSON.data.redirect )
+                    log( "Change payment method success" )
+                    log( data.responseJSON.data.redirect )
                     wcNexiCheckout.bodyEl.removeClass( "dibs-selected" )
                     window.location.href = data.responseJSON.data.redirect
                 },
@@ -212,7 +218,8 @@ jQuery( function ( $ ) {
          *
          * @param {string} message
          */
-        logToFile( message ) {
+        logToFile(message) {
+            log(message)
             $.ajax( {
                 url: nexiCheckoutParams.log_to_file_url,
                 type: "POST",

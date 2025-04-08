@@ -167,6 +167,7 @@ class Nets_Easy_Assets {
 				'log_to_file_nonce'         => wp_create_nonce( 'dibs_easy_wc_log_js' ),
 				'privateKey'                => $private_key,
 				'locale'                    => wc_dibs_get_locale(),
+				'debug'                     => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 			)
 		);
 		wp_enqueue_script( 'nexi-checkout-inline' );
@@ -339,6 +340,7 @@ class Nets_Easy_Assets {
 				'locale'                           => wc_dibs_get_locale(),
 				'isMobile'                         => wp_is_mobile(),
 				'shippingSelector'                 => apply_filters( 'nets_easy_shipping_selector', '.woocommerce-checkout-review-order-table' ),
+				'debug'                            => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 			)
 		);
 		wp_enqueue_script( 'nets-easy-checkout' );
