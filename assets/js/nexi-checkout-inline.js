@@ -25,11 +25,11 @@ jQuery( function ( $ ) {
          * Initialize the gateway
          */
         init() {
-            $( document ).ready( wcNexiCheckout.loadDibs )
+            $( document ).ready( wcNexiCheckout.loadNexi )
             wcNexiCheckout.bodyEl.on(
                 "click",
                 wcNexiCheckout.selectAnotherSelector,
-                wcNexiCheckout.changeFromDibsEasy,
+                wcNexiCheckout.changeFromNexiCheckout,
             )
 
             $('#nexi-inline-close-modal').on('click', () => { 
@@ -39,9 +39,9 @@ jQuery( function ( $ ) {
         },
 
         /**
-         * Check if DIBS Easy is the selected gateway.
+         * Check if Nexi Checkout is the selected gateway.
          */
-        dibsIsSelected() {
+        isGatewaySelected() {
             if ( wcNexiCheckout.paymentMethodEl.length > 0 ) {
                 wcNexiCheckout.paymentMethod = wcNexiCheckout.paymentMethodEl.filter( ":checked" ).val()
                 if ( "dibs_easy" === wcNexiCheckout.paymentMethod ) {
@@ -53,7 +53,7 @@ jQuery( function ( $ ) {
         /**
          * Triggers on document ready.
          */
-        loadDibs() {
+        loadNexi() {
             wcNexiCheckout.initNexiCheckout()
         },
 
@@ -91,8 +91,6 @@ jQuery( function ( $ ) {
                         address,
                         nonce: nexiCheckoutParams.nets_checkout_nonce,
                     },
-                    success( response ) {},
-                    error( response ) {},
                     complete( response ) {
                         log( "COMPLETED" )
                         log( "customer_address_updated " )
@@ -106,7 +104,7 @@ jQuery( function ( $ ) {
             }
         },
         /**
-         * Init Dibs Easy Checkout
+         * Initializes a new checkout instance from Nexi.
          */
         initNexiCheckout() {
             // Constructs a new Checkout object.
@@ -179,11 +177,11 @@ jQuery( function ( $ ) {
             } )
         },
         /**
-         * When the customer changes from Dibs Easy to other payment methods.
+         * When the customer changes from Nexi Checkout to a different payment method.
          *
          * @param {Event} e
          */
-        changeFromDibsEasy( e ) {
+        changeFromNexiCheckout( e ) {
             e.preventDefault()
             $( wcNexiCheckout.checkoutFormSelector ).block( {
                 message: null,
@@ -202,8 +200,6 @@ jQuery( function ( $ ) {
                     dibs_easy: false,
                     nonce: nexiCheckoutParams.nets_checkout_nonce,
                 },
-                success( data ) {},
-                error( data ) {},
                 complete( data ) {
                     log( "Change payment method success" )
                     log( data.responseJSON.data.redirect )
@@ -214,7 +210,7 @@ jQuery( function ( $ ) {
         },
 
         /**
-         * Logs the message to the Dibs Easy log in WooCommerce.
+         * Logs the message to the Nexi Checkout log in WooCommerce.
          *
          * @param {string} message
          */
@@ -265,7 +261,7 @@ jQuery( function ( $ ) {
         },
 
         /**
-         * Fails the order with Dibs Easy on a checkout error and timeout.
+         * Fails the order with Nexi Checkout on a checkout error and timeout.
          *
          * @param {string} event
          * @param {string} errorMessage
