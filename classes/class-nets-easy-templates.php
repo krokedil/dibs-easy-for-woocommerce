@@ -49,6 +49,38 @@ class Nets_Easy_Templates {
 	}
 
 	/**
+	 *
+	 * Checks whether Nexi is the selected payment method, or whether it should be considered selected.
+	 *
+	 * @return bool
+	 */
+	private function is_nexi_chosen() {
+		// Before we make any additional controls, let us verify the gateway is registered.
+		$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+		if ( ! array_key_exists( 'dibs_easy', $available_gateways ) ) {
+			return false;
+		}
+
+		$chosen_payment_method = WC()->session->get( 'chosen_payment_method' );
+		// If payment method doesn't exist, but Nexi is available, and is set to be the default, we can consider it as the chosen gateway.
+		if ( empty( $chosen_payment_method ) ) {
+			// Check the WC payment settings.
+			if ( isset( $available_gateways[ $chosen_payment_method ] ) || 'dibs_easy' === array_key_first( $available_gateways ) ) {
+				return true;
+			}
+		}
+
+		// Check the session.
+		if ( 'dibs_easy' === $chosen_payment_method ) {
+			return true;
+		}
+
+		return false;
+	}
+
+
+
+	/**
 	 * Override checkout form template if DIBS Easy is the selected payment method.
 	 *
 	 * @param string $template      Template.
@@ -70,6 +102,10 @@ class Nets_Easy_Templates {
 			return $template;
 		}
 
+		if ( ! $this->is_nexi_chosen() ) {
+			return $template;
+		}
+
 		$checkout_flow = get_option( 'woocommerce_dibs_easy_settings' )['checkout_flow'] ?? 'embedded';
 		if ( 'inline' === $checkout_flow ) {
 			return $this->replace_payment_method( $template, $template_name );
@@ -87,26 +123,11 @@ class Nets_Easy_Templates {
 	 */
 	public function maybe_replace_checkout( $template, $template_name ) {
 		if ( 'checkout/form-checkout.php' === $template_name ) {
-			$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
-			if ( ! array_key_exists( 'dibs_easy', $available_gateways ) ) {
-				return $template;
-			}
 
 			$maybe_template = locate_template( 'woocommerce/nets-easy-checkout.php' );
 			$nexi_template  = $maybe_template ? $maybe_template : WC_DIBS_PATH . '/templates/nets-easy-checkout.php';
 
-			$chosen_payment_method = WC()->session->chosen_payment_method;
-			if ( 'dibs_easy' === $chosen_payment_method ) {
-				return $nexi_template;
-			}
-
-			if ( empty( $chosen_payment_method ) && 'dibs_easy' === array_key_first( $available_gateways ) ) {
-				return $nexi_template;
-			}
-
-			if ( ! isset( $available_gateways[ $chosen_payment_method ] ) && 'dibs_easy' === array_key_first( $available_gateways ) ) {
-				return $nexi_template;
-			}
+			return $nexi_template;
 		}
 
 		return $template;
