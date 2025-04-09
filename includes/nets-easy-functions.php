@@ -449,3 +449,33 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
 function nexi_is_embedded( $checkout_flow ) {
 	return in_array( $checkout_flow, array( 'embedded', 'inline' ), true );
 }
+
+/**
+ *
+ * Checks whether Nexi is the selected payment method, or whether it should be considered selected.
+ *
+ * @return bool
+ */
+function nexi_is_chosen() {
+	// Before we make any additional controls, let us verify the gateway is registered.
+	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+	if ( ! array_key_exists( 'dibs_easy', $available_gateways ) ) {
+		return false;
+	}
+
+	$chosen_payment_method = WC()->session->get( 'chosen_payment_method' );
+	// If payment method doesn't exist, but Nexi is available, and is set to be the default, we can consider it as the chosen gateway.
+	if ( empty( $chosen_payment_method ) ) {
+		// Check the WC payment settings.
+		if ( isset( $available_gateways[ $chosen_payment_method ] ) || 'dibs_easy' === array_key_first( $available_gateways ) ) {
+			return true;
+		}
+	}
+
+	// Check the session.
+	if ( 'dibs_easy' === $chosen_payment_method ) {
+		return true;
+	}
+
+	return false;
+}
