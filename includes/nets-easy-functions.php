@@ -457,6 +457,11 @@ function nexi_is_embedded( $checkout_flow ) {
  * @return bool
  */
 function nexi_is_chosen() {
+	// Ensure we have the properties required for our checks. This may not always be the case, e.g., on admin page. We return true in these situations to exit early, and to avoid disrupt existing behavior.
+	if ( ! isset( WC()->session ) || ( ! method_exists( WC(), 'payment_gateways' ) || ! is_callable( array( WC(), 'payment_gateways' ) ) ) ) {
+		return true;
+	}
+
 	// Before we make any additional controls, let us verify the gateway is registered.
 	$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 	if ( ! array_key_exists( 'dibs_easy', $available_gateways ) ) {
