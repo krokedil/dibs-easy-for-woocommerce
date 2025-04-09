@@ -160,14 +160,14 @@ class Nets_Easy_Assets {
 			'nexi-checkout-inline',
 			'nexiCheckoutParams',
 			array(
-				'paymentId'                 => $payment_id,
-				'submitOrder'               => WC_AJAX::get_endpoint( 'checkout' ),
-				'change_payment_method_url' => WC_AJAX::get_endpoint( 'change_payment_method' ),
-				'log_to_file_url'           => WC_AJAX::get_endpoint( 'dibs_easy_wc_log_js' ),
-				'log_to_file_nonce'         => wp_create_nonce( 'dibs_easy_wc_log_js' ),
-				'privateKey'                => $private_key,
-				'locale'                    => wc_dibs_get_locale(),
-				'debug'                     => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
+				'paymentId'              => $payment_id,
+				'submitOrder'            => WC_AJAX::get_endpoint( 'checkout' ),
+				'changePaymentMethodURL' => WC_AJAX::get_endpoint( 'change_payment_method' ),
+				'logToFileURL'           => WC_AJAX::get_endpoint( 'dibs_easy_wc_log_js' ),
+				'logToFileNonce'         => wp_create_nonce( 'dibs_easy_wc_log_js' ),
+				'privateKey'             => $private_key,
+				'locale'                 => wc_dibs_get_locale(),
+				'debug'                  => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 			)
 		);
 		wp_enqueue_script( 'nexi-checkout-inline' );

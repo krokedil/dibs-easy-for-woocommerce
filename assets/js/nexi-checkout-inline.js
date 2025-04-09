@@ -194,7 +194,7 @@ jQuery( function ( $ ) {
                 type: "POST",
                 dataType: "json",
                 async: true,
-                url: nexiCheckoutParams.change_payment_method_url,
+                url: nexiCheckoutParams.changePaymentMethodURL,
                 data: {
                     action: "dibs_change_payment_method",
                     dibs_easy: false,
@@ -217,12 +217,12 @@ jQuery( function ( $ ) {
         logToFile(message) {
             log(message)
             $.ajax( {
-                url: nexiCheckoutParams.log_to_file_url,
+                url: nexiCheckoutParams.logToFileURL,
                 type: "POST",
                 dataType: "json",
                 data: {
                     message,
-                    nonce: nexiCheckoutParams.log_to_file_nonce,
+                    nonce: nexiCheckoutParams.logToFileNonce,
                 },
             } )
         },
