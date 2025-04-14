@@ -74,7 +74,7 @@ class Nets_Easy_Templates {
 			return $template;
 		}
 
-		$checkout_flow = get_option( 'woocommerce_dibs_easy_settings' )['checkout_flow'] ?? 'embedded';
+		$checkout_flow = get_option( 'woocommerce_dibs_easy_settings' )['checkout_flow'] ?? 'inline';
 		if ( 'inline' === $checkout_flow ) {
 			return $this->replace_payment_method( $template, $template_name );
 		}

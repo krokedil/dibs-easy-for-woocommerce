@@ -195,7 +195,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 
 	if ( 'dibs_easy' === $order->get_payment_method() ) {
 		// Get checkout flow to see if we need to handle logic for embedded flow.
-		$checkout_flow = $settings['checkout_flow'] ?? 'embedded';
+		$checkout_flow = $settings['checkout_flow'] ?? 'inline';
 	} else {
 		// For stand alone payment methods, use redirect.
 		$checkout_flow = 'redirect';

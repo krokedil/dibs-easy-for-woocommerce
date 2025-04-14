@@ -24,7 +24,7 @@ class Nets_Easy_Checkout_Helper {
 	 *
 	 * @return array
 	 */
-	public static function get_checkout( $checkout_flow = 'embedded', $order_id = null ) {
+	public static function get_checkout( $checkout_flow = 'inline', $order_id = null ) {
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		$auto_capture  = $dibs_settings['auto_capture'] ?? 'no';
 

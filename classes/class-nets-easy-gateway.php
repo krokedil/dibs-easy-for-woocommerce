@@ -55,7 +55,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Get the settings values.
 		$this->title                          = $this->get_option( 'title' );
 		$this->enabled                        = $this->get_option( 'enabled' );
-		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'embedded';
+		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'inline';
 		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? 'default';
 		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? '145';
 

@@ -24,7 +24,7 @@ class Nets_Easy_Order_Helper {
 	 *
 	 * @return array
 	 */
-	public static function get_order( $checkout_flow = 'embedded', $order_id = null ) {
+	public static function get_order( $checkout_flow = 'inline', $order_id = null ) {
 		if ( nexi_is_embedded( $checkout_flow ) ) {
 			$items = Nets_Easy_Cart_Helper::get_items();
 

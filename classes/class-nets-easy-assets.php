@@ -220,7 +220,7 @@ class Nets_Easy_Assets {
 
 		$settings = get_option( 'woocommerce_dibs_easy_settings', array() );
 		$params   = array(
-			'checkout_flow'             => $settings['checkout_flow'] ?? 'embedded',
+			'checkout_flow'             => $settings['checkout_flow'] ?? 'inline',
 			'change_payment_method_url' => WC_AJAX::get_endpoint( 'change_payment_method' ),
 			'nets_checkout_nonce'       => wp_create_nonce( 'nets_checkout' ),
 		);

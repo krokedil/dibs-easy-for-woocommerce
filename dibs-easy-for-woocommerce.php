@@ -125,7 +125,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		public function __construct() {
 			$this->dibs_settings                      = get_option( 'woocommerce_dibs_easy_settings' );
-			$this->checkout_flow                      = $this->dibs_settings['checkout_flow'] ?? 'embedded';
+			$this->checkout_flow                      = $this->dibs_settings['checkout_flow'] ?? 'inline';
 			$this->enable_payment_method_card         = $this->dibs_settings['enable_payment_method_card'] ?? 'no';
 			$this->enable_payment_method_sofort       = $this->dibs_settings['enable_payment_method_sofort'] ?? 'no';
 			$this->enable_payment_method_trustly      = $this->dibs_settings['enable_payment_method_trustly'] ?? 'no';
