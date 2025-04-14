@@ -3,9 +3,9 @@ jQuery( function ( $ ) {
         return false
     }
 
-    const log = (...args) => {
-        if (nexiCheckoutParams.debug) { 
-            console.log(...args)
+    const log = ( ...args ) => {
+        if ( nexiCheckoutParams.debug ) {
+            console.log( ...args )
         }
     }
 
@@ -18,24 +18,35 @@ jQuery( function ( $ ) {
         bodyEl: $( "body" ),
         paymentMethodEl: $( 'input[name="payment_method"]' ),
         nexiCheckout: null,
-        selectAnotherSelector: "#dibs-easy-select-other",
         checkoutFormSelector: "form.checkout",
 
         /**
          * Initialize the gateway
          */
         init() {
-            $( document ).ready( wcNexiCheckout.loadNexi )
-            wcNexiCheckout.bodyEl.on(
-                "click",
-                wcNexiCheckout.selectAnotherSelector,
-                wcNexiCheckout.changeFromNexiCheckout,
-            )
+            $( document ).ready( () => {
+                wcNexiCheckout.paymentMethodEl.on( "change", ( e ) => {
+                    e.preventDefault()
+                    $( wcNexiCheckout.checkoutFormSelector ).block( {
+                        message: null,
+                        overlayCSS: {
+                            background: "#fff",
+                            opacity: 0.6,
+                        },
+                    } )
 
-            $('#nexi-inline-close-modal').on('click', () => { 
+                    if ( $( this ).val() === "dibs_easy" ) {
+                        wcNexiCheckout.changeToNexiCheckout()
+                    } else {
+                        wcNexiCheckout.changeFromNexiCheckout()
+                    }
+                } )
+            } )
+
+            $( "#nexi-inline-close-modal" ).on( "click", () => {
                 wcNexiCheckout.toggleInlineOverlay()
                 wcNexiCheckout.unblockUI()
-            })
+            } )
         },
 
         /**
@@ -63,9 +74,7 @@ jQuery( function ( $ ) {
          * @param {Object} response
          */
         paymentCompleted( response ) {
-            wcNexiCheckout.logToFile(
-                `Payment completed is triggered with payment id: ${ response.paymentId }`,
-            )
+            wcNexiCheckout.logToFile( `Payment completed is triggered with payment id: ${ response.paymentId }` )
             const redirectUrl = sessionStorage.getItem( "redirectNets" )
             if ( redirectUrl ) {
                 window.location.href = redirectUrl
@@ -115,14 +124,11 @@ jQuery( function ( $ ) {
                 language: nexiCheckoutParams.locale,
             } )
             wcNexiCheckout.nexiCheckout.on( "payment-completed", wcNexiCheckout.paymentCompleted )
-            wcNexiCheckout.nexiCheckout.on(
-                "applepay-contact-updated",
-                wcNexiCheckout.applePayAddressChanged,
-            )
+            wcNexiCheckout.nexiCheckout.on( "applepay-contact-updated", wcNexiCheckout.applePayAddressChanged )
 
-            wcNexiCheckout.nexiCheckout.on("pay-initialized", (paymentId) => {
+            wcNexiCheckout.nexiCheckout.on( "pay-initialized", ( paymentId ) => {
                 wcNexiCheckout.submitOrder()
-                wcNexiCheckout.logToFile("Pay initialized event is triggered.")
+                wcNexiCheckout.logToFile( "Pay initialized event is triggered." )
             } )
         },
 
@@ -137,8 +143,7 @@ jQuery( function ( $ ) {
                 url: nexiCheckoutParams.submitOrder,
                 data: $( "form.checkout" ).serialize(),
                 dataType: "json",
-                success(data) {
-
+                success( data ) {
                     try {
                         if ( "success" === data.result ) {
                             wcNexiCheckout.logToFile( "Successfully placed order." )
@@ -182,14 +187,17 @@ jQuery( function ( $ ) {
          * @param {Event} e
          */
         changeFromNexiCheckout( e ) {
-            e.preventDefault()
-            $( wcNexiCheckout.checkoutFormSelector ).block( {
-                message: null,
-                overlayCSS: {
-                    background: "#fff",
-                    opacity: 0.6,
-                },
-            } )
+            wcNexiCheckout.changeSelectedGateway( false )
+        },
+        changeToNexiCheckout( e ) {
+            wcNexiCheckout.changeSelectedGateway( true )
+        },
+        /**
+         * When the customer changes to or from Nexi Checkout.
+         *
+         * @param {boolean} toNexi - True if changing to Nexi, false otherwise.
+         */
+        changeSelectedGateway( toNexi ) {
             $.ajax( {
                 type: "POST",
                 dataType: "json",
@@ -197,7 +205,7 @@ jQuery( function ( $ ) {
                 url: nexiCheckoutParams.changePaymentMethodURL,
                 data: {
                     action: "dibs_change_payment_method",
-                    dibs_easy: false,
+                    dibs_easy: toNexi,
                     nonce: nexiCheckoutParams.nets_checkout_nonce,
                 },
                 complete( data ) {
@@ -214,8 +222,8 @@ jQuery( function ( $ ) {
          *
          * @param {string} message
          */
-        logToFile(message) {
-            log(message)
+        logToFile( message ) {
+            log( message )
             $.ajax( {
                 url: nexiCheckoutParams.logToFileURL,
                 type: "POST",
@@ -232,7 +240,7 @@ jQuery( function ( $ ) {
          */
         unblockUI: () => {
             $( ".woocommerce-checkout-review-order-table" ).unblock()
-            $("#customer_details").removeClass("processing").unblock()
+            $( "#customer_details" ).removeClass( "processing" ).unblock()
         },
 
         /**
@@ -257,7 +265,7 @@ jQuery( function ( $ ) {
                     background: "#fff",
                     opacity: 0.6,
                 },
-            })
+            } )
         },
 
         /**
@@ -274,7 +282,7 @@ jQuery( function ( $ ) {
             wcNexiCheckout.nexiCheckout.send( "payment-order-finalized", false )
             // Reenable the form.
             wcNexiCheckout.bodyEl.trigger( "updated_checkout" )
-            $(wcNexiCheckout.checkoutFormSelector).removeClass("processing")
+            $( wcNexiCheckout.checkoutFormSelector ).removeClass( "processing" )
             wcNexiCheckout.unblockUI()
 
             // Print error messages, and trigger checkout_error, and scroll to notices.
@@ -297,10 +305,10 @@ jQuery( function ( $ ) {
             )
         },
 
-        toggleInlineOverlay: () => { 
-            $('#nexi-inline-modal').toggleClass('netseasy-modal')
-            $('#nexi-inline-modal-box').toggleClass('netseasy-modal-box')
-        }
+        toggleInlineOverlay: () => {
+            $( "#nexi-inline-modal" ).toggleClass( "netseasy-modal" )
+            $( "#nexi-inline-modal-box" ).toggleClass( "netseasy-modal-box" )
+        },
     }
 
     wcNexiCheckout.init()
