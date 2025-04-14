@@ -124,8 +124,8 @@ return apply_filters(
 			'title'       => __( 'Checkout flow', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'select',
 			'options'     => array(
+				'inline'   => __( 'Inline embedded', 'dibs-easy-for-woocommerce' ),
 				'embedded' => __( 'Embedded', 'dibs-easy-for-woocommerce' ),
-				'inline'   => __( 'Embedded (inline)', 'dibs-easy-for-woocommerce' ),
 				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
 				'overlay'  => __( 'Overlay', 'dibs-easy-for-woocommerce' ),
 			),
