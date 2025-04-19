@@ -187,17 +187,17 @@ jQuery( function ( $ ) {
          * @param {Event} e
          */
         changeFromNexiCheckout( e ) {
-            wcNexiCheckout.changeSelectedGateway( false )
+            wcNexiCheckout.changeSelectedGateway( true )
         },
         changeToNexiCheckout( e ) {
-            wcNexiCheckout.changeSelectedGateway( true )
+            wcNexiCheckout.changeSelectedGateway( false )
         },
         /**
          * When the customer changes to or from Nexi Checkout.
          *
-         * @param {boolean} toNexi - True if changing to Nexi, false otherwise.
+         * @param {boolean} fromNexi - True if changing from Nexi from a different gateway, false if changing to Nexi.
          */
-        changeSelectedGateway( toNexi ) {
+        changeSelectedGateway( fromNexi ) {
             $.ajax( {
                 type: "POST",
                 dataType: "json",
@@ -205,7 +205,7 @@ jQuery( function ( $ ) {
                 url: nexiCheckoutParams.changePaymentMethodURL,
                 data: {
                     action: "dibs_change_payment_method",
-                    dibs_easy: toNexi,
+                    dibs_easy: fromNexi,
                     nonce: nexiCheckoutParams.nonce,
                 },
                 complete( data ) {
