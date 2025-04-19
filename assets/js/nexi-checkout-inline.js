@@ -41,6 +41,8 @@ jQuery( function ( $ ) {
                     e.preventDefault()
                     wcNexiCheckout.unblockUI()
                 } )
+
+                wcNexiCheckout.loadNexi()
             } )
 
             $( "#nexi-inline-close-modal" ).on( "click", () => {
