@@ -163,6 +163,7 @@ class Nets_Easy_Assets {
 				'paymentId'              => $payment_id,
 				'submitOrder'            => WC_AJAX::get_endpoint( 'checkout' ),
 				'changePaymentMethodURL' => WC_AJAX::get_endpoint( 'change_payment_method' ),
+				'nonce'                  => wp_create_nonce( 'nets_checkout' ),
 				'logToFileURL'           => WC_AJAX::get_endpoint( 'dibs_easy_wc_log_js' ),
 				'logToFileNonce'         => wp_create_nonce( 'dibs_easy_wc_log_js' ),
 				'privateKey'             => $private_key,

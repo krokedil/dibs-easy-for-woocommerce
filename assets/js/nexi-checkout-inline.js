@@ -25,21 +25,21 @@ jQuery( function ( $ ) {
          */
         init() {
             $( document ).ready( () => {
-                wcNexiCheckout.paymentMethodEl.on( "change", ( e ) => {
-                    e.preventDefault()
-                    $( wcNexiCheckout.checkoutFormSelector ).block( {
-                        message: null,
-                        overlayCSS: {
-                            background: "#fff",
-                            opacity: 0.6,
-                        },
-                    } )
+                // When an update_order_review happens, WC will replace the payment methods fragment, resulting in the payment method element being replaced. Therefore, we have to listen on the body element.
+                $( "body" ).on( "change", 'input[name="payment_method"]', ( e ) => {
+                    // Updated the internal reference in case it was replaced by a fragment.
+                    wcNexiCheckout.paymentMethodEl = $( e.target )
+                    wcNexiCheckout.blockUI()
 
-                    if ( $( this ).val() === "dibs_easy" ) {
+                    if ( $( e.target ).val() === "dibs_easy" ) {
                         wcNexiCheckout.changeToNexiCheckout()
                     } else {
                         wcNexiCheckout.changeFromNexiCheckout()
                     }
+
+                    // In case the payment method change fails due to an AJAX error, we want to prevent WC from updating the chosen payment method. Instead, the chosen payment method should be set by the AJAX handler which only happens if the transition was successful.
+                    e.preventDefault()
+                    wcNexiCheckout.unblockUI()
                 } )
             } )
 
@@ -53,9 +53,9 @@ jQuery( function ( $ ) {
          * Check if Nexi Checkout is the selected gateway.
          */
         isGatewaySelected() {
-            if ( wcNexiCheckout.paymentMethodEl.length > 0 ) {
-                wcNexiCheckout.paymentMethod = wcNexiCheckout.paymentMethodEl.filter( ":checked" ).val()
-                if ( "dibs_easy" === wcNexiCheckout.paymentMethod ) {
+            if ( $( wcNexiCheckout.paymentMethodEl ).length > 0 ) {
+                const selectedGateway = wcNexiCheckout.paymentMethodEl.filter( ":checked" ).val()
+                if ( "dibs_easy" === selectedGateway ) {
                     return true
                 }
             }
@@ -100,7 +100,7 @@ jQuery( function ( $ ) {
                         address,
                         nonce: nexiCheckoutParams.nets_checkout_nonce,
                     },
-                    complete( response ) {
+                    success: ( response ) => {
                         log( "COMPLETED" )
                         log( "customer_address_updated " )
                         log( response.responseJSON.data )
@@ -206,13 +206,16 @@ jQuery( function ( $ ) {
                 data: {
                     action: "dibs_change_payment_method",
                     dibs_easy: toNexi,
-                    nonce: nexiCheckoutParams.nets_checkout_nonce,
+                    nonce: nexiCheckoutParams.nonce,
                 },
                 complete( data ) {
-                    log( "Change payment method success" )
-                    log( data.responseJSON.data.redirect )
-                    wcNexiCheckout.bodyEl.removeClass( "dibs-selected" )
-                    window.location.href = data.responseJSON.data.redirect
+                    if ( data.responseJSON.success ) {
+                        log( "Change payment method success" )
+                        log( data.responseJSON.data.redirect )
+                        window.location.href = data.responseJSON.data.redirect
+                    } else {
+                        log( "Change payment method failed", data.responseJSON.data.redirect )
+                    }
                 },
             } )
         },
