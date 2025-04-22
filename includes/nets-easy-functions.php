@@ -439,3 +439,14 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
 
 	return apply_filters( 'nexi_custom_payment_method_title', "$gateway / $method $type", $order, $method, $type );
 }
+
+/**
+ * Returns the current Nexi JWT token from WC->session.
+ *
+ * @return string The purchase id.
+ */
+function nexi_get_jwt_token_from_session() {
+	$nexi_payment_data = WC()->session->get( 'dibs_order_data' );
+	$jwt               = ( is_array( $nexi_payment_data ) && isset( $nexi_payment_data['jwt'] ) ) ? $nexi_payment_data['jwt'] : '';
+	return $jwt;
+}

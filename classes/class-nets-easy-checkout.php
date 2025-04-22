@@ -12,11 +12,24 @@ defined( 'ABSPATH' ) || exit;
  */
 class Nets_Easy_Checkout {
 	/**
+	 * Checkout flow.
+	 *
+	 * @var string
+	 */
+	public $checkout_flow;
+
+	/**
 	 * Class constructor
 	 */
 	public function __construct() {
+		$this->checkout_flow = get_option( 'woocommerce_dibs_easy_settings' )['checkout_flow'] ?? 'embedded';
+
 		add_action( 'woocommerce_after_calculate_totals', array( $this, 'update_nets_easy_order' ), 999999 );
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
+
+		if ( 'embedded' === $this->checkout_flow ) {
+			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_hidden_jwt_token_field' ), 30 );
+		}
 	}
 
 	/**
@@ -27,13 +40,11 @@ class Nets_Easy_Checkout {
 	 */
 	public function update_nets_easy_order( $cart ) {
 
-		$settings = get_option( 'woocommerce_dibs_easy_settings' );
-
 		if ( ! is_checkout() ) {
 			return;
 		}
 
-		if ( 'redirect' === $settings['checkout_flow'] ) {
+		if ( 'redirect' === $this->checkout_flow ) {
 			return;
 		}
 
@@ -57,6 +68,19 @@ class Nets_Easy_Checkout {
 			wc_dibs_unset_sessions();
 			Nets_Easy_Logger::log( 'Currency changed in update Nets function. Clearing Nets session and reloading the checkout page.' );
 			WC()->session->reload_checkout = true;
+			return;
+		}
+
+		// Check if JWT token in checkout is the same as the one stored in session.
+		$nexi_jwt_token = nexi_get_jwt_token_from_session();
+		$raw_post_data  = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_URL );
+		parse_str( $raw_post_data, $post_data );
+		$checkout_jwt_token = $post_data['nexi_jwt_token'] ?? '';
+
+		if ( $nexi_jwt_token !== $checkout_jwt_token ) {
+			wc_dibs_unset_sessions();
+			Nets_Easy_Logger::log( sprintf( 'JWT token used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $checkout_jwt_token, $nexi_jwt_token ) );
+			wc_add_notice( 'Nexi JWT token issue. Please reload the page and try again.', 'error' );
 			return;
 		}
 
@@ -127,6 +151,27 @@ class Nets_Easy_Checkout {
 		$hosts[] = 'checkout.dibspayment.eu';
 		$hosts[] = 'test.checkout.dibspayment.eu';
 		return $hosts;
+	}
+
+	/**
+	 * Adds a hidden nexi_jwt_token checkout form field.
+	 * Used to confirm that the token used for the Nexi Checkout widget in frontend is
+	 * the same one currently saved in WC session nexi_wc_payment_data.
+	 * We do this to prevent issues if stores have session problems.
+	 *
+	 * @param array $fields WooCommerce checkout form fields.
+	 * @return array
+	 */
+	public function add_hidden_jwt_token_field( $fields ) {
+		$nexi_jwt_token = nexi_get_jwt_token_from_session();
+
+		$fields['billing']['nexi_jwt_token'] = array(
+			'type'    => 'hidden',
+			'class'   => array( 'nexi_jwt_token' ),
+			'default' => $nexi_jwt_token,
+		);
+
+		return $fields;
 	}
 }
 new Nets_Easy_Checkout();
