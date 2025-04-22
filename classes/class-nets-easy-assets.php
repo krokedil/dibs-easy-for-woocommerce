@@ -255,7 +255,7 @@ class Nets_Easy_Assets {
 
 		if ( empty( $order_id ) ) {
 			// If we don't have an order - get JWT from session.
-			$nexi_payment_data = WC()->session->get( 'nexi_wc_payment_data' );
+			$nexi_payment_data = WC()->session->get( 'nexi_wc_payment_jwt' );
 			$nexi_jwt_token    = ( is_array( $nexi_payment_data ) && isset( $nexi_payment_data['jwt'] ) ) ? $nexi_payment_data['jwt'] : '';
 		} else {
 			$order          = wc_get_order( $order_id );

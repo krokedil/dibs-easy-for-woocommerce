@@ -156,7 +156,7 @@ class Nets_Easy_Checkout {
 	/**
 	 * Adds a hidden nexi_jwt_token checkout form field.
 	 * Used to confirm that the token used for the Nexi Checkout widget in frontend is
-	 * the same one currently saved in WC session nexi_wc_payment_data.
+	 * the same one currently saved in WC session nexi_wc_payment_jwt.
 	 * We do this to prevent issues if stores have session problems.
 	 *
 	 * @param array $fields WooCommerce checkout form fields.

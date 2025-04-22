@@ -42,6 +42,7 @@ function dibs_easy_maybe_create_order() {
 	$session->set( 'nets_easy_currency', get_woocommerce_currency() );
 	$session->set( 'nets_easy_last_update_hash', $cart->get_cart_hash() );
 	$session->set( 'dibs_cart_contains_subscription', get_dibs_cart_contains_subscription() );
+	$session->set( 'nexi_wc_payment_jwt', $dibs_easy_order['jwt'] );
 	// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
 	$payment_id = $dibs_easy_order['paymentId'];
 	set_transient( 'dibs_payment_id_' . $payment_id, $payment_id, 15 * MINUTE_IN_SECONDS ); // phpcs:ignore
@@ -115,6 +116,10 @@ function wc_dibs_unset_sessions() {
 
 		if ( WC()->session->get( 'dibs_cart_contains_subscription' ) ) {
 			WC()->session->__unset( 'dibs_cart_contains_subscription' );
+		}
+
+		if ( WC()->session->get( 'nexi_wc_payment_jwt' ) ) {
+			WC()->session->__unset( 'nexi_wc_payment_jwt' );
 		}
 	}
 }
