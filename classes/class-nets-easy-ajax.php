@@ -156,7 +156,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 		if ( $payment_id !== $payment_id_session ) {
 			wp_send_json_error( 'Failed to get the Nexi order data. Payment ID does not match the session.' );
-			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $payment_id, $payment_id_session ) );
+			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s).', $payment_id, $payment_id_session ) );
 		}
 
 		// Prevent duplicate orders if payment complete event is triggered twice or if order already exist in Woo (via webhook).
