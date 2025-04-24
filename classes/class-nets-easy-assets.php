@@ -210,8 +210,6 @@ class Nets_Easy_Assets {
 	 * Loads the needed scripts for Nexi Checkout.
 	 */
 	public function localize_and_enqueue_checkout_script() {
-		$key      = filter_input( INPUT_GET, 'key', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$order_id = ! empty( $key ) ? wc_get_order_id_by_order_key( $key ) : 0;
 
 		if ( WC()->session->get( 'dibs_payment_id' ) ) {
 			$checkout_initiated = 'yes';
@@ -253,15 +251,6 @@ class Nets_Easy_Assets {
 			)
 		);
 
-		if ( empty( $order_id ) ) {
-			// If we don't have an order - get JWT from session.
-			$nexi_payment_data = WC()->session->get( 'nexi_wc_payment_jwt' );
-			$nexi_jwt_token    = ( is_array( $nexi_payment_data ) && isset( $nexi_payment_data['jwt'] ) ) ? $nexi_payment_data['jwt'] : '';
-		} else {
-			$order          = wc_get_order( $order_id );
-			$nexi_jwt_token = $order->get_meta( '_wc_nexi_jwt', true );
-		}
-
 		// todo enable min version.
 		// phpcs:ignore $src                          = WC_DIBS__URL . '/assets/js/checkout' . $script_version . '.js';
 
@@ -278,7 +267,6 @@ class Nets_Easy_Assets {
 				'customer_address_updated_url'     => WC_AJAX::get_endpoint( 'customer_address_updated' ),
 				'get_order_data_url'               => WC_AJAX::get_endpoint( 'get_order_data' ),
 				'submitOrder'                      => WC_AJAX::get_endpoint( 'checkout' ),
-				'nexi_jwt_token'                   => $nexi_jwt_token,
 				'dibs_add_customer_order_note_url' => WC_AJAX::get_endpoint( 'dibs_add_customer_order_note' ),
 				'change_payment_method_url'        => WC_AJAX::get_endpoint( 'change_payment_method' ),
 				'log_to_file_url'                  => WC_AJAX::get_endpoint( 'dibs_easy_wc_log_js' ),

@@ -28,7 +28,7 @@ class Nets_Easy_Checkout {
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
 
 		if ( 'embedded' === $this->checkout_flow ) {
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_hidden_jwt_token_field' ), 30 );
+			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_hidden_session_field' ), 30 );
 		}
 	}
 
@@ -71,16 +71,16 @@ class Nets_Easy_Checkout {
 			return;
 		}
 
-		// Check if JWT token in checkout is the same as the one stored in session.
-		$nexi_jwt_token = nexi_get_jwt_token_from_session();
-		$raw_post_data  = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_URL );
+		// Check if Nexi session in checkout is the same as the one stored in backend.
+		$raw_post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_URL );
 		parse_str( $raw_post_data, $post_data );
-		$checkout_jwt_token = $post_data['nexi_jwt_token'] ?? '';
+		$frontend_session = $post_data['nexi_session'] ?? '';
+		$session          = WC()->session->get( 'dibs_payment_id' );
 
-		if ( $nexi_jwt_token !== $checkout_jwt_token ) {
+		if ( $session !== $frontend_session ) {
 			wc_dibs_unset_sessions();
-			Nets_Easy_Logger::log( sprintf( 'JWT token used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $checkout_jwt_token, $nexi_jwt_token ) );
-			wc_add_notice( 'Nexi JWT token issue. Please reload the page and try again.', 'error' );
+			Nets_Easy_Logger::log( sprintf( 'Session used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $frontend_session, $session ) );
+			wc_add_notice( 'Nexi session issues. Please reload the page and try again.', 'error' );
 			return;
 		}
 
@@ -154,21 +154,19 @@ class Nets_Easy_Checkout {
 	}
 
 	/**
-	 * Adds a hidden nexi_jwt_token checkout form field.
+	 * Adds a hidden nexi_session checkout form field.
 	 * Used to confirm that the token used for the Nexi Checkout widget in frontend is
-	 * the same one currently saved in WC session nexi_wc_payment_jwt.
+	 * the same one currently saved in WC session dibs_payment_id.
 	 * We do this to prevent issues if stores have session problems.
 	 *
 	 * @param array $fields WooCommerce checkout form fields.
 	 * @return array
 	 */
-	public function add_hidden_jwt_token_field( $fields ) {
-		$nexi_jwt_token = nexi_get_jwt_token_from_session();
+	public function add_hidden_session_field( $fields ) {
 
-		$fields['billing']['nexi_jwt_token'] = array(
+		$fields['billing']['nexi_session'] = array(
 			'type'    => 'hidden',
-			'class'   => array( 'nexi_jwt_token' ),
-			'default' => $nexi_jwt_token,
+			'default' => WC()->session->get( 'dibs_payment_id' ) ?? '',
 		);
 
 		return $fields;

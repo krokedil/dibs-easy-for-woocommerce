@@ -42,7 +42,6 @@ function dibs_easy_maybe_create_order() {
 	$session->set( 'nets_easy_currency', get_woocommerce_currency() );
 	$session->set( 'nets_easy_last_update_hash', $cart->get_cart_hash() );
 	$session->set( 'dibs_cart_contains_subscription', get_dibs_cart_contains_subscription() );
-	$session->set( 'nexi_wc_payment_jwt', $dibs_easy_order['jwt'] );
 	// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
 	$payment_id = $dibs_easy_order['paymentId'];
 	set_transient( 'dibs_payment_id_' . $payment_id, $payment_id, 15 * MINUTE_IN_SECONDS ); // phpcs:ignore
@@ -116,10 +115,6 @@ function wc_dibs_unset_sessions() {
 
 		if ( WC()->session->get( 'dibs_cart_contains_subscription' ) ) {
 			WC()->session->__unset( 'dibs_cart_contains_subscription' );
-		}
-
-		if ( WC()->session->get( 'nexi_wc_payment_jwt' ) ) {
-			WC()->session->__unset( 'nexi_wc_payment_jwt' );
 		}
 	}
 }
@@ -443,15 +438,4 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
 	$type = ucfirst( strtolower( $type ) );
 
 	return apply_filters( 'nexi_custom_payment_method_title', "$gateway / $method $type", $order, $method, $type );
-}
-
-/**
- * Returns the current Nexi JWT token from WC->session.
- *
- * @return string The purchase id.
- */
-function nexi_get_jwt_token_from_session() {
-	$nexi_payment_data = WC()->session->get( 'dibs_order_data' );
-	$jwt               = ( is_array( $nexi_payment_data ) && isset( $nexi_payment_data['jwt'] ) ) ? $nexi_payment_data['jwt'] : '';
-	return $jwt;
 }
