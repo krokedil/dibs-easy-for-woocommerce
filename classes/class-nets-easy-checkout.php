@@ -28,7 +28,7 @@ class Nets_Easy_Checkout {
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
 
 		if ( 'embedded' === $this->checkout_flow ) {
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_hidden_session_field' ), 30 );
+			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_hidden_payment_id_field' ), 30 );
 		}
 	}
 
@@ -71,16 +71,17 @@ class Nets_Easy_Checkout {
 			return;
 		}
 
-		// Check if Nexi session in checkout is the same as the one stored in backend.
+		// Check if Nexi payment id is the same in checkout as in session.
 		$raw_post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_URL );
 		parse_str( $raw_post_data, $post_data );
-		$frontend_session = $post_data['nexi_session'] ?? '';
-		$session          = WC()->session->get( 'dibs_payment_id' );
+		$payment_id         = $post_data['nexi_payment_id'] ?? '';
+		$payment_id_session = WC()->session->get( 'dibs_payment_id' );
 
-		if ( $session !== $frontend_session ) {
+		if ( $payment_id !== $payment_id_session ) {
 			wc_dibs_unset_sessions();
-			Nets_Easy_Logger::log( sprintf( 'Session used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $frontend_session, $session ) );
+			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $payment_id, $payment_id_session ) );
 			wc_add_notice( 'Nexi session issues. Please reload the page and try again.', 'error' );
+			WC()->session->reload_checkout = true;
 			return;
 		}
 
@@ -162,9 +163,9 @@ class Nets_Easy_Checkout {
 	 * @param array $fields WooCommerce checkout form fields.
 	 * @return array
 	 */
-	public function add_hidden_session_field( $fields ) {
+	public function add_hidden_payment_id_field( $fields ) {
 
-		$fields['billing']['nexi_session'] = array(
+		$fields['billing']['nexi_payment_id'] = array(
 			'type'    => 'hidden',
 			'default' => WC()->session->get( 'dibs_payment_id' ) ?? '',
 		);
