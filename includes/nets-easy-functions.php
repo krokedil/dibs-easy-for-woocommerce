@@ -432,7 +432,8 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
 	// Split on capital letter (e.g., "EasyInvoice" → "Easy Invoice").
 	$method = preg_replace( '/(?<!^)([A-Z])/', ' $1', $method );
 	// Check if same words appear in method and type (e.g., "EasyInvoice" and "Invoice" → "Easy Invoice" and "").
-	$type = strtolower( end( explode( ' ', $method ) ) ) === strtolower( $type ) ? '' : $type;
+	$method_parts = explode( ' ', $method );
+	$type         = strtolower( end( $method_parts ) ) === strtolower( $type ) ? '' : $type;
 
 	// Change first letter to uppercase only (e.g., "CARD" → "Card").
 	$type = ucfirst( strtolower( $type ) );

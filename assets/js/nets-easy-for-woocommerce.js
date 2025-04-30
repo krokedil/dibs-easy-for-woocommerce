@@ -213,10 +213,11 @@ jQuery( function ( $ ) {
          * Init Dibs Easy Checkout
          */
         initDibsCheckout() {
+            let paymentId = $( "#nexi_payment_id" ).val() ?? wcDibsEasy.dibs_payment_id;
             // Constructs a new Checkout object.
             dibsEasyForWoocommerce.dibsCheckout = new Dibs.Checkout( {
                 checkoutKey: wcDibsEasy.privateKey,
-                paymentId: wcDibsEasy.dibs_payment_id,
+                paymentId: paymentId,
                 containerId: "dibs-complete-checkout",
                 language: wcDibsEasy.locale,
             } )
