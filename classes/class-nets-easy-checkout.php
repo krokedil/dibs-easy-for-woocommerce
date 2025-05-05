@@ -12,11 +12,24 @@ defined( 'ABSPATH' ) || exit;
  */
 class Nets_Easy_Checkout {
 	/**
+	 * Checkout flow.
+	 *
+	 * @var string
+	 */
+	public $checkout_flow;
+
+	/**
 	 * Class constructor
 	 */
 	public function __construct() {
+		$this->checkout_flow = get_option( 'woocommerce_dibs_easy_settings' )['checkout_flow'] ?? 'embedded';
+
 		add_action( 'woocommerce_after_calculate_totals', array( $this, 'update_nets_easy_order' ), 999999 );
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
+
+		if ( 'embedded' === $this->checkout_flow ) {
+			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_hidden_payment_id_field' ), 30 );
+		}
 	}
 
 	/**
@@ -27,13 +40,11 @@ class Nets_Easy_Checkout {
 	 */
 	public function update_nets_easy_order( $cart ) {
 
-		$settings = get_option( 'woocommerce_dibs_easy_settings' );
-
 		if ( ! is_checkout() ) {
 			return;
 		}
 
-		if ( 'redirect' === $settings['checkout_flow'] ) {
+		if ( 'redirect' === $this->checkout_flow ) {
 			return;
 		}
 
@@ -56,6 +67,21 @@ class Nets_Easy_Checkout {
 		if ( get_woocommerce_currency() !== WC()->session->get( 'nets_easy_currency' ) ) {
 			wc_dibs_unset_sessions();
 			Nets_Easy_Logger::log( 'Currency changed in update Nets function. Clearing Nets session and reloading the checkout page.' );
+			WC()->session->reload_checkout = true;
+			return;
+		}
+
+		// Check if Nexi payment id is the same in checkout as in session.
+		$raw_post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_URL );
+		parse_str( $raw_post_data, $post_data );
+		$payment_id         = $post_data['nexi_payment_id'] ?? '';
+		$payment_id_session = WC()->session->get( 'dibs_payment_id' );
+
+		if ( $payment_id !== $payment_id_session ) {
+			wc_dibs_unset_sessions();
+			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $payment_id, $payment_id_session ) );
+			wc_add_notice( __( 'Nexi session issues. Please reload the page and try again.', 'dibs-easy-for-woocommerce' ), 'error' );
+
 			WC()->session->reload_checkout = true;
 			return;
 		}
@@ -127,6 +153,25 @@ class Nets_Easy_Checkout {
 		$hosts[] = 'checkout.dibspayment.eu';
 		$hosts[] = 'test.checkout.dibspayment.eu';
 		return $hosts;
+	}
+
+	/**
+	 * Adds a hidden nexi_session checkout form field.
+	 * Used to confirm that the token used for the Nexi Checkout widget in frontend is
+	 * the same one currently saved in WC session dibs_payment_id.
+	 * We do this to prevent issues if stores have session problems.
+	 *
+	 * @param array $fields WooCommerce checkout form fields.
+	 * @return array
+	 */
+	public function add_hidden_payment_id_field( $fields ) {
+
+		$fields['billing']['nexi_payment_id'] = array(
+			'type'    => 'hidden',
+			'default' => WC()->session->get( 'dibs_payment_id' ) ?? '',
+		);
+
+		return $fields;
 	}
 }
 new Nets_Easy_Checkout();

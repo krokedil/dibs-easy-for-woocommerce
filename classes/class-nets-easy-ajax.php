@@ -147,12 +147,16 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		}
 
 		$payment_id = filter_input( INPUT_POST, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( ! $payment_id ) {
-			$payment_id = WC()->session->get( 'dibs_payment_id' );
-		}
 
 		if ( empty( $payment_id ) ) {
 			wp_send_json_error( 'Failed to get the Nexi order data. Payment ID missing.' );
+		}
+
+		$payment_id_session = WC()->session->get( 'dibs_payment_id' );
+
+		if ( $payment_id !== $payment_id_session ) {
+			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s).', $payment_id, $payment_id_session ) );
+			wp_send_json_error( 'Failed to get the Nexi order data. Payment ID does not match the session.' );
 		}
 
 		// Prevent duplicate orders if payment complete event is triggered twice or if order already exist in Woo (via webhook).
@@ -292,13 +296,20 @@ class Nets_Easy_Ajax extends WC_AJAX {
 	 * @return void
 	 */
 	public static function dibs_easy_wc_log_js() {
-		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
-		if ( ! wp_verify_nonce( $nonce, 'dibs_easy_wc_log_js' ) ) {
-			wp_send_json_error( 'bad_nonce' );
+		check_ajax_referer( 'dibs_easy_wc_log_js', 'nonce' );
+		$payment_id = WC()->session->get( 'dibs_payment_id' );
+
+		// Get the content size of the request.
+		$post_size = (int) $_SERVER['CONTENT_LENGTH'] ?? 0;
+
+		// If the post data is too long, log an error message and return.
+		if ( $post_size > 1024 ) {
+			Nets_Easy_Logger::log( "Frontend JS $payment_id: message too long and can't be logged." );
+			wp_send_json_success(); // Return success to not stop anything in the frontend if this happens.
 		}
-		$posted_message = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
-		$payment_id     = WC()->session->get( 'dibs_payment_id' );
-		$message        = "Frontend JS: $payment_id $posted_message";
+
+		$posted_message = filter_input( INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$message        = "Frontend JS $payment_id: $posted_message";
 		Nets_Easy_Logger::log( $message );
 		wp_send_json_success();
 	}
