@@ -37,3 +37,8 @@ body.dibs-checkout-processing {
     max-width: 600px; /* Could be more or less, depending on screen size */
     text-align: center;
 }
+
+/* INLINE CHECKOUT */
+table.woocommerce-checkout-review-order-table {
+    margin-bottom: 0 !important;
+}

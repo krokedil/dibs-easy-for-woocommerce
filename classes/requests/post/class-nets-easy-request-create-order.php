@@ -30,7 +30,7 @@ class Nets_Easy_Request_Create_Order extends Nets_Easy_Request_Post {
 	 * @return array
 	 */
 	protected function get_body() {
-		$checkout_flow                 = $this->arguments['checkout_flow'] ?? 'embedded';
+		$checkout_flow                 = $this->arguments['checkout_flow'] ?? $this->settings['checkout_flow'] ?? 'inline';
 		$order_id                      = $this->arguments['order_id'] ?? null;
 		$payment_methods_configuration = $this->arguments['payment_methods_configuration'] ?? '';
 		$invoice_fee_id                = $this->settings['dibs_invoice_fee'] ?? '';

@@ -125,7 +125,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		public function __construct() {
 			$this->dibs_settings                      = get_option( 'woocommerce_dibs_easy_settings' );
-			$this->checkout_flow                      = $this->dibs_settings['checkout_flow'] ?? 'embedded';
+			$this->checkout_flow                      = $this->dibs_settings['checkout_flow'] ?? 'inline';
 			$this->enable_payment_method_card         = $this->dibs_settings['enable_payment_method_card'] ?? 'no';
 			$this->enable_payment_method_sofort       = $this->dibs_settings['enable_payment_method_sofort'] ?? 'no';
 			$this->enable_payment_method_trustly      = $this->dibs_settings['enable_payment_method_trustly'] ?? 'no';
@@ -180,9 +180,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				return;
 			}
 
-			if ( 'embedded' === $this->checkout_flow ) {
-				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
-			}
+			// Functions are used in the files below.
+			include_once plugin_basename( 'includes/nets-easy-functions.php' );
 
 			include_once plugin_basename( 'classes/class-nets-easy-ajax.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-order-management.php' );
@@ -195,7 +194,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-subscriptions.php' );
 
 			include_once plugin_basename( 'includes/nets-easy-country-converter.php' );
-			include_once plugin_basename( 'includes/nets-easy-functions.php' );
 
 			include_once plugin_basename( 'classes/requests/class-nets-easy-request.php' );
 			include_once plugin_basename( 'classes/requests/class-nets-easy-request-post.php' );
@@ -226,6 +224,10 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-assets.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-api.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-checkout.php' );
+
+			if ( nexi_is_embedded( $this->checkout_flow ) ) {
+				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
+			}
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 
