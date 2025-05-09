@@ -3,12 +3,6 @@ jQuery( function ( $ ) {
         return false
     }
 
-    const log = ( ...args ) => {
-        if ( nexiCheckoutParams.debug ) {
-            console.log( ...args )
-        }
-    }
-
     /**
      * The main object.
      *
@@ -19,6 +13,11 @@ jQuery( function ( $ ) {
         paymentMethodEl: $( 'input[name="payment_method"]' ),
         nexiCheckout: null,
         checkoutFormSelector: "form.checkout",
+        log: ( ...args ) => {
+            if ( nexiCheckoutParams.debug ) {
+                console.log( ...args )
+            }
+        },
 
         /**
          * Initialize the gateway
@@ -88,10 +87,10 @@ jQuery( function ( $ ) {
          *
          */
         applePayAddressChanged( address ) {
-            log( "applepay-contact-updated", address )
+            wcNexiCheckout.log( "applepay-contact-updated", address )
             wcNexiCheckout.logToFile( "ApplePay address changed is triggered." )
             if ( address ) {
-                log( "applepay-contact-updated" )
+                wcNexiCheckout.log( "applepay-contact-updated" )
                 $.ajax( {
                     type: "POST",
                     dataType: "json",
@@ -103,9 +102,9 @@ jQuery( function ( $ ) {
                         nonce: nexiCheckoutParams.nets_checkout_nonce,
                     },
                     success: ( response ) => {
-                        log( "COMPLETED" )
-                        log( "customer_address_updated " )
-                        log( response.responseJSON.data )
+                        wcNexiCheckout.log( "COMPLETED" )
+                        wcNexiCheckout.log( "customer_address_updated " )
+                        wcNexiCheckout.log( response.responseJSON.data )
                         wcNexiCheckout.updateAddress( response.responseJSON.data )
                         wcNexiCheckout.nexiCheckout.completeApplePayShippingContactUpdate(
                             response.responseJSON.data.cart_total,
@@ -212,11 +211,11 @@ jQuery( function ( $ ) {
                 },
                 complete( data ) {
                     if ( data.responseJSON.success ) {
-                        log( "Change payment method success" )
-                        log( data.responseJSON.data.redirect )
+                        wcNexiCheckout.log( "Change payment method success" )
+                        wcNexiCheckout.log( data.responseJSON.data.redirect )
                         window.location.href = data.responseJSON.data.redirect
                     } else {
-                        log( "Change payment method failed", data.responseJSON.data.redirect )
+                        wcNexiCheckout.log( "Change payment method failed", data.responseJSON.data.redirect )
                     }
                 },
             } )
@@ -228,7 +227,7 @@ jQuery( function ( $ ) {
          * @param {string} message
          */
         logToFile( message ) {
-            log( message )
+            wcNexiCheckout.log( message )
             $.ajax( {
                 url: nexiCheckoutParams.logToFileURL,
                 type: "POST",
