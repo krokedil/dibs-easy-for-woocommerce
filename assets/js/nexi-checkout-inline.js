@@ -32,11 +32,7 @@ jQuery( function ( $ ) {
                     wcNexiCheckout.paymentMethodEl = $( e.target )
                     wcNexiCheckout.blockUI()
 
-                    if ( $( e.target ).val() === "dibs_easy" ) {
-                        wcNexiCheckout.changeToNexiCheckout()
-                    } else {
-                        wcNexiCheckout.changeFromNexiCheckout()
-                    }
+                    wcNexiCheckout.changeSelectedGateway( $( e.target ).val() === "dibs_easy" )
 
                     // In case the payment method change fails due to an AJAX error, we want to prevent WC from updating the chosen payment method. Instead, the chosen payment method should be set by the AJAX handler which only happens if the transition was successful.
                     wcNexiCheckout.unblockUI()
@@ -184,22 +180,11 @@ jQuery( function ( $ ) {
             } )
         },
         /**
-         * When the customer changes from Nexi Checkout to a different payment method.
-         *
-         * @param {Event} e
-         */
-        changeFromNexiCheckout( e ) {
-            wcNexiCheckout.changeSelectedGateway( true )
-        },
-        changeToNexiCheckout( e ) {
-            wcNexiCheckout.changeSelectedGateway( false )
-        },
-        /**
          * When the customer changes to or from Nexi Checkout.
          *
-         * @param {boolean} fromNexi - True if changing from Nexi from a different gateway, false if changing to Nexi.
+         * @param {boolean} toNexi - True if changing to Nexi, false if changing to different gateway.
          */
-        changeSelectedGateway( fromNexi ) {
+        changeSelectedGateway( toNexi ) {
             $.ajax( {
                 type: "POST",
                 dataType: "json",
@@ -207,7 +192,7 @@ jQuery( function ( $ ) {
                 url: nexiCheckoutParams.changePaymentMethodURL,
                 data: {
                     action: "dibs_change_payment_method",
-                    dibs_easy: fromNexi,
+                    dibs_easy: ! toNexi, // The AJAX request has inverted logic, so we need to set the opposite value.
                     nonce: nexiCheckoutParams.nonce,
                 },
                 complete( data ) {
