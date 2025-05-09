@@ -26,6 +26,8 @@ jQuery( function ( $ ) {
             $( document ).ready( () => {
                 // When an update_order_review happens, WC will replace the payment methods fragment, resulting in the payment method element being replaced. Therefore, we have to listen on the body element.
                 $( "body" ).on( "change", 'input[name="payment_method"]', ( e ) => {
+                    e.preventDefault()
+
                     // Updated the internal reference in case it was replaced by a fragment.
                     wcNexiCheckout.paymentMethodEl = $( e.target )
                     wcNexiCheckout.blockUI()
@@ -37,7 +39,6 @@ jQuery( function ( $ ) {
                     }
 
                     // In case the payment method change fails due to an AJAX error, we want to prevent WC from updating the chosen payment method. Instead, the chosen payment method should be set by the AJAX handler which only happens if the transition was successful.
-                    e.preventDefault()
                     wcNexiCheckout.unblockUI()
                 } )
 
