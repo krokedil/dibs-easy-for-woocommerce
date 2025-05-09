@@ -46,6 +46,9 @@ class Nets_Easy_Templates {
 		add_action( 'wc_dibs_after_order_review', array( $this, 'add_extra_checkout_fields' ), 10 );
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_show_another_gateway_button', 20 );
 		add_action( 'wc_dibs_after_snippet', array( $this, 'add_wc_form' ), 10 );
+
+		// Since Nexi Inline overrides the payment method template, we need to add a "Select another payment method" button.
+		add_action( 'nexi_inline_after_snippet', array( $this, 'show_another_gateway_button' ) );
 	}
 
 	/**
@@ -115,6 +118,26 @@ class Nets_Easy_Templates {
 		}
 
 		return $this->maybe_replace_checkout( $template, $template_name );
+	}
+
+	/**
+	 * Outputs a "select another payment method" button.
+	 */
+	public function show_another_gateway_button() {
+		$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+
+		if ( count( $available_gateways ) > 1 ) {
+			$settings                   = get_option( 'woocommerce_dibs_easy_settings' );
+			$select_another_method_text = isset( $settings['select_another_method_text'] ) && '' !== $settings['select_another_method_text'] ? $settings['select_another_method_text'] : __( 'Select another payment method', 'dibs-easy-for-woocommerce' );
+
+			?>
+		<p class="nexi-checkout-select-other-wrapper">
+			<a class="checkout-button button" href="#" id="nexi-checkout-select-other">
+				<?php echo esc_html( $select_another_method_text ); ?>
+			</a>
+		</p>
+			<?php
+		}
 	}
 
 	/**

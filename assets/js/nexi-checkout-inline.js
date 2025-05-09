@@ -45,6 +45,12 @@ jQuery( function ( $ ) {
                 wcNexiCheckout.toggleInlineOverlay()
                 wcNexiCheckout.unblockUI()
             } )
+
+            $("#nexi-checkout-select-other").on("click", (e) => {
+                e.preventDefault()
+                wcNexiCheckout.blockUI()
+                wcNexiCheckout.changeSelectedGateway( false )
+            } )
         },
 
         /**

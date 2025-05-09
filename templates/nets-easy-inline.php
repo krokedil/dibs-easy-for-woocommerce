@@ -22,7 +22,9 @@
 			?>
 			<div id="dibs-wrapper">
 				<div id="dibs-iframe">
+					<?php do_action( 'nexi_inline_before_snippet' ); ?>
 					<div id="dibs-complete-checkout"></div>
+					<?php do_action( 'nexi_inline_after_snippet' ); ?>
 				</div>
 			</div>
 		</div>
