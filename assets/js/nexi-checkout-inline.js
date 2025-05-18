@@ -46,7 +46,7 @@ jQuery( function ( $ ) {
                 wcNexiCheckout.unblockUI()
             } )
 
-            $("#nexi-checkout-select-other").on("click", (e) => {
+            $( "#dibs-easy-select-other" ).on( "click", ( e ) => {
                 e.preventDefault()
                 wcNexiCheckout.blockUI()
                 wcNexiCheckout.changeSelectedGateway( false )

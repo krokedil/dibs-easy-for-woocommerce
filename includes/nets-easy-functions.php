@@ -70,7 +70,7 @@ function wc_dibs_show_another_gateway_button() {
 
 	if ( count( $available_gateways ) > 1 ) {
 		$settings                   = get_option( 'woocommerce_dibs_easy_settings' );
-		$select_another_method_text = isset( $settings['select_another_method_text'] ) && '' !== $settings['select_another_method_text'] ? $settings['select_another_method_text'] : __( 'Select another payment method', 'dibs-easy-for-woocommerce' );
+		$select_another_method_text = ! empty( $settings['select_another_method_text'] ?? '' ) ? $settings['select_another_method_text'] : __( 'Select another payment method', 'dibs-easy-for-woocommerce' );
 
 		?>
 		<p style="margin-top:30px">
