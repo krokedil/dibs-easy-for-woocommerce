@@ -40,6 +40,6 @@
   }
 
 /* INLINE CHECKOUT */
-.woocommerce-checkout-review-order-table:has(~ #nexi-inline-modal) {
-    margin-bottom: 0 !important;
+#order_review > .woocommerce-checkout-review-order-table:has(~ #nexi-inline-modal) {
+    margin-bottom: 0;
 }
