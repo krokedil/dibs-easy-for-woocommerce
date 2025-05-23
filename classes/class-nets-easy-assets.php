@@ -374,10 +374,7 @@ class Nets_Easy_Assets {
 	 * Loads style for the plugin.
 	 */
 	public function dibs_overlay_css() {
-		if ( ! is_checkout() ) {
-			return;
-		}
-		if ( is_order_received_page() ) {
+		if ( ! is_checkout() || is_order_received_page() ) {
 			return;
 		}
 		$style_version = $this->nets_easy_is_script_debug_enabled();
