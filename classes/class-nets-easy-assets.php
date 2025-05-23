@@ -51,19 +51,24 @@ class Nets_Easy_Assets {
 		$this->test_mode     = $this->settings['test_mode'] ?? 'no';
 		$this->checkout_flow = $this->settings['checkout_flow'] ?? '';
 
-		if ( 'embedded' === $this->checkout_flow ) {
+		if ( nexi_is_embedded( $this->checkout_flow ) ) {
 
-			/* For block-based themes, the template process is processed BEFORE the `wp_enqueue_script`. We need to enqueue the scripts in 'dibs_load_js' before the localized script is enqueued which depends on the former. The `init` hook cannot be used since `is_checkout` always returns false. With `template_redirect`, `is_checkout` returns the correct value, and is processed before the localization script is enqueued. */
-			add_action( 'template_redirect', array( $this, 'dibs_load_js' ), 10 );
-			add_action( 'wc_dibs_before_checkout_form', array( $this, 'localize_and_enqueue_checkout_script' ) );
-
-			add_action( 'wp_enqueue_scripts', array( $this, 'dibs_load_css' ), 10 );
+			if ( 'inline' === $this->checkout_flow ) {
+				add_action( 'wp_enqueue_scripts', array( $this, 'dibs_overlay_css' ) );
+				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_nexi_inline_js' ) );
+			} else {
+				/* For block-based themes, the template process is processed BEFORE the `wp_enqueue_script`. We need to enqueue the scripts in 'dibs_load_js' before the localized script is enqueued which depends on the former. The `init` hook cannot be used since `is_checkout` always returns false. With `template_redirect`, `is_checkout` returns the correct value, and is processed before the localization script is enqueued. */
+				add_action( 'template_redirect', array( $this, 'dibs_load_js' ), 10 );
+				add_action( 'wc_dibs_before_checkout_form', array( $this, 'localize_and_enqueue_checkout_script' ) );
+				add_action( 'wp_enqueue_scripts', array( $this, 'dibs_load_css' ), 10 );
+			}
 		}
 
 		if ( 'overlay' === $this->checkout_flow ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'load_overlay_js' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'dibs_overlay_css' ) );
 			add_action( 'wp_print_scripts', array( $this, 'inject_iframe_script' ) );
+
 		}
 	}
 
@@ -110,10 +115,69 @@ class Nets_Easy_Assets {
 	}
 
 	/**
+	 * Loads script for the embedded inline flow.
+	 *
+	 * @return void
+	 */
+	public function enqueue_nexi_inline_js() {
+		if ( 'yes' !== $this->enabled ) {
+			return;
+		}
+
+		/* On the 'order-pay' page we redirect the customer to a hosted payment page, and therefore don't need need to enqueue any of the following assets. */
+		if ( ! is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
+			return;
+		}
+
+		// There is no 'thank-you' snippet to show. Use the standard WC template.
+		if ( is_wc_endpoint_url( 'order-received' ) ) {
+			return;
+		}
+
+		$payment_id = WC()->session->get( 'dibs_payment_id' );
+		if ( empty( $payment_id ) ) {
+			dibs_easy_maybe_create_order();
+			$payment_id = WC()->session->get( 'dibs_payment_id' );
+		}
+
+		$script_url = $this->get_script_url();
+		wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
+
+		$src = WC_DIBS__URL . '/assets/js/nexi-checkout-inline.js';
+		wp_register_script(
+			'nexi-checkout-inline',
+			$src,
+			array(
+				'jquery',
+				'dibs-script',
+			),
+			WC_DIBS_EASY_VERSION,
+			false
+		);
+
+		$private_key = 'yes' === $this->test_mode ? $this->settings['dibs_test_checkout_key'] : $this->settings['dibs_checkout_key'];
+		wp_localize_script(
+			'nexi-checkout-inline',
+			'nexiCheckoutParams',
+			array(
+				'paymentId'              => $payment_id,
+				'submitOrder'            => WC_AJAX::get_endpoint( 'checkout' ),
+				'changePaymentMethodURL' => WC_AJAX::get_endpoint( 'change_payment_method' ),
+				'nonce'                  => wp_create_nonce( 'nets_checkout' ),
+				'logToFileURL'           => WC_AJAX::get_endpoint( 'dibs_easy_wc_log_js' ),
+				'logToFileNonce'         => wp_create_nonce( 'dibs_easy_wc_log_js' ),
+				'privateKey'             => $private_key,
+				'locale'                 => wc_dibs_get_locale(),
+				'debug'                  => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
+			)
+		);
+		wp_enqueue_script( 'nexi-checkout-inline' );
+	}
+
+	/**
 	 * Loads scripts for the plugin.
 	 */
 	public function dibs_load_js() {
-
 		if ( 'yes' !== $this->enabled ) {
 			return;
 		}
@@ -155,7 +219,9 @@ class Nets_Easy_Assets {
 			true
 		);
 
-		$params = array(
+		$settings = get_option( 'woocommerce_dibs_easy_settings', array() );
+		$params   = array(
+			'checkout_flow'             => $settings['checkout_flow'] ?? 'inline',
 			'change_payment_method_url' => WC_AJAX::get_endpoint( 'change_payment_method' ),
 			'nets_checkout_nonce'       => wp_create_nonce( 'nets_checkout' ),
 		);
@@ -172,7 +238,6 @@ class Nets_Easy_Assets {
 	 * Loads scripts for the plugin - overlay checkout mode.
 	 */
 	public function load_overlay_js() {
-
 		if ( 'yes' !== $this->enabled ) {
 			return;
 		}
@@ -276,6 +341,7 @@ class Nets_Easy_Assets {
 				'locale'                           => wc_dibs_get_locale(),
 				'isMobile'                         => wp_is_mobile(),
 				'shippingSelector'                 => apply_filters( 'nets_easy_shipping_selector', '.woocommerce-checkout-review-order-table' ),
+				'debug'                            => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 			)
 		);
 		wp_enqueue_script( 'nets-easy-checkout' );
@@ -308,10 +374,7 @@ class Nets_Easy_Assets {
 	 * Loads style for the plugin.
 	 */
 	public function dibs_overlay_css() {
-		if ( ! is_checkout() ) {
-			return;
-		}
-		if ( is_order_received_page() ) {
+		if ( ! is_checkout() || is_order_received_page() ) {
 			return;
 		}
 		$style_version = $this->nets_easy_is_script_debug_enabled();

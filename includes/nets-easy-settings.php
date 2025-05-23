@@ -124,12 +124,13 @@ return apply_filters(
 			'title'       => __( 'Checkout flow', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'select',
 			'options'     => array(
+				'inline'   => __( 'Inline embedded', 'dibs-easy-for-woocommerce' ),
 				'embedded' => __( 'Embedded', 'dibs-easy-for-woocommerce' ),
 				'redirect' => __( 'Redirect', 'dibs-easy-for-woocommerce' ),
 				'overlay'  => __( 'Overlay', 'dibs-easy-for-woocommerce' ),
 			),
-			'description' => __( 'Select how Nexi Checkout should be integrated in WooCommerce. <strong>Embedded</strong> – the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> – the customer is redirected to a payment page hosted by Nexi. <strong>Overlay</strong> – similar logic as redirect flow but the hosted payment window is displayed in an overlay on desktop.', 'dibs-easy-for-woocommerce' ),
-			'default'     => 'embedded',
+			'description' => __( 'Select how Nexi Checkout should be integrated in WooCommerce. <strong>Inline embedded</strong> — address data is entered through the WooCommerce checkout form, with payment methods integrated inline, directly alongside the form fields. <strong>Embedded</strong> — the checkout is embedded in the WooCommerce checkout page and partially replaces the checkout form. <strong>Redirect</strong> — the customer is redirected to a payment page hosted by Nexi. <strong>Overlay</strong> — similar logic as redirect flow but the hosted payment window is displayed in an overlay on desktop.', 'dibs-easy-for-woocommerce' ),
+			'default'     => 'inline',
 			'desc_tip'    => false,
 		),
 		'auto_capture'                 => array(
