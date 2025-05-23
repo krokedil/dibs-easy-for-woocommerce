@@ -32,7 +32,9 @@ jQuery( function ( $ ) {
                     wcNexiCheckout.paymentMethodEl = $( e.target )
                     wcNexiCheckout.blockUI()
 
-                    wcNexiCheckout.changeSelectedGateway( $( e.target ).val() === "dibs_easy" )
+                    // Do not cache the payment method element, as it will be replaced by a fragment.
+                    const selectedGateway = $('input[name="payment_method"]:checked').val()
+                    wcNexiCheckout.changeSelectedGateway( selectedGateway === "dibs_easy" )
 
                     // In case the payment method change fails due to an AJAX error, we want to prevent WC from updating the chosen payment method. Instead, the chosen payment method should be set by the AJAX handler which only happens if the transition was successful.
                     wcNexiCheckout.unblockUI()
