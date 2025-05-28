@@ -70,7 +70,7 @@ function wc_dibs_show_another_gateway_button() {
 
 	if ( count( $available_gateways ) > 1 ) {
 		$settings                   = get_option( 'woocommerce_dibs_easy_settings' );
-		$select_another_method_text = isset( $settings['select_another_method_text'] ) && '' !== $settings['select_another_method_text'] ? $settings['select_another_method_text'] : __( 'Select another payment method', 'dibs-easy-for-woocommerce' );
+		$select_another_method_text = ! empty( $settings['select_another_method_text'] ?? '' ) ? $settings['select_another_method_text'] : __( 'Select another payment method', 'dibs-easy-for-woocommerce' );
 
 		?>
 		<p style="margin-top:30px">
@@ -195,7 +195,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 
 	if ( 'dibs_easy' === $order->get_payment_method() ) {
 		// Get checkout flow to see if we need to handle logic for embedded flow.
-		$checkout_flow = $settings['checkout_flow'] ?? 'embedded';
+		$checkout_flow = $settings['checkout_flow'] ?? 'inline';
 	} else {
 		// For stand alone payment methods, use redirect.
 		$checkout_flow = 'redirect';
@@ -250,7 +250,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		// Update order reference if this is embedded checkout flow.
 		$_checkout_flow = $order->get_meta( '_dibs_checkout_flow' );
 		$checkout_flow  = ! empty( $_checkout_flow ) ? $_checkout_flow : $checkout_flow;
-		if ( 'embedded' === $checkout_flow ) {
+		if ( nexi_is_embedded( $checkout_flow ) ) {
 			$order_reference_response = Nets_Easy()->api->update_nets_easy_order_reference( $payment_id, $order_id );
 			if ( is_wp_error( $order_reference_response ) ) {
 				$order->add_order_note(
@@ -439,4 +439,14 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
 	$type = ucfirst( strtolower( $type ) );
 
 	return apply_filters( 'nexi_custom_payment_method_title', "$gateway / $method $type", $order, $method, $type );
+}
+
+/**
+ * Check if the checkout flow is embedded.
+ *
+ * @param string $checkout_flow The checkout flow.
+ * @return bool
+ */
+function nexi_is_embedded( $checkout_flow ) {
+	return in_array( $checkout_flow, array( 'embedded', 'inline' ), true );
 }

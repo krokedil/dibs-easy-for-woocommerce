@@ -241,7 +241,6 @@ class Nets_Easy_Ajax extends WC_AJAX {
 	 * @return void
 	 */
 	public static function change_payment_method() {
-
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_key( $_POST['nonce'] ) : '';
 		if ( ! wp_verify_nonce( $nonce, 'nets_checkout' ) ) {
 			wp_send_json_error( 'bad_nonce' );
@@ -255,7 +254,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 		$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
 		$dibs_easy          = filter_input( INPUT_POST, 'dibs_easy', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( 'false' === $dibs_easy ) {
+		if ( wc_string_to_bool( $dibs_easy ) ) {
 			// Set chosen payment method to first gateway that is not DIBS Easy.
 			$first_gateway = reset( $available_gateways );
 			if ( 'dibs_easy' !== $first_gateway->id ) {

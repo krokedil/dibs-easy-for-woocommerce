@@ -45,7 +45,7 @@ class Nets_Easy_Admin_Notices {
 	public function __construct() {
 		$this->settings      = get_option( 'woocommerce_dibs_easy_settings' );
 		$this->enabled       = $this->settings['enabled'] ?? '';
-		$this->checkout_flow = $this->settings['checkout_flow'] ?? 'embedded';
+		$this->checkout_flow = $this->settings['checkout_flow'] ?? 'inline';
 		add_action( 'admin_init', array( $this, 'check_settings' ) );
 	}
 
@@ -92,9 +92,10 @@ class Nets_Easy_Admin_Notices {
 	 * Check how account creation is set.
 	 */
 	public function check_account() {
-		if ( 'yes' !== $this->enabled || 'embedded' !== $this->checkout_flow ) {
+		if ( 'yes' !== $this->enabled || ! nexi_is_embedded( $this->checkout_flow ) ) {
 			return;
 		}
+
 		// Account page - username.
 		if ( 'yes' === get_option( 'woocommerce_enable_signup_and_login_from_checkout' ) && 'no' === get_option( 'woocommerce_registration_generate_username' ) ) {
 			echo '<div class="notice notice-error">';
