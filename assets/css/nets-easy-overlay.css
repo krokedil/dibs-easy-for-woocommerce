@@ -38,3 +38,8 @@
   .close-netseasy-modal:hover {
     color: darkgray;
   }
+
+/* INLINE CHECKOUT */
+#order_review > .woocommerce-checkout-review-order-table:has(~ #nexi-inline-modal) {
+    margin-bottom: 0;
+}

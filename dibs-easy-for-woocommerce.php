@@ -8,7 +8,7 @@
  * Plugin Name:             Nexi Checkout
  * Plugin URI:              https://krokedil.se/produkt/nets-easy/
  * Description:             Extends WooCommerce. Provides a <a href="http://developer.nexigroup.com/nexi-checkout/en-EU/docs/checkout-for-woocommerce/" target="_blank">Nexi Checkout</a> payment solution for WooCommerce.
- * Version:                 2.10.4
+ * Version:                 2.11.0
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -16,7 +16,7 @@
  * Text Domain:             dibs-easy-for-woocommerce
  * Domain Path:             /languages
  * WC requires at least:    5.6.0
- * WC tested up to:         9.7.0
+ * WC tested up to:         9.8.5
  * Copyright:               © 2017-2025 Krokedil AB.
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '2.10.4' );
+define( 'WC_DIBS_EASY_VERSION', '2.11.0' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -125,7 +125,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 */
 		public function __construct() {
 			$this->dibs_settings                      = get_option( 'woocommerce_dibs_easy_settings' );
-			$this->checkout_flow                      = $this->dibs_settings['checkout_flow'] ?? 'embedded';
+			$this->checkout_flow                      = $this->dibs_settings['checkout_flow'] ?? 'inline';
 			$this->enable_payment_method_card         = $this->dibs_settings['enable_payment_method_card'] ?? 'no';
 			$this->enable_payment_method_sofort       = $this->dibs_settings['enable_payment_method_sofort'] ?? 'no';
 			$this->enable_payment_method_trustly      = $this->dibs_settings['enable_payment_method_trustly'] ?? 'no';
@@ -180,9 +180,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				return;
 			}
 
-			if ( 'embedded' === $this->checkout_flow ) {
-				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
-			}
+			// Functions are used in the files below.
+			include_once plugin_basename( 'includes/nets-easy-functions.php' );
 
 			include_once plugin_basename( 'classes/class-nets-easy-ajax.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-order-management.php' );
@@ -195,7 +194,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-subscriptions.php' );
 
 			include_once plugin_basename( 'includes/nets-easy-country-converter.php' );
-			include_once plugin_basename( 'includes/nets-easy-functions.php' );
 
 			include_once plugin_basename( 'classes/requests/class-nets-easy-request.php' );
 			include_once plugin_basename( 'classes/requests/class-nets-easy-request-post.php' );
@@ -226,6 +224,10 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-assets.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-api.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-checkout.php' );
+
+			if ( nexi_is_embedded( $this->checkout_flow ) ) {
+				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
+			}
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
 

@@ -24,14 +24,14 @@ class Nets_Easy_Checkout_Helper {
 	 *
 	 * @return array
 	 */
-	public static function get_checkout( $checkout_flow = 'embedded', $order_id = null ) {
+	public static function get_checkout( $checkout_flow = 'inline', $order_id = null ) {
 		$dibs_settings = get_option( 'woocommerce_dibs_easy_settings' );
 		$auto_capture  = $dibs_settings['auto_capture'] ?? 'no';
 
 		$checkout = array(
 			'termsUrl' => wc_get_page_permalink( 'terms' ),
 		);
-		if ( 'embedded' === $checkout_flow ) {
+		if ( nexi_is_embedded( $checkout_flow ) ) {
 			$checkout['url']                   = wc_get_checkout_url();
 			$checkout['shipping']['countries'] = array();
 
@@ -48,6 +48,9 @@ class Nets_Easy_Checkout_Helper {
 
 			$checkout['consumer'] = self::prefill_embedded_customer_data();
 
+			if ( 'inline' === $checkout_flow ) {
+				$checkout['merchantHandlesConsumerData'] = true;
+			}
 		} else {
 			$order      = wc_get_order( $order_id );
 			$return_url = add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() );
@@ -120,18 +123,18 @@ class Nets_Easy_Checkout_Helper {
 	/**
 	 * Gets customer address.
 	 *
-	 * @param object $order The WooCommerce order.
+	 * @param WC_Order $order The WooCommerce order.
 	 * @return array
 	 */
 	public static function get_consumer_address( $order ) {
 		$consumer          = array();
 		$consumer['email'] = $order->get_billing_email();
 
-		if ( $order->get_billing_address_1() ) {
+		if ( ! empty( $order->get_billing_address_1() ) ) {
 			$consumer['shippingAddress']['addressLine1'] = $order->get_billing_address_1();
 		}
 
-		if ( $order->get_billing_address_2() ) {
+		if ( ! empty( $order->get_billing_address_2() ) ) {
 			$consumer['shippingAddress']['addressLine2'] = $order->get_billing_address_2();
 		}
 
@@ -152,6 +155,11 @@ class Nets_Easy_Checkout_Helper {
 		if ( $order->get_billing_phone() ) {
 			$consumer['phoneNumber']['prefix'] = self::get_phone_prefix( $order );
 			$consumer['phoneNumber']['number'] = self::get_phone_number( $order );
+
+			// The prefix is always set, but the number is not. Both must be non-empty.
+			if ( empty( $consumer['phoneNumber']['number'] ) ) {
+				unset( $consumer['phoneNumber'] );
+			}
 		}
 
 		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
@@ -161,10 +169,21 @@ class Nets_Easy_Checkout_Helper {
 			$consumer['company']['name']                 = $order->get_billing_company();
 			$consumer['company']['contact']['firstName'] = $order->get_billing_first_name();
 			$consumer['company']['contact']['lastName']  = $order->get_billing_last_name();
+
+			$has_person = array_filter( $consumer['company']['contact'] );
+			if ( count( $has_person ) <= 1 ) {
+				unset( $consumer['contact'] );
+			}
 		} else {
 			$consumer['privatePerson']['firstName'] = $order->get_billing_first_name();
 			$consumer['privatePerson']['lastName']  = $order->get_billing_last_name();
+
+			$has_person = array_filter( $consumer['privatePerson'] );
+			if ( count( $has_person ) <= 1 ) {
+				unset( $consumer['privatePerson'] );
+			}
 		}
+
 		return $consumer;
 	}
 
@@ -216,36 +235,46 @@ class Nets_Easy_Checkout_Helper {
 		/**
 		 * The customer object.
 		 *
-		 * @var $customer WC_Customer
+		 * @var WC_Customer $customer
 		 */
 		$customer          = WC()->customer;
 		$email             = $customer->get_billing_email();
 		$consumer['email'] = $email;
 
-		if ( $customer->get_billing_address_1() ) {
+		if ( ! empty( $customer->get_billing_address_1() ) ) {
 			$consumer['shippingAddress']['addressLine1'] = $customer->get_billing_address_1();
 		}
 
-		if ( $customer->get_billing_address_2() ) {
+		if ( ! empty( $customer->get_billing_address_2() ) ) {
 			$consumer['shippingAddress']['addressLine2'] = $customer->get_billing_address_2();
 		}
 
-		if ( $customer->get_billing_postcode() ) {
-			$postal_code = null;
-			if ( ! empty( $customer->get_billing_postcode() ) ) {
-				$postal_code = str_replace( ' ', '', $customer->get_billing_postcode() );
-			}
+		$has_address = isset( $consumer['shippingAddress']['addressLine1'] );
+		if ( ! $has_address ) {
+			unset( $consumer['shippingAddress'] );
+		}
+
+		if ( ! empty( $customer->get_billing_postcode() ) ) {
+			$postal_code                               = str_replace( ' ', '', $customer->get_billing_postcode() );
 			$consumer['shippingAddress']['postalCode'] = $postal_code;
 		}
 
-		if ( $customer->get_billing_city() ) {
-			$consumer['shippingAddress']['city'] = $customer->get_billing_city();
+		// If any of these fields is set, the other must be set too.
+		if ( $has_address ) {
+			$consumer['shippingAddress']['country'] = dibs_get_iso_3_country( $customer->get_billing_country() );
+			if ( ! empty( $customer->get_billing_city() ) ) {
+				$consumer['shippingAddress']['city'] = $customer->get_billing_city();
+			}
 		}
-
-		$consumer['shippingAddress']['country'] = dibs_get_iso_3_country( $customer->get_billing_country() );
 
 		$consumer['phoneNumber']['prefix'] = self::get_checkout_phone_prefix();
 		$consumer['phoneNumber']['number'] = self::get_checkout_phone_number();
+
+		// The prefix is always set, but the number is not. Both must be non-empty.
+		$has_phone = array_filter( $consumer['phoneNumber'] ?? array() );
+		if ( count( $has_phone ) <= 1 ) {
+			unset( $consumer['phoneNumber'] );
+		}
 
 		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
 		$allowed_customer_types = $dibs_settings['allowed_customer_types'] ?? 'B2C';
@@ -254,10 +283,21 @@ class Nets_Easy_Checkout_Helper {
 			$consumer['company']['name']                 = $customer->get_billing_company();
 			$consumer['company']['contact']['firstName'] = $customer->get_billing_first_name();
 			$consumer['company']['contact']['lastName']  = $customer->get_billing_last_name();
+
+			$has_contact = array_filter( $consumer['company']['contact'] ?? array() );
+			if ( count( $has_contact ) <= 1 ) {
+				unset( $consumer['company']['contact'] );
+			}
 		} else {
 			$consumer['privatePerson']['firstName'] = $customer->get_billing_first_name();
 			$consumer['privatePerson']['lastName']  = $customer->get_billing_last_name();
+
+			$has_person = array_filter( $consumer['privatePerson'] ?? array() );
+			if ( count( $has_person ) <= 1 ) {
+				unset( $consumer['privatePerson'] );
+			}
 		}
+
 		return $consumer;
 	}
 

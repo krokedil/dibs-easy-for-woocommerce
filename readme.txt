@@ -2,11 +2,11 @@
 Contributors: dibspayment, krokedil, NiklasHogefjord
 Tags: ecommerce, e-commerce, woocommerce, dibs, nets easy, nets, nexi
 Requires at least: 5.0
-Tested up to: 6.7.2
+Tested up to: 6.8.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 9.7.0
-Stable tag: 2.10.4
+WC tested up to: 9.8.5
+Stable tag: 2.11.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,9 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2025.06.02    - version 2.11.0 =
+* Feature       - Added a new embedded checkout flow, "Inline embedded".
+
 = 2025.05.05    - version 2.10.4 =
 * Fix           - Fixed an issue where duplicate orders could be created in rare cases.
 * Fix           - Limited the max size of a log message from the frontend to 1000 characters, to prevent excessively large logs from being created.
