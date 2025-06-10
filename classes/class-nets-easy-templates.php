@@ -128,14 +128,43 @@ class Nets_Easy_Templates {
 	 * @return string
 	 */
 	public function maybe_replace_checkout( $template, $template_name ) {
+
 		if ( 'checkout/form-checkout.php' === $template_name ) {
 
-			$maybe_template = locate_template( 'woocommerce/nets-easy-checkout.php' );
-			$nexi_template  = $maybe_template ? $maybe_template : WC_DIBS_PATH . '/templates/nets-easy-checkout.php';
+			$maybe_template     = locate_template( 'woocommerce/nets-easy-checkout.php' );
+			$nexi_template      = $maybe_template ? $maybe_template : WC_DIBS_PATH . '/templates/nets-easy-checkout.php';
+			$confirm            = filter_input( INPUT_GET, 'confirm', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+			$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
+			if ( array_key_exists( 'dibs_easy', $available_gateways ) ) {
+				// If chosen payment method exists.
+				if ( 'dibs_easy' === WC()->session->get( 'chosen_payment_method' ) ) {
+					error_log( '1' );
+					return $nexi_template;
+				}
 
-			return $nexi_template;
+				// If chosen payment method does not exist and Nexi is the first gateway.
+				if ( null === WC()->session->get( 'chosen_payment_method' ) || '' === WC()->session->get( 'chosen_payment_method' ) ) {
+					reset( $available_gateways );
+
+					if ( 'dibs_easy' === key( $available_gateways ) ) {
+						error_log( '2' );
+						return $nexi_template;
+					}
+				}
+
+				// If another gateway is saved in session, but has since become unavailable.
+				if ( WC()->session->get( 'chosen_payment_method' ) ) {
+					if ( ! array_key_exists( WC()->session->get( 'chosen_payment_method' ), $available_gateways ) ) {
+						reset( $available_gateways );
+
+						if ( 'dibs_easy' === key( $available_gateways ) ) {
+							error_log( '3' );
+							return $nexi_template;
+						}
+					}
+				}
+			}
 		}
-
 		return $template;
 	}
 
