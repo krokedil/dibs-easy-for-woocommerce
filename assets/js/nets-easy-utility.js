@@ -38,6 +38,7 @@ jQuery( function ( $ ) {
                 $.ajax( {
                     type: "POST",
                     data: {
+                        dibs_easy: true,
                         nonce: nets_easy_utility_params.nets_checkout_nonce,
                     },
                     dataType: "json",

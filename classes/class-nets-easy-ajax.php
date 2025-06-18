@@ -253,8 +253,9 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		WC()->cart->calculate_totals();
 
 		$available_gateways = WC()->payment_gateways()->get_available_payment_gateways();
-		$dibs_easy          = filter_input( INPUT_POST, 'dibs_easy', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		if ( wc_string_to_bool( $dibs_easy ) ) {
+		$dibs_easy          = filter_input( INPUT_POST, 'dibs_easy', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? false;
+
+		if ( ! wc_string_to_bool( $dibs_easy ) ) {
 			// Set chosen payment method to first gateway that is not DIBS Easy.
 			$first_gateway = reset( $available_gateways );
 			if ( 'dibs_easy' !== $first_gateway->id ) {
