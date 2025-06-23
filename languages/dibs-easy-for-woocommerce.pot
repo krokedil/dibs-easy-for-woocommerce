@@ -2,7 +2,7 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout 2.11.0\n"
+"Project-Id-Version: Nexi Checkout 2.11.1\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
 "POT-Creation-Date: 2025-06-02 08:30:18+00:00\n"
