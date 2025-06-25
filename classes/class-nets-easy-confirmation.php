@@ -41,7 +41,7 @@ class Nets_Easy_Confirmation {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'maybe_reload_page' ), 1 );
-		add_action( 'init', array( $this, 'confirm_order' ), 10, 2 );
+		add_action( 'init', array( $this, 'confirm_order' ), 999, 2 );
 		add_action( 'init', array( $this, 'maybe_confirm_customer_redirected_from_payment_page_order' ), 20 );
 	}
 
