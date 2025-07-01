@@ -80,6 +80,8 @@ jQuery( function ( $ ) {
          */
         loadNexi() {
             wcNexiCheckout.initNexiCheckout()
+            wcNexiCheckout.bodyEl.on( "update_checkout", wcNexiCheckout.updateCheckout )
+            wcNexiCheckout.bodyEl.on( "updated_checkout", wcNexiCheckout.updatedCheckout )
         },
 
         /**
@@ -314,6 +316,21 @@ jQuery( function ( $ ) {
         toggleInlineOverlay: () => {
             $( "#nexi-inline-modal" ).toggleClass( "netseasy-modal" )
             $( "#nexi-inline-modal-box" ).toggleClass( "netseasy-modal-box" )
+        },
+
+        updateCheckout() {
+            if ( window.Dibs !== undefined ) {
+                // lock iframe
+                wcNexiCheckout.nexiCheckout.freezeCheckout()
+            }
+        },
+        
+        updatedCheckout() {
+            if ( window.Dibs !== undefined ) {
+                // unlock iframe
+                wcNexiCheckout.nexiCheckout.thawCheckout()
+                $( "#dibs-order-review" ).unblock()
+            }
         },
     }
 
