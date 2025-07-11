@@ -32,7 +32,7 @@ jQuery( function ( $ ) {
                     const changedGateway = $( 'input[name="payment_method"]:checked' ).val()
 
                     // If neither the changed nor the previously selected gateway is Nexi Checkout, return.
-                    if( changedGateway !== "dibs_easy" && wcNexiCheckout.selectedGateway !== "dibs_easy" ) {
+                    if ( changedGateway !== "dibs_easy" && wcNexiCheckout.selectedGateway !== "dibs_easy" ) {
                         return
                     }
 
@@ -49,6 +49,10 @@ jQuery( function ( $ ) {
                 } )
 
                 wcNexiCheckout.loadNexi()
+
+                // Update the Nexi Checkout when the checkout is updated.
+                wcNexiCheckout.bodyEl.on( "update_checkout", wcNexiCheckout.updateCheckout )
+                wcNexiCheckout.bodyEl.on( "updated_checkout", wcNexiCheckout.updatedCheckout )
             } )
 
             $( "#nexi-inline-close-modal" ).on( "click", () => {
@@ -61,6 +65,21 @@ jQuery( function ( $ ) {
                 wcNexiCheckout.blockUI()
                 wcNexiCheckout.changeSelectedGateway( false )
             } )
+        },
+
+        updateCheckout() {
+            wcNexiCheckout.log( "update_checkout" )
+            if ( window.Dibs !== undefined ) {
+                wcNexiCheckout.blockUI()
+                wcNexiCheckout.nexiCheckout.freezeCheckout()
+            }
+        },
+        updatedCheckout() {
+            wcNexiCheckout.log( "updated_checkout" )
+            if ( window.Dibs !== undefined ) {
+                wcNexiCheckout.nexiCheckout.thawCheckout()
+                wcNexiCheckout.unblockUI()
+            }
         },
 
         /**
