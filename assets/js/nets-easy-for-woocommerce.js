@@ -216,6 +216,7 @@ jQuery( function ( $ ) {
             let paymentId = $( "#nexi_payment_id" ).val()
             if ( ! paymentId ) {
                 paymentId = wcDibsEasy.dibs_payment_id
+                $( "#nexi_payment_id" ).val( paymentId )
             }
 
             // Constructs a new Checkout object.
