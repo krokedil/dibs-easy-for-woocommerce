@@ -42,7 +42,7 @@ With a test account, you will see how the Nexi Checkout administration portal wo
 3. Upload the entire plugin directory to your /wp-content/plugins/ directory.
 4. Activate the plugin through the 'Plugins' menu in WordPress Administration.
 5. Go WooCommerce Settings --> Payment Gateways and configure your Nexi Checkout settings.
-6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
+6. Read more about the configuration process in the [plugin documentation](https://docs.krokedil.com/nexi-checkout/).
 
 
 == Frequently Asked Questions ==
@@ -50,7 +50,7 @@ With a test account, you will see how the Nexi Checkout administration portal wo
 Available for merchants in Denmark, Sweden and Norway.
 
 = Where can I find Nexi Checkout documentation? =
-For help setting up and configuring Nexi Checkout please refer to our [documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
+For help setting up and configuring Nexi Checkout please refer to our [documentation](https://docs.krokedil.com/nexi-checkout/).
 
 = Are there any specific requirements? =
 * WooCommerce 5.0 or newer is required.
