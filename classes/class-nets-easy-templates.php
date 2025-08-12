@@ -47,6 +47,9 @@ class Nets_Easy_Templates {
 		add_action( 'wc_dibs_after_order_review', 'wc_dibs_show_another_gateway_button', 20 );
 		add_action( 'wc_dibs_after_snippet', array( $this, 'add_wc_form' ), 10 );
 
+		// Required for the update_order_review to work.
+		add_action( 'nexi_inline_before_snippet', array( $this, 'add_hidden_payment_method_field' ) );
+
 		// Since Nexi Inline overrides the payment method template, we need to add a "Select another payment method" button.
 		add_action( 'nexi_inline_after_snippet', 'wc_dibs_show_another_gateway_button' );
 	}
@@ -173,6 +176,21 @@ class Nets_Easy_Templates {
 			</div>
 			<input id="payment_method_dibs_easy" type="radio" class="input-radio" name="payment_method" value="dibs_easy" checked="checked" />
 		</div>
+		<?php
+	}
+
+	/**
+	 * Adds the payment method field to the checkout page.
+	 *
+	 * The update_order_review requires that the payment method field is either a checkbox or a radio button to be included in the $_POST data which is used for setting the chosen_payment_method, otherwise it will return an empty string.
+	 *
+	 * @see https://github.com/woocommerce/woocommerce/blob/7d2d3b87a32f4d83a673a62af863af89c9a6d7e5/plugins/woocommerce/client/legacy/js/frontend/checkout.js#L481-L497
+	 *
+	 * @return void
+	 */
+	public function add_hidden_payment_method_field() {
+		?>
+		<input id="payment_method_dibs_easy" type="radio" class="input-radio" name="payment_method" value="dibs_easy" checked="checked" hidden="true" />
 		<?php
 	}
 

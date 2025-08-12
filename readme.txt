@@ -6,7 +6,7 @@ Tested up to: 6.8.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 9.9.4
-Stable tag: 2.11.1
+Stable tag: 2.11.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -42,7 +42,7 @@ With a test account, you will see how the Nexi Checkout administration portal wo
 3. Upload the entire plugin directory to your /wp-content/plugins/ directory.
 4. Activate the plugin through the 'Plugins' menu in WordPress Administration.
 5. Go WooCommerce Settings --> Payment Gateways and configure your Nexi Checkout settings.
-6. Read more about the configuration process in the [plugin documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
+6. Read more about the configuration process in the [plugin documentation](https://docs.krokedil.com/nexi-checkout/).
 
 
 == Frequently Asked Questions ==
@@ -50,7 +50,7 @@ With a test account, you will see how the Nexi Checkout administration portal wo
 Available for merchants in Denmark, Sweden and Norway.
 
 = Where can I find Nexi Checkout documentation? =
-For help setting up and configuring Nexi Checkout please refer to our [documentation](http://docs.krokedil.com/documentation/nets-easy-for-woocommerce/).
+For help setting up and configuring Nexi Checkout please refer to our [documentation](https://docs.krokedil.com/nexi-checkout/).
 
 = Are there any specific requirements? =
 * WooCommerce 5.0 or newer is required.
@@ -59,6 +59,11 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2025.08.12    - version 2.11.2 =
+* Fix           - Fixed the checkout not always updating when adding coupons, using the inline embedded checkout flow.
+* Fix           - Fixed the pay button label not being translatable in the blocks checkout.
+* Tweak         - Tweaked the order confirmation priority to be compatible with the plugin "Checkout Field Editor for WooCommerce" by ThemeHigh.
+
 = 2025.06.23    - version 2.11.1 =
 * Fix           - Fixed an issue where the payment method couldn't be changed in some checkout flows after Nexi was initially selected.
 

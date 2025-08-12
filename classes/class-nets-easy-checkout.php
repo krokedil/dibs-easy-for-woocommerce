@@ -27,7 +27,7 @@ class Nets_Easy_Checkout {
 		add_action( 'woocommerce_after_calculate_totals', array( $this, 'update_nets_easy_order' ), 999999 );
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
 
-		if ( 'embedded' === $this->checkout_flow ) {
+		if ( in_array( $this->checkout_flow, array( 'embedded', 'inline' ), true ) ) {
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_hidden_payment_id_field' ), 30 );
 		}
 	}

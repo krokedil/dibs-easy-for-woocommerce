@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout 2.11.1\n"
+"Project-Id-Version: Nexi Checkout 2.11.2\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2025-06-02 08:30:18+00:00\n"
+"POT-Creation-Date: 2025-08-12 12:27:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,6 +13,11 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
+
+#: blocks/src/checkout/class-nets-easy-checkout-block.php:90
+#. translators: %s is the payment method title.
+msgid "Pay with %s"
+msgstr ""
 
 #: classes/class-nets-easy-admin-notices.php:72
 #. Translators: url to Woocommerce docs
