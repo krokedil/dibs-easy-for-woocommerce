@@ -54,6 +54,12 @@ class Nets_Easy_Api_Callbacks {
 			$post_body = file_get_contents( 'php://input' );
 			$data      = json_decode( $post_body, true );
 
+			if ( ! is_array( $data ) || ! isset( $data['data'] ) ) {
+				$json_error = json_last_error();
+				Nets_Easy_Logger::log( 'Invalid JSON received from Nets: ' . $post_body . '. JSON error: ' . $json_error );
+				return;
+			}
+
 			$amount       = $data['data']['order']['amount']['amount'];
 			$payment_id   = $data['data']['paymentId'];
 			$order_number = $data['data']['order']['reference'];
