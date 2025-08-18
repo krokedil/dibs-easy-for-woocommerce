@@ -226,7 +226,6 @@ abstract class Nets_Easy_Request {
 			}
 			$return = new WP_Error( $response_code, $error_message, $data );
 		} else {
-
 			$return = json_decode( wp_remote_retrieve_body( $response ), true );
 
 			if ( ! is_array( $return ) && 204 !== $response_code ) {
