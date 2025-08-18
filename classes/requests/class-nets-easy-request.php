@@ -206,8 +206,9 @@ abstract class Nets_Easy_Request {
 			// Get the error messages.
 			$errors = json_decode( $response['body'], true );
 			if ( ! is_array( $errors ) ) {
-				$json_error = json_last_error();
-				Nets_Easy_Logger::log( 'Invalid JSON received from Nets: ' . $response['body'] . '. JSON error: ' . $json_error );
+				$json_error = json_last_error_msg();
+				Nets_Easy_Logger::log( 'Invalid JSON received from Nets while processing response errors, response body: ' . $response['body'] . '. JSON error: ' . $json_error );
+
 				$message       = wp_remote_retrieve_response_message( $response );
 				$error_message = "API Error {$response_code}, message : {$message}";
 			} else {
@@ -225,10 +226,12 @@ abstract class Nets_Easy_Request {
 			}
 			$return = new WP_Error( $response_code, $error_message, $data );
 		} else {
+
 			$return = json_decode( wp_remote_retrieve_body( $response ), true );
-			if ( ! is_array( $return ) ) {
-				$json_error = json_last_error();
-				Nets_Easy_Logger::log( 'Invalid JSON received from Nets: ' . wp_remote_retrieve_body( $response ) . '. JSON error: ' . $json_error );
+
+			if ( ! is_array( $return ) && 204 !== $response_code ) {
+				$json_error = json_last_error_msg();
+				Nets_Easy_Logger::log( 'Invalid JSON received from Nets while processing response, response body: ' . wp_remote_retrieve_body( $response ) . '. JSON error: ' . $json_error );
 			}
 		}
 
@@ -274,16 +277,12 @@ abstract class Nets_Easy_Request {
 		$code   = wp_remote_retrieve_response_code( $response );
 
 		$body = json_decode( $response['body'], true );
-		if ( ! is_array( $body ) ) {
-			$json_error = json_last_error();
-			Nets_Easy_Logger::log( 'Invalid JSON received from Nets: ' . $response['body'] . '. JSON error: ' . $json_error );
-		}
 
-		// Set payment id for reference iin log.
+		// Set payment id for reference in log.
 		if ( ! empty( $this->payment_id ) ) {
 			$order_id = $this->payment_id;
 		} else {
-			$order_id = is_array( $body ) ? ( $body['paymentId'] ?? $body['payment']['paymentId'] ?? null ) : null;
+			$order_id = $body['paymentId'] ?? $body['payment']['paymentId'] ?? null;
 		}
 
 		$log = Nets_Easy_Logger::format_log( $order_id, $method, $title, $request_args, $request_url, $response, $code );

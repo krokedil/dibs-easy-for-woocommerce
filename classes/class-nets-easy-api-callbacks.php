@@ -48,6 +48,7 @@ class Nets_Easy_Api_Callbacks {
 	 * Handle scheduling of payment completed webhook.
 	 */
 	public function payment_created_scheduler() {
+
 		$dibs_payment_created_callback = filter_input( INPUT_GET, 'dibs-payment-created-callback', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( ! empty( $dibs_payment_created_callback ) && '1' === $dibs_payment_created_callback ) {
 
@@ -55,8 +56,8 @@ class Nets_Easy_Api_Callbacks {
 			$data      = json_decode( $post_body, true );
 
 			if ( ! is_array( $data ) || ! isset( $data['data'] ) ) {
-				$json_error = json_last_error();
-				Nets_Easy_Logger::log( 'Invalid JSON received from Nets: ' . $post_body . '. JSON error: ' . $json_error );
+				$json_error = json_last_error_msg();
+				Nets_Easy_Logger::log( 'Invalid JSON received from Nets on payment created callback: ' . $post_body . '. JSON error: ' . $json_error . '. No action scheduled.' );
 				return;
 			}
 
