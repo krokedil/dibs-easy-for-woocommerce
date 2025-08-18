@@ -48,7 +48,6 @@ class Nets_Easy_Api_Callbacks {
 	 * Handle scheduling of payment completed webhook.
 	 */
 	public function payment_created_scheduler() {
-
 		$dibs_payment_created_callback = filter_input( INPUT_GET, 'dibs-payment-created-callback', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		if ( ! empty( $dibs_payment_created_callback ) && '1' === $dibs_payment_created_callback ) {
 
