@@ -56,7 +56,9 @@ class Nets_Easy_Api_Callbacks {
 
 			if ( ! is_array( $data ) || ! isset( $data['data'] ) ) {
 				$json_error = json_last_error_msg();
-				Nets_Easy_Logger::log( 'Invalid JSON received from Nets on payment created callback: ' . $post_body . '. JSON error: ' . $json_error . '. No action scheduled.' );
+				// Limit the length of the log.
+				$log_post_body = substr( $post_body, 0, 100 ) . ( strlen( $post_body ) > 100 ? '...' : '' );
+				Nets_Easy_Logger::log( 'Invalid JSON received from Nets on payment created callback. JSON error: ' . $json_error . '. No action scheduled. Post body: ' . $log_post_body );
 				return;
 			}
 
