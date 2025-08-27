@@ -204,14 +204,8 @@ abstract class Nets_Easy_Request {
 			$data          = 'URL: ' . $request_url . ' - ' . wp_json_encode( $request_args );
 			$error_message = '';
 			// Get the error messages.
-			$errors = json_decode( $response['body'], true );
-			if ( ! is_array( $errors ) ) {
-				$json_error = json_last_error_msg();
-				Nets_Easy_Logger::log( 'Invalid JSON received from Nets while processing response errors, response body: ' . $response['body'] . '. JSON error: ' . $json_error );
-
-				$message       = wp_remote_retrieve_response_message( $response );
-				$error_message = "API Error {$response_code}, message : {$message}";
-			} else {
+			if ( null !== json_decode( $response['body'], true ) ) {
+				$errors = json_decode( $response['body'], true );
 				foreach ( $errors as $properties ) {
 					if ( is_array( $properties ) ) {
 						foreach ( $properties as $property ) {
@@ -227,11 +221,6 @@ abstract class Nets_Easy_Request {
 			$return = new WP_Error( $response_code, $error_message, $data );
 		} else {
 			$return = json_decode( wp_remote_retrieve_body( $response ), true );
-
-			if ( ! is_array( $return ) && 204 !== $response_code ) {
-				$json_error = json_last_error_msg();
-				Nets_Easy_Logger::log( 'Invalid JSON received from Nets while processing response, response body: ' . wp_remote_retrieve_body( $response ) . '. JSON error: ' . $json_error );
-			}
 		}
 
 		$this->log_response( $response, $request_args, $request_url );
