@@ -217,6 +217,9 @@ abstract class Nets_Easy_Request {
 						$error_message .= ' ' . $properties;
 					}
 				}
+			} else {
+				$message       = wp_remote_retrieve_response_message( $response );
+				$error_message = "API Error {$response_code}, message : {$message}";
 			}
 			$return = new WP_Error( $response_code, $error_message, $data );
 		} else {
