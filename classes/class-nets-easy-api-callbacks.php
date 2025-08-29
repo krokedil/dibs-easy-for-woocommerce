@@ -54,6 +54,14 @@ class Nets_Easy_Api_Callbacks {
 			$post_body = file_get_contents( 'php://input' );
 			$data      = json_decode( $post_body, true );
 
+			if ( ! is_array( $data ) || ! isset( $data['data'] ) ) {
+				$json_error = json_last_error_msg();
+				// Limit the length of the log.
+				$log_post_body = substr( $post_body, 0, 100 ) . ( strlen( $post_body ) > 100 ? '...' : '' );
+				Nets_Easy_Logger::log( 'Invalid JSON received from Nets on payment created callback. JSON error: ' . $json_error . '. No action scheduled. Post body: ' . $log_post_body );
+				return;
+			}
+
 			$amount       = $data['data']['order']['amount']['amount'];
 			$payment_id   = $data['data']['paymentId'];
 			$order_number = $data['data']['order']['reference'];

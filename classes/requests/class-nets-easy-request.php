@@ -269,7 +269,7 @@ abstract class Nets_Easy_Request {
 
 		$body = json_decode( $response['body'], true );
 
-		// Set payment id for reference iin log.
+		// Set payment id for reference in log.
 		if ( ! empty( $this->payment_id ) ) {
 			$order_id = $this->payment_id;
 		} else {
