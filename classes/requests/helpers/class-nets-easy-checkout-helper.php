@@ -68,6 +68,7 @@ class Nets_Easy_Checkout_Helper {
 			$checkout['shipping']['countries']                   = array();
 			$checkout['shipping']['merchantHandlesShippingCost'] = false;
 			$checkout['consumer']                                = self::get_consumer_address( $order );
+			$checkout['countryCode']                             = dibs_get_iso_3_country( $order->get_billing_country() );
 		}
 
 		$allowed_customer_types = $dibs_settings['allowed_customer_types'] ?? 'B2C';
