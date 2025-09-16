@@ -46,7 +46,8 @@ class Nets_Easy_Checkout_Helper {
 				$checkout['shipping']['countries'] = self::get_shipping_countries();
 			}
 
-			$checkout['consumer'] = self::prefill_embedded_customer_data();
+			$checkout['consumer']    = self::prefill_embedded_customer_data();
+			$checkout['countryCode'] = dibs_get_iso_3_country( WC()->customer->get_billing_country() );
 
 			if ( 'inline' === $checkout_flow ) {
 				$checkout['merchantHandlesConsumerData'] = true;
@@ -68,9 +69,8 @@ class Nets_Easy_Checkout_Helper {
 			$checkout['shipping']['countries']                   = array();
 			$checkout['shipping']['merchantHandlesShippingCost'] = false;
 			$checkout['consumer']                                = self::get_consumer_address( $order );
+			$checkout['countryCode']                             = dibs_get_iso_3_country( $order->get_billing_country() );
 		}
-
-		$checkout['countryCode'] = dibs_get_iso_3_country( isset( $order ) ? $order->get_billing_country() : WC()->customer->get_billing_country() );
 
 		$allowed_customer_types = $dibs_settings['allowed_customer_types'] ?? 'B2C';
 		switch ( $allowed_customer_types ) {
