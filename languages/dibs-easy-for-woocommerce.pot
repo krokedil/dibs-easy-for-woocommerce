@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout 2.11.2\n"
+"Project-Id-Version: Nexi Checkout 2.11.3\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2025-08-12 12:27:54+00:00\n"
+"POT-Creation-Date: 2025-09-23 09:34:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,8 +58,8 @@ msgstr ""
 msgid "Cart total does not match Nets order total. Please try refreshing the page."
 msgstr ""
 
-#: classes/class-nets-easy-api-callbacks.php:112
-#: classes/class-nets-easy-api-callbacks.php:117
+#: classes/class-nets-easy-api-callbacks.php:120
+#: classes/class-nets-easy-api-callbacks.php:125
 #. Translators: Nets order total.
 msgid ""
 "Order needs manual review. WooCommerce order total and Nexi order total do "
