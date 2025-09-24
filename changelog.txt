@@ -1,4 +1,54 @@
 *** Nexi Checkout Changelog ***
+2025-09-23  - version 2.11.3
+* Fix       - The countryCode is now included in checkout requests to Nexi, so only payment options available for the customer's country are displayed.
+* Tweak     - Extended logging for JSON decoding, to improve troubleshooting of unexpected API responses.
+
+2025-08-12  - version 2.11.2
+* Fix       - Fixed the checkout not always updating when adding coupons, using the inline embedded checkout flow.
+* Fix       - Fixed the pay button label not being translatable in the blocks checkout.
+* Tweak     - Tweaked the order confirmation priority to be compatible with the plugin "Checkout Field Editor for WooCommerce" by ThemeHigh.
+
+2025-06-23  - version 2.11.1
+* Fix       - Fixed an issue where the payment method couldn't be changed in some checkout flows after Nexi was initially selected.
+
+2025-06-02  - version 2.11.0
+* Feature   - Added a new embedded checkout flow, "Inline embedded".
+
+2025-05-05  - version 2.10.4
+* Fix       - Fixed an issue where duplicate orders could be created in rare cases.
+* Fix       - Limited the max size of a log message from the frontend to 1000 characters, to prevent excessively large logs from being created.
+
+2025-03-24  - version 2.10.3
+* Fix       - Declared support for subscriptions in blocks.
+* Fix       - Fixed checkout page in admin pages from blanking.
+* Fix       - Removed redundant console logging.
+
+2025-03-12  - version 2.10.2
+* Tweak     - Added an admin notice for missing dependencies when needed.
+
+2025-02-17  - version 2.10.1
+* Fix       - Added missing dependencies folder.
+
+2025-02-17  - version 2.10.0
+* Feature   - Added support for the gift card plugins "Gift Cards" by Woo, "PW WooCommerce Gift Cards" by Pimwick, "YITH WooCommerce Gift Cards" by YITH, and "WooCommerce Smart Coupons" by StoreApps.
+* Fix       - The overlay should now close as intended when the customer clicks on the return to store button.
+* Fix       - Addressed various deprecation warnings in PHP 8.
+* Fix       - The 'change_nexi_order_button_label' action filter should now work as intended.
+* Tweak     - Updated assets and log name to reflect the Nexi rebranding.
+
+2024-11-11  - version 2.9.4
+* Feature   - Added the 'nexi_order_button_label' filter to allow changing the text of the payment button on block-based checkout pages.
+* Feature   - Added the 'nexi_custom_payment_method_title' filter to allow changing the payment method title.
+* Fix       - Fixed checkout validation failing if the phone number included hyphens without specifying a country calling code.
+
+2024-10-14  - version 2.9.3
+* Fix       - Prevented a 405 error when the payment ID is missing.
+* Tweak     - Added payment method name and type to the title.
+* Tweak     - Improved logging for missing payment ID.
+
+2024-09-03  - version 2.9.2
+* Fix       - The overlay modal should now close as intended when the customer clicks on the return to store button.
+
 2024-07-02  - version 2.9.1
 * Fix       - Fixed missing payment gateway icons.
 * Fix       - Escape redirect URLs for redirect and overlay checkout flow.
