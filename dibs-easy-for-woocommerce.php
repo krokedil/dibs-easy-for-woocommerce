@@ -202,6 +202,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-create-order.php' );
 			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-update-order.php' );
 			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-update-order-reference.php' );
+			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-terminate-session.php' );
 			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-activate-order.php' );
 			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-cancel-order.php' );
 			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-refund-order.php' );
