@@ -247,6 +247,23 @@ class Nets_Easy_API {
 	}
 
 	/**
+	 * Terminates Nexi session.
+	 *
+	 * @param string $payment_id The payment identifier.
+	 *
+	 * @return array|mixed
+	 */
+	public function terminate_nets_easy_session( $payment_id ) {
+		$request  = new Nets_Easy_Request_Terminate_Session(
+			array(
+				'payment_id' => $payment_id,
+			)
+		);
+		$response = $request->request();
+		return $this->check_for_api_error( $response );
+	}
+
+	/**
 	 * Checks for WP Errors and returns either the response as array or a false.
 	 *
 	 * @param array|WP_Error $response The response from the request.
@@ -257,15 +274,5 @@ class Nets_Easy_API {
 			dibs_easy_print_error_message( $response );
 		}
 		return $response;
-	}
-
-	public function terminate_nets_easy_session( $payment_id ) {
-		$request  = new Nets_Easy_Request_Terminate_Session(
-			array(
-				'payment_id' => $payment_id,
-			)
-		);
-		$response = $request->request();
-		return $this->check_for_api_error( $response );
 	}
 }

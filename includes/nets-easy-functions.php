@@ -451,7 +451,12 @@ function nexi_is_embedded( $checkout_flow ) {
 	return in_array( $checkout_flow, array( 'embedded', 'inline' ), true );
 }
 
-
+/**
+ * Terminate Nexi session.
+ *
+ * @param string $payment_id The payment ID.
+ * @return void
+ */
 function nexi_terminate_session( $payment_id ) {
 	if ( empty( $payment_id ) && isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
