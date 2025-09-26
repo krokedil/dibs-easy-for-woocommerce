@@ -260,7 +260,7 @@ class Nets_Easy_API {
 			)
 		);
 		$response = $request->request();
-		return $this->check_for_api_error( $response );
+		return $response;
 	}
 
 	/**

@@ -80,6 +80,7 @@ class Nets_Easy_Checkout {
 
 		if ( $payment_id !== $payment_id_session ) {
 			nexi_terminate_session( $payment_id_session );
+			nexi_terminate_session( $payment_id );
 			wc_dibs_unset_sessions();
 			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $payment_id, $payment_id_session ) );
 			wc_add_notice( __( 'Nexi session issues. Please reload the page and try again.', 'dibs-easy-for-woocommerce' ), 'error' );
