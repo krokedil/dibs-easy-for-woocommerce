@@ -457,7 +457,7 @@ function nexi_terminate_session( $payment_id ) {
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 	}
 
-	if ( ! empty( $payment_id ) ) {
+	if ( empty( $payment_id ) ) {
 		Nets_Easy_Logger::log( 'No payment ID provided for session termination.' );
 		return;
 	}
