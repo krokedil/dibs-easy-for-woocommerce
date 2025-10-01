@@ -30,7 +30,6 @@ class Nets_Easy_API {
 		$response = $request->request();
 
 		return $this->check_for_api_error( $response );
-
 	}
 
 	/**
@@ -116,7 +115,6 @@ class Nets_Easy_API {
 		);
 		$response = $request->request();
 		return $this->check_for_api_error( $response );
-
 	}
 
 	/**
@@ -246,6 +244,23 @@ class Nets_Easy_API {
 		);
 		$response = $request->request();
 		return $this->check_for_api_error( $response );
+	}
+
+	/**
+	 * Terminates Nexi session.
+	 *
+	 * @param string $payment_id The payment identifier.
+	 *
+	 * @return array|mixed
+	 */
+	public function terminate_nets_easy_session( $payment_id ) {
+		$request  = new Nets_Easy_Request_Terminate_Session(
+			array(
+				'payment_id' => $payment_id,
+			)
+		);
+		$response = $request->request();
+		return $response;
 	}
 
 	/**
