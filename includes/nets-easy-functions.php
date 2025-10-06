@@ -450,3 +450,29 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
 function nexi_is_embedded( $checkout_flow ) {
 	return in_array( $checkout_flow, array( 'embedded', 'inline' ), true );
 }
+
+/**
+ * Terminate Nexi session.
+ *
+ * @param string $payment_id The payment ID.
+ * @return void
+ */
+function nexi_terminate_session( $payment_id ) {
+	try {
+		if ( empty( $payment_id ) && isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
+			$payment_id = WC()->session->get( 'dibs_payment_id' );
+		}
+
+		if ( empty( $payment_id ) ) {
+			Nets_Easy_Logger::log( 'No payment ID provided for session termination.' );
+			return;
+		}
+
+		$response = Nets_Easy()->api->terminate_nets_easy_session( $payment_id );
+		if ( is_wp_error( $response ) ) {
+			Nets_Easy_Logger::log( 'Error terminating Nexi session: ' . $response->get_error_message() );
+		}
+	} catch ( Exception $e ) {
+		Nets_Easy_Logger::log( 'Exception when terminating Nexi session: ' . $e->getMessage() );
+	}
+}

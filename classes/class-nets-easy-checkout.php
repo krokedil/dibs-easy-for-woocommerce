@@ -65,6 +65,7 @@ class Nets_Easy_Checkout {
 
 		// Check that the currency is the same as earlier, otherwise create a new session.
 		if ( get_woocommerce_currency() !== WC()->session->get( 'nets_easy_currency' ) ) {
+			nexi_terminate_session( $payment_id );
 			wc_dibs_unset_sessions();
 			Nets_Easy_Logger::log( 'Currency changed in update Nets function. Clearing Nets session and reloading the checkout page.' );
 			WC()->session->reload_checkout = true;
@@ -78,6 +79,8 @@ class Nets_Easy_Checkout {
 		$payment_id_session = WC()->session->get( 'dibs_payment_id' );
 
 		if ( $payment_id !== $payment_id_session ) {
+			nexi_terminate_session( $payment_id_session );
+			nexi_terminate_session( $payment_id );
 			wc_dibs_unset_sessions();
 			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $payment_id, $payment_id_session ) );
 			wc_add_notice( __( 'Nexi session issues. Please reload the page and try again.', 'dibs-easy-for-woocommerce' ), 'error' );
@@ -105,6 +108,7 @@ class Nets_Easy_Checkout {
 		// If so, delete the session and reload the page.
 		if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
 			if ( WC()->session->get( 'dibs_cart_contains_subscription' ) !== get_dibs_cart_contains_subscription() ) {
+				nexi_terminate_session( $payment_id_session );
 				wc_dibs_unset_sessions();
 				if ( wp_doing_ajax() ) {
 					WC()->session->reload_checkout = true;
