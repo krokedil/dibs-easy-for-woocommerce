@@ -1,0 +1,70 @@
+<?php
+/**
+ * This Nexi Checkout Swish payment method class.
+ *
+ * @package Nexi/PaymentMethods
+ */
+
+namespace Krokedil\Nexi\PaymentMethods;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Swish class
+ */
+class Swish extends BaseGateway {
+	/**
+	 * Swish constructor.
+	 */
+	public function __construct() {
+		parent::__construct();
+
+		$this->id                  = 'nets_easy_swish';
+		$this->method_title        = __( 'Nexi Checkout Swish', 'dibs-easy-for-woocommerce' );
+		$this->method_description  = __( 'Nexi Checkout Swish payment', 'dibs-easy-for-woocommerce' );
+		$this->payment_method_name = 'Swish';
+
+		$this->supports = array(
+			'products',
+			'refunds',
+		);
+
+		add_action( "woocommerce_update_options_payment_gateways_$this->id", array( $this, 'process_admin_options' ) );
+	}
+
+	/**
+	 * Checks if method should be available.
+	 *
+	 * @return bool
+	 */
+	public function check_availability() {
+		if ( 'yes' !== $this->enabled ) {
+			return false;
+		}
+
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return true;
+		}
+
+		if ( 'SEK' !== get_woocommerce_currency() ) {
+			return false;
+		}
+
+		if ( WC()->customer && method_exists( WC()->customer, 'get_billing_country' ) ) {
+			if ( 'SE' !== WC()->customer->get_billing_country() ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Init form fields.
+	 */
+	public function init_form_fields() {
+		$this->form_fields = include WC_DIBS_PATH . '/includes/nets-easy-settings-swish.php';
+	}
+}

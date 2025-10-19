@@ -36,8 +36,11 @@ define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
 define( 'DIBS_API_TEST_ENDPOINT', 'https://test.api.dibspayment.eu/v1/' );
 
 use KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
+use Krokedil\Nexi\PaymentMethods;
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
+
+
 	/**
 	 * Class DIBS_Easy
 	 */
@@ -81,35 +84,35 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		/**
 		 * Enable Payment Method Card
 		 *
-		 * @var $enable_payment_method_card
+		 * @var bool $enable_payment_method_card
 		 */
 		public $enable_payment_method_card;
 
 		/**
 		 * Enable Payment Method Sofort payment.
 		 *
-		 * @var $enable_payment_method_sofort
+		 * @var bool $enable_payment_method_sofort
 		 */
 		public $enable_payment_method_sofort;
 
 		/**
 		 * Enable Payment Method Trustly payment.
 		 *
-		 * @var $enable_payment_method_trustly
+		 * @var bool $enable_payment_method_trustly
 		 */
 		public $enable_payment_method_trustly;
 
 		/**
 		 * Enable Payment Method Swish payment.
 		 *
-		 * @var $enable_payment_method_swish
+		 * @var bool $enable_payment_method_swish
 		 */
 		public $enable_payment_method_swish;
 
 		/**
 		 * Enable Payment Method Ratepay payment.
 		 *
-		 * @var $enable_payment_method_ratepay_sepa
+		 * @var bool $enable_payment_method_ratepay_sepa
 		 */
 		public $enable_payment_method_ratepay_sepa;
 
@@ -126,11 +129,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		public function __construct() {
 			$this->dibs_settings                      = get_option( 'woocommerce_dibs_easy_settings' );
 			$this->checkout_flow                      = $this->dibs_settings['checkout_flow'] ?? 'inline';
-			$this->enable_payment_method_card         = $this->dibs_settings['enable_payment_method_card'] ?? 'no';
-			$this->enable_payment_method_sofort       = $this->dibs_settings['enable_payment_method_sofort'] ?? 'no';
-			$this->enable_payment_method_trustly      = $this->dibs_settings['enable_payment_method_trustly'] ?? 'no';
-			$this->enable_payment_method_swish        = $this->dibs_settings['enable_payment_method_swish'] ?? 'no';
-			$this->enable_payment_method_ratepay_sepa = $this->dibs_settings['enable_payment_method_ratepay_sepa'] ?? 'no';
+			$this->enable_payment_method_card         = 'yes' === ( $this->dibs_settings['enable_payment_method_card'] ?? 'no' );
+			$this->enable_payment_method_sofort       = 'yes' === ( $this->dibs_settings['enable_payment_method_sofort'] ?? 'no' );
+			$this->enable_payment_method_trustly      = 'yes' === ( $this->dibs_settings['enable_payment_method_trustly'] ?? 'no' );
+			$this->enable_payment_method_swish        = 'yes' === ( $this->dibs_settings['enable_payment_method_swish'] ?? 'no' );
+			$this->enable_payment_method_ratepay_sepa = 'yes' === ( $this->dibs_settings['enable_payment_method_ratepay_sepa'] ?? 'no' );
 
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_action( 'woocommerce_blocks_loaded', array( $this, 'register_block_method' ) );
@@ -255,15 +258,10 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
+
 			include_once plugin_basename( 'classes/class-nets-easy-gateway.php' );
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-card.php' );
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-sofort.php' );
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-trustly.php' );
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php' );
 
-			include_once plugin_basename( 'classes/payment-methods/class-nets-easy-gateway-swish.php' );
-
-			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_dibs_easy' ) );
+			add_filter( 'woocommerce_payment_gateways', array( $this, 'register_gateways' ) );
 		}
 
 		/**
@@ -329,39 +327,39 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		/**
 		 * Add the gateway to WooCommerce
 		 *
-		 * @param  array $methods Payment methods.
+		 * @param  array $gateways Payment methods.
 		 *
-		 * @return array $methods Payment methods.
+		 * @return array $gateways Payment methods.
 		 */
-		public function add_dibs_easy( $methods ) {
-			$methods[] = Nets_Easy_Gateway::class;
+		public function register_gateways( $gateways ) {
+			$gateways[] = Nets_Easy_Gateway::class;
 
 			// Maybe enable Card payment.
-			if ( 'yes' === $this->enable_payment_method_card ) {
-				$methods[] = Nets_Easy_Gateway_Card::class;
+			if ( $this->enable_payment_method_card ) {
+				$gateways[] = PaymentMethods\Card::class;
 			}
 
 			// Maybe enable Sofort payment.
-			if ( 'yes' === $this->enable_payment_method_sofort ) {
-				$methods[] = Nets_Easy_Gateway_Sofort::class;
+			if ( $this->enable_payment_method_sofort ) {
+				$gateways[] = PaymentMethods\Sofort::class;
 			}
 
 			// Maybe enable Trustly payment.
-			if ( 'yes' === $this->enable_payment_method_trustly ) {
-				$methods[] = Nets_Easy_Gateway_Trustly::class;
+			if ( $this->enable_payment_method_trustly ) {
+				$gateways[] = PaymentMethods\Trustly::class;
 			}
 
 			// Maybe enable Swish payment.
-			if ( 'yes' === $this->enable_payment_method_swish ) {
-				$methods[] = Nets_Easy_Gateway_Swish::class;
+			if ( $this->enable_payment_method_swish ) {
+				$gateways[] = PaymentMethods\Swish::class;
 			}
 
 			// Maybe enable Ratepay payment.
-			if ( 'yes' === $this->enable_payment_method_ratepay_sepa ) {
-				$methods[] = Nets_Easy_Gateway_Ratepay_Sepa::class;
+			if ( $this->enable_payment_method_ratepay_sepa ) {
+				$gateways[] = PaymentMethods\Ratepay_Sepa::class;
 			}
 
-			return $methods;
+			return $gateways;
 		}
 
 		/**
@@ -378,11 +376,11 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 				$payment_methods = array(
 					'dibs_easy'              => 'yes' === $main_payment_method_enabled,
-					'nets_easy_card'         => 'yes' === $this->enable_payment_method_card,
-					'nets_easy_sofort'       => 'yes' === $this->enable_payment_method_sofort,
-					'nets_easy_trustly'      => 'yes' === $this->enable_payment_method_trustly,
-					'nets_easy_swish'        => 'yes' === $this->enable_payment_method_swish,
-					'nets_easy_ratepay_sepa' => 'yes' === $this->enable_payment_method_ratepay_sepa,
+					'nets_easy_card'         => $this->enable_payment_method_card,
+					'nets_easy_sofort'       => $this->enable_payment_method_sofort,
+					'nets_easy_trustly'      => $this->enable_payment_method_trustly,
+					'nets_easy_swish'        => $this->enable_payment_method_swish,
+					'nets_easy_ratepay_sepa' => $this->enable_payment_method_ratepay_sepa,
 				);
 
 				add_action(
