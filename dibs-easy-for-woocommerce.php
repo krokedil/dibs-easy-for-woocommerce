@@ -270,15 +270,19 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * @return bool
 		 */
 		public function init_composer() {
-			$autoloader = WC_DIBS_PATH . '/dependencies/scoper-autoload.php';
+			// Autoload the /src directory classes.
+			$autoloader        = WC_DIBS_PATH . '/vendor/autoload.php';
+			$autoloader_result = is_readable( $autoloader ) && require $autoloader;
 
-			if ( ! is_readable( $autoloader ) ) {
+			// Autoload the /dependencies directory classes.
+			$autoloader_dependencies        = WC_DIBS_PATH . '/dependencies/scoper-autoload.php';
+			$autoloader_dependencies_result = is_readable( $autoloader_dependencies ) && require $autoloader_dependencies;
+			if ( ! $autoloader_dependencies_result || ! $autoloader_result ) {
 				self::missing_autoloader();
 				return false;
 			}
 
-			$autoloader_result = require $autoloader;
-			return ! $autoloader_result ? false : true;
+			return true;
 		}
 
 		/**
