@@ -33,6 +33,9 @@ class Vipps extends BaseGateway {
 		$this->init_form_fields();
 		$this->init_settings();
 
+		$this->title   = $this->get_option( 'title', $this->method_title );
+		$this->enabled = $this->get_option( 'enabled' );
+
 		$this->supports = array(
 			'products',
 			'refunds',

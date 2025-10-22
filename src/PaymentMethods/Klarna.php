@@ -30,6 +30,12 @@ class Klarna extends BaseGateway {
 		$this->available_countries  = array( 'SE', 'NO', 'DK', 'DE', 'AT' );
 		$this->available_currencies = array( 'SEK', 'NOK', 'DKK', 'EUR', 'CHF' );
 
+		$this->init_form_fields();
+		$this->init_settings();
+
+		$this->title   = $this->get_option( 'title', $this->method_title );
+		$this->enabled = $this->get_option( 'enabled' );
+
 		$this->supports = array(
 			'products',
 			'refunds',
