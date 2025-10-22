@@ -413,8 +413,13 @@ function nets_easy_get_order_by_purchase_id( $payment_id, $date_after = null ) {
 	return $order;
 }
 
+/**
+ * Get all payment method IDs.
+ *
+ * @return array
+ */
 function nets_easy_all_payment_method_ids() {
-	return array( 'dibs_easy', 'nets_easy_card', 'nets_easy_sofort', 'nets_easy_trustly', 'nets_easy_swish', 'nets_easy_ratepay_sepa' );
+	return array( 'dibs_easy', 'nets_easy_card', 'nets_easy_sofort', 'nets_easy_trustly', 'nets_easy_swish', 'nets_easy_ratepay_sepa', 'nets_easy_klarna', 'nets_easy_mobilepay', 'nets_easy_vipps' );
 }
 
 
