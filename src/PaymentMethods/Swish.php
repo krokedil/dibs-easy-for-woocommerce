@@ -26,6 +26,9 @@ class Swish extends BaseGateway {
 		$this->method_description  = __( 'Nexi Checkout Swish payment', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name = 'Swish';
 
+		$this->init_form_fields();
+		$this->init_settings();
+
 		$this->supports = array(
 			'products',
 			'refunds',

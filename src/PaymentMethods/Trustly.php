@@ -26,6 +26,12 @@ class Trustly extends BaseGateway {
 		$this->method_description  = __( 'Nexi Checkout Trustly payment', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name = 'Trustly';
 
+		$this->init_form_fields();
+		$this->init_settings();
+
+		$this->title   = $this->get_option( 'title', $this->method_title );
+		$this->enabled = $this->get_option( 'enabled' );
+
 		$this->supports = array(
 			'products',
 			'refunds',

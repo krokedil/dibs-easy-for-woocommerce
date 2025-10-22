@@ -27,6 +27,9 @@ class Ratepay_Sepa extends BaseGateway {
 		$this->payment_method_name  = 'RatePaySepa';
 		$this->available_currencies = array( 'EUR' );
 
+		$this->init_form_fields();
+		$this->init_settings();
+
 		$this->supports = array(
 			'products',
 			'refunds',

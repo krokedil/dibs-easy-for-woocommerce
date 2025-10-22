@@ -27,6 +27,9 @@ class Sofort extends BaseGateway {
 		$this->payment_method_name  = 'Sofort';
 		$this->available_currencies = array( 'EUR', 'GBP', 'CHF' );
 
+		$this->init_form_fields();
+		$this->init_settings();
+
 		$this->supports = array(
 			'products',
 			'refunds',

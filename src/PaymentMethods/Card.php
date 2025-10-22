@@ -26,6 +26,9 @@ class Card extends BaseGateway {
 		$this->method_description  = __( 'Nexi Checkout Card payment', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name = 'Card';
 
+		$this->init_form_fields();
+		$this->init_settings();
+
 		$this->supports = array(
 			'products',
 			'refunds',

@@ -30,6 +30,9 @@ class MobilePay extends BaseGateway {
 		$this->available_countries  = array( 'DK' );
 		$this->available_currencies = array( 'DKK' );
 
+		$this->init_form_fields();
+		$this->init_settings();
+
 		$this->supports = array(
 			'products',
 			'refunds',

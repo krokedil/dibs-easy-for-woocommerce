@@ -67,14 +67,15 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 		$this->id                 = 'dibs_easy';
 		$this->method_title       = __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' );
 		$this->method_description = __( 'Nexi Checkout Payment for checkout', 'dibs-easy-for-woocommerce' );
-		$this->description        = $this->get_option( 'description' );
-
 		// Load the form fields.
 		$this->init_form_fields();
-		// Load the settings.
+
+		// Initialize settings before getting options.
 		$this->init_settings();
+
 		// Get the settings values.
-		$this->title                          = $this->get_option( 'title' );
+		$this->description                    = $this->get_option( 'description' );
+		$this->title                          = $this->get_option( 'title', $this->method_title );
 		$this->enabled                        = $this->get_option( 'enabled' );
 		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'inline';
 		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? 'default';

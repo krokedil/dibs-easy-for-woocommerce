@@ -30,6 +30,9 @@ class Vipps extends BaseGateway {
 		$this->available_countries  = array( 'NO' );
 		$this->available_currencies = array( 'NOK' );
 
+		$this->init_form_fields();
+		$this->init_settings();
+
 		$this->supports = array(
 			'products',
 			'refunds',
