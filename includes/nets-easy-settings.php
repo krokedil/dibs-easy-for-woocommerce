@@ -226,5 +226,23 @@ return apply_filters(
 			'label'   => __( 'Enable Ratepay SEPA payment as separate payment method', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
+		'enable_payment_method_klarna'       => array(
+			'title'   => __( 'Klarna payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Klarna payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		'enable_payment_method_mobilepay'    => array(
+			'title'   => __( 'MobilePay payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable MobilePay payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		'enable_payment_method_vipps'        => array(
+			'title'   => __( 'Vipps payment', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Vipps payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
 	)
 );

@@ -117,6 +117,28 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		public $enable_payment_method_ratepay_sepa;
 
 		/**
+		 * Enable Payment Method Klarna.
+		 *
+		 * @var bool $enable_payment_method_klarna
+		 */
+		public $enable_payment_method_klarna;
+
+		/**
+		 * Enable Payment Method MobilePay.
+		 *
+		 * @var bool $enable_payment_method_mobilepay
+		 */
+		public $enable_payment_method_mobilepay;
+
+		/**
+		 * Enable Payment Method Vipps.
+		 *
+		 * @var bool $enable_payment_method_vipps
+		 */
+		public $enable_payment_method_vipps;
+
+
+		/**
 		 * The WooCommerce package from Krokedil
 		 *
 		 * @var KrokedilWooCommerce|null
@@ -134,6 +156,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			$this->enable_payment_method_trustly      = 'yes' === ( $this->dibs_settings['enable_payment_method_trustly'] ?? 'no' );
 			$this->enable_payment_method_swish        = 'yes' === ( $this->dibs_settings['enable_payment_method_swish'] ?? 'no' );
 			$this->enable_payment_method_ratepay_sepa = 'yes' === ( $this->dibs_settings['enable_payment_method_ratepay_sepa'] ?? 'no' );
+			$this->enable_payment_method_klarna       = 'yes' === ( $this->dibs_settings['enable_payment_method_klarna'] ?? 'no' );
+			$this->enable_payment_method_mobilepay    = 'yes' === ( $this->dibs_settings['enable_payment_method_mobilepay'] ?? 'no' );
+			$this->enable_payment_method_vipps        = 'yes' === ( $this->dibs_settings['enable_payment_method_vipps'] ?? 'no' );
 
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 			add_action( 'woocommerce_blocks_loaded', array( $this, 'register_block_method' ) );
@@ -363,6 +388,18 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 				$gateways[] = PaymentMethods\Ratepay_Sepa::class;
 			}
 
+			if ( $this->enable_payment_method_klarna ) {
+				$gateways[] = PaymentMethods\Klarna::class;
+			}
+
+			if ( $this->enable_payment_method_mobilepay ) {
+				$gateways[] = PaymentMethods\MobilePay::class;
+			}
+
+			if ( $this->enable_payment_method_vipps ) {
+				$gateways[] = PaymentMethods\Vipps::class;
+			}
+
 			return $gateways;
 		}
 
@@ -385,6 +422,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 					'nets_easy_trustly'      => $this->enable_payment_method_trustly,
 					'nets_easy_swish'        => $this->enable_payment_method_swish,
 					'nets_easy_ratepay_sepa' => $this->enable_payment_method_ratepay_sepa,
+					'nets_easy_klarna'       => $this->enable_payment_method_klarna,
+					'nets_easy_mobilepay'    => $this->enable_payment_method_mobilepay,
+					'nets_easy_vipps'        => $this->enable_payment_method_vipps,
 				);
 
 				add_action(
