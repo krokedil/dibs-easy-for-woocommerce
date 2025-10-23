@@ -54,10 +54,6 @@ class Vipps extends BaseGateway {
 			return false;
 		}
 
-		if ( is_admin() && ! wp_doing_ajax() ) {
-			return true;
-		}
-
 		// Customer country check.
 		if ( WC()->customer && method_exists( WC()->customer, 'get_billing_country' ) ) {
 			if ( ! in_array( WC()->customer->get_billing_country(), $this->available_countries, true ) ) {

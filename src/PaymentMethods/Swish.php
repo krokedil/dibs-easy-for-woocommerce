@@ -50,10 +50,6 @@ class Swish extends BaseGateway {
 			return false;
 		}
 
-		if ( is_admin() && ! wp_doing_ajax() ) {
-			return true;
-		}
-
 		if ( 'SEK' !== get_woocommerce_currency() ) {
 			return false;
 		}
