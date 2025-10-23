@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Swish class
  */
 class Swish extends BaseGateway {
+
 	/**
 	 * Swish constructor.
 	 */
@@ -37,6 +38,7 @@ class Swish extends BaseGateway {
 			'refunds',
 		);
 
+		$this->set_checkout_flow();
 		add_action( "woocommerce_update_options_payment_gateways_$this->id", array( $this, 'process_admin_options' ) );
 	}
 
@@ -46,7 +48,8 @@ class Swish extends BaseGateway {
 	 * @return bool
 	 */
 	public function check_availability() {
-		if ( 'yes' !== $this->enabled ) {
+		$checkout_flow = $this->settings['checkout_flow'] ?? null;
+		if ( 'yes' !== $this->enabled || ! in_array( $checkout_flow, $this->supported_checkout_flows(), true ) ) {
 			return false;
 		}
 

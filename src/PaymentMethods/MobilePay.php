@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * MobilePay class
  */
 class MobilePay extends BaseGateway {
+
 	/**
 	 * MobilePay constructor.
 	 */
@@ -33,11 +34,15 @@ class MobilePay extends BaseGateway {
 		$this->init_form_fields();
 		$this->init_settings();
 
+		$this->title   = $this->get_option( 'title', $this->method_title );
+		$this->enabled = $this->get_option( 'enabled' );
+
 		$this->supports = array(
 			'products',
 			'refunds',
 		);
 
+		$this->set_checkout_flow();
 		add_action( "woocommerce_update_options_payment_gateways_$this->id", array( $this, 'process_admin_options' ) );
 	}
 
@@ -47,7 +52,8 @@ class MobilePay extends BaseGateway {
 	 * @return bool
 	 */
 	public function check_availability() {
-		if ( 'yes' !== $this->enabled ) {
+		$checkout_flow = $this->settings['checkout_flow'] ?? null;
+		if ( 'yes' !== $this->enabled || ! in_array( $checkout_flow, $this->supported_checkout_flows(), true ) ) {
 			return false;
 		}
 

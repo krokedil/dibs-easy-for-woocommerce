@@ -17,8 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Klarna class
  */
 class Klarna extends BaseGateway {
+
 	/**
-	 * DIBS_Easy_Gateway constructor.
+	 * Klarna constructor.
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -41,6 +42,7 @@ class Klarna extends BaseGateway {
 			'refunds',
 		);
 
+		$this->set_checkout_flow();
 		add_action( "woocommerce_update_options_payment_gateways_$this->id", array( $this, 'process_admin_options' ) );
 	}
 
@@ -50,9 +52,11 @@ class Klarna extends BaseGateway {
 	 * @return bool
 	 */
 	public function check_availability() {
-		if ( 'yes' !== $this->enabled ) {
+		$checkout_flow = $this->settings['checkout_flow'] ?? null;
+		if ( 'yes' !== $this->enabled || ! in_array( $checkout_flow, $this->supported_checkout_flows(), true ) ) {
 			return false;
 		}
+
 		// Customer country check.
 		if ( WC()->customer && method_exists( WC()->customer, 'get_billing_country' ) ) {
 			if ( ! in_array( WC()->customer->get_billing_country(), $this->available_countries, true ) ) {

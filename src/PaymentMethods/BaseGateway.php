@@ -19,6 +19,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class BaseGateway extends WC_Payment_Gateway {
 	/**
+	 * The default checkout flow
+	 *
+	 * @var string
+	 */
+	protected $default_checkout_flow = 'redirect';
+
+	/**
 	 * The checkout flow
 	 *
 	 * @var string
@@ -77,7 +84,6 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 		$this->description                    = $this->get_option( 'description' );
 		$this->title                          = $this->get_option( 'title', $this->method_title );
 		$this->enabled                        = $this->get_option( 'enabled' );
-		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'inline';
 		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? 'default';
 		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? '145';
 		$this->available_countries            = $this->settings['available_countries'] ?? array();
@@ -100,10 +106,43 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			$this->supports[] = 'refunds';
 		}
 
+		$this->set_checkout_flow();
+
 		// Add class if DIBS Easy is set as the default gateway.
 		add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
 		add_action( 'woocommerce_thankyou_dibs_easy', array( $this, 'dibs_thankyou' ) );
 		add_action( 'woocommerce_thankyou', array( $this, 'maybe_delete_dibs_sessions' ), 100, 1 );
+	}
+
+	/**
+	 * Init settings for gateways.
+	 *
+	 * Override to include settings from parent gateway.
+	 */
+	public function init_settings() {
+		parent::init_settings();
+		$this->settings = wp_parse_args( $this->settings, get_option( 'woocommerce_dibs_easy_settings', array() ) );
+	}
+
+	/**
+	 * Set the checkout flow.
+	 */
+	protected function set_checkout_flow() {
+		$supported = $this->supported_checkout_flows();
+		if ( isset( $this->settings['checkout_flow'] ) && in_array( $this->settings['checkout_flow'], $supported, true ) ) {
+			$this->checkout_flow = $this->settings['checkout_flow'];
+		} else {
+			$this->checkout_flow = $this->default_checkout_flow;
+		}
+	}
+
+	/**
+	 * Supported checkout flows.
+	 *
+	 * @return array
+	 */
+	protected function supported_checkout_flows() {
+		return array( 'redirect', 'overlay' );
 	}
 
 	/**
@@ -146,7 +185,8 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	 * @return bool
 	 */
 	protected function check_availability() {
-		return wc_string_to_bool( $this->enabled );
+		$checkout_flow = $this->settings['checkout_flow'] ?? null;
+		return wc_string_to_bool( $this->enabled ) && in_array( $checkout_flow, $this->supported_checkout_flows(), true );
 	}
 
 	/**
