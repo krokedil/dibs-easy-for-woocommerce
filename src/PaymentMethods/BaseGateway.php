@@ -71,47 +71,26 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	 * BaseGateway constructor.
 	 */
 	public function __construct() {
-		$this->id                 = 'dibs_easy';
-		$this->method_title       = __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' );
-		$this->method_description = __( 'Nexi Checkout Payment for checkout', 'dibs-easy-for-woocommerce' );
-		// Load the form fields.
-		$this->init_form_fields();
-
-		// Initialize settings before getting options.
-		$this->init_settings();
-
-		// Get the settings values.
-		$this->description                    = $this->get_option( 'description' );
-		$this->title                          = $this->get_option( 'title', $this->method_title );
-		$this->enabled                        = $this->get_option( 'enabled' );
 		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? 'default';
 		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? '145';
-		$this->available_countries            = $this->settings['available_countries'] ?? array();
 
-		$this->supports = array(
-			'products',
-			'subscriptions',
-			'subscription_cancellation',
-			'subscription_suspension',
-			'subscription_reactivation',
-			'subscription_amount_changes',
-			'subscription_date_changes',
-			'subscription_payment_method_change_customer',
-			'subscription_payment_method_change_admin',
-			'subscription_payment_method_change',
-			'multiple_subscriptions',
-		);
+		$available_countries       = empty( $this->available_countries ) ? $this->settings['available_countries'] ?? array() : $this->available_countries;
+		$this->available_countries = ! is_array( $available_countries ) ? array() : $available_countries;
 
 		if ( 'yes' === $this->get_option( 'dibs_manage_orders' ) ) {
 			$this->supports[] = 'refunds';
 		}
 
-		$this->set_checkout_flow();
+		$this->title       = $this->get_option( 'title', $this->method_title );
+		$this->enabled     = $this->get_option( 'enabled', $this->settings[ "enable_payment_method_{$this->payment_method_name}" ] ?? false );
+		$this->description = $this->get_option( 'description', $this->method_description );
 
 		// Add class if DIBS Easy is set as the default gateway.
 		add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
 		add_action( 'woocommerce_thankyou_dibs_easy', array( $this, 'dibs_thankyou' ) );
 		add_action( 'woocommerce_thankyou', array( $this, 'maybe_delete_dibs_sessions' ), 100, 1 );
+
+		$this->set_checkout_flow();
 	}
 
 	/**

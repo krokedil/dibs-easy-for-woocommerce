@@ -20,26 +20,23 @@ class Swish extends BaseGateway {
 	 * Swish constructor.
 	 */
 	public function __construct() {
-		parent::__construct();
-
-		$this->id                  = 'nets_easy_swish';
-		$this->method_title        = __( 'Nexi Checkout Swish', 'dibs-easy-for-woocommerce' );
-		$this->method_description  = __( 'Nexi Checkout Swish payment', 'dibs-easy-for-woocommerce' );
-		$this->payment_method_name = 'Swish';
+		$this->id                   = 'nets_easy_swish';
+		$this->method_title         = __( 'Nexi Checkout Swish', 'dibs-easy-for-woocommerce' );
+		$this->method_description   = __( 'Nexi Checkout Swish payment', 'dibs-easy-for-woocommerce' );
+		$this->payment_method_name  = 'Swish';
+		$this->available_countries  = array( 'SE' );
+		$this->available_currencies = array( 'SEK' );
 
 		$this->init_form_fields();
 		$this->init_settings();
-
-		$this->title   = $this->get_option( 'title', $this->method_title );
-		$this->enabled = $this->get_option( 'enabled' );
 
 		$this->supports = array(
 			'products',
 			'refunds',
 		);
 
-		$this->set_checkout_flow();
 		add_action( "woocommerce_update_options_payment_gateways_$this->id", array( $this, 'process_admin_options' ) );
+		parent::__construct();
 	}
 
 	/**
@@ -53,12 +50,14 @@ class Swish extends BaseGateway {
 			return false;
 		}
 
-		if ( 'SEK' !== get_woocommerce_currency() ) {
+		// Currency check.
+		if ( ! in_array( get_woocommerce_currency(), $this->available_currencies, true ) ) {
 			return false;
 		}
 
+		// Country check.
 		if ( WC()->customer && method_exists( WC()->customer, 'get_billing_country' ) ) {
-			if ( 'SE' !== WC()->customer->get_billing_country() ) {
+			if ( ! in_array( WC()->customer->get_billing_country(), $this->available_countries, true ) ) {
 				return false;
 			}
 		}

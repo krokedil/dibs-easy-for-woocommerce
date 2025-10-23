@@ -22,8 +22,6 @@ class MobilePay extends BaseGateway {
 	 * MobilePay constructor.
 	 */
 	public function __construct() {
-		parent::__construct();
-
 		$this->id                   = 'nets_easy_mobilepay';
 		$this->method_title         = __( 'Nexi Checkout MobilePay', 'dibs-easy-for-woocommerce' );
 		$this->method_description   = __( 'Nexi Checkout MobilePay payment', 'dibs-easy-for-woocommerce' );
@@ -34,16 +32,13 @@ class MobilePay extends BaseGateway {
 		$this->init_form_fields();
 		$this->init_settings();
 
-		$this->title   = $this->get_option( 'title', $this->method_title );
-		$this->enabled = $this->get_option( 'enabled' );
-
 		$this->supports = array(
 			'products',
 			'refunds',
 		);
 
-		$this->set_checkout_flow();
 		add_action( "woocommerce_update_options_payment_gateways_$this->id", array( $this, 'process_admin_options' ) );
+		parent::__construct();
 	}
 
 	/**
