@@ -44,7 +44,7 @@ class Sofort extends BaseGateway {
 	 * @return bool
 	 */
 	public function check_availability() {
-		$checkout_flow = $this->settings['checkout_flow'] ?? null;
+		$checkout_flow = $this->shared_settings['checkout_flow'] ?? null;
 		if ( 'yes' !== $this->enabled || ! in_array( $checkout_flow, $this->supported_checkout_flows(), true ) ) {
 			return false;
 		}
