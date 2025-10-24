@@ -28,6 +28,9 @@ class Trustly extends BaseGateway {
 		$this->init_form_fields();
 		$this->init_settings();
 
+		$available_countries       = $this->settings['available_countries'];
+		$this->available_countries = is_array( $available_countries ) ? $available_countries : array();
+
 		$this->supports = array(
 			'products',
 			'refunds',
