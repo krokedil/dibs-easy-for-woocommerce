@@ -107,7 +107,7 @@ class Nets_Easy_Checkout {
 		// Check if we have a case where a regular product is in the cart and the incorrect text on the button.
 		// If so, delete the session and reload the page.
 		if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
-			if ( WC()->session->get( 'dibs_cart_contains_subscription' ) !== get_dibs_cart_contains_subscription() ) {
+			if ( WC()->session->get( 'dibs_cart_contains_subscription' ) !== Nets_Easy_Subscriptions::cart_has_subscription() ) {
 				nexi_terminate_session( $payment_id_session );
 				wc_dibs_unset_sessions();
 				if ( wp_doing_ajax() ) {
@@ -119,7 +119,7 @@ class Nets_Easy_Checkout {
 		}
 
 		// If cart doesn't need payment anymore - reload the checkout page.
-		if ( apply_filters( 'nets_easy_check_if_needs_payment', true ) && 'no' === get_dibs_cart_contains_subscription() ) {
+		if ( apply_filters( 'nets_easy_check_if_needs_payment', true ) && ! Nets_Easy_Subscriptions::cart_has_subscription() ) {
 			if ( ! WC()->cart->needs_payment() ) {
 				Nets_Easy_Logger::log( 'Cart does not need payment. Reloading the checkout page.' );
 				WC()->session->reload_checkout = true;
