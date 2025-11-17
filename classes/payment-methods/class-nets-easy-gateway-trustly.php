@@ -64,7 +64,7 @@ class Nets_Easy_Gateway_Trustly extends WC_Payment_Gateway {
 		$this->enabled                        = $this->get_option( 'enabled' );
 		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'redirect';
 		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? 'default';
-		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? '145';
+		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_width'] ?? '145';
 		$this->available_countries            = $this->settings['available_countries'] ?? array();
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
