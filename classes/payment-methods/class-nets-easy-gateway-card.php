@@ -57,7 +57,7 @@ class Nets_Easy_Gateway_Card extends WC_Payment_Gateway {
 		$this->enabled                        = $this->get_option( 'enabled' );
 		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? $this->checkout_flow;
 		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? $this->payment_gateway_icon;
-		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? $this->payment_gateway_icon_max_width;
+		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_width'] ?? $this->payment_gateway_icon_max_width;
 
 		add_action( "woocommerce_update_options_payment_gateways_{$this->id}", array( $this, 'process_admin_options' ) );
 
