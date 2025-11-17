@@ -6,7 +6,7 @@ Tested up to: 6.8.3
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.2.2
-Stable tag: 2.12.0
+Stable tag: 2.12.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,11 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2025.11.17    - version 2.12.1 =
+* Fix           - Improved support for additional subscription scenarios, including failed renewals, resubscriptions, early renewals, and renewal switches.
+* Fix           - Fixed a compatibility issue with certain themes, which caused the Nexi session to be terminated immediately.
+* Fix           - Updated outdated documentation links to their current URLs.
+
 = 2025.10.06    - version 2.12.0 =
 * Feature       - Payments are now also terminated in Nets as the WooCommerce sessions are cleared, in cases where a new session is needed.
 * Fix           - Added changelog.txt to display plugin version correctly on woocommerce.com.

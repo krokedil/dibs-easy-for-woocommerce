@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout 2.12.0\n"
+"Project-Id-Version: Nexi Checkout 2.12.1\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2025-10-06 08:22:09+00:00\n"
+"POT-Creation-Date: 2025-11-17 09:54:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Please fill in all required checkout fields."
 msgstr ""
 
-#: classes/class-nets-easy-checkout.php:86
+#: classes/class-nets-easy-checkout.php:87
 msgid "Nexi session issues. Please reload the page and try again."
 msgstr ""
 
@@ -172,7 +172,7 @@ msgid ""
 "%2$s. Charge ID %3$s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:103
+#: classes/class-nets-easy-subscriptions.php:122
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:83
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:108
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:123
@@ -190,50 +190,50 @@ msgstr ""
 msgid "pcs"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:217
 #: classes/class-nets-easy-subscriptions.php:236
+#: classes/class-nets-easy-subscriptions.php:255
 #. Translators: Nets subscription recurring token.
 msgid "Nexi Checkout subscription ID/recurring token %s saved."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:311
+#: classes/class-nets-easy-subscriptions.php:330
 #. Translators: Nets Payment ID & Charge ID.
 msgid "Subscription payment made with Nets. Payment ID: %1$s. Charge ID %2$s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:320
+#: classes/class-nets-easy-subscriptions.php:339
 #. Translators: Request response from Nets.
 msgid "Subscription payment failed with Nets. Error message: %s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:352
+#: classes/class-nets-easy-subscriptions.php:371
 #. Translators: Nets recurring token.
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
 "Nets. Recurring token: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:362
+#: classes/class-nets-easy-subscriptions.php:381
 #. Translators: Request response.
 msgid "Error during Nets_Easy_Request_Get_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:393
+#: classes/class-nets-easy-subscriptions.php:412
 #. Translators: Recurring token & subscription type.
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
 "Nets. Recurring token:%1$s. Subscription type: %2$s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:403
+#: classes/class-nets-easy-subscriptions.php:422
 #. Translators: Request response.
 msgid ""
 "Error during "
 "Nets_Easy_Request_Get_Unscheduled_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:420
-#: classes/class-nets-easy-subscriptions.php:428
+#: classes/class-nets-easy-subscriptions.php:439
+#: classes/class-nets-easy-subscriptions.php:447
 msgid "Nets recurring token"
 msgstr ""
 
@@ -322,30 +322,30 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: includes/nets-easy-functions.php:73
+#: includes/nets-easy-functions.php:61
 msgid "Select another payment method"
 msgstr ""
 
-#: includes/nets-easy-functions.php:223
+#: includes/nets-easy-functions.php:211
 #. translators: %s: Error message
 msgid "Nexi Checkout: Error when confirming order: %s"
 msgstr ""
 
-#: includes/nets-easy-functions.php:259
+#: includes/nets-easy-functions.php:247
 #. translators: %s: Error message
 msgid ""
 "Nexi Checkout: Error when updating order reference to Nets. Error message : "
 "%s"
 msgstr ""
 
-#: includes/nets-easy-functions.php:273
+#: includes/nets-easy-functions.php:261
 #. Translators: Nexi Checkout Payment ID.
 msgid ""
 "New payment created in Nexi Checkout with Payment ID %1$s. Payment type - "
 "%2$s. Charge ID %3$s."
 msgstr ""
 
-#: includes/nets-easy-functions.php:276
+#: includes/nets-easy-functions.php:264
 #. Translators: Nexi Checkout Payment ID.
 msgid ""
 "New payment created in Nexi Checkout with Payment ID %1$s. Payment type - "
@@ -743,8 +743,8 @@ msgid ""
 "Select the text displayed on the complete payment button. Only applicable "
 "for subscription based payments. Translations for the selections can be "
 "found <a "
-"href=\"https://docs.krokedil.com/nets-easy-for-woocommerce/get-started/"
-"subscription-support/#custom-button-text-for-subscription-payments\" "
+"href=\"https://docs.krokedil.com/nexi-checkout/get-started/subscription-"
+"support/#custom-button-text-for-subscription-payments\" "
 "target=\"_blank\">here.</a>"
 msgstr ""
 
