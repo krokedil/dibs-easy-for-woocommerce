@@ -26,6 +26,7 @@ class Klarna extends BaseGateway {
 		$this->method_title         = __( 'Nexi Checkout Klarna', 'dibs-easy-for-woocommerce' );
 		$this->method_description   = __( 'Nexi Checkout Klarna payment', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name  = 'Klarna';
+		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/klarna.png';
 		$this->available_countries  = array( 'SE', 'NO', 'DK', 'DE', 'AT' );
 		$this->available_currencies = array( 'SEK', 'NOK', 'DKK', 'EUR', 'CHF' );
 

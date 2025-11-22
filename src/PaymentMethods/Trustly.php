@@ -20,10 +20,11 @@ class Trustly extends BaseGateway {
 	 * Trustly constructor.
 	 */
 	public function __construct() {
-		$this->id                  = 'nets_easy_trustly';
-		$this->method_title        = __( 'Nexi Checkout Trustly', 'dibs-easy-for-woocommerce' );
-		$this->method_description  = __( 'Nexi Checkout Trustly payment', 'dibs-easy-for-woocommerce' );
-		$this->payment_method_name = 'Trustly';
+		$this->id                   = 'nets_easy_trustly';
+		$this->method_title         = __( 'Nexi Checkout Trustly', 'dibs-easy-for-woocommerce' );
+		$this->method_description   = __( 'Nexi Checkout Trustly payment', 'dibs-easy-for-woocommerce' );
+		$this->payment_method_name  = 'Trustly';
+		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/trustly.png';
 
 		$this->init_form_fields();
 		$this->init_settings();

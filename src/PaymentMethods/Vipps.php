@@ -26,6 +26,7 @@ class Vipps extends BaseGateway {
 		$this->method_title         = __( 'Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' );
 		$this->method_description   = __( 'Nexi Checkout Vipps payment', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name  = 'Vipps';
+		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/vipps.png';
 		$this->available_countries  = array( 'NO' );
 		$this->available_currencies = array( 'NOK' );
 

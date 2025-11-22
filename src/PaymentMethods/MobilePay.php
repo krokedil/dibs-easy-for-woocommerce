@@ -26,6 +26,7 @@ class MobilePay extends BaseGateway {
 		$this->method_title         = __( 'Nexi Checkout MobilePay', 'dibs-easy-for-woocommerce' );
 		$this->method_description   = __( 'Nexi Checkout MobilePay payment', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name  = 'MobilePay';
+		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/mobilepay.png';
 		$this->available_countries  = array( 'DK' );
 		$this->available_currencies = array( 'DKK' );
 
