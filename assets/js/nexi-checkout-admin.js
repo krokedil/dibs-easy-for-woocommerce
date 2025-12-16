@@ -15,6 +15,8 @@ jQuery(window).on('load', function () {
             .contents()
             // Preserve any HTML formatting by only replacing the text node.
             .filter((_, node) => node.nodeType === 3 && node.textContent === 'Nexi Checkout')
-            .replaceWith(gateways[gatewayId]);
+            .replaceWith(gateways[gatewayId].label);
+
+        $gateway.find('.woocommerce-list__item-image').attr('src', gateways[gatewayId].logo);
     }
  });

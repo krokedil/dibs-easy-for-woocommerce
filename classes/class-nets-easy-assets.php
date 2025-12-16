@@ -142,14 +142,38 @@ class Nets_Easy_Assets {
 		);
 
 		$gateway_mapping = array(
-			'nets_easy_card'         => __( 'Nexi Checkout Card', 'dibs-easy-for-woocommerce' ),
-			'nets_easy_klarna'       => __( 'Nexi Checkout Klarna', 'dibs-easy-for-woocommerce' ),
-			'nets_easy_mobilepay'    => __( 'Nexi Checkout MobilePay', 'dibs-easy-for-woocommerce' ),
-			'nets_easy_ratepay_sepa' => __( 'Nexi Checkout Ratepay SEPA', 'dibs-easy-for-woocommerce' ),
-			'nets_easy_sofort'       => __( 'Nexi Checkout Sofort', 'dibs-easy-for-woocommerce' ),
-			'nets_easy_swish'        => __( 'Nexi Checkout Swish', 'dibs-easy-for-woocommerce' ),
-			'nets_easy_trustly'      => __( 'Nexi Checkout Trustly', 'dibs-easy-for-woocommerce' ),
-			'nets_easy_vipps'        => __( 'Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' ),
+			'nets_easy_card'         => array(
+				'label' => __( 'Nexi Checkout Card', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/visa.png',
+			),
+			'nets_easy_klarna'       => array(
+				'label' => __( 'Nexi Checkout Klarna', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/klarna.png',
+			),
+			'nets_easy_mobilepay'    => array(
+				'label' => __( 'Nexi Checkout MobilePay', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/mobilepay.png',
+			),
+			'nets_easy_ratepay_sepa' => array(
+				'label' => __( 'Nexi Checkout Ratepay SEPA', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/sepa.png',
+			),
+			'nets_easy_sofort'       => array(
+				'label' => __( 'Nexi Checkout Sofort', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/sofort.png',
+			),
+			'nets_easy_swish'        => array(
+				'label' => __( 'Nexi Checkout Swish', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/swish.png',
+			),
+			'nets_easy_trustly'      => array(
+				'label' => __( 'Nexi Checkout Trustly', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/trustly.png',
+			),
+			'nets_easy_vipps'        => array(
+				'label' => __( 'Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/vipps.png',
+			),
 		);
 		wp_localize_script(
 			'nexi-checkout-admin',
