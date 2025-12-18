@@ -16,10 +16,6 @@ jQuery(function ($) {
          */
         init() {
             $(window).on('load', function () {
-                // If we're not on the payment gateways settings page, return.
-                if (0 === $('.settings-payment-gateways__list').length) {
-                    return;
-                }
                 nexiCheckoutAdmin.waitForElement('.woocommerce-list__item-enter-done', nexiCheckoutAdmin.updateNexiGateways);
             });
         },
