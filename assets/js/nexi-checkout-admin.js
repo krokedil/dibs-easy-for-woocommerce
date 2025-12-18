@@ -1,22 +1,66 @@
-// Delay until all elements are loaded, otherwise the gateways won't be available yet.
-jQuery(window).on('load', function () {
-    if (typeof nexiCheckoutAdminParams == 'undefined') { 
-        return;
+jQuery(function ($) {
+    if (typeof nexiCheckoutAdminParams === "undefined") {
+        return false;
     }
 
-    const gateways = nexiCheckoutAdminParams.gateways;
-    for (const gatewayId in gateways) { 
-        const $gateway = jQuery(`#${gatewayId}`);
-        if ($gateway.length !== 1 ) {
-            continue;
+    /**
+     * The main object.
+     *
+     * @type {Object} nexiCheckoutAdmin
+     */
+    const nexiCheckoutAdmin = {
+        bodyEl: $("body"),
+
+        /**
+         * Initialize the admin gateway logic
+         */
+        init() {
+            $(window).on('load', function () {
+                // If we're not on the payment gateways settings page, return.
+                if (0 === $('.settings-payment-gateways__list').length) {
+                    return;
+                }
+                nexiCheckoutAdmin.waitForElement('.woocommerce-list__item-enter-done', nexiCheckoutAdmin.updateNexiGateways);
+            });
+        },
+
+        /**
+         * Update Nexi gateways labels and logos
+         */
+        updateNexiGateways() {
+            const gateways = nexiCheckoutAdminParams.gateways;
+            for (const gatewayId in gateways) {
+                const $gateway = $(`#${gatewayId}`);
+                if ($gateway.length !== 1) {
+                    continue;
+                }
+                // Update the label
+                $gateway.find('.woocommerce-list__item-title')
+                    .contents()
+                    .filter((_, node) => node.nodeType === 3 && node.textContent === 'Nexi Checkout')
+                    .replaceWith(gateways[gatewayId].label);
+                // Update the logo
+                $gateway.find('.woocommerce-list__item-image').attr('src', gateways[gatewayId].logo);
+            }
+        },
+
+        /**
+         * Wait for an element to appear in the DOM, then run callback
+         */
+        waitForElement(selector, callback) {
+            if ($(selector).length) {
+                callback();
+                return;
+            }
+            const observer = new MutationObserver(() => {
+                if ($(selector).length) {
+                    observer.disconnect();
+                    callback();
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
         }
+    };
 
-        $gateway.find('.woocommerce-list__item-title')
-            .contents()
-            // Preserve any HTML formatting by only replacing the text node.
-            .filter((_, node) => node.nodeType === 3 && node.textContent === 'Nexi Checkout')
-            .replaceWith(gateways[gatewayId].label);
-
-        $gateway.find('.woocommerce-list__item-image').attr('src', gateways[gatewayId].logo);
-    }
- });
+    nexiCheckoutAdmin.init();
+});
