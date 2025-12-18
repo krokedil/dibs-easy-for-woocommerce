@@ -105,7 +105,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	protected function supported_checkout_flows() {
-		return array( 'redirect', 'overlay' );
+		return array( 'redirect', 'overlay', 'inline', 'embedded' );
 	}
 
 	/**
