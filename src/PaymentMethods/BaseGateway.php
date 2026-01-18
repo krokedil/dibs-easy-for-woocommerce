@@ -105,7 +105,8 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	protected function supported_checkout_flows() {
-		return array( 'redirect', 'overlay', 'inline', 'embedded' );
+		// The list concerns only the split payment methods. These only support redirect and overlay flows. Thus, no additions should be made here unless it applies to all of them.
+		return array( 'redirect', 'overlay' );
 	}
 
 	/**
