@@ -28,7 +28,8 @@ class Nets_Easy_Checkout {
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
 
 		if ( in_array( $this->checkout_flow, array( 'embedded', 'inline' ), true ) ) {
-			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_hidden_payment_id_field' ), 30 );
+			add_action( 'nexi_inline_after_snippet', array( $this, 'add_hidden_payment_id_field' ), 10 );
+			add_action( 'wc_dibs_after_snippet', array( $this, 'add_hidden_payment_id_field' ), 10 );
 		}
 	}
 
@@ -107,7 +108,7 @@ class Nets_Easy_Checkout {
 		// Check if we have a case where a regular product is in the cart and the incorrect text on the button.
 		// If so, delete the session and reload the page.
 		if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
-			if ( WC()->session->get( 'dibs_cart_contains_subscription' ) !== get_dibs_cart_contains_subscription() ) {
+			if ( WC()->session->get( 'dibs_cart_contains_subscription' ) !== Nets_Easy_Subscriptions::cart_has_subscription() ) {
 				nexi_terminate_session( $payment_id_session );
 				wc_dibs_unset_sessions();
 				if ( wp_doing_ajax() ) {
@@ -119,7 +120,7 @@ class Nets_Easy_Checkout {
 		}
 
 		// If cart doesn't need payment anymore - reload the checkout page.
-		if ( apply_filters( 'nets_easy_check_if_needs_payment', true ) && 'no' === get_dibs_cart_contains_subscription() ) {
+		if ( apply_filters( 'nets_easy_check_if_needs_payment', true ) && ! Nets_Easy_Subscriptions::cart_has_subscription() ) {
 			if ( ! WC()->cart->needs_payment() ) {
 				Nets_Easy_Logger::log( 'Cart does not need payment. Reloading the checkout page.' );
 				WC()->session->reload_checkout = true;
@@ -169,13 +170,10 @@ class Nets_Easy_Checkout {
 	 * @return array
 	 */
 	public function add_hidden_payment_id_field( $fields ) {
-
-		$fields['billing']['nexi_payment_id'] = array(
-			'type'    => 'hidden',
-			'default' => WC()->session->get( 'dibs_payment_id' ) ?? '',
-		);
-
-		return $fields;
+		$payment_id = WC()->session->get( 'dibs_payment_id' ) ?? '';
+		?>
+		<input type="hidden" class="nexi_payment_id" name="nexi_payment_id" id="nexi_payment_id" value="<?php echo esc_attr( $payment_id ); ?>" />
+		<?php
 	}
 }
 new Nets_Easy_Checkout();

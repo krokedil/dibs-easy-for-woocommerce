@@ -77,7 +77,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		$post_code = $address['postalCode'];
 
 		// If customer is not logged in and this is a subscription purchase - get customer email from DIBS.
-		if ( ! is_user_logged_in() && ( ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) || 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) ) {
+		if ( ( ! is_user_logged_in() && Nets_Easy_Subscriptions::cart_has_subscription() ) || ( 'no' === get_option( 'woocommerce_enable_guest_checkout' ) ) ) {
 			$payment_id = WC()->session->get( 'dibs_payment_id' );
 			if ( empty( $payment_id ) ) {
 				wp_send_json_error( 'Failed to update customer address. Payment ID missing.' );

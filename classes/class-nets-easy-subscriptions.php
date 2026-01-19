@@ -51,6 +51,25 @@ class Nets_Easy_Subscriptions {
 	}
 
 	/**
+	 * Check if a cart contains a subscription.
+	 *
+	 * @return bool
+	 */
+	public static function cart_has_subscription() {
+		if ( ! is_checkout() ) {
+			return false;
+		}
+
+		return ( class_exists( 'WC_Subscriptions_Cart' ) && WC_Subscriptions_Cart::cart_contains_subscription() ) ||
+			( function_exists( 'wcs_cart_contains_renewal' ) && wcs_cart_contains_renewal() ) ||
+			( function_exists( 'wcs_cart_contains_failed_renewal_order_payment' ) && wcs_cart_contains_failed_renewal_order_payment() ) ||
+			( function_exists( 'wcs_cart_contains_resubscribe' ) && wcs_cart_contains_resubscribe() ) ||
+			( function_exists( 'wcs_cart_contains_early_renewal' ) && wcs_cart_contains_early_renewal() ) ||
+			( function_exists( 'wcs_cart_contains_switches' ) && wcs_cart_contains_switches() );
+	}
+
+
+	/**
 	 * Marks the order as a recurring order for Nexi Checkout
 	 *
 	 * @param array $request_args The Nexi Checkout request arguments.
@@ -58,7 +77,7 @@ class Nets_Easy_Subscriptions {
 	 */
 	public function maybe_add_subscription( $request_args ) {
 		// Check if we have a subscription product. If yes set recurring fi eld.
-		if ( class_exists( 'WC_Subscriptions_Cart' ) && ( WC_Subscriptions_Cart::cart_contains_subscription() || wcs_cart_contains_renewal() ) ) {
+		if ( self::cart_has_subscription() ) {
 
 			// Unscheduled or scheduled subscription?
 			if ( 'unscheduled_subscription' === $this->subscription_type ) {
