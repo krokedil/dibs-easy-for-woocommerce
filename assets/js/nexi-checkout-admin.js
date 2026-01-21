@@ -36,7 +36,10 @@ jQuery(function ($) {
                     .filter((_, node) => node.nodeType === 3 && node.textContent === 'Nexi Checkout')
                     .replaceWith(gateways[gatewayId].label);
                 // Update the logo
-                $gateway.find('.woocommerce-list__item-image').attr('src', gateways[gatewayId].logo);
+                $gateway.find('.woocommerce-list__item-image').attr(
+                    'src',
+                    gateways[gatewayId]?.logo ?? gateways['dibs_easy']?.logo
+                );
             }
         },
 
