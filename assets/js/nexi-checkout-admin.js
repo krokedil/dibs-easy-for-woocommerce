@@ -38,8 +38,8 @@ jQuery(function ($) {
                 // Update the logo
                 $gateway.find('.woocommerce-list__item-image').attr(
                     'src',
-                    gateways[gatewayId]?.logo ?? gateways['dibs_easy']?.logo
-                );
+                    gateways[gatewayId]?.logo
+                ).attr('onerror', `this.onerror=null;this.src='${ gateways.dibs_easy.logo }';`);
             }
         },
 
