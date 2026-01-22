@@ -1,4 +1,8 @@
 *** Nexi Checkout Changelog ***
+2026-01-22  - version 2.13.0
+* Feature   - Vipps, MobilePay, and Klarna are now available as standalone payment methods.
+* Fix       - The "Payment gateway icon width" setting now works as expected.
+
 2025-11-17  - version 2.12.1
 * Fix       - Improved support for additional subscription scenarios, including failed renewals, resubscriptions, early renewals, and renewal switches.
 * Fix       - Fixed a compatibility issue with certain themes, which caused the Nexi session to be terminated immediately.
