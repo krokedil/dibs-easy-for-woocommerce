@@ -5,8 +5,8 @@ Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.3.5
-Stable tag: 2.13.0
+WC tested up to: 10.4.3
+Stable tag: 2.13.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,9 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2026.01.22    - version 2.13.1 =
+* Fix           - Removed vendor from distignore.
+
 = 2026.01.22    - version 2.13.0 =
 * Feature       - Vipps, MobilePay, and Klarna are now available as standalone payment methods.
 * Fix           - The "Payment gateway icon width" setting now works as expected.

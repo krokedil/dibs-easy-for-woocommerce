@@ -1,4 +1,7 @@
 *** Nexi Checkout Changelog ***
+2026-01-22  - version 2.13.1
+* Fix       - Removed vendor from distignore.
+
 2026-01-22  - version 2.13.0
 * Feature   - Vipps, MobilePay, and Klarna are now available as standalone payment methods.
 * Fix       - The "Payment gateway icon width" setting now works as expected.
