@@ -70,6 +70,8 @@ class Nets_Easy_Assets {
 			add_action( 'wp_print_scripts', array( $this, 'inject_iframe_script' ) );
 
 		}
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 	}
 
 	/**
@@ -112,6 +114,80 @@ class Nets_Easy_Assets {
 			})
 		</script>
 		<?php
+	}
+
+	/**
+	 * Loads admin scripts.
+	 *
+	 * @param string $hook The current admin page.
+	 */
+	public function admin_enqueue_scripts( $hook ) {
+		if ( 'woocommerce_page_wc-settings' !== $hook ) {
+			return;
+		}
+
+		if ( 'checkout' !== filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ) {
+			return;
+		}
+
+		$src = WC_DIBS__URL . '/assets/js/nexi-checkout-admin.js';
+		wp_register_script(
+			'nexi-checkout-admin',
+			$src,
+			array(
+				'jquery',
+			),
+			WC_DIBS_EASY_VERSION,
+			true
+		);
+
+		$gateway_mapping = array(
+			'dibs_easy'              => array(
+				'label' => __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/nexi-logo.svg',
+			),
+			'nets_easy_card'         => array(
+				'label' => __( 'Nexi Checkout Card', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/visa.png',
+			),
+			'nets_easy_klarna'       => array(
+				'label' => __( 'Nexi Checkout Klarna', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/klarna.png',
+			),
+			'nets_easy_mobilepay'    => array(
+				'label' => __( 'Nexi Checkout MobilePay', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/mobilepay.png',
+			),
+			'nets_easy_ratepay_sepa' => array(
+				'label' => __( 'Nexi Checkout Ratepay SEPA', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/sepa.png',
+			),
+			'nets_easy_sofort'       => array(
+				'label' => __( 'Nexi Checkout Sofort', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/sofort.png',
+			),
+			'nets_easy_swish'        => array(
+				'label' => __( 'Nexi Checkout Swish', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/swish.png',
+			),
+			'nets_easy_trustly'      => array(
+				'label' => __( 'Nexi Checkout Trustly', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/trustly.png',
+			),
+			'nets_easy_vipps'        => array(
+				'label' => __( 'Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/vipps.png',
+			),
+		);
+		wp_localize_script(
+			'nexi-checkout-admin',
+			'nexiCheckoutAdminParams',
+			array(
+				'gateways' => $gateway_mapping,
+			),
+		);
+
+		wp_enqueue_script( 'nexi-checkout-admin' );
 	}
 
 	/**
