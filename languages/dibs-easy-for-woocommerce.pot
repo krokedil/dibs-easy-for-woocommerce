@@ -1,15 +1,15 @@
-# Copyright (C) 2025 Krokedil
+# Copyright (C) 2026 Krokedil
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout 2.12.1\n"
+"Project-Id-Version: Nexi Checkout 2.13.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2025-11-17 09:54:17+00:00\n"
+"POT-Creation-Date: 2026-01-22 12:25:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2025-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
@@ -66,11 +66,48 @@ msgid ""
 "not match. Nexi order total: %s."
 msgstr ""
 
-#: classes/class-nets-easy-assets.php:330
+#. Plugin Name of the plugin/theme
+msgid "Nexi Checkout"
+msgstr ""
+
+#: classes/class-nets-easy-assets.php:150 src/PaymentMethods/Card.php:24
+msgid "Nexi Checkout Card"
+msgstr ""
+
+#: classes/class-nets-easy-assets.php:154 src/PaymentMethods/Klarna.php:26
+msgid "Nexi Checkout Klarna"
+msgstr ""
+
+#: classes/class-nets-easy-assets.php:158 src/PaymentMethods/MobilePay.php:26
+msgid "Nexi Checkout MobilePay"
+msgstr ""
+
+#: classes/class-nets-easy-assets.php:162
+#: src/PaymentMethods/Ratepay_Sepa.php:24
+msgid "Nexi Checkout Ratepay SEPA"
+msgstr ""
+
+#: classes/class-nets-easy-assets.php:166 src/PaymentMethods/Sofort.php:24
+msgid "Nexi Checkout Sofort"
+msgstr ""
+
+#: classes/class-nets-easy-assets.php:170 src/PaymentMethods/Swish.php:24
+msgid "Nexi Checkout Swish"
+msgstr ""
+
+#: classes/class-nets-easy-assets.php:174 src/PaymentMethods/Trustly.php:24
+msgid "Nexi Checkout Trustly"
+msgstr ""
+
+#: classes/class-nets-easy-assets.php:178 src/PaymentMethods/Vipps.php:26
+msgid "Nexi Checkout Vipps"
+msgstr ""
+
+#: classes/class-nets-easy-assets.php:406
 msgid "Please wait while we process your order..."
 msgstr ""
 
-#: classes/class-nets-easy-assets.php:331
+#: classes/class-nets-easy-assets.php:407
 msgid "Please fill in all required checkout fields."
 msgstr ""
 
@@ -90,37 +127,30 @@ msgstr ""
 msgid "Customer card: "
 msgstr ""
 
-#. Plugin Name of the plugin/theme
-msgid "Nexi Checkout"
-msgstr ""
-
 #: classes/class-nets-easy-gateway.php:47
 msgid "Nexi Checkout Payment for checkout"
 msgstr ""
 
 #: classes/class-nets-easy-gateway.php:153
 #: classes/class-nets-easy-gateway.php:310
-#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:227
-#: classes/payment-methods/class-nets-easy-gateway-sofort.php:227
-#: classes/payment-methods/class-nets-easy-gateway-swish.php:209
-#: classes/payment-methods/class-nets-easy-gateway-trustly.php:213
+#: src/PaymentMethods/BaseGateway.php:189
+#: src/PaymentMethods/BaseGateway.php:350
 msgid "Customer redirected to Nets payment page."
 msgstr ""
 
 #: classes/class-nets-easy-gateway.php:205
+#: src/PaymentMethods/BaseGateway.php:241
 #. Translators: Nets refund ID.
 msgid "Refund made in Nexi Checkout with refund ID %s."
 msgstr ""
 
 #: classes/class-nets-easy-gateway.php:247
+#: src/PaymentMethods/BaseGateway.php:283
 msgid "Order finalized in thankyou page."
 msgstr ""
 
 #: classes/class-nets-easy-gateway.php:351
-#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:268
-#: classes/payment-methods/class-nets-easy-gateway-sofort.php:269
-#: classes/payment-methods/class-nets-easy-gateway-swish.php:251
-#: classes/payment-methods/class-nets-easy-gateway-trustly.php:255
+#: src/PaymentMethods/BaseGateway.php:394
 msgid "Nets payment page displayed in overlay."
 msgstr ""
 
@@ -237,88 +267,30 @@ msgstr ""
 msgid "Nets recurring token"
 msgstr ""
 
-#: classes/payment-methods/class-nets-easy-gateway-card.php:45
-msgid "Nexi Checkout Card"
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-card.php:47
-msgid "Nexi Checkout Card payment"
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-card.php:147
-#: classes/payment-methods/class-nets-easy-gateway-card.php:226
-msgid "Customer redirected to Nexi payment page."
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-card.php:189
-#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:190
-#: classes/payment-methods/class-nets-easy-gateway-sofort.php:190
-#: classes/payment-methods/class-nets-easy-gateway-swish.php:172
-#: classes/payment-methods/class-nets-easy-gateway-trustly.php:176
-#. Translators: Nets refund ID.
-msgid "Refund made in Nexi with refund ID %s."
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-card.php:267
-msgid "Nexi payment page displayed in overlay."
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:59
-msgid "Nexi Checkout Ratepay SEPA"
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-ratepay-sepa.php:61
-msgid "Nexi Checkout Ratepay SEPA payment"
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-sofort.php:59
-msgid "Nexi Checkout Sofort"
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-sofort.php:61
-msgid "Nexi Checkout Sofort payment"
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-swish.php:45
-msgid "Nexi Checkout Swish"
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-swish.php:47
-msgid "Nexi Checkout Swish payment"
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-trustly.php:52
-msgid "Nexi Checkout Trustly"
-msgstr ""
-
-#: classes/payment-methods/class-nets-easy-gateway-trustly.php:54
-msgid "Nexi Checkout Trustly payment"
-msgstr ""
-
 #: classes/requests/helpers/class-nets-easy-order-items-helper.php:228
 msgid "Gift card:"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:157 dibs-easy-for-woocommerce.php:166
+#: dibs-easy-for-woocommerce.php:185 dibs-easy-for-woocommerce.php:194
 msgid "Nope"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:294 dibs-easy-for-woocommerce.php:303
+#: dibs-easy-for-woocommerce.php:321 dibs-easy-for-woocommerce.php:330
 msgid ""
 "Your installation of Nexi Checkout is not complete. If you installed this "
 "plugin directly from Github please refer to the README.DEV.md file in the "
 "plugin."
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:322
+#: dibs-easy-for-woocommerce.php:349
 msgid "Settings"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:323
+#: dibs-easy-for-woocommerce.php:350
 msgid "Docs"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:324
+#: dibs-easy-for-woocommerce.php:351
 msgid "Support"
 msgstr ""
 
@@ -353,11 +325,13 @@ msgid ""
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:19
+#: includes/nets-easy-settings-klarna.php:19
+#: includes/nets-easy-settings-mobilepay.php:19
 #: includes/nets-easy-settings-ratepay-sepa.php:19
 #: includes/nets-easy-settings-sofort.php:19
 #: includes/nets-easy-settings-swish.php:19
 #: includes/nets-easy-settings-trustly.php:19
-#: includes/nets-easy-settings.php:19
+#: includes/nets-easy-settings-vipps.php:19 includes/nets-easy-settings.php:19
 msgid "Enable/Disable"
 msgstr ""
 
@@ -366,20 +340,24 @@ msgid "Enable Nexi Checkout Card"
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:25
+#: includes/nets-easy-settings-klarna.php:25
+#: includes/nets-easy-settings-mobilepay.php:25
 #: includes/nets-easy-settings-ratepay-sepa.php:25
 #: includes/nets-easy-settings-sofort.php:25
 #: includes/nets-easy-settings-swish.php:25
 #: includes/nets-easy-settings-trustly.php:25
-#: includes/nets-easy-settings.php:25
+#: includes/nets-easy-settings-vipps.php:25 includes/nets-easy-settings.php:25
 msgid "Title"
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:27
+#: includes/nets-easy-settings-klarna.php:27
+#: includes/nets-easy-settings-mobilepay.php:27
 #: includes/nets-easy-settings-ratepay-sepa.php:27
 #: includes/nets-easy-settings-sofort.php:27
 #: includes/nets-easy-settings-swish.php:27
 #: includes/nets-easy-settings-trustly.php:27
-#: includes/nets-easy-settings.php:27
+#: includes/nets-easy-settings-vipps.php:27 includes/nets-easy-settings.php:27
 msgid "This is the title that the user sees on the checkout page for Nexi Checkout."
 msgstr ""
 
@@ -388,38 +366,46 @@ msgid "Card payment"
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:31
+#: includes/nets-easy-settings-klarna.php:31
+#: includes/nets-easy-settings-mobilepay.php:31
 #: includes/nets-easy-settings-ratepay-sepa.php:31
 #: includes/nets-easy-settings-sofort.php:31
 #: includes/nets-easy-settings-swish.php:31
 #: includes/nets-easy-settings-trustly.php:31
-#: includes/nets-easy-settings.php:31
+#: includes/nets-easy-settings-vipps.php:31 includes/nets-easy-settings.php:31
 msgid "Description"
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:35
+#: includes/nets-easy-settings-klarna.php:35
+#: includes/nets-easy-settings-mobilepay.php:35
 #: includes/nets-easy-settings-ratepay-sepa.php:35
 #: includes/nets-easy-settings-sofort.php:35
 #: includes/nets-easy-settings-swish.php:35
 #: includes/nets-easy-settings-trustly.php:35
-#: includes/nets-easy-settings.php:35
+#: includes/nets-easy-settings-vipps.php:35 includes/nets-easy-settings.php:35
 msgid "This controls the description which the user sees during checkout."
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:38
+#: includes/nets-easy-settings-klarna.php:38
+#: includes/nets-easy-settings-mobilepay.php:38
 #: includes/nets-easy-settings-ratepay-sepa.php:38
 #: includes/nets-easy-settings-sofort.php:38
 #: includes/nets-easy-settings-swish.php:38
 #: includes/nets-easy-settings-trustly.php:38
-#: includes/nets-easy-settings.php:180
+#: includes/nets-easy-settings-vipps.php:38 includes/nets-easy-settings.php:180
 msgid "Payment gateway icon"
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:40
+#: includes/nets-easy-settings-klarna.php:40
+#: includes/nets-easy-settings-mobilepay.php:40
 #: includes/nets-easy-settings-ratepay-sepa.php:40
 #: includes/nets-easy-settings-sofort.php:40
 #: includes/nets-easy-settings-swish.php:40
 #: includes/nets-easy-settings-trustly.php:40
-#: includes/nets-easy-settings.php:182
+#: includes/nets-easy-settings-vipps.php:40 includes/nets-easy-settings.php:182
 msgid ""
 "Enter an URL to the icon you want to display for the payment method. Use "
 "<i>default</i> to display the default Nexi logo. Leave blank to not show an "
@@ -427,21 +413,43 @@ msgid ""
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:45
+#: includes/nets-easy-settings-klarna.php:45
+#: includes/nets-easy-settings-mobilepay.php:45
 #: includes/nets-easy-settings-ratepay-sepa.php:45
 #: includes/nets-easy-settings-sofort.php:45
 #: includes/nets-easy-settings-swish.php:45
 #: includes/nets-easy-settings-trustly.php:45
-#: includes/nets-easy-settings.php:187
+#: includes/nets-easy-settings-vipps.php:45 includes/nets-easy-settings.php:187
 msgid "Payment gateway icon width"
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:47
+#: includes/nets-easy-settings-klarna.php:47
+#: includes/nets-easy-settings-mobilepay.php:47
 #: includes/nets-easy-settings-ratepay-sepa.php:47
 #: includes/nets-easy-settings-sofort.php:47
 #: includes/nets-easy-settings-swish.php:47
 #: includes/nets-easy-settings-trustly.php:47
-#: includes/nets-easy-settings.php:189
+#: includes/nets-easy-settings-vipps.php:47 includes/nets-easy-settings.php:189
 msgid "Specify the max width (in px) of the payment gateway icon."
+msgstr ""
+
+#: includes/nets-easy-settings-klarna.php:21
+msgid "Enable Nexi Checkout Klarna"
+msgstr ""
+
+#: includes/nets-easy-settings-klarna.php:28
+#: includes/nets-easy-settings.php:234
+msgid "Klarna payment"
+msgstr ""
+
+#: includes/nets-easy-settings-mobilepay.php:21
+msgid "Enable Nexi Checkout MobilePay"
+msgstr ""
+
+#: includes/nets-easy-settings-mobilepay.php:28
+#: includes/nets-easy-settings.php:240
+msgid "MobilePay payment"
 msgstr ""
 
 #: includes/nets-easy-settings-ratepay-sepa.php:21
@@ -550,6 +558,14 @@ msgstr ""
 
 #: includes/nets-easy-settings-trustly.php:71
 msgid "United Kingdom"
+msgstr ""
+
+#: includes/nets-easy-settings-vipps.php:21
+msgid "Enable Nexi Checkout Vipps"
+msgstr ""
+
+#: includes/nets-easy-settings-vipps.php:28 includes/nets-easy-settings.php:246
+msgid "Vipps payment"
 msgstr ""
 
 #: includes/nets-easy-settings.php:21
@@ -784,6 +800,50 @@ msgstr ""
 
 #: includes/nets-easy-settings.php:222
 msgid "Enable Swish payment as separate payment method"
+msgstr ""
+
+#: includes/nets-easy-settings.php:236
+msgid "Enable Klarna payment as separate payment method"
+msgstr ""
+
+#: includes/nets-easy-settings.php:242
+msgid "Enable MobilePay payment as separate payment method"
+msgstr ""
+
+#: includes/nets-easy-settings.php:248
+msgid "Enable Vipps payment as separate payment method"
+msgstr ""
+
+#: src/PaymentMethods/Card.php:25
+msgid "Nexi Checkout Card payment"
+msgstr ""
+
+#: src/PaymentMethods/Klarna.php:27
+msgid "Nexi Checkout Klarna payment"
+msgstr ""
+
+#: src/PaymentMethods/MobilePay.php:27
+msgid "Nexi Checkout MobilePay payment"
+msgstr ""
+
+#: src/PaymentMethods/Ratepay_Sepa.php:25
+msgid "Nexi Checkout Ratepay SEPA payment"
+msgstr ""
+
+#: src/PaymentMethods/Sofort.php:25
+msgid "Nexi Checkout Sofort payment"
+msgstr ""
+
+#: src/PaymentMethods/Swish.php:25
+msgid "Nexi Checkout Swish payment"
+msgstr ""
+
+#: src/PaymentMethods/Trustly.php:25
+msgid "Nexi Checkout Trustly payment"
+msgstr ""
+
+#: src/PaymentMethods/Vipps.php:27
+msgid "Nexi Checkout Vipps payment"
 msgstr ""
 
 #: templates/nets-easy-checkout.php:17

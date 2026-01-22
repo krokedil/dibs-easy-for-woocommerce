@@ -1,19 +1,29 @@
 <?php
 /**
- * Nets Gateway class
+ * This class serves as the base for all the Nexi payment methods.
  *
- * @package DIBS_Easy/Classes
+ * @package Nexi/PaymentMethods
  */
 
+namespace Krokedil\Nexi\PaymentMethods;
+
+use WC_Payment_Gateway;
+
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 /**
  * Nets_Easy_Gateway class
  */
-class Nets_Easy_Gateway extends WC_Payment_Gateway {
-
+abstract class BaseGateway extends WC_Payment_Gateway {
+	/**
+	 * The default checkout flow
+	 *
+	 * @var string
+	 */
+	protected $default_checkout_flow = 'redirect';
 
 	/**
 	 * The checkout flow
@@ -25,9 +35,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * The payment gateway icon
 	 *
-	 * @var string
+	 * @var string|null
 	 */
-	public $payment_gateway_icon;
+	public $payment_gateway_icon = null;
 
 	/**
 	 * The payment gateway icon max width
@@ -37,47 +47,51 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	public $payment_gateway_icon_max_width;
 
 	/**
-	 * DIBS_Easy_Gateway constructor.
+	 * Customer countries where the payment method is available.
+	 *
+	 * @var array
+	 */
+	protected $available_countries = array();
+
+	/**
+	 * Currencies accepted by the payment method.
+	 *
+	 * @var array
+	 */
+	public $available_currencies = array();
+
+	/**
+	 * The Nexi name of this payment method.
+	 *
+	 * @var string
+	 */
+	protected $payment_method_name;
+
+	/**
+	 * Gateway settings.
+	 *
+	 * @var array
+	 */
+	protected $shared_settings;
+
+	/**
+	 * BaseGateway constructor.
 	 */
 	public function __construct() {
-		$this->id = 'dibs_easy';
+		$this->shared_settings                = get_option( 'woocommerce_dibs_easy_settings', array() );
+		$this->payment_gateway_icon           = $this->payment_gateway_icon ?? $this->settings['payment_gateway_icon'] ?? 'default';
+		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? '145';
 
-		$this->method_title = __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' );
-
-		$this->method_description = __( 'Nexi Checkout Payment for checkout', 'dibs-easy-for-woocommerce' );
-
-		$this->description = $this->get_option( 'description' );
-
-		// Load the form fields.
-		$this->init_form_fields();
-		// Load the settings.
-		$this->init_settings();
-		// Get the settings values.
-		$this->title                          = $this->get_option( 'title' );
-		$this->enabled                        = $this->get_option( 'enabled' );
-		$this->checkout_flow                  = $this->settings['checkout_flow'] ?? 'inline';
-		$this->payment_gateway_icon           = $this->settings['payment_gateway_icon'] ?? 'default';
-		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_width'] ?? '145';
-
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-
-		$this->supports = array(
-			'products',
-			'subscriptions',
-			'subscription_cancellation',
-			'subscription_suspension',
-			'subscription_reactivation',
-			'subscription_amount_changes',
-			'subscription_date_changes',
-			'subscription_payment_method_change_customer',
-			'subscription_payment_method_change_admin',
-			'subscription_payment_method_change',
-			'multiple_subscriptions',
-		);
+		$available_countries       = empty( $this->available_countries ) ? $this->settings['available_countries'] ?? array() : $this->available_countries;
+		$this->available_countries = ! is_array( $available_countries ) ? array() : $available_countries;
 
 		if ( 'yes' === $this->get_option( 'dibs_manage_orders' ) ) {
 			$this->supports[] = 'refunds';
 		}
+
+		$this->title       = $this->get_option( 'title', $this->method_title );
+		$this->enabled     = $this->get_option( 'enabled', $this->settings[ "enable_payment_method_{$this->payment_method_name}" ] ?? false );
+		$this->description = $this->get_option( 'description', $this->method_description );
 
 		// Add class if DIBS Easy is set as the default gateway.
 		add_filter( 'body_class', array( $this, 'dibs_add_body_class' ) );
@@ -86,14 +100,23 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Supported checkout flows.
+	 *
+	 * @return array
+	 */
+	protected function supported_checkout_flows() {
+		// The list concerns only the split payment methods. These only support redirect and overlay flows. Thus, no additions should be made here unless it applies to all of them.
+		return array( 'redirect', 'overlay' );
+	}
+
+	/**
 	 * Get gateway icon.
 	 *
 	 * @return string
 	 */
 	public function get_icon() {
-
 		if ( empty( $this->payment_gateway_icon ) ) {
-			return;
+			return parent::get_icon();
 		}
 
 		if ( 'default' === strtolower( $this->payment_gateway_icon ) ) {
@@ -109,12 +132,25 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Checks if method should be available.
+	 * Check if payment method should be available.
+	 *
+	 * @hook nexi_pay_is_available
+	 * @return boolean
+	 */
+	public function is_available() {
+		return apply_filters( 'nexi_is_available', $this->check_availability(), $this );
+	}
+
+	/**
+	 * Check if the gateway should be available.
+	 *
+	 * This function is extracted to create the 'nexi_is_available' filter.
 	 *
 	 * @return bool
 	 */
-	public function is_available() {
-		return 'yes' === $this->enabled;
+	protected function check_availability() {
+		$checkout_flow = $this->shared_settings['checkout_flow'] ?? null;
+		return wc_string_to_bool( $this->enabled ) && in_array( $checkout_flow, $this->supported_checkout_flows(), true );
 	}
 
 	/**
@@ -189,7 +225,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 * @param  string $amount Refund amount.
 	 * @param  string $reason Reason test message for the refund.
 	 *
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
@@ -212,21 +248,21 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Add Nexi Checkout body class.
 	 *
-	 * @param  array $class Body classes.
+	 * @param  array $classes Body classes.
 	 *
 	 * @return array
 	 */
-	public function dibs_add_body_class( $class ) {
+	public function dibs_add_body_class( $classes ) {
 		if ( is_checkout() ) {
 			$available_payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
 			reset( $available_payment_gateways );
 			$first_gateway = key( $available_payment_gateways );
 
 			if ( 'dibs_easy' === $first_gateway ) {
-				$class[] = 'dibs-selected';
+				$classes[] = 'dibs-selected';
 			}
 		}
-		return $class;
+		return $classes;
 	}
 
 	/**
@@ -255,7 +291,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			// Unset sessions.
 			wc_dibs_unset_sessions();
 		} elseif ( empty( $order->get_date_paid() ) ) {
-				wc_dibs_confirm_dibs_order( $order_id );
+			wc_dibs_confirm_dibs_order( $order_id );
 		}
 	}
 
@@ -271,14 +307,13 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Check if data is json.
 	 *
-	 * @param string $string Json object.
+	 * @param string $maybe_json Json object.
 	 *
 	 * @return mixed
 	 */
-	public function is_json( $string ) {
-		json_decode( $string );
-
-		return ( json_last_error() === JSON_ERROR_NONE );
+	public function is_json( $maybe_json ) {
+		json_decode( $maybe_json );
+		return json_last_error() === JSON_ERROR_NONE;
 	}
 
 	/**
@@ -291,12 +326,17 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	protected function process_redirect_handler( $order_id ) {
 
 		// Create payment in Nets.
-		$response = Nets_Easy()->api->create_nets_easy_order(
-			array(
-				'checkout_flow' => 'redirect',
-				'order_id'      => $order_id,
-			)
+		$args = array(
+			'checkout_flow' => 'redirect',
+			'order_id'      => $order_id,
 		);
+
+		if ( ! empty( $this->payment_method_name ) ) {
+			$args['payment_methods_configuration'] = $this->payment_method_name;
+		}
+
+		$response = Nets_Easy()->api->create_nets_easy_order( $args );
+
 		if ( is_wp_error( $response ) ) {
 			wc_add_notice( $response->get_error_message(), 'error' );
 			return array(
@@ -330,14 +370,17 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 * @return array|string[]
 	 */
 	protected function process_overlay_handler( $order_id ) {
-
 		// Create payment in Nets.
-		$response = Nets_Easy()->api->create_nets_easy_order(
-			array(
-				'checkout_flow' => 'overlay',
-				'order_id'      => $order_id,
-			)
+		$args = array(
+			'checkout_flow' => 'overlay',
+			'order_id'      => $order_id,
 		);
+
+		if ( ! empty( $this->payment_method_name ) ) {
+			$args['payment_methods_configuration'] = $this->payment_method_name;
+		}
+
+		$response = Nets_Easy()->api->create_nets_easy_order( $args );
 		if ( is_wp_error( $response ) ) {
 			wc_add_notice( $response->get_error_message(), 'error' );
 			return array(
