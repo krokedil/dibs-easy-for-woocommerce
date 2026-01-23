@@ -161,8 +161,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 				'result' => 'error',
 			);
 		}
-		// Regular purchase.
-		// Embedded flow.
+		// Embedded flow (including inline).
 		if ( nexi_is_embedded( $this->checkout_flow ) && ! is_wc_endpoint_url( 'order-pay' ) ) {
 			$order->update_meta_data( '_dibs_checkout_flow', $this->checkout_flow );
 			$order->save();

@@ -65,22 +65,24 @@ class Nets_Easy_Checkout {
 		$raw_post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_URL );
 		parse_str( $raw_post_data, $post_data );
 
-		$billing_address = WC()->customer->get_billing();
-		$first_name      = empty( $post_data['billing_first_name'] ) ? $billing_address['first_name'] : $post_data['billing_first_name'];
-		$last_name       = empty( $post_data['billing_last_name'] ) ? $billing_address['last_name'] : $post_data['billing_last_name'];
+		if ( 'inline' === $this->checkout_flow ) {
+			$billing_address = WC()->customer->get_billing();
+			$first_name      = empty( $post_data['billing_first_name'] ) ? $billing_address['first_name'] : $post_data['billing_first_name'];
+			$last_name       = empty( $post_data['billing_last_name'] ) ? $billing_address['last_name'] : $post_data['billing_last_name'];
 
-		if ( hash_equals( md5( "$first_name:$last_name" ), WC()->session->get( 'nexi_billing_customer_name_hash', '' ) ) === false ) {
-			// When the name change is detected, the billing data hasn't been saved to the customer yet.
-			// To ensure the name change persists after reload, we must manually save it here.
-			WC()->customer->set_billing_first_name( $first_name );
-			WC()->customer->set_billing_last_name( $last_name );
-			WC()->customer->save();
+			if ( hash_equals( md5( "$first_name:$last_name" ), WC()->session->get( 'nexi_billing_customer_name_hash', '' ) ) === false ) {
+				// When the name change is detected, the billing data hasn't been saved to the customer yet.
+				// To ensure the name change persists after reload, we must manually save it here.
+				WC()->customer->set_billing_first_name( $first_name );
+				WC()->customer->set_billing_last_name( $last_name );
+				WC()->customer->save();
 
-			nexi_terminate_session( $payment_id );
-			wc_dibs_unset_sessions();
-			Nets_Easy_Logger::log( 'Billing address changed in update Nets function. Clearing Nexi session and reloading the checkout page.' );
-			WC()->session->reload_checkout = true;
-			return;
+				nexi_terminate_session( $payment_id );
+				wc_dibs_unset_sessions();
+				Nets_Easy_Logger::log( 'Billing address changed in update Nets function. Clearing Nexi session and reloading the checkout page.' );
+				WC()->session->reload_checkout = true;
+				return;
+			}
 		}
 
 		// Trigger get if the ajax event is among the approved ones.
