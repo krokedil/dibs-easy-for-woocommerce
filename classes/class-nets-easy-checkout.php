@@ -30,6 +30,10 @@ class Nets_Easy_Checkout {
 		if ( in_array( $this->checkout_flow, array( 'embedded', 'inline' ), true ) ) {
 			add_action( 'nexi_inline_after_snippet', array( $this, 'add_hidden_payment_id_field' ), 10 );
 			add_action( 'wc_dibs_after_snippet', array( $this, 'add_hidden_payment_id_field' ), 10 );
+
+			if ( 'inline' === $this->checkout_flow ) {
+				add_filter( 'woocommerce_checkout_fields', array( $this, 'trigger_checkout_update_on_name_change' ) );
+			}
 		}
 	}
 
@@ -55,6 +59,27 @@ class Nets_Easy_Checkout {
 
 		$payment_id = WC()->session->get( 'dibs_payment_id' );
 		if ( empty( $payment_id ) ) {
+			return;
+		}
+
+		$raw_post_data = filter_input( INPUT_POST, 'post_data', FILTER_SANITIZE_URL );
+		parse_str( $raw_post_data, $post_data );
+
+		$billing_address = WC()->customer->get_billing();
+		$first_name      = empty( $post_data['billing_first_name'] ) ? $billing_address['first_name'] : $post_data['billing_first_name'];
+		$last_name       = empty( $post_data['billing_last_name'] ) ? $billing_address['last_name'] : $post_data['billing_last_name'];
+
+		if ( hash_equals( md5( "$first_name:$last_name" ), WC()->session->get( 'nexi_billing_customer_name_hash', '' ) ) === false ) {
+			// When the name change is detected, the billing data hasn't been saved to the customer yet.
+			// To ensure the name change persists after reload, we must manually save it here.
+			WC()->customer->set_billing_first_name( $first_name );
+			WC()->customer->set_billing_last_name( $last_name );
+			WC()->customer->save();
+
+			nexi_terminate_session( $payment_id );
+			wc_dibs_unset_sessions();
+			Nets_Easy_Logger::log( 'Billing address changed in update Nets function. Clearing Nexi session and reloading the checkout page.' );
+			WC()->session->reload_checkout = true;
 			return;
 		}
 
@@ -145,6 +170,20 @@ class Nets_Easy_Checkout {
 			// Update the session value with the new cart hash.
 			WC()->session->set( 'nets_easy_last_update_hash', $cart_hash );
 		}
+	}
+
+	/**
+	 * Trigger checkout update when first name or last name is changed.
+	 *
+	 * @param array $fields WooCommerce checkout fields.
+	 * @return array
+	 */
+	public function trigger_checkout_update_on_name_change( $fields ) {
+		// Add the specific class that triggers the AJAX update.
+		$fields['billing']['billing_first_name']['class'][] = 'address-field';
+		$fields['billing']['billing_last_name']['class'][]  = 'address-field';
+
+		return $fields;
 	}
 
 	/**

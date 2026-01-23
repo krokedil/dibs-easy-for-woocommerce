@@ -37,6 +37,12 @@ function dibs_easy_maybe_create_order() {
 		// If failed then bail.
 		return;
 	}
+
+	$customer   = WC()->customer->get_billing();
+	$first_name = $customer['first_name'];
+	$last_name  = $customer['last_name'];
+	$session->set( 'nexi_billing_customer_name_hash', md5( "$first_name:$last_name" ) );
+
 	// store payment id.
 	$session->set( 'dibs_payment_id', $dibs_easy_order['paymentId'] );
 	$session->set( 'nets_easy_currency', get_woocommerce_currency() );
@@ -103,6 +109,10 @@ function wc_dibs_unset_sessions() {
 
 		if ( WC()->session->get( 'dibs_cart_contains_subscription' ) ) {
 			WC()->session->__unset( 'dibs_cart_contains_subscription' );
+		}
+
+		if ( WC()->session->get( 'nexi_billing_customer_name_hash' ) ) {
+			WC()->session->__unset( 'nexi_billing_customer_name_hash' );
 		}
 	}
 }
