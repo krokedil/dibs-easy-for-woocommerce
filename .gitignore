@@ -34,3 +34,7 @@ tmp-*
 
 # Release
 /release/
+
+# Version backup files
+*.bak
+.changelogs/backup-*
