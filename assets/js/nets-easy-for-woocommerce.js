@@ -72,10 +72,9 @@ jQuery( function ( $ ) {
             )
             const redirectUrl = sessionStorage.getItem( "redirectNets" )
             if ( redirectUrl ) {
-
                 // Prevent multiple redirects.
-                if (dibsEasyForWoocommerce.alreadyRedirected) {
-                    return;
+                if ( dibsEasyForWoocommerce.alreadyRedirected ) {
+                    return
                 }
 
                 dibsEasyForWoocommerce.alreadyRedirected = true
