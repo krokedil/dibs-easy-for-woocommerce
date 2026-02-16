@@ -182,7 +182,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * @return void
 		 */
 		private function __clone() {
-			wc_doing_it_wrong( __FUNCTION__, __( 'Nope' ), '1.0' );
+			wc_doing_it_wrong( __FUNCTION__, __( 'Nope', 'dibs-easy-for-woocommerce' ), '1.0' );
 		}
 		/**
 		 * Private unserialize method to prevent unserializing of the *Singleton*
@@ -191,7 +191,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 * @return void
 		 */
 		public function __wakeup() {
-			wc_doing_it_wrong( __FUNCTION__, __( 'Nope' ), '1.0' );
+			wc_doing_it_wrong( __FUNCTION__, __( 'Nope', 'dibs-easy-for-woocommerce' ), '1.0' );
 		}
 
 		/**
