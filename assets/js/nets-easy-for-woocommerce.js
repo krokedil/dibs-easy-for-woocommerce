@@ -23,6 +23,7 @@ jQuery( function ( $ ) {
         shippingSelector: ".woocommerce-checkout-review-order-table",
         standardWooFields: wcDibsEasy.standard_woo_checkout_fields,
         wooTerms: "form.checkout #terms",
+        alreadyRedirected: false,
 
         /**
          * Initialize the gateway
@@ -71,6 +72,13 @@ jQuery( function ( $ ) {
             )
             const redirectUrl = sessionStorage.getItem( "redirectNets" )
             if ( redirectUrl ) {
+                // Prevent multiple redirects.
+                if ( dibsEasyForWoocommerce.alreadyRedirected ) {
+                    return
+                }
+
+                dibsEasyForWoocommerce.alreadyRedirected = true
+
                 window.location.href = redirectUrl
             }
         },

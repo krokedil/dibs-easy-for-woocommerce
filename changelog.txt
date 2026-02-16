@@ -1,4 +1,7 @@
 *** Nexi Checkout Changelog ***
+2026-02-16  - version 2.13.2
+* Fix       - Prevented the possibility of duplicate redirects in JavaScript, ensuring that only a single order confirmation occurs.
+
 2026-01-22  - version 2.13.1
 * Fix       - Removed vendor from distignore.
 

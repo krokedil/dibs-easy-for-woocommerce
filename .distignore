@@ -1,11 +1,13 @@
 /.wordpress-org
 /.git
 /.github
+/.changelogs
 /node_modules
 .babelrc
 .distignore
 .eslintrc.json
 .gitignore
+*.bak
 composer.json
 composer.lock
 gruntfile.js
