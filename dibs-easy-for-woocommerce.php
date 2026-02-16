@@ -441,7 +441,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		 *
 		 * @return KrokedilWooCommerce
 		 */
-		public function WC() {
+		public function WC() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 			return $this->wc;
 		}
 	}
