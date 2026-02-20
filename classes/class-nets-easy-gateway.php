@@ -420,17 +420,24 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	private function get_settings_page_args() {
 		$args = get_transient( 'nexi_checkout_settings_page_config' );
 		if ( ! $args ) {
-			$args = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/develop/configs/nexi-checkout.json' );
+			$response = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/develop/configs/nexi-checkout.json' );
 
-			if ( is_wp_error( $args ) ) {
+			if ( is_wp_error( $response ) ) {
 				Nets_Easy_Logger::log( 'Failed to fetch Nexi Checkout settings page config from remote source.' );
 				return null;
 			}
 
-			$args = wp_remote_retrieve_body( $args );
+			$args = wp_remote_retrieve_body( $response );
+
+			if ( empty( $args ) || ! $this->is_json( $args ) ) {
+				Nets_Easy_Logger::log( 'Invalid JSON format for Nexi Checkout settings page config.' );
+				return null;
+			}
+
 			set_transient( 'nexi_checkout_settings_page_config', $args, 60 * 60 * 24 ); // 24 hours lifetime.
 		}
 
-		return json_decode( $args, true );
+		$decoded = json_decode( $args, true );
+		return is_array( $decoded ) ? $decoded : null;
 	}
 }
