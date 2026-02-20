@@ -215,21 +215,21 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Add Nexi Checkout body class.
 	 *
-	 * @param  array $class Body classes.
+	 * @param  array $classes Body classes.
 	 *
 	 * @return array
 	 */
-	public function dibs_add_body_class( $class ) {
+	public function dibs_add_body_class( $classes ) {
 		if ( is_checkout() ) {
 			$available_payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
 			reset( $available_payment_gateways );
 			$first_gateway = key( $available_payment_gateways );
 
 			if ( 'dibs_easy' === $first_gateway ) {
-				$class[] = 'dibs-selected';
+				$classes[] = 'dibs-selected';
 			}
 		}
-		return $class;
+		return $classes;
 	}
 
 	/**
@@ -274,13 +274,12 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Check if data is json.
 	 *
-	 * @param string $string Json object.
+	 * @param string $maybe_json Json object.
 	 *
 	 * @return mixed
 	 */
-	public function is_json( $string ) {
-		json_decode( $string );
-
+	public function is_json( $maybe_json ) {
+		json_decode( $maybe_json );
 		return ( json_last_error() === JSON_ERROR_NONE );
 	}
 
