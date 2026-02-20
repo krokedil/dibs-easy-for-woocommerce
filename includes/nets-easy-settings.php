@@ -18,7 +18,7 @@ return apply_filters(
 		// General configuration.
 		'general_section'                  => array(
 			'id'          => 'general_section',
-			'title'       => 'General configuration',
+			'title'       => __( 'General configuration', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'krokedil_section_start',
 			'description' => __( 'Configure the general settings for Nexi Checkout.', 'dibs-easy-for-woocommerce' ),
 		),
@@ -59,7 +59,7 @@ return apply_filters(
 		),
 		'credentials_section'              => array(
 			'id'          => 'credentials_section',
-			'title'       => 'Credentials and test mode',
+			'title'       => __( 'Credentials and test mode', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'krokedil_section_start',
 			'description' => __( 'Configure your merchant credentials and environment.', 'dibs-easy-for-woocommerce' ),
 		),
@@ -108,7 +108,7 @@ return apply_filters(
 		),
 		'checkout_experience_section'      => array(
 			'id'          => 'checkout_experience_section',
-			'title'       => 'Checkout experience',
+			'title'       => __( 'Checkout experience', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'krokedil_section_start',
 			'description' => __( 'Control how the checkout behaves and is presented to customers.', 'dibs-easy-for-woocommerce' ),
 		),
@@ -182,12 +182,12 @@ return apply_filters(
 			'default'     => '',
 			'desc_tip'    => true,
 		),
-		'checkout_ui_section_end'          => array(
+		'checkout_experience_section_end'  => array(
 			'type' => 'krokedil_section_end',
 		),
 		'email_section'                    => array(
 			'id'          => 'email_section',
-			'title'       => 'Email settings',
+			'title'       => __( 'Email settings', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'krokedil_section_start',
 			'description' => __( 'Configure what appears in order confirmation emails.', 'dibs-easy-for-woocommerce' ),
 		),
@@ -208,7 +208,7 @@ return apply_filters(
 		),
 		'order_management_section'         => array(
 			'id'          => 'order_management_section',
-			'title'       => 'Order management and logging',
+			'title'       => __( 'Order management and logging', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'krokedil_section_start',
 			'description' => __( 'Control backend order handling and logging.', 'dibs-easy-for-woocommerce' ),
 		),
@@ -238,7 +238,7 @@ return apply_filters(
 		),
 		'payment_method_split_section'     => array(
 			'id'          => 'payment_method_split_section',
-			'title'       => 'Payment method splitting',
+			'title'       => __( 'Payment method splitting', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'krokedil_section_start',
 			'description' => __( 'Enable specific payment methods as standalone payment methods in the checkout.', 'dibs-easy-for-woocommerce' ),
 		),

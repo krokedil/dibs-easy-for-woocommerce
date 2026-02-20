@@ -426,6 +426,12 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 				return null;
 			}
 
+			$response_code = wp_remote_retrieve_response_code( $response );
+			if ( 200 !== $response_code ) {
+				Nets_Easy_Logger::log( 'Unexpected HTTP status when fetching Nexi Checkout settings page config: ' . $response_code );
+				return null;
+			}
+
 			$args = wp_remote_retrieve_body( $response );
 
 			if ( empty( $args ) || ! $this->is_json( $args ) ) {
