@@ -5,6 +5,9 @@
  * @package DIBS_Easy/Classes
  */
 
+use KrokedilNexiCheckoutDeps\Krokedil\SettingsPage\SettingsPage;
+use KrokedilNexiCheckoutDeps\Krokedil\SettingsPage\Gateway;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -384,5 +387,50 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 				'redirect' => esc_url_raw( add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ) ),
 			);
 		}
+	}
+
+	/**
+	 * Add sidebar to the settings page.
+	 */
+	public function admin_options() {
+		$args = $this->get_settings_page_args();
+
+		if ( empty( $args ) ) {
+			parent::admin_options();
+			return;
+		}
+
+		$args['icon']            = WC_DIBS__URL . '/assets/images/nexi-logo.svg';
+		$gateway_page            = new Gateway( $this, $args );
+		$args['general_content'] = array( $gateway_page, 'output' );
+		( SettingsPage::get_instance() )
+		->set_plugin_name( 'Nexi Checkout for WooCommerce' )
+		->register_page( $this->id, $args, $this )
+		->output( $this->id );
+	}
+
+	/**
+	 * Read the settings page arguments from remote or local storage.
+	 * If the args are stored locally, they are fetched from the transient cache.
+	 * If they are not available locally, they are fetched from the remote source and stored in the transient cache.
+	 * If the remote source is not available, the function returns null, and default settings page will be used instead.
+	 *
+	 * @return array|null
+	 */
+	private function get_settings_page_args() {
+		$args = get_transient( 'nexi_checkout_settings_page_config' );
+		if ( ! $args ) {
+			$args = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/develop/configs/nexi-checkout-for-woocommerce.json' );
+
+			if ( is_wp_error( $args ) ) {
+				Nets_Easy_Logger::log( 'Failed to fetch Nexi Checkout settings page config from remote source.' );
+				return null;
+			}
+
+			$args = wp_remote_retrieve_body( $args );
+			set_transient( 'nexi_checkout_settings_page_config', $args, 60 * 60 * 24 ); // 24 hours lifetime.
+		}
+
+		return json_decode( $args, true );
 	}
 }
