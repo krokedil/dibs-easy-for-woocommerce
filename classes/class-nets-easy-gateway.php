@@ -148,7 +148,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 					'order_id'      => $order_id,
 				)
 			);
-			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
+			if ( ! is_wp_error( $response ) && array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
 				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
 
@@ -158,7 +158,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 				);
 			}
 
-			throw new \Exception( __( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues.", 'dibs-easy-for-woocommerce' ) );
+			throw new \Exception( sprintf( __( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues. Error: %s", 'dibs-easy-for-woocommerce' ), $response->get_error_message() ) );
 		}
 		// Regular purchase.
 		// Embedded flow.
