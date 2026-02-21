@@ -157,9 +157,8 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 					'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 				);
 			}
-			return array(
-				'result' => 'error',
-			);
+
+			throw new \Exception( __( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues.", 'dibs-easy-for-woocommerce' ) );
 		}
 		// Regular purchase.
 		// Embedded flow.
@@ -298,10 +297,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			)
 		);
 		if ( is_wp_error( $response ) ) {
-			wc_add_notice( $response->get_error_message(), 'error' );
-			return array(
-				'result' => 'error',
-			);
+			throw new \Exception( $response->get_error_message() );
 		}
 
 		$order = wc_get_order( $order_id );
@@ -317,9 +313,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return array(
-			'result' => 'error',
-		);
+		throw new \Exception( __( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues.", 'dibs-easy-for-woocommerce' ) );
 	}
 
 	/**
@@ -339,10 +333,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			)
 		);
 		if ( is_wp_error( $response ) ) {
-			wc_add_notice( $response->get_error_message(), 'error' );
-			return array(
-				'result' => 'error',
-			);
+			throw new \Exception( $response->get_error_message() );
 		}
 
 		$order = wc_get_order( $order_id );
@@ -358,9 +349,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return array(
-			'result' => 'error',
-		);
+		throw new \Exception( __( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues.", 'dibs-easy-for-woocommerce' ) );
 	}
 
 	/**

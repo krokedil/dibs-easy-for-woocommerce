@@ -193,9 +193,8 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 					'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 				);
 			}
-			return array(
-				'result' => 'error',
-			);
+
+			throw new \Exception( __( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues.", 'dibs-easy-for-woocommerce' ) );
 		}
 		// Regular purchase.
 		// Embedded flow.
@@ -338,10 +337,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 		$response = Nets_Easy()->api->create_nets_easy_order( $args );
 
 		if ( is_wp_error( $response ) ) {
-			wc_add_notice( $response->get_error_message(), 'error' );
-			return array(
-				'result' => 'error',
-			);
+			throw new \Exception( $response->get_error_message() );
 		}
 
 		$order = wc_get_order( $order_id );
@@ -357,9 +353,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return array(
-			'result' => 'error',
-		);
+		throw new \Exception( __( 'Payment could not be initiated in Nexi Checkout. Please try again or contact the store.', 'dibs-easy-for-woocommerce' ) );
 	}
 
 	/**
@@ -382,10 +376,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 
 		$response = Nets_Easy()->api->create_nets_easy_order( $args );
 		if ( is_wp_error( $response ) ) {
-			wc_add_notice( $response->get_error_message(), 'error' );
-			return array(
-				'result' => 'error',
-			);
+			throw new \Exception( $response->get_error_message() );
 		}
 
 		$order = wc_get_order( $order_id );
@@ -401,9 +392,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return array(
-			'result' => 'error',
-		);
+		throw new \Exception( __( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues.", 'dibs-easy-for-woocommerce' ) );
 	}
 
 	/**
