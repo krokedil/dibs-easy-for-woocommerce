@@ -144,7 +144,7 @@ class Nets_Easy_Assets {
 		$gateway_mapping = array(
 			'dibs_easy'              => array(
 				'label' => __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' ),
-				'logo'  => WC_DIBS__URL . '/assets/images/nexi-logo.svg',
+				'logo'  => WC_DIBS__URL . '/assets/images/nexi-logo.png',
 			),
 			'nets_easy_card'         => array(
 				'label' => __( 'Nexi Checkout Card', 'dibs-easy-for-woocommerce' ),
