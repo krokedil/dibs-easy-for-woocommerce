@@ -231,7 +231,9 @@ class Nets_Easy_Assets {
 			false
 		);
 
-		$private_key = 'yes' === $this->test_mode ? $this->settings['dibs_test_checkout_key'] : $this->settings['dibs_checkout_key'];
+		$is_test_mode = 'yes' === $this->test_mode;
+		$private_key  = $is_test_mode ? $this->settings['dibs_test_checkout_key'] : $this->settings['dibs_checkout_key'];
+		$private_key  = apply_filters( 'nexi_request_checkout_key', $private_key, $is_test_mode );
 		wp_localize_script(
 			'nexi-checkout-inline',
 			'nexiCheckoutParams',
@@ -395,7 +397,9 @@ class Nets_Easy_Assets {
 		// todo enable min version.
 		// phpcs:ignore $src                          = WC_DIBS__URL . '/assets/js/checkout' . $script_version . '.js';
 
-		$private_key = 'yes' === $this->test_mode ? $this->settings['dibs_test_checkout_key'] : $this->settings['dibs_checkout_key'];
+		$is_test_mode = 'yes' === $this->test_mode;
+		$private_key  = $is_test_mode ? $this->settings['dibs_test_checkout_key'] : $this->settings['dibs_checkout_key'];
+		$private_key  = apply_filters( 'nexi_request_checkout_key', $private_key, $is_test_mode );
 		wp_localize_script(
 			'nets-easy-checkout',
 			'wcDibsEasy',
