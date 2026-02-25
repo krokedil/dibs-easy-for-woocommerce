@@ -101,7 +101,7 @@ class Nets_Easy_Assets {
 	 * Injects the iframe script.
 	 */
 	public function inject_iframe_script() {
-		if ( ! isset( $_GET['nexi_overlay'] ) ) {
+		if ( ! isset( $_GET['nexi_overlay'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		}
 		?>
