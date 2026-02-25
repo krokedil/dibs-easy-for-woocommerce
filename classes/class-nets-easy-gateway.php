@@ -5,6 +5,9 @@
  * @package DIBS_Easy/Classes
  */
 
+use KrokedilNexiCheckoutDeps\Krokedil\SettingsPage\SettingsPage;
+use KrokedilNexiCheckoutDeps\Krokedil\SettingsPage\Gateway;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -272,13 +275,12 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Check if data is json.
 	 *
-	 * @param string $json_string Json object.
+	 * @param string $maybe_json Json object.
 	 *
 	 * @return mixed
 	 */
-	public function is_json( $json_string ) {
-		json_decode( $json_string );
-
+	public function is_json( $maybe_json ) {
+		json_decode( $maybe_json );
 		return ( json_last_error() === JSON_ERROR_NONE );
 	}
 
@@ -378,5 +380,63 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 				'redirect' => esc_url_raw( add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ) ),
 			);
 		}
+	}
+
+	/**
+	 * Add sidebar to the settings page.
+	 */
+	public function admin_options() {
+		$args = $this->get_settings_page_args();
+
+		if ( empty( $args ) ) {
+			parent::admin_options();
+			return;
+		}
+
+		$args['icon']            = WC_DIBS__URL . '/assets/images/nexi-logo.svg';
+		$gateway_page            = new Gateway( $this, $args );
+		$args['general_content'] = array( $gateway_page, 'output' );
+		( SettingsPage::get_instance() )
+		->set_plugin_name( 'Nexi Checkout' )
+		->register_page( $this->id, $args, $this )
+		->output( $this->id );
+	}
+
+	/**
+	 * Read the settings page arguments from remote or local storage.
+	 * If the args are stored locally, they are fetched from the transient cache.
+	 * If they are not available locally, they are fetched from the remote source and stored in the transient cache.
+	 * If the remote source is not available, the function returns null, and default settings page will be used instead.
+	 *
+	 * @return array|null
+	 */
+	private function get_settings_page_args() {
+		$args = get_transient( 'nexi_checkout_settings_page_config' );
+		if ( ! $args ) {
+			$response = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/develop/configs/nexi-checkout.json' );
+
+			if ( is_wp_error( $response ) ) {
+				Nets_Easy_Logger::log( 'Failed to fetch Nexi Checkout settings page config from remote source.' );
+				return null;
+			}
+
+			$response_code = wp_remote_retrieve_response_code( $response );
+			if ( 200 !== $response_code ) {
+				Nets_Easy_Logger::log( 'Unexpected HTTP status when fetching Nexi Checkout settings page config: ' . $response_code );
+				return null;
+			}
+
+			$args = wp_remote_retrieve_body( $response );
+
+			if ( empty( $args ) || ! $this->is_json( $args ) ) {
+				Nets_Easy_Logger::log( 'Invalid JSON format for Nexi Checkout settings page config.' );
+				return null;
+			}
+
+			set_transient( 'nexi_checkout_settings_page_config', $args, 60 * 60 * 24 ); // 24 hours lifetime.
+		}
+
+		$decoded = json_decode( $args, true );
+		return is_array( $decoded ) ? $decoded : null;
 	}
 }
