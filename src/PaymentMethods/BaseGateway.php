@@ -167,6 +167,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	 *
 	 * @param int $order_id WooCommerce order ID.
 	 *
+	 * @throws \Exception If an error occurs during payment processing.
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
@@ -186,7 +187,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 					'order_id'      => $order_id,
 				)
 			);
-			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
+			if ( ! is_wp_error( $response ) && array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
 				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
 
@@ -195,9 +196,9 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 					'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 				);
 			}
-			return array(
-				'result' => 'error',
-			);
+
+			// translators: %s: API error message.
+			throw new \Exception( sprintf( esc_html__( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues. Error: %s", 'dibs-easy-for-woocommerce' ), esc_html( $response->get_error_message() ) ) );
 		}
 		// Regular purchase.
 		// Embedded flow.
@@ -321,8 +322,8 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	/**
 	 * Process the payment via redirect flow.
 	 *
+	 * @throws \Exception If an error occurs during payment processing.
 	 * @param int $order_id The WooCommerce order id.
-	 *
 	 * @return array|string[]
 	 */
 	protected function process_redirect_handler( $order_id ) {
@@ -340,10 +341,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 		$response = Nets_Easy()->api->create_nets_easy_order( $args );
 
 		if ( is_wp_error( $response ) ) {
-			wc_add_notice( $response->get_error_message(), 'error' );
-			return array(
-				'result' => 'error',
-			);
+			throw new \Exception( esc_html( $response->get_error_message() ) );
 		}
 
 		$order = wc_get_order( $order_id );
@@ -359,14 +357,13 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return array(
-			'result' => 'error',
-		);
+		throw new \Exception( esc_html__( 'Payment could not be initiated in Nexi Checkout. Please try again in a moment or contact us if the issue continues.', 'dibs-easy-for-woocommerce' ) );
 	}
 
 	/**
 	 * Process the payment via overlay flow.
 	 *
+	 * @throws \Exception If an error occurs during payment processing.
 	 * @param int $order_id The WooCommerce order id.
 	 *
 	 * @return array|string[]
@@ -384,10 +381,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 
 		$response = Nets_Easy()->api->create_nets_easy_order( $args );
 		if ( is_wp_error( $response ) ) {
-			wc_add_notice( $response->get_error_message(), 'error' );
-			return array(
-				'result' => 'error',
-			);
+			throw new \Exception( esc_html( $response->get_error_message() ) );
 		}
 
 		$order = wc_get_order( $order_id );
@@ -403,9 +397,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return array(
-			'result' => 'error',
-		);
+		throw new \Exception( esc_html__( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues.", 'dibs-easy-for-woocommerce' ) );
 	}
 
 	/**
