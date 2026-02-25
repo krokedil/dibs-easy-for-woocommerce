@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Resolved an issue where error messages were not displayed when a payment failed during processing due to recent WooCommerce changes.
