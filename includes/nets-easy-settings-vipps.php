@@ -16,6 +16,7 @@ return apply_filters(
 	'dibs_easy_vipps_settings',
 	array(
 		'general'                    => array(
+			'id'          => 'general_section',
 			'title'       => __( 'General configuration', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'krokedil_section_start',
 			'description' => '',
