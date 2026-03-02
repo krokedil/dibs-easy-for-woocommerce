@@ -1,19 +1,24 @@
 {
   "require": {
     "php": ">=7.4",
-    "krokedil/woocommerce": "^1.0.0"
+    "krokedil/woocommerce": "^1.0.0",
+    "krokedil/settings-page": "^1.1.0"
   },
   "config": {
     "platform": {
       "php": "7.4"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:krokedil/woocommerce.git"
-    }
-  ],
+   "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:krokedil/woocommerce.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:krokedil/settings-page.git"
+        }
+    ],
   "minimum-stability": "dev",
   "prefer-stable": true
 }

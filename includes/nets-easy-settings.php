@@ -15,66 +15,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 return apply_filters(
 	'dibs_easy_settings',
 	array(
-		'enabled'                         => array(
+		// General configuration.
+		'general_section'                  => array(
+			'id'          => 'general_section',
+			'title'       => __( 'General configuration', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'krokedil_section_start',
+			'description' => __( 'Configure the general settings for Nexi Checkout.', 'dibs-easy-for-woocommerce' ),
+		),
+		'enabled'                          => array(
 			'title'   => __( 'Enable/Disable', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
 			'label'   => __( 'Enable Nexi Checkout', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
-		'title'                           => array(
+		'title'                            => array(
 			'title'       => __( 'Title', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
 			'description' => __( 'This is the title that the user sees on the checkout page for Nexi Checkout.', 'dibs-easy-for-woocommerce' ),
 			'default'     => __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' ),
 		),
-		'description'                     => array(
+		'description'                      => array(
 			'title'       => __( 'Description', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'textarea',
 			'default'     => '',
 			'desc_tip'    => true,
 			'description' => __( 'This controls the description which the user sees during checkout.', 'dibs-easy-for-woocommerce' ),
 		),
-		'merchant_number'                 => array(
-			'title'       => __( 'Merchant ID', 'dibs-easy-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'The stores Nexi Checkout Merchant ID. Only required if you are a partner and initiating the checkout with your partner keys.', 'dibs-easy-for-woocommerce' ),
-			'default'     => '',
-		),
-		'dibs_live_key'                   => array(
-			'title'       => __( 'Live Secret key', 'dibs-easy-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'Enter your Nexi live secret key', 'dibs-easy-for-woocommerce' ),
-			'default'     => '',
-			'desc_tip'    => true,
-		),
-		'dibs_checkout_key'               => array(
-			'title'       => __( 'Live Checkout key', 'dibs-easy-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'Enter your Nexi live checkout key', 'dibs-easy-for-woocommerce' ),
-			'default'     => '',
-			'desc_tip'    => true,
-		),
-		'dibs_test_key'                   => array(
-			'title'       => __( 'Test Secret key', 'dibs-easy-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'Enter your Nexi Test secret key if you want to run in test mode.', 'dibs-easy-for-woocommerce' ),
-			'default'     => '',
-			'desc_tip'    => true,
-		),
-		'dibs_test_checkout_key'          => array(
-			'title'       => __( 'Test Checkout key', 'dibs-easy-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'Enter your Nexi Test checkout key', 'dibs-easy-for-woocommerce' ),
-			'default'     => '',
-			'desc_tip'    => true,
-		),
-		'test_mode'                       => array(
-			'title'   => __( 'Test mode', 'dibs-easy-for-woocommerce' ),
-			'type'    => 'checkbox',
-			'label'   => __( 'Enable Test mode for Nexi Checkout', 'dibs-easy-for-woocommerce' ),
-			'default' => 'no',
-		),
-		'allowed_customer_types'          => array(
+		'allowed_customer_types'           => array(
 			'title'       => __( 'Allowed Customer Types', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'select',
 			'options'     => array(
@@ -87,40 +54,65 @@ return apply_filters(
 			'default'     => 'B2C',
 			'desc_tip'    => false,
 		),
-		'email_text'                      => array(
-			'title'       => __( 'Email text', 'dibs-easy-for-woocommerce' ),
-			'type'        => 'textarea',
-			'description' => __( 'This text will be added to your customers order confirmation email.', 'dibs-easy-for-woocommerce' ),
+		'general_section_end'              => array(
+			'type' => 'krokedil_section_end',
+		),
+		'credentials_section'              => array(
+			'id'          => 'credentials_section',
+			'title'       => __( 'Credentials and test mode', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'krokedil_section_start',
+			'description' => __( 'Configure your merchant credentials and environment.', 'dibs-easy-for-woocommerce' ),
+		),
+		'merchant_number'                  => array(
+			'title'       => __( 'Merchant ID', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => __( 'The stores Nexi Checkout Merchant ID. Only required if you are a partner and initiating the checkout with your partner keys.', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 		),
-		'email_nets_payment_data'         => array(
-			'title'   => __( 'Email payment data', 'dibs-easy-for-woocommerce' ),
-			'type'    => 'checkbox',
-			'label'   => __( 'Add Nexi payment data to order confirmation email.', 'dibs-easy-for-woocommerce' ),
-			'default' => 'no',
-		),
-		'dibs_manage_orders'              => array(
-			'title'   => __( 'Manage orders', 'dibs-easy-for-woocommerce' ),
-			'type'    => 'checkbox',
-			'label'   => __( 'Enable WooCommerce to manage orders in Nexi Checkout backend', 'dibs-easy-for-woocommerce' ),
-			'default' => 'no',
-		),
-		'debug_mode'                      => array(
-			'title'       => __( 'Logging', 'dibs-easy-for-woocommerce' ),
-			'type'        => 'checkbox',
-			'label'       => __( 'Log debug messages', 'dibs-easy-for-woocommerce' ),
-			'description' => __( 'Save debug messages to the WooCommerce System Status log', 'dibs-easy-for-woocommerce' ),
-			'default'     => 'yes',
+		'dibs_live_key'                    => array(
+			'title'       => __( 'Live Secret key', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => __( 'Enter your Nexi live secret key', 'dibs-easy-for-woocommerce' ),
+			'default'     => '',
 			'desc_tip'    => true,
 		),
-		'dibs_invoice_fee'                => array(
-			'title'       => __( 'Invoice fee ID', 'dibs-easy-for-woocommerce' ),
+		'dibs_checkout_key'                => array(
+			'title'       => __( 'Live Checkout key', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
-			'description' => sprintf( __( 'Create a hidden (simple) product that acts as the invoice fee. Enter the product <strong>ID</strong> number in this textfield. Leave blank to disable.', 'dibs-easy-for-woocommerce' ) ),
+			'description' => __( 'Enter your Nexi live checkout key', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
-			'desc_tip'    => false,
+			'desc_tip'    => true,
 		),
-		'checkout_flow'                   => array(
+		'dibs_test_key'                    => array(
+			'title'       => __( 'Test Secret key', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => __( 'Enter your Nexi Test secret key if you want to run in test mode.', 'dibs-easy-for-woocommerce' ),
+			'default'     => '',
+			'desc_tip'    => true,
+		),
+		'dibs_test_checkout_key'           => array(
+			'title'       => __( 'Test Checkout key', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => __( 'Enter your Nexi Test checkout key', 'dibs-easy-for-woocommerce' ),
+			'default'     => '',
+			'desc_tip'    => true,
+		),
+		'test_mode'                        => array(
+			'title'   => __( 'Test mode', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable Test mode for Nexi Checkout', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		'credentials_section_end'          => array(
+			'type' => 'krokedil_section_end',
+		),
+		'checkout_experience_section'      => array(
+			'id'          => 'checkout_experience_section',
+			'title'       => __( 'Checkout experience', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'krokedil_section_start',
+			'description' => __( 'Control how the checkout behaves and is presented to customers.', 'dibs-easy-for-woocommerce' ),
+		),
+		'checkout_flow'                    => array(
 			'title'       => __( 'Checkout flow', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'select',
 			'options'     => array(
@@ -133,20 +125,13 @@ return apply_filters(
 			'default'     => 'inline',
 			'desc_tip'    => false,
 		),
-		'auto_capture'                    => array(
+		'auto_capture'                     => array(
 			'title'   => __( 'Auto-capture', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
 			'label'   => __( 'Enable Auto-capture. If enabled Nexi Checkout charges your customer immediately after payment completion. Only enable for compliant products/services.', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
-		'select_another_method_text'      => array(
-			'title'       => __( 'Other payment method button text', 'dibs-easy-for-woocommerce' ),
-			'type'        => 'text',
-			'description' => __( 'Customize the <em>Select another payment method</em> button text that is displayed in checkout if using other payment methods than Nexi Checkout. Leave blank to use the default (and translatable) text.', 'dibs-easy-for-woocommerce' ),
-			'default'     => '',
-			'desc_tip'    => true,
-		),
-		'complete_payment_button_text'    => array(
+		'complete_payment_button_text'     => array(
 			'title'       => __( 'Subscription payment button text', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'select',
 			'options'     => array(
@@ -164,7 +149,7 @@ return apply_filters(
 			'default'     => 'subscribe',
 			'desc_tip'    => false,
 		),
-		'subscription_type'               => array(
+		'subscription_type'                => array(
 			'title'       => __( 'Subscription type', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'select',
 			'options'     => array(
@@ -176,27 +161,88 @@ return apply_filters(
 			'default'     => 'scheduled_subscription',
 			'desc_tip'    => false,
 		),
-		'payment_gateway_icon'            => array(
+		'select_another_method_text'       => array(
+			'title'       => __( 'Other payment method button text', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => __( 'Customize the <em>Select another payment method</em> button text that is displayed in checkout if using other payment methods than Nexi Checkout. Leave blank to use the default (and translatable) text.', 'dibs-easy-for-woocommerce' ),
+			'default'     => '',
+			'desc_tip'    => true,
+		),
+		'payment_gateway_icon'             => array(
 			'title'       => __( 'Payment gateway icon', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
 			'description' => __( 'Enter an URL to the icon you want to display for the payment method. Use <i>default</i> to display the default Nexi logo. Leave blank to not show an icon at all.', 'dibs-easy-for-woocommerce' ),
 			'default'     => 'default',
 			'desc_tip'    => false,
 		),
-		'payment_gateway_icon_width'      => array(
+		'payment_gateway_icon_width'       => array(
 			'title'       => __( 'Payment gateway icon width', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'number',
 			'description' => __( 'Specify the max width (in px) of the payment gateway icon.', 'dibs-easy-for-woocommerce' ),
 			'default'     => '',
 			'desc_tip'    => true,
 		),
-		// SE.
-		'payment_method_split_title'      => array(
-			'title'       => __( 'Payment method splitting', 'dibs-easy-for-woocommerce' ),
-			'description' => __( 'Enable specific payment methods as standalone payment methods in the checkout.', 'dibs-easy-for-woocommerce' ),
-			'type'        => 'title',
+		'checkout_experience_section_end'  => array(
+			'type' => 'krokedil_section_end',
 		),
-		'enable_payment_method_card'      => array(
+		'email_section'                    => array(
+			'id'          => 'email_section',
+			'title'       => __( 'Email settings', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'krokedil_section_start',
+			'description' => __( 'Configure what appears in order confirmation emails.', 'dibs-easy-for-woocommerce' ),
+		),
+		'email_text'                       => array(
+			'title'       => __( 'Email text', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'textarea',
+			'description' => __( 'This text will be added to your customers order confirmation email.', 'dibs-easy-for-woocommerce' ),
+			'default'     => '',
+		),
+		'email_nets_payment_data'          => array(
+			'title'   => __( 'Email payment data', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Add Nexi payment data to order confirmation email.', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		'email_section_end'                => array(
+			'type' => 'krokedil_section_end',
+		),
+		'order_management_section'         => array(
+			'id'          => 'order_management_section',
+			'title'       => __( 'Order management and logging', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'krokedil_section_start',
+			'description' => __( 'Control backend order handling and logging.', 'dibs-easy-for-woocommerce' ),
+		),
+		'dibs_manage_orders'               => array(
+			'title'   => __( 'Manage orders', 'dibs-easy-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'label'   => __( 'Enable WooCommerce to manage orders in Nexi Checkout backend', 'dibs-easy-for-woocommerce' ),
+			'default' => 'no',
+		),
+		'dibs_invoice_fee'                 => array(
+			'title'       => __( 'Invoice fee ID', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'text',
+			'description' => sprintf( __( 'Create a hidden (simple) product that acts as the invoice fee. Enter the product <strong>ID</strong> number in this textfield. Leave blank to disable.', 'dibs-easy-for-woocommerce' ) ),
+			'default'     => '',
+			'desc_tip'    => false,
+		),
+		'debug_mode'                       => array(
+			'title'       => __( 'Logging', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'checkbox',
+			'label'       => __( 'Log debug messages', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'Save debug messages to the WooCommerce System Status log', 'dibs-easy-for-woocommerce' ),
+			'default'     => 'yes',
+			'desc_tip'    => true,
+		),
+		'order_management_section_end'     => array(
+			'type' => 'krokedil_section_end',
+		),
+		'payment_method_split_section'     => array(
+			'id'          => 'payment_method_split_section',
+			'title'       => __( 'Payment method splitting', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'krokedil_section_start',
+			'description' => __( 'Enable specific payment methods as standalone payment methods in the checkout.', 'dibs-easy-for-woocommerce' ),
+		),
+		'enable_payment_method_card'       => array(
 			'title'   => __( 'Card payment', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
 			'label'   => __( 'Enable Card payment as separate payment method', 'dibs-easy-for-woocommerce' ),
@@ -216,7 +262,7 @@ return apply_filters(
 			'default' => 'no',
 		),
 		*/
-		'enable_payment_method_swish'     => array(
+		'enable_payment_method_swish'      => array(
 			'title'   => __( 'Swish payment', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
 			'label'   => __( 'Enable Swish payment as separate payment method', 'dibs-easy-for-woocommerce' ),
@@ -230,23 +276,26 @@ return apply_filters(
 			'default' => 'no',
 		),
 		*/
-		'enable_payment_method_klarna'    => array(
+		'enable_payment_method_klarna'     => array(
 			'title'   => __( 'Klarna payment', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
 			'label'   => __( 'Enable Klarna payment as separate payment method', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
-		'enable_payment_method_mobilepay' => array(
+		'enable_payment_method_mobilepay'  => array(
 			'title'   => __( 'MobilePay payment', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
 			'label'   => __( 'Enable MobilePay payment as separate payment method', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
-		'enable_payment_method_vipps'     => array(
+		'enable_payment_method_vipps'      => array(
 			'title'   => __( 'Vipps payment', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
 			'label'   => __( 'Enable Vipps payment as separate payment method', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
+		),
+		'payment_method_split_section_end' => array(
+			'type' => 'krokedil_section_end',
 		),
 	)
 );

@@ -101,7 +101,7 @@ class Nets_Easy_Assets {
 	 * Injects the iframe script.
 	 */
 	public function inject_iframe_script() {
-		if ( ! isset( $_GET['nexi_overlay'] ) ) {
+		if ( ! isset( $_GET['nexi_overlay'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
 		}
 		?>
@@ -144,7 +144,7 @@ class Nets_Easy_Assets {
 		$gateway_mapping = array(
 			'dibs_easy'              => array(
 				'label' => __( 'Nexi Checkout', 'dibs-easy-for-woocommerce' ),
-				'logo'  => WC_DIBS__URL . '/assets/images/nexi-logo.svg',
+				'logo'  => WC_DIBS__URL . '/assets/images/nexi-logo.png',
 			),
 			'nets_easy_card'         => array(
 				'label' => __( 'Nexi Checkout Card', 'dibs-easy-for-woocommerce' ),
@@ -231,7 +231,7 @@ class Nets_Easy_Assets {
 			false
 		);
 
-		$private_key = 'yes' === $this->test_mode ? $this->settings['dibs_test_checkout_key'] : $this->settings['dibs_checkout_key'];
+		$private_key = $this->get_checkout_key();
 		wp_localize_script(
 			'nexi-checkout-inline',
 			'nexiCheckoutParams',
@@ -395,7 +395,7 @@ class Nets_Easy_Assets {
 		// todo enable min version.
 		// phpcs:ignore $src                          = WC_DIBS__URL . '/assets/js/checkout' . $script_version . '.js';
 
-		$private_key = 'yes' === $this->test_mode ? $this->settings['dibs_test_checkout_key'] : $this->settings['dibs_checkout_key'];
+		$private_key = $this->get_checkout_key();
 		wp_localize_script(
 			'nets-easy-checkout',
 			'wcDibsEasy',
@@ -463,6 +463,21 @@ class Nets_Easy_Assets {
 		);
 
 		wp_enqueue_style( 'nets-easy-overlay-style' );
+	}
+
+	/**
+	 * Retrieves the checkout key.
+	 *
+	 * @return string The checkout key.
+	 */
+	public function get_checkout_key() {
+		$is_test_mode = ( 'yes' === $this->test_mode );
+		$key_name     = $is_test_mode ? 'dibs_test_checkout_key' : 'dibs_checkout_key';
+
+		$private_key = ! empty( $this->settings[ $key_name ] ) ? $this->settings[ $key_name ] : '';
+		$private_key = apply_filters( 'nexi_request_checkout_key', $private_key, $is_test_mode );
+
+		return $private_key;
 	}
 }
 new Nets_Easy_Assets();

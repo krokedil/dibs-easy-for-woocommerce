@@ -15,6 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 return apply_filters(
 	'dibs_easy_ratepay_sepa_settings',
 	array(
+		'general'                    => array(
+			'id'          => 'general_section',
+			'title'       => __( 'General configuration', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'krokedil_section_start',
+			'description' => '',
+		),
 		'enabled'                    => array(
 			'title'   => __( 'Enable/Disable', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
@@ -59,6 +65,9 @@ return apply_filters(
 			),
 			'default'     => '',
 			'desc_tip'    => true,
+		),
+		'general_end'                => array(
+			'type' => 'krokedil_section_end',
 		),
 	)
 );

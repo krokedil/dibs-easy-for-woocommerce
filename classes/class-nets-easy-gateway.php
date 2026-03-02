@@ -5,6 +5,9 @@
  * @package DIBS_Easy/Classes
  */
 
+use KrokedilNexiCheckoutDeps\Krokedil\SettingsPage\SettingsPage;
+use KrokedilNexiCheckoutDeps\Krokedil\SettingsPage\Gateway;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -129,6 +132,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @param int $order_id WooCommerce order ID.
 	 *
+	 * @throws \Exception If an error occurs during payment processing.
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
@@ -148,7 +152,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 					'order_id'      => $order_id,
 				)
 			);
-			if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
+			if ( ! is_wp_error( $response ) && array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
 				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
 
@@ -157,9 +161,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 					'redirect' => esc_url_raw( add_query_arg( 'language', wc_dibs_get_locale(), $response['hostedPaymentPageUrl'] ) ),
 				);
 			}
-			return array(
-				'result' => 'error',
-			);
+
+			// translators: %s: API error message.
+			throw new \Exception( sprintf( esc_html__( "We couldn't start your payment session right now. Please try again in a moment or contact us if the issue continues. Error: %s", 'dibs-easy-for-woocommerce' ), esc_html( $response->get_error_message() ) ) );
 		}
 		// Regular purchase.
 		// Embedded flow.
@@ -189,7 +193,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 * @param  string $amount Refund amount.
 	 * @param  string $reason Reason test message for the refund.
 	 *
-	 * @return bool
+	 * @return bool|WP_Error
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
@@ -212,21 +216,21 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Add Nexi Checkout body class.
 	 *
-	 * @param  array $class Body classes.
+	 * @param  array $classes Body classes.
 	 *
 	 * @return array
 	 */
-	public function dibs_add_body_class( $class ) {
+	public function dibs_add_body_class( $classes ) {
 		if ( is_checkout() ) {
 			$available_payment_gateways = WC()->payment_gateways->get_available_payment_gateways();
 			reset( $available_payment_gateways );
 			$first_gateway = key( $available_payment_gateways );
 
 			if ( 'dibs_easy' === $first_gateway ) {
-				$class[] = 'dibs-selected';
+				$classes[] = 'dibs-selected';
 			}
 		}
-		return $class;
+		return $classes;
 	}
 
 	/**
@@ -271,13 +275,12 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Check if data is json.
 	 *
-	 * @param string $string Json object.
+	 * @param string $maybe_json Json object.
 	 *
 	 * @return mixed
 	 */
-	public function is_json( $string ) {
-		json_decode( $string );
-
+	public function is_json( $maybe_json ) {
+		json_decode( $maybe_json );
 		return ( json_last_error() === JSON_ERROR_NONE );
 	}
 
@@ -286,6 +289,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @param int $order_id The WooCommerce order id.
 	 *
+	 * @throws \Exception  If an error occurs during payment processing.
 	 * @return array|string[]
 	 */
 	protected function process_redirect_handler( $order_id ) {
@@ -297,11 +301,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 				'order_id'      => $order_id,
 			)
 		);
+
 		if ( is_wp_error( $response ) ) {
-			wc_add_notice( $response->get_error_message(), 'error' );
-			return array(
-				'result' => 'error',
-			);
+			throw new \Exception( esc_html( $response->get_error_message() ) );
 		}
 
 		$order = wc_get_order( $order_id );
@@ -317,9 +319,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return array(
-			'result' => 'error',
-		);
+		throw new \Exception( esc_html__( 'Payment could not be initiated in Nexi Checkout. Please try again in a moment or contact us if the issue continues.', 'dibs-easy-for-woocommerce' ) );
 	}
 
 	/**
@@ -327,6 +327,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 *
 	 * @param int $order_id The WooCommerce order id.
 	 *
+	 * @throws \Exception If an error occurs during payment processing.
 	 * @return array|string[]
 	 */
 	protected function process_overlay_handler( $order_id ) {
@@ -339,10 +340,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			)
 		);
 		if ( is_wp_error( $response ) ) {
-			wc_add_notice( $response->get_error_message(), 'error' );
-			return array(
-				'result' => 'error',
-			);
+			throw new \Exception( esc_html( $response->get_error_message() ) );
 		}
 
 		$order = wc_get_order( $order_id );
@@ -358,9 +356,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			);
 		}
 
-		return array(
-			'result' => 'error',
-		);
+		throw new \Exception( esc_html__( 'Payment could not be initiated in Nexi Checkout. Please try again in a moment or contact us if the issue continues.', 'dibs-easy-for-woocommerce' ) );
 	}
 
 	/**
@@ -384,5 +380,63 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 				'redirect' => esc_url_raw( add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ) ),
 			);
 		}
+	}
+
+	/**
+	 * Add sidebar to the settings page.
+	 */
+	public function admin_options() {
+		$args = $this->get_settings_page_args();
+
+		if ( empty( $args ) ) {
+			parent::admin_options();
+			return;
+		}
+
+		$args['icon']            = WC_DIBS__URL . '/assets/images/nexi-logo.png';
+		$gateway_page            = new Gateway( $this, $args );
+		$args['general_content'] = array( $gateway_page, 'output' );
+		( SettingsPage::get_instance() )
+		->set_plugin_name( 'Nexi Checkout' )
+		->register_page( $this->id, $args, $this )
+		->output( $this->id );
+	}
+
+	/**
+	 * Read the settings page arguments from remote or local storage.
+	 * If the args are stored locally, they are fetched from the transient cache.
+	 * If they are not available locally, they are fetched from the remote source and stored in the transient cache.
+	 * If the remote source is not available, the function returns null, and default settings page will be used instead.
+	 *
+	 * @return array|null
+	 */
+	private function get_settings_page_args() {
+		$args = get_transient( 'nexi_checkout_settings_page_config' );
+		if ( ! $args ) {
+			$response = wp_remote_get( 'https://krokedil-settings-page-configs.s3.eu-north-1.amazonaws.com/develop/configs/nexi-checkout.json' );
+
+			if ( is_wp_error( $response ) ) {
+				Nets_Easy_Logger::log( 'Failed to fetch Nexi Checkout settings page config from remote source.' );
+				return null;
+			}
+
+			$response_code = wp_remote_retrieve_response_code( $response );
+			if ( 200 !== $response_code ) {
+				Nets_Easy_Logger::log( 'Unexpected HTTP status when fetching Nexi Checkout settings page config: ' . $response_code );
+				return null;
+			}
+
+			$args = wp_remote_retrieve_body( $response );
+
+			if ( empty( $args ) || ! $this->is_json( $args ) ) {
+				Nets_Easy_Logger::log( 'Invalid JSON format for Nexi Checkout settings page config.' );
+				return null;
+			}
+
+			set_transient( 'nexi_checkout_settings_page_config', $args, 60 * 60 * 24 ); // 24 hours lifetime.
+		}
+
+		$decoded = json_decode( $args, true );
+		return is_array( $decoded ) ? $decoded : null;
 	}
 }
