@@ -1,4 +1,0 @@
-Type: Enhancement
-Needs Documentation: yes
-
-Added the 'nexi_request_checkout_key' filter to allow modification of the private (checkout) key sent to Nexi.
