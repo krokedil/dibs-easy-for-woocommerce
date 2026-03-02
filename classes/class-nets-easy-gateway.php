@@ -393,7 +393,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			return;
 		}
 
-		$args['icon']            = WC_DIBS__URL . '/assets/images/nexi-logo.svg';
+		$args['icon']            = WC_DIBS__URL . '/assets/images/nexi-logo.png';
 		$gateway_page            = new Gateway( $this, $args );
 		$args['general_content'] = array( $gateway_page, 'output' );
 		( SettingsPage::get_instance() )
