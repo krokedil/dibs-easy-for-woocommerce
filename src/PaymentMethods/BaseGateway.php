@@ -453,7 +453,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			return $this->payment_gateway_icon;
 		}
 
-		return WC_DIBS__URL . '/assets/images/nexi-logo.svg';
+		return WC_DIBS__URL . '/assets/images/nexi-logo.png';
 	}
 
 	/**
