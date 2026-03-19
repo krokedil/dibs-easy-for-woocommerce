@@ -41,6 +41,7 @@ jobs:
     - name: Install dependencies and build project
       run: |
         mkdir -p ~/.composer/cache
+        composer install --prefer-dist --no-progress --optimize-autoloader
         composer install --prefer-dist --no-progress --optimize-autoloader --no-dev
         npm ci && npm run build
 
