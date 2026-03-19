@@ -2,6 +2,9 @@ name: Create Dev Zip
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - develop-optimize-devzip
 
 jobs:
   build:
