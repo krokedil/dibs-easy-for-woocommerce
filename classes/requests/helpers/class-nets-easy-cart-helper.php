@@ -136,8 +136,8 @@ class Nets_Easy_Cart_Helper {
 	 */
 	public static function get_shipping() {
 		$packages        = WC()->shipping->get_packages();
-		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
-		$chosen_shipping = $chosen_methods[0];
+		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods', array() );
+		$chosen_shipping = $chosen_methods[0] ?? array();
 		foreach ( $packages as $i => $package ) {
 			foreach ( $package['rates'] as $method ) {
 				if ( $chosen_shipping === $method->id ) {
