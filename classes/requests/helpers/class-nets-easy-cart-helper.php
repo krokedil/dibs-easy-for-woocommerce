@@ -177,7 +177,6 @@ class Nets_Easy_Cart_Helper {
 	 * Gets the sku for one item.
 	 *
 	 * @param object $product The WooCommerce product.
-	 * @param string $product_id The WooCommerce product ID.
 	 * @return string
 	 */
 	public static function get_sku( $product ) {
