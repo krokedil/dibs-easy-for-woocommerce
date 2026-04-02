@@ -67,7 +67,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 		$update_needed      = 'no';
 		$must_login         = 'no';
-		$must_login_message = apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. Please log in.', 'woocommerce' ) );
+		$must_login_message = apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. Please log in.', 'woocommerce' ) ); //phpcs:ignore
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
