@@ -144,7 +144,7 @@ class Nets_Easy_Cart_Helper {
 				if ( $chosen_shipping === $method->id ) {
 					if ( $method->cost > 0 ) {
 						return array(
-							'reference'        => 'shipping|' . $method->id,
+							'reference'        => "shipping|{$method->id}",
 							'name'             => wc_dibs_clean_name( $method->label ),
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -157,7 +157,7 @@ class Nets_Easy_Cart_Helper {
 					}
 
 					return array(
-						'reference'        => 'shipping|' . $method->id,
+						'reference'        => "shipping|{$method->id}",
 						'name'             => wc_dibs_clean_name( $method->label ),
 						'quantity'         => 1,
 						'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
