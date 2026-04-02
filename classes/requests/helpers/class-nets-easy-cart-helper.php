@@ -180,7 +180,7 @@ class Nets_Easy_Cart_Helper {
 	 * @param string $product_id The WooCommerce product ID.
 	 * @return string
 	 */
-	public static function get_sku( $product, $product_id ) {
+	public static function get_sku( $product ) {
 		$part_number = $product->get_sku();
 		if ( empty( $part_number ) ) {
 			$part_number = $product->get_id();
