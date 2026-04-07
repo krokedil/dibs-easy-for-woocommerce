@@ -78,14 +78,15 @@ class Nets_Easy_Confirmation {
 		if ( empty( $easy_confirm ) || empty( $order_key ) ) {
 			return;
 		}
-		$order_id = wc_get_order_id_by_order_key( $order_key );
-		$order    = wc_get_order( $order_id );
 
-		Nets_Easy_Logger::log( $order_id . ': Confirmation endpoint hit for order.' );
+		$order_id   = wc_get_order_id_by_order_key( $order_key );
+		$order      = wc_get_order( $order_id );
+		$payment_id = $order->get_meta( '_dibs_payment_id' );
+
+		Nets_Easy_Logger::log( "[CONFIRM]: $order_id: Confirmation endpoint hit for order ($payment_id)." );
 
 		if ( empty( $order->get_date_paid() ) ) {
-
-			Nets_Easy_Logger::log( $order_id . ': Confirm the Nexi order from the confirmation page.' );
+			Nets_Easy_Logger::log( "[CONFIRM]: $order_id: Confirm the Nexi order ($payment_id) from the confirmation page." );
 
 			// Confirm the order.
 			wc_dibs_confirm_dibs_order( $order_id );
