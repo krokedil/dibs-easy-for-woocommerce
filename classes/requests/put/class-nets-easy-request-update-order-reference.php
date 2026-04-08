@@ -47,7 +47,6 @@ class Nets_Easy_Request_Update_Order_Reference extends Nets_Easy_Request_Put {
 
 		$this->order_number = $this->get_order_number( $arguments['order_id'] );
 		$this->log_title    = 'Update order reference ';
-
 	}
 
 	/**

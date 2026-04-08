@@ -67,7 +67,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 		$update_needed      = 'no';
 		$must_login         = 'no';
-		$must_login_message = apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. Please log in.', 'woocommerce' ) );
+		$must_login_message = apply_filters( 'woocommerce_registration_error_email_exists', __( 'An account is already registered with your email address. Please log in.', 'woocommerce' ) ); //phpcs:ignore
 
 		wc_maybe_define_constant( 'WOOCOMMERCE_CHECKOUT', true );
 
@@ -155,7 +155,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		$payment_id_session = WC()->session->get( 'dibs_payment_id' );
 
 		if ( $payment_id !== $payment_id_session ) {
-			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s).', $payment_id, $payment_id_session ) );
+			Nets_Easy_Logger::log( sprintf( '[AJAX]: Payment ID used in checkout (%s) not the same as the one stored in WC session (%s).', $payment_id, $payment_id_session ) );
 			wp_send_json_error( 'Failed to get the Nexi order data. Payment ID does not match the session.' );
 		}
 
@@ -184,9 +184,9 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		if ( $order_id_match ) {
 			$order = wc_get_order( $order_id_match );
 			if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
-				Nets_Easy_Logger::log( 'Process Woo checkout triggered but _dibs_payment_id already exist in this order: ' . $order_id_match );
+				Nets_Easy_Logger::log( "[AJAX]: Process Woo checkout triggered but _dibs_payment_id ($order_payment_id ) already exist in this order: $order_id_match" );
 				$location = $order->get_checkout_order_received_url();
-				Nets_Easy_Logger::log( '$location: ' . $location );
+				Nets_Easy_Logger::log( "[AJAX]: \$location: $location" );
 				wp_send_json_error( array( 'redirect' => $location ) );
 			}
 		}
@@ -202,7 +202,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 				$message = 'Empty response from Nets.';
 			}
 
-			Nets_Easy_Logger::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but something went wrong. WooCommerce form not submitted. Error message: ' . wp_json_encode( $message ) );
+			Nets_Easy_Logger::log( "[AJAX]: processWooCheckout triggered for Nets payment ID $payment_id, but something went wrong. WooCommerce form not submitted. Error message: " . wp_json_encode( $message ) );
 
 			// @todo - log and/or improve this error response?
 			wp_send_json_error( $message );
@@ -214,7 +214,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 			// Allow for a difference, measured in the smallest currency unit (e.g., 300 = 3 SEK).
 			if ( abs( $cart_total - $nets_order_total ) > 300 ) {
-				Nets_Easy_Logger::log( 'processWooCheckout triggered for Nets payment ID ' . $payment_id . ', but cart total does not match Nets order total. WooCommerce form not submitted. Cart total: ' . $cart_total . ', Nets order total: ' . $nets_order_total );
+				Nets_Easy_Logger::log( "[AJAX]: processWooCheckout triggered for Nets payment ID $payment_id, but cart total does not match Nets order total. WooCommerce form not submitted. Cart total: $cart_total, Nets order total: $nets_order_total" );
 
 				wp_send_json_error( __( 'Cart total does not match Nets order total. Please try refreshing the page.', 'dibs-easy-for-woocommerce' ) );
 			}
@@ -228,7 +228,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			// Store the order data in a session. We might need it if form processing in Woo fails.
 			WC()->session->set( 'dibs_order_data', $response );
 
-			Nets_Easy_Logger::log( 'processWooCheckout triggered and checkout form about to be submitted for Nets payment ID ' . $payment_id );
+			Nets_Easy_Logger::log( "[AJAX]: processWooCheckout triggered and checkout form about to be submitted for Nets payment ID $payment_id" );
 
 			self::prepare_cart_before_form_processing( $response['payment']['consumer']['shippingAddress']['country'] );
 			wp_send_json_success( $response );
@@ -304,12 +304,12 @@ class Nets_Easy_Ajax extends WC_AJAX {
 
 		// If the post data is too long, log an error message and return.
 		if ( $post_size > 1024 ) {
-			Nets_Easy_Logger::log( "Frontend JS $payment_id: message too long and can't be logged." );
+			Nets_Easy_Logger::log( "[AJAX]: Frontend JS $payment_id: message too long and can't be logged." );
 			wp_send_json_success(); // Return success to not stop anything in the frontend if this happens.
 		}
 
 		$posted_message = filter_input( INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$message        = "Frontend JS $payment_id: $posted_message";
+		$message        = "[AJAX]: Frontend JS $payment_id: $posted_message";
 		Nets_Easy_Logger::log( $message );
 		wp_send_json_success();
 	}

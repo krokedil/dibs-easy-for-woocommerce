@@ -475,12 +475,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "8c360e27327c8bd29e1c57721574709d0d706118"
+                "reference": "50f0d9c9d0e3cff1163c959c50aaaaa4a7115f08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8c360e27327c8bd29e1c57721574709d0d706118",
-                "reference": "8c360e27327c8bd29e1c57721574709d0d706118",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/50f0d9c9d0e3cff1163c959c50aaaaa4a7115f08",
+                "reference": "50f0d9c9d0e3cff1163c959c50aaaaa4a7115f08",
                 "shasum": ""
             },
             "require": {
@@ -526,7 +526,7 @@
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
                 "source": "https://github.com/nikic/PHP-Parser/tree/master"
             },
-            "time": "2025-12-06T20:24:35+00:00"
+            "time": "2026-02-26T13:20:22+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -962,12 +962,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-                "reference": "157d3aef48d3ac2337857b3859c33ecdf7658ea5"
+                "reference": "7490cf849d1d68b75705e8eb000e3e89b2eea526"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/157d3aef48d3ac2337857b3859c33ecdf7658ea5",
-                "reference": "157d3aef48d3ac2337857b3859c33ecdf7658ea5",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/7490cf849d1d68b75705e8eb000e3e89b2eea526",
+                "reference": "7490cf849d1d68b75705e8eb000e3e89b2eea526",
                 "shasum": ""
             },
             "require": {
@@ -1037,7 +1037,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-02-05T23:45:11+00:00"
+            "time": "2026-04-06T00:54:57+00:00"
         },
         {
             "name": "phpcsstandards/phpcsutils",
@@ -1045,12 +1045,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "3382ced401a027c91452256033cf1b82982c8a1d"
+                "reference": "3a726c3d50cbbfe1c5e2cd877df0df39e0295a38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/3382ced401a027c91452256033cf1b82982c8a1d",
-                "reference": "3382ced401a027c91452256033cf1b82982c8a1d",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/3a726c3d50cbbfe1c5e2cd877df0df39e0295a38",
+                "reference": "3a726c3d50cbbfe1c5e2cd877df0df39e0295a38",
                 "shasum": ""
             },
             "require": {
@@ -1131,7 +1131,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-02-05T23:44:14+00:00"
+            "time": "2026-04-06T00:53:44+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1470,12 +1470,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0b4e91d9534b05365591e59bbb369a301bd13524"
+                "reference": "b2419311b187389f5fcf686be09656777da3ac1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0b4e91d9534b05365591e59bbb369a301bd13524",
-                "reference": "0b4e91d9534b05365591e59bbb369a301bd13524",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b2419311b187389f5fcf686be09656777da3ac1d",
+                "reference": "b2419311b187389f5fcf686be09656777da3ac1d",
                 "shasum": ""
             },
             "require": {
@@ -1553,27 +1553,11 @@
             },
             "funding": [
                 {
-                    "url": "https://phpunit.de/sponsors.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/sebastianbergmann",
-                    "type": "github"
-                },
-                {
-                    "url": "https://liberapay.com/sebastianbergmann",
-                    "type": "liberapay"
-                },
-                {
-                    "url": "https://thanks.dev/u/gh/sebastianbergmann",
-                    "type": "thanks_dev"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/phpunit/phpunit",
-                    "type": "tidelift"
+                    "url": "https://phpunit.de/sponsoring.html",
+                    "type": "other"
                 }
             ],
-            "time": "2026-02-19T12:07:17+00:00"
+            "time": "2026-03-31T14:31:40+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2593,12 +2577,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "9c42a808cf53f4ab9b531af2023ef1815699938a"
+                "reference": "42687919b65b7542282d315c451702639d58bb72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/9c42a808cf53f4ab9b531af2023ef1815699938a",
-                "reference": "9c42a808cf53f4ab9b531af2023ef1815699938a",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/42687919b65b7542282d315c451702639d58bb72",
+                "reference": "42687919b65b7542282d315c451702639d58bb72",
                 "shasum": ""
             },
             "require": {
@@ -2664,7 +2648,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-02-05T23:49:55+00:00"
+            "time": "2026-04-06T01:04:07+00:00"
         },
         {
             "name": "theseer/tokenizer",
