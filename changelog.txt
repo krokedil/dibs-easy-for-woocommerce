@@ -1,4 +1,8 @@
 *** Nexi Checkout Changelog ***
+2026-04-08      - version 2.14.1
+* Tweak         - Extended logging to easier track issues related to a specific payment ID.
+* Fix           - The Nexi logo is now correctly displayed on the Nexi Checkout Card payment settings page.
+
 2026-03-02      - version 2.14.0
 * Feature       - Redesigned the plugin's settings page for improved structure and user experience.
 * Enhancement   - Added the 'nexi_request_checkout_key' filter to allow modification of the private (checkout) key sent to Nexi.

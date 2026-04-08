@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout 2.14.0\n"
+"Project-Id-Version: Nexi Checkout 2.14.1\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2026-03-02 09:52:44+00:00\n"
+"POT-Creation-Date: 2026-04-08 06:14:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -287,6 +287,62 @@ msgstr ""
 msgid "Gift card:"
 msgstr ""
 
+#: dependencies/krokedil/settings-page/src/Addons.php:42
+#: dependencies/krokedil/settings-page/src/Navigation.php:57
+msgid "Addons"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Addons.php:209
+#. translators: %s is the plugin name.
+msgid "Free"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Addons.php:241
+msgid "Active"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Addons.php:245
+msgid "Activate"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Addons.php:251
+msgid "Install Now"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Navigation.php:52
+msgid "General"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Navigation.php:54
+#: dependencies/krokedil/settings-page/src/Support.php:30
+#: dibs-easy-for-woocommerce.php:351
+msgid "Support"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Support.php:100
+msgid "If you still need help, please open a support ticket with Krokedil."
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Support.php:103
+msgid "Open support ticket with Krokedil"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Traits/Layout.php:76
+msgid "Return to payments"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Traits/Sidebar.php:90
+msgid "Plugin resources"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Traits/Sidebar.php:114
+msgid "Additional resources"
+msgstr ""
+
+#: dependencies/krokedil/settings-page/src/Traits/Subsection.php:34
+msgid "Sections"
+msgstr ""
+
 #: dibs-easy-for-woocommerce.php:185 dibs-easy-for-woocommerce.php:194
 msgid "Nope"
 msgstr ""
@@ -304,10 +360,6 @@ msgstr ""
 
 #: dibs-easy-for-woocommerce.php:350
 msgid "Docs"
-msgstr ""
-
-#: dibs-easy-for-woocommerce.php:351
-msgid "Support"
 msgstr ""
 
 #: includes/nets-easy-functions.php:61
