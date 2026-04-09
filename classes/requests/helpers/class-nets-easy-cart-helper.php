@@ -135,16 +135,15 @@ class Nets_Easy_Cart_Helper {
 	 * @return array|null
 	 */
 	public static function get_shipping() {
-		WC()->cart->calculate_shipping();
 		$packages        = WC()->shipping->get_packages();
-		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
-		$chosen_shipping = $chosen_methods[0];
+		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods', array() );
+		$chosen_shipping = $chosen_methods[0] ?? array();
 		foreach ( $packages as $i => $package ) {
 			foreach ( $package['rates'] as $method ) {
 				if ( $chosen_shipping === $method->id ) {
 					if ( $method->cost > 0 ) {
 						return array(
-							'reference'        => 'shipping|' . $method->id,
+							'reference'        => "shipping|{$method->id}",
 							'name'             => wc_dibs_clean_name( $method->label ),
 							'quantity'         => 1,
 							'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -157,7 +156,7 @@ class Nets_Easy_Cart_Helper {
 					}
 
 					return array(
-						'reference'        => 'shipping|' . $method->id,
+						'reference'        => "shipping|{$method->id}",
 						'name'             => wc_dibs_clean_name( $method->label ),
 						'quantity'         => 1,
 						'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -178,10 +177,9 @@ class Nets_Easy_Cart_Helper {
 	 * Gets the sku for one item.
 	 *
 	 * @param object $product The WooCommerce product.
-	 * @param string $product_id The WooCommerce product ID.
 	 * @return string
 	 */
-	public static function get_sku( $product, $product_id ) {
+	public static function get_sku( $product ) {
 		$part_number = $product->get_sku();
 		if ( empty( $part_number ) ) {
 			$part_number = $product->get_id();
