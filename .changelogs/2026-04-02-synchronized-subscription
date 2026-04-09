@@ -1,4 +1,4 @@
 Type: Fix
 Needs Documentation: no
 
-Added support for synchronized subscription.
+Fixed an issue where shipping costs were incorrectly included during the grace period for synchronized subscriptions. This caused mismatches between WooCommerce and Nexi Checkout, which would fail the payment.
