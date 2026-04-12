@@ -107,7 +107,7 @@ class Nets_Easy_Confirmation {
 	 */
 	public function maybe_confirm_customer_redirected_from_payment_page_order() {
 		// At some point it we used paymentId, but now it seems to be paymentid.
-		$payment_id = $_GET['paymentId'] ?? $_GET['paymentid'] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$payment_id = $_GET['paymentId'] ?? $_GET['paymentid'] ?? ''; // phpcs:ignore
 		if ( empty( $payment_id ) ) {
 			return;
 		}

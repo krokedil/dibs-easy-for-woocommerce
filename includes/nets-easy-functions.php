@@ -366,14 +366,15 @@ function dibs_easy_print_error_message( $wp_error ) {
 /**
  * Finds an order based on a payment ID (the Nets order number).
  *
- * @param string $payment_id Nets order number saved as Payment ID in WC order.
+ * @param string      $payment_id Nets order number saved as Payment ID in WC order.
+ * @param string|null $date_after Optional date to limit the search to orders created after a certain date. Format: 'YYYY-MM-DD HH:MM:SS'.
  * @return object|bool The WooCommerce order, or false if the order could not be found.
  */
 function nets_easy_get_order_by_purchase_id( $payment_id, $date_after = null ) {
 
 	$args = array(
-		'meta_key'     => '_dibs_payment_id',
-		'meta_value'   => wc_clean( wp_unslash( $payment_id ) ),
+		'meta_key'     => '_dibs_payment_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		'meta_value'   => wc_clean( wp_unslash( $payment_id ) ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		'meta_compare' => '=',
 		'order'        => 'DESC',
 		'orderby'      => 'date',
