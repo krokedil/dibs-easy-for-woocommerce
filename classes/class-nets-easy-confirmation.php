@@ -107,12 +107,15 @@ class Nets_Easy_Confirmation {
 	 */
 	public function maybe_confirm_customer_redirected_from_payment_page_order() {
 		// At some point we used paymentId, but now it seems to be paymentid.
-		$payment_id = $_GET['paymentId'] ?? $_GET['paymentid'] ?? ''; // phpcs:ignore
+		$payment_id = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		if ( empty( $payment_id ) ) {
+			$payment_id = filter_input( INPUT_GET, 'paymentid', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		}
+
 		if ( empty( $payment_id ) ) {
 			return;
 		}
 
-		$payment_id = sanitize_text_field( wp_unslash( $payment_id ) );
 		Nets_Easy_Logger::log( "$payment_id Customer redirected back to checkout. Checking payment status." );
 
 		$request = Nets_Easy()->api->get_nets_easy_order( $payment_id );
