@@ -106,13 +106,14 @@ class Nets_Easy_Confirmation {
 	 * It needs to be triggered after similar logic in the subscription class (dibs_payment_method_changed).
 	 */
 	public function maybe_confirm_customer_redirected_from_payment_page_order() {
-
-		$payment_id = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		// At some point it we used paymentId, but now it seems to be paymentid.
+		$payment_id = $_GET['paymentId'] ?? $_GET['paymentid'] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $payment_id ) ) {
 			return;
 		}
 
-		Nets_Easy_Logger::log( $payment_id . '. Customer redirected back to checkout. Checking payment status.' );
+		$payment_id = sanitize_text_field( wp_unslash( $payment_id ) );
+		Nets_Easy_Logger::log( "$payment_id Customer redirected back to checkout. Checking payment status." );
 
 		$request = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 
