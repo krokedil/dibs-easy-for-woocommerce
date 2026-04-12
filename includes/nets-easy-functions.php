@@ -371,10 +371,11 @@ function dibs_easy_print_error_message( $wp_error ) {
  * @return object|bool The WooCommerce order, or false if the order could not be found.
  */
 function nets_easy_get_order_by_purchase_id( $payment_id, $date_after = null ) {
-
-	$args = array(
-		'meta_key'     => '_dibs_payment_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-		'meta_value'   => wc_clean( wp_unslash( $payment_id ) ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+	$meta_key   = '_dibs_payment_id';
+	$meta_value = wc_clean( wp_unslash( $payment_id ) );
+	$args       = array(
+		'meta_key'     => $meta_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		'meta_value'   => $meta_value, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		'meta_compare' => '=',
 		'order'        => 'DESC',
 		'orderby'      => 'date',
@@ -396,10 +397,10 @@ function nets_easy_get_order_by_purchase_id( $payment_id, $date_after = null ) {
 	$order = reset( $orders );
 
 	// Validate that the order actual has the metadata we're looking for, and that it is the same.
-	$meta_value = $order->get_meta( '_dibs_payment_id', true );
+	$stored_payment_id = $order->get_meta( '_dibs_payment_id', true );
 
 	// If the meta value is not the same as the Nexi payment id, return false.
-	if ( $meta_value !== $payment_id ) {
+	if ( $meta_value !== $stored_payment_id ) {
 		return false;
 	}
 
