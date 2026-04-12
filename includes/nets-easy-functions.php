@@ -283,7 +283,7 @@ function wc_dibs_save_shipping_reference_to_order( $order_id ) {
 	$order = wc_get_order( $order_id );
 	if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
 		$packages        = WC()->shipping->get_packages();
-		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
+		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods', array() );
 		$chosen_shipping = $chosen_methods[0] ?? '';
 		if ( empty( $chosen_shipping ) ) {
 			return;
