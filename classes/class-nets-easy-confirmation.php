@@ -129,23 +129,23 @@ class Nets_Easy_Confirmation {
 				return;
 			}
 
-			Nets_Easy_Logger::log( $payment_id . '. Customer redirected back to checkout. Payment created. Order ID ' . $order->get_id() );
+			Nets_Easy_Logger::log( "$payment_id Customer redirected back to checkout. Payment created. Order ID {$order->get_id()}" );
 
 			if ( empty( $order->get_date_paid() ) ) {
 
-				Nets_Easy_Logger::log( $payment_id . '. Order ID ' . $order->get_id() . '. Confirming the order.' );
+				Nets_Easy_Logger::log( "$payment_id Order ID {$order->get_id()}. Confirming the order." );
 				// Confirm the order.
 				wc_dibs_confirm_dibs_order( $order->get_id() );
 				wc_dibs_unset_sessions();
-				wp_safe_redirect( html_entity_decode( $order->get_checkout_order_received_url(), ENT_QUOTES ) );
-				exit;
 
 			} else {
-				Nets_Easy_Logger::log( $payment_id . '. Order ID ' . $order->get_id() . '. Order already confirmed.' );
-				return;
+				Nets_Easy_Logger::log( "$payment_id Order ID {$order->get_id()}. Order already confirmed. Redirecting to thank you page." );
 			}
+
+			wp_safe_redirect( html_entity_decode( $order->get_checkout_order_received_url(), ENT_QUOTES ) );
+			exit;
 		} else {
-			Nets_Easy_Logger::log( $payment_id . '. Customer redirected back to checkout. Payment status is NOT paid.' );
+			Nets_Easy_Logger::log( "$payment_id Customer redirected back to checkout. Payment status is NOT paid." );
 		}
 	}
 }
