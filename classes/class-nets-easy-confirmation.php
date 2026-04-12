@@ -106,7 +106,7 @@ class Nets_Easy_Confirmation {
 	 * It needs to be triggered after similar logic in the subscription class (dibs_payment_method_changed).
 	 */
 	public function maybe_confirm_customer_redirected_from_payment_page_order() {
-		// At some point it we used paymentId, but now it seems to be paymentid.
+		// At some point we used paymentId, but now it seems to be paymentid.
 		$payment_id = $_GET['paymentId'] ?? $_GET['paymentid'] ?? ''; // phpcs:ignore
 		if ( empty( $payment_id ) ) {
 			return;
