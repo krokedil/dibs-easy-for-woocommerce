@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed undefined shipping method when shipping is checked after opurchase is completed.
