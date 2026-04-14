@@ -60,7 +60,7 @@ class Nets_Easy_Confirmation {
 			$url = sanitize_url( home_url( remove_query_arg( 'nets_reload' ) ) );
 			?>
 			<script>
-				top.location = <?php echo esc_url_raw( $url ); ?>;
+				top.location = "<?php echo esc_url_raw( $url ); ?>"
 			</script>
 			<?php
 			wp_die();
