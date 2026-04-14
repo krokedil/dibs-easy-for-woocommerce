@@ -57,10 +57,10 @@ class Nets_Easy_Confirmation {
 		$reload = filter_input( INPUT_GET, 'nets_reload', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if ( ! empty( $reload ) ) {
-			$url = esc_url_raw( home_url( remove_query_arg( 'nets_reload' ) ) );
+			$url = sanitize_url( home_url( remove_query_arg( 'nets_reload' ) ) );
 			?>
 			<script>
-				top.location = <?php echo wp_json_encode( $url ); ?>;
+				top.location = <?php echo esc_url_raw( $url ); ?>;
 			</script>
 			<?php
 			wp_die();
