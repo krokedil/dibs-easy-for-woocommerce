@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed special query characters being incorrectly encoded.

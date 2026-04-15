@@ -282,13 +282,17 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 function wc_dibs_save_shipping_reference_to_order( $order_id ) {
 	$order = wc_get_order( $order_id );
 	if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) ) {
-		$packages        = WC()->shipping->get_packages();
-		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods' );
-		$chosen_shipping = $chosen_methods[0];
+		$chosen_methods  = WC()->session->get( 'chosen_shipping_methods', array() );
+		$chosen_shipping = $chosen_methods[0] ?? '';
+		if ( empty( $chosen_shipping ) ) {
+			return;
+		}
+
+		$packages = WC()->shipping->get_packages();
 		foreach ( $packages as $i => $package ) {
 			foreach ( $package['rates'] as $method ) {
 				if ( $chosen_shipping === $method->id ) {
-					$order->update_meta_data( '_nets_shipping_reference', 'shipping|' . $method->id );
+					$order->update_meta_data( '_nets_shipping_reference', "shipping|{$method->id}" );
 					$order->save();
 				}
 			}
@@ -362,14 +366,16 @@ function dibs_easy_print_error_message( $wp_error ) {
 /**
  * Finds an order based on a payment ID (the Nets order number).
  *
- * @param string $payment_id Nets order number saved as Payment ID in WC order.
+ * @param string      $payment_id Nets order number saved as Payment ID in WC order.
+ * @param string|null $date_after Optional date to limit the search to orders created after a certain date. Format: 'YYYY-MM-DD HH:MM:SS'.
  * @return object|bool The WooCommerce order, or false if the order could not be found.
  */
 function nets_easy_get_order_by_purchase_id( $payment_id, $date_after = null ) {
-
-	$args = array(
-		'meta_key'     => '_dibs_payment_id',
-		'meta_value'   => wc_clean( wp_unslash( $payment_id ) ),
+	$meta_key   = '_dibs_payment_id';
+	$meta_value = wc_clean( wp_unslash( $payment_id ) );
+	$args       = array(
+		'meta_key'     => $meta_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+		'meta_value'   => $meta_value, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 		'meta_compare' => '=',
 		'order'        => 'DESC',
 		'orderby'      => 'date',
@@ -391,10 +397,10 @@ function nets_easy_get_order_by_purchase_id( $payment_id, $date_after = null ) {
 	$order = reset( $orders );
 
 	// Validate that the order actual has the metadata we're looking for, and that it is the same.
-	$meta_value = $order->get_meta( '_dibs_payment_id', true );
+	$stored_payment_id = $order->get_meta( '_dibs_payment_id', true );
 
 	// If the meta value is not the same as the Nexi payment id, return false.
-	if ( $meta_value !== $payment_id ) {
+	if ( $meta_value !== $stored_payment_id ) {
 		return false;
 	}
 
