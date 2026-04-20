@@ -57,10 +57,10 @@ class Nets_Easy_Confirmation {
 		$reload = filter_input( INPUT_GET, 'nets_reload', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if ( ! empty( $reload ) ) {
-			$url = remove_query_arg( 'nets_reload' );
+			$url = sanitize_url( home_url( remove_query_arg( 'nets_reload' ) ) );
 			?>
 			<script>
-				top.location = "<?php echo esc_url( $url ); ?>"
+				top.location = "<?php echo esc_url_raw( $url ); ?>"
 			</script>
 			<?php
 			wp_die();
@@ -106,13 +106,17 @@ class Nets_Easy_Confirmation {
 	 * It needs to be triggered after similar logic in the subscription class (dibs_payment_method_changed).
 	 */
 	public function maybe_confirm_customer_redirected_from_payment_page_order() {
-
+		// At some point we used paymentId, but now it seems to be paymentid.
 		$payment_id = filter_input( INPUT_GET, 'paymentId', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		if ( empty( $payment_id ) ) {
+			$payment_id = filter_input( INPUT_GET, 'paymentid', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		}
+
 		if ( empty( $payment_id ) ) {
 			return;
 		}
 
-		Nets_Easy_Logger::log( $payment_id . '. Customer redirected back to checkout. Checking payment status.' );
+		Nets_Easy_Logger::log( "$payment_id Customer redirected back to checkout. Checking payment status." );
 
 		$request = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 
@@ -128,23 +132,23 @@ class Nets_Easy_Confirmation {
 				return;
 			}
 
-			Nets_Easy_Logger::log( $payment_id . '. Customer redirected back to checkout. Payment created. Order ID ' . $order->get_id() );
+			Nets_Easy_Logger::log( "$payment_id Customer redirected back to checkout. Payment created. Order ID {$order->get_id()}" );
 
 			if ( empty( $order->get_date_paid() ) ) {
 
-				Nets_Easy_Logger::log( $payment_id . '. Order ID ' . $order->get_id() . '. Confirming the order.' );
+				Nets_Easy_Logger::log( "$payment_id Order ID {$order->get_id()}. Confirming the order." );
 				// Confirm the order.
 				wc_dibs_confirm_dibs_order( $order->get_id() );
 				wc_dibs_unset_sessions();
-				wp_safe_redirect( html_entity_decode( $order->get_checkout_order_received_url(), ENT_QUOTES ) );
-				exit;
 
 			} else {
-				Nets_Easy_Logger::log( $payment_id . '. Order ID ' . $order->get_id() . '. Order already confirmed.' );
-				return;
+				Nets_Easy_Logger::log( "$payment_id Order ID {$order->get_id()}. Order already confirmed. Redirecting to thank you page." );
 			}
+
+			wp_safe_redirect( html_entity_decode( $order->get_checkout_order_received_url(), ENT_QUOTES ) );
+			exit;
 		} else {
-			Nets_Easy_Logger::log( $payment_id . '. Customer redirected back to checkout. Payment status is NOT paid.' );
+			Nets_Easy_Logger::log( "$payment_id Customer redirected back to checkout. Payment status is NOT paid." );
 		}
 	}
 }

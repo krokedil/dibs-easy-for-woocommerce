@@ -5,8 +5,8 @@ Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 10.6.2
-Stable tag: 2.14.1
+WC tested up to: 10.7.0
+Stable tag: 2.14.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,13 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2026.04.20    - version 2.14.2 =
+* Enhancement   - Skipped iterating through shipping packages when no shipping method is chosen.
+* Tweak         - Due to API changes, the paymentid query parameter is now used. paymentId is still supported for compatibility.
+* Fix           - Fixed an issue where shipping costs were incorrectly included during the grace period for synchronized subscriptions. This caused mismatches between WooCommerce and Nexi Checkout, which would fail the payment.
+* Fix           - Fixed undefined shipping method when checking for shipping at purchase completion.
+* Fix           - Fixed special query characters being incorrectly encoded.
+
 = 2026.04.08    - version 2.14.1 =
 * Tweak         - Extended logging to easier track issues related to a specific payment ID.
 * Fix           - The Nexi logo is now correctly displayed on the Nexi Checkout Card payment settings page.

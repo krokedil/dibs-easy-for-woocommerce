@@ -1,4 +1,11 @@
 *** Nexi Checkout Changelog ***
+2026-04-20      - version 2.14.2
+* Enhancement   - Skipped iterating through shipping packages when no shipping method is chosen.
+* Tweak         - Due to API changes, the paymentid query parameter is now used. paymentId is still supported for compatibility.
+* Fix           - Fixed an issue where shipping costs were incorrectly included during the grace period for synchronized subscriptions. This caused mismatches between WooCommerce and Nexi Checkout, which would fail the payment.
+* Fix           - Fixed undefined shipping method when checking for shipping at purchase completion.
+* Fix           - Fixed special query characters being incorrectly encoded.
+
 2026-04-08      - version 2.14.1
 * Tweak         - Extended logging to easier track issues related to a specific payment ID.
 * Fix           - The Nexi logo is now correctly displayed on the Nexi Checkout Card payment settings page.
