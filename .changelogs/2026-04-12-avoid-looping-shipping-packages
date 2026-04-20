@@ -1,4 +1,0 @@
-Type: Enhancement
-Needs Documentation: no
-
-Skipped iterating through shipping packages when no shipping method is chosen.

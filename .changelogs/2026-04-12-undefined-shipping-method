@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Fixed undefined shipping method when checking for shipping at purchase completion.

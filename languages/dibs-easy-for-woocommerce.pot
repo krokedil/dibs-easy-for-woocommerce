@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Nexi Checkout 2.14.1\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2026-04-08 06:14:48+00:00\n"
+"POT-Creation-Date: 2026-04-20 08:04:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -222,8 +222,8 @@ msgstr ""
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:83
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:108
 #: classes/requests/helpers/class-nets-easy-cart-helper.php:123
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:150
-#: classes/requests/helpers/class-nets-easy-cart-helper.php:163
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:149
+#: classes/requests/helpers/class-nets-easy-cart-helper.php:162
 #: classes/requests/helpers/class-nets-easy-order-items-helper.php:83
 #: classes/requests/helpers/class-nets-easy-order-items-helper.php:108
 #: classes/requests/helpers/class-nets-easy-order-items-helper.php:142

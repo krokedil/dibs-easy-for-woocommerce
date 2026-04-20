@@ -1,4 +1,0 @@
-Type: Tweak
-Needs Documentation: no
-
-Due to API changes, the paymentid query parameter is now used. paymentId is still supported for compatibility.
