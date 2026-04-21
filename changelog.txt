@@ -1,4 +1,7 @@
 *** Nexi Checkout Changelog ***
+2026-04-21      - version 2.14.3
+* Fix           - Fixed an issue where some settings fields were not visible on the settings page, caused by a sanitization function in our settings library.
+
 2026-04-20      - version 2.14.2
 * Enhancement   - Skipped iterating through shipping packages when no shipping method is chosen.
 * Tweak         - Due to API changes, the paymentid query parameter is now used. paymentId is still supported for compatibility.
