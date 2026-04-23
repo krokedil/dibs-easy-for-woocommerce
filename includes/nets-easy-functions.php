@@ -416,6 +416,49 @@ function nets_easy_all_payment_method_ids() {
 	return array( 'dibs_easy', 'nets_easy_card', 'nets_easy_sofort', 'nets_easy_trustly', 'nets_easy_swish', 'nets_easy_ratepay_sepa', 'nets_easy_klarna', 'nets_easy_mobilepay', 'nets_easy_vipps' );
 }
 
+/**
+ * Only display available payment gateways on order-pay for split Nexi methods.
+ *
+ * If an order was originally created with a split Nexi gateway (e.g. Card),
+ * keep only that same gateway available during the pay-for-order flow.
+ *
+ * @param array $available_gateways Available gateways.
+ * @return array
+ */
+function nexi_filter_order_pay_gateways( $available_gateways ) {
+	if ( ! is_checkout_pay_page() || empty( $available_gateways ) ) {
+		return $available_gateways;
+	}
+
+	$order_id = absint( get_query_var( 'order-pay' ) );
+
+	if ( empty( $order_id ) ) {
+		return $available_gateways;
+	}
+
+	$order = wc_get_order( $order_id );
+	if ( ! $order ) {
+		return $available_gateways;
+	}
+
+	$original_gateway = $order->get_payment_method();
+	$split_gateways   = array_diff( nets_easy_all_payment_method_ids(), array( 'dibs_easy' ) );
+
+	if ( ! in_array( $original_gateway, $split_gateways, true ) ) {
+		return $available_gateways;
+	}
+
+	if ( isset( $available_gateways[ $original_gateway ] ) ) {
+		return array(
+			$original_gateway => $available_gateways[ $original_gateway ],
+		);
+	}
+
+	return array();
+}
+
+add_filter( 'woocommerce_available_payment_gateways', 'nexi_filter_order_pay_gateways', 999 );
+
 
 /**
  * Get payment method title.
