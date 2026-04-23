@@ -457,7 +457,43 @@ function nexi_filter_order_pay_gateways( $available_gateways ) {
 	return array();
 }
 
+/**
+ * Allow split Nexi gateway on order-pay regardless of checkout flow.
+ *
+ * For the pay-for-order flow we need the originally selected split method to stay
+ * available even if the global flow is embedded/inline.
+ *
+ * @param bool               $is_available Current availability.
+ * @param WC_Payment_Gateway $gateway Gateway instance.
+ * @return bool
+ */
+function nexi_allow_split_gateway_on_order_pay( $is_available, $gateway ) {
+	if ( ! is_checkout_pay_page() ) {
+		return $is_available;
+	}
+
+	$order_id = absint( get_query_var( 'order-pay' ) );
+	if ( empty( $order_id ) ) {
+		return $is_available;
+	}
+
+	$order = wc_get_order( $order_id );
+	if ( ! $order || ! $order->needs_payment() ) {
+		return $is_available;
+	}
+
+	$original_gateway = $order->get_payment_method();
+	$split_gateways   = array_diff( nets_easy_all_payment_method_ids(), array( 'dibs_easy' ) );
+
+	if ( in_array( $original_gateway, $split_gateways, true ) && $gateway->id === $original_gateway ) {
+		return true;
+	}
+
+	return $is_available;
+}
+
 add_filter( 'woocommerce_available_payment_gateways', 'nexi_filter_order_pay_gateways', 999 );
+add_filter( 'nexi_is_available', 'nexi_allow_split_gateway_on_order_pay', 10, 2 );
 
 
 /**
