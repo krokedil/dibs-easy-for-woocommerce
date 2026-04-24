@@ -94,30 +94,21 @@ class Nets_Easy_Scheduled_Actions_Metabox {
 			return;
 		}
 
-		self::print_scheduled_actions( $payment_id );
+		$date_created       = $order->get_date_created();
+		$order_created_date = $date_created ? $date_created->format( 'Y-m-d H:i:s' ) : '';
+
+		self::print_scheduled_actions( $payment_id, $order_created_date );
 	}
 
 	/**
 	 * Print the scheduled actions summary and a link to the Action Scheduler list filtered by the given search term.
 	 *
-	 * @param string $search_term The term to search scheduled actions by (typically the Nexi payment ID).
+	 * @param string $search_term        The term to search scheduled actions by (typically the Nexi payment ID).
+	 * @param string $order_created_date The order creation date (Y-m-d H:i:s). Used to narrow the query.
 	 * @return void
 	 */
-	public static function print_scheduled_actions( $search_term ) {
-		$statuses = array( 'complete', 'failed', 'pending' );
-		$counts   = array();
-
-		foreach ( $statuses as $status ) {
-			$actions           = as_get_scheduled_actions(
-				array(
-					'search'   => $search_term,
-					'status'   => array( $status ),
-					'per_page' => -1,
-				),
-				'ids'
-			);
-			$counts[ $status ] = is_array( $actions ) ? count( $actions ) : 0;
-		}
+	public static function print_scheduled_actions( $search_term, $order_created_date = '' ) {
+		$counts = self::get_scheduled_action_counts( $search_term, $order_created_date );
 
 		$query_url = admin_url(
 			'admin.php?page=wc-status&tab=action-scheduler&s=' . rawurlencode( $search_term ) . '&action=-1&paged=1&action2=-1'
@@ -140,6 +131,50 @@ class Nets_Easy_Scheduled_Actions_Metabox {
 			?>
 		</a>
 		<?php
+	}
+
+	/**
+	 * Count scheduled actions for the given search term, narrowed by hook and order-creation date.
+	 *
+	 * Action Scheduler deletes completed/failed actions after a retention period (default 30 days), so any
+	 * order older than a few months has nothing to show. We short-circuit those to avoid unnecessary queries.
+	 *
+	 * @param string $search_term        The term to search scheduled actions by (typically the Nexi payment ID).
+	 * @param string $order_created_date The order creation date (Y-m-d H:i:s). Empty string disables the date filter.
+	 * @return array<string,int> Counts keyed by status ('complete', 'failed', 'pending').
+	 */
+	private static function get_scheduled_action_counts( $search_term, $order_created_date ) {
+		$counts = array(
+			'complete' => 0,
+			'failed'   => 0,
+			'pending'  => 0,
+		);
+
+		if ( ! empty( $order_created_date ) ) {
+			$order_created_ts = strtotime( $order_created_date );
+			if ( $order_created_ts && $order_created_ts < strtotime( '-3 months' ) ) {
+				return $counts;
+			}
+		}
+
+		$query_args = array(
+			'search'   => $search_term,
+			'hook'     => 'dibs_payment_created_callback',
+			'per_page' => -1,
+		);
+
+		if ( ! empty( $order_created_date ) ) {
+			$query_args['date']         = $order_created_date;
+			$query_args['date_compare'] = '>=';
+		}
+
+		foreach ( array_keys( $counts ) as $status ) {
+			$query_args['status'] = array( $status );
+			$actions              = as_get_scheduled_actions( $query_args, 'ids' );
+			$counts[ $status ]    = is_array( $actions ) ? count( $actions ) : 0;
+		}
+
+		return $counts;
 	}
 }
 new Nets_Easy_Scheduled_Actions_Metabox();
