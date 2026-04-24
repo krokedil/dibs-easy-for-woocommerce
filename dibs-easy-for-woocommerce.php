@@ -215,6 +215,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-order-management.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-admin-notices.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-api-callbacks.php' );
+			include_once plugin_basename( 'classes/class-nets-easy-scheduled-actions-metabox.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-confirmation.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-logger.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-email.php' );
