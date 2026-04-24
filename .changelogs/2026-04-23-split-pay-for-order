@@ -1,4 +1,4 @@
 Type: Fix
 Needs Documentation: no
 
-For "Pay for order" orders that uses a split Nexi payment method, only that selected payment method is now available on the customer payment page.
+For "Pay for order" orders that use a split Nexi payment method, only that selected payment method is now available on the customer payment page.

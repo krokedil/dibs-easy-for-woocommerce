@@ -437,7 +437,7 @@ function nexi_filter_order_pay_gateways( $available_gateways ) {
 	}
 
 	$order = wc_get_order( $order_id );
-	if ( ! $order ) {
+	if ( ! $order || ! $order->needs_payment() ) {
 		return $available_gateways;
 	}
 
@@ -454,7 +454,7 @@ function nexi_filter_order_pay_gateways( $available_gateways ) {
 		);
 	}
 
-	return array();
+	return $available_gateways;
 }
 
 /**
@@ -482,10 +482,11 @@ function nexi_allow_split_gateway_on_order_pay( $is_available, $gateway ) {
 		return $is_available;
 	}
 
-	$original_gateway = $order->get_payment_method();
-	$split_gateways   = array_diff( nets_easy_all_payment_method_ids(), array( 'dibs_easy' ) );
+	$original_gateway   = $order->get_payment_method();
+	$split_gateways     = array_diff( nets_easy_all_payment_method_ids(), array( 'dibs_easy' ) );
+	$gateway_is_enabled = isset( $gateway->enabled ) && 'yes' === $gateway->enabled;
 
-	if ( in_array( $original_gateway, $split_gateways, true ) && $gateway->id === $original_gateway ) {
+	if ( in_array( $original_gateway, $split_gateways, true ) && $gateway->id === $original_gateway && $gateway_is_enabled ) {
 		return true;
 	}
 
