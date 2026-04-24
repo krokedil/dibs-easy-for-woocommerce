@@ -70,7 +70,58 @@ class ScheduledActionsMetabox extends OrderMetabox {
 			return;
 		}
 
-		$payment_id = $order->get_meta( '_dibs_payment_id' );
+		$payment_id    = $order->get_meta( '_dibs_payment_id' );
+		$charge_id     = $order->get_meta( '_dibs_charge_id' );
+		$checkout_flow = $order->get_meta( '_dibs_checkout_flow' );
+
+		self::output_info(
+			__( 'Environment', 'dibs-easy-for-woocommerce' ),
+			esc_html( self::get_environment_label() )
+		);
+
+		if ( ! empty( $payment_id ) ) {
+			self::output_info(
+				__( 'Payment ID', 'dibs-easy-for-woocommerce' ),
+				esc_html( $payment_id )
+			);
+		}
+
+		if ( ! empty( $charge_id ) ) {
+			self::output_info(
+				__( 'Charge ID', 'dibs-easy-for-woocommerce' ),
+				esc_html( $charge_id )
+			);
+		}
+
+		if ( ! empty( $checkout_flow ) ) {
+			self::output_info(
+				__( 'Checkout flow', 'dibs-easy-for-woocommerce' ),
+				esc_html( ucfirst( $checkout_flow ) )
+			);
+		}
+
+		if ( ! empty( $payment_id ) ) {
+			$portal_url = apply_filters( 'nets_easy_portal_url', '', $payment_id, $order );
+			if ( ! empty( $portal_url ) ) {
+				self::output_action_button(
+					__( 'View in Nexi portal', 'dibs-easy-for-woocommerce' ),
+					$portal_url,
+					true
+				);
+			}
+		}
+
+		self::render_scheduled_actions( $order, $payment_id );
+	}
+
+	/**
+	 * Render the scheduled-actions summary row.
+	 *
+	 * @param \WC_Order $order      The order being displayed.
+	 * @param string    $payment_id The Nexi payment ID from order meta.
+	 * @return void
+	 */
+	private static function render_scheduled_actions( $order, $payment_id ) {
 		if ( empty( $payment_id ) ) {
 			self::output_error( __( 'No Nexi payment ID is associated with this order yet.', 'dibs-easy-for-woocommerce' ) );
 			return;
@@ -102,6 +153,20 @@ class ScheduledActionsMetabox extends OrderMetabox {
 			'<a target="_blank" href="' . esc_url( $query_url ) . '">' . esc_html( $link_text ) . '</a>',
 			__( 'See all actions scheduled for this order.', 'dibs-easy-for-woocommerce' )
 		);
+	}
+
+	/**
+	 * Resolve the human-readable environment label from the gateway settings.
+	 *
+	 * @return string
+	 */
+	private static function get_environment_label() {
+		$settings  = get_option( 'woocommerce_dibs_easy_settings', array() );
+		$test_mode = isset( $settings['test_mode'] ) && 'yes' === $settings['test_mode'];
+
+		return $test_mode
+			? __( 'Test', 'dibs-easy-for-woocommerce' )
+			: __( 'Live', 'dibs-easy-for-woocommerce' );
 	}
 
 	/**

@@ -169,6 +169,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Embedded flow.
 		if ( nexi_is_embedded( $this->checkout_flow ) && ! is_wc_endpoint_url( 'order-pay' ) ) {
 			$order->update_meta_data( '_dibs_checkout_flow', $this->checkout_flow );
+			\KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\OrderUtility::add_environment_info( $order, WC_DIBS_EASY_VERSION, $this->checkout_flow, false );
 			$order->save();
 			// Save payment type, card details & run $order->payment_complete() if all looks good.
 			return $this->process_embedded_handler( $order_id );
@@ -177,11 +178,13 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 		// Overlay flow.
 		if ( 'overlay' === $this->checkout_flow && ! wp_is_mobile() && ! is_wc_endpoint_url( 'order-pay' ) ) {
 			$order->update_meta_data( '_dibs_checkout_flow', 'overlay' );
+			\KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\OrderUtility::add_environment_info( $order, WC_DIBS_EASY_VERSION, 'overlay', false );
 			$order->save();
 			return $this->process_overlay_handler( $order_id );
 		}
 
 		$order->update_meta_data( '_dibs_checkout_flow', 'redirect' );
+		\KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\OrderUtility::add_environment_info( $order, WC_DIBS_EASY_VERSION, 'redirect', false );
 		$order->save();
 		return $this->process_redirect_handler( $order_id );
 	}
