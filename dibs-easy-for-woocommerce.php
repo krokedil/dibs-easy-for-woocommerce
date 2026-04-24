@@ -36,6 +36,7 @@ define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
 define( 'DIBS_API_TEST_ENDPOINT', 'https://test.api.dibspayment.eu/v1/' );
 
 use KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
+use Krokedil\Nexi\OrderManagement\ScheduledActionsMetabox;
 use Krokedil\Nexi\PaymentMethods;
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
@@ -215,7 +216,6 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/class-nets-easy-order-management.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-admin-notices.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-api-callbacks.php' );
-			include_once plugin_basename( 'classes/class-nets-easy-scheduled-actions-metabox.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-confirmation.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-logger.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-email.php' );
@@ -275,6 +275,10 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			);
 
 			$this->api = new Nets_Easy_API();
+
+			if ( is_admin() ) {
+				new ScheduledActionsMetabox();
+			}
 		}
 
 		/**
