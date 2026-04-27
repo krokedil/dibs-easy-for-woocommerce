@@ -115,6 +115,7 @@ class Nets_Easy_Checkout {
 					WC()->session->set( 'reload_checkout', true );
 				} else {
 					wp_safe_redirect( wc_get_checkout_url() );
+					exit;
 				}
 			}
 		}
