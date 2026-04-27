@@ -162,7 +162,7 @@ class Nets_Easy_Checkout {
 	}
 
 	/**
-	 * Adds a hidden nexi_session checkout form field.
+	 * Adds a hidden nexi_payment_id checkout form field.
 	 * Used to confirm that the token used for the Nexi Checkout widget in frontend is
 	 * the same one currently saved in WC session dibs_payment_id.
 	 * We do this to prevent issues if stores have session problems.
