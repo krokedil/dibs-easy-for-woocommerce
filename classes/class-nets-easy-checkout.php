@@ -28,8 +28,8 @@ class Nets_Easy_Checkout {
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
 
 		if ( in_array( $this->checkout_flow, array( 'embedded', 'inline' ), true ) ) {
-			add_action( 'nexi_inline_after_snippet', array( $this, 'add_hidden_payment_id_field' ), 10 );
-			add_action( 'wc_dibs_after_snippet', array( $this, 'add_hidden_payment_id_field' ), 10 );
+			add_action( 'nexi_inline_after_snippet', array( $this, 'add_hidden_payment_id_field' ) );
+			add_action( 'wc_dibs_after_snippet', array( $this, 'add_hidden_payment_id_field' ) );
 		}
 	}
 
@@ -166,10 +166,9 @@ class Nets_Easy_Checkout {
 	 * the same one currently saved in WC session dibs_payment_id.
 	 * We do this to prevent issues if stores have session problems.
 	 *
-	 * @param array $fields WooCommerce checkout form fields.
-	 * @return array
+	 * @return void
 	 */
-	public function add_hidden_payment_id_field( $fields ) {
+	public function add_hidden_payment_id_field() {
 		$payment_id = WC()->session->get( 'dibs_payment_id' ) ?? '';
 		?>
 		<input type="hidden" class="nexi_payment_id" name="nexi_payment_id" id="nexi_payment_id" value="<?php echo esc_attr( $payment_id ); ?>" />
