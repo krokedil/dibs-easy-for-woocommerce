@@ -36,7 +36,7 @@ class Nets_Easy_Subscriptions {
 		add_action( 'dibs_easy_process_payment', array( $this, 'set_recurring_token_for_order' ), 10, 2 );
 
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'show_recurring_token' ) );
-		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_dibs_recurring_token_update' ), 45, 2 );
+		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_dibs_recurring_token_update' ), 45 );
 
 		// Charge renewal payment.
 		add_action( 'woocommerce_scheduled_subscription_payment_dibs_easy', array( $this, 'trigger_scheduled_payment' ), 10, 2 );
@@ -453,9 +453,8 @@ class Nets_Easy_Subscriptions {
 	 * Save recurring token to order.
 	 *
 	 * @param string $post_id WC order id.
-	 * @param object $post WordPress post.
 	 */
-	public function save_dibs_recurring_token_update( $post_id, $post ) {
+	public function save_dibs_recurring_token_update( $post_id ) {
 		$order = wc_get_order( $post_id );
 		if ( 'shop_subscription' === $order->get_type() && $order->get_meta( '_dibs_recurring_token' ) ) {
 				$dibs_recurring_token = filter_input( INPUT_POST, '_dibs_recurring_token', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
