@@ -110,13 +110,8 @@ class Nets_Easy_Subscriptions {
 						$order_items = array();
 						foreach ( $wc_order->get_items() as $item ) {
 							$product = $item->get_product();
-							if ( $item['variation_id'] ) {
-								$product_id = $item['variation_id'];
-							} else {
-								$product_id = $item['product_id'];
-							}
 							$order_items[] = array(
-								'reference'        => self::get_sku( $product, $product_id ),
+								'reference'        => self::get_sku( $product ),
 								'name'             => $item->get_name(),
 								'quantity'         => $item->get_quantity(),
 								'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -200,11 +195,10 @@ class Nets_Easy_Subscriptions {
 	 * Returns the SKU used in Nets for the product.
 	 *
 	 * @param object $product WooCommerce product.
-	 * @param string $product_id WooCommerce product id.
 	 *
 	 * @return string
 	 */
-	public static function get_sku( $product, $product_id ) {
+	public static function get_sku( $product ) {
 		$part_number = $product->get_sku();
 		if ( empty( $part_number ) ) {
 			$part_number = $product->get_id();
