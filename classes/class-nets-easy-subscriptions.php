@@ -489,6 +489,12 @@ class Nets_Easy_Subscriptions {
 			return $wc_result;
 		}
 
+		// Do not override the needs payment result if the order is not in a valid status for needing payment.
+		// This is necessary to prevent 'processing' orders from being marked as needing payment. Otherwise, a "Pay" button will appear on the order received page.
+		if ( ! in_array( $order->get_status(), $valid_order_statuses, true ) ) {
+			return $wc_result;
+		}
+
 		// Only change for subscription orders.
 		if ( ! $this->has_subscription( $order->get_id() ) ) {
 			return $wc_result;
