@@ -69,7 +69,7 @@ class Nets_Easy_Checkout {
 			nexi_terminate_session( $payment_id );
 			wc_dibs_unset_sessions();
 			Nets_Easy_Logger::log( 'Currency changed in update Nets function. Clearing Nets session and reloading the checkout page.' );
-			WC()->session->reload_checkout = true;
+			WC()->session->set( 'reload_checkout', true );
 			return;
 		}
 
@@ -86,7 +86,7 @@ class Nets_Easy_Checkout {
 			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $payment_id, $payment_id_session ) );
 			wc_add_notice( __( 'Nexi session issues. Please reload the page and try again.', 'dibs-easy-for-woocommerce' ), 'error' );
 
-			WC()->session->reload_checkout = true;
+			WC()->session->set( 'reload_checkout', true );
 			return;
 		}
 
@@ -112,7 +112,7 @@ class Nets_Easy_Checkout {
 				nexi_terminate_session( $payment_id_session );
 				wc_dibs_unset_sessions();
 				if ( wp_doing_ajax() ) {
-					WC()->session->reload_checkout = true;
+					WC()->session->set( 'reload_checkout', true );
 				} else {
 					wp_safe_redirect( wc_get_checkout_url() );
 				}
@@ -123,7 +123,7 @@ class Nets_Easy_Checkout {
 		if ( apply_filters( 'nets_easy_check_if_needs_payment', true ) && ! Nets_Easy_Subscriptions::cart_has_subscription() ) {
 			if ( ! WC()->cart->needs_payment() ) {
 				Nets_Easy_Logger::log( 'Cart does not need payment. Reloading the checkout page.' );
-				WC()->session->reload_checkout = true;
+				WC()->session->set( 'reload_checkout', true );
 				return;
 			}
 		}
@@ -138,7 +138,7 @@ class Nets_Easy_Checkout {
 			if ( is_wp_error( $updated_nets_easy_order ) && 409 === $updated_nets_easy_order->get_error_code() ) {
 				// 409 response - try again.
 				Nets_Easy_Logger::log( $payment_id . '. Nexi Checkout update order request resulted in 409 response. Reloading the checkout page and try to update again.' );
-				WC()->session->reload_checkout = true;
+				WC()->session->set( 'reload_checkout', true );
 				return;
 			}
 
