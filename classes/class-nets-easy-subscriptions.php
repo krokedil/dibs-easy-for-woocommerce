@@ -430,7 +430,7 @@ class Nets_Easy_Subscriptions {
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
 				<?php
-					echo '<p><strong>' . esc_html( __( 'Nets recurring token' ) ) . ':</strong>' . esc_html( $order->get_meta( '_dibs_recurring_token' ) ) . '</p>';
+					echo '<p><strong>' . esc_html( __( 'Nets recurring token', 'dibs-easy-for-woocommerce' ) ) . ':</strong>' . esc_html( $order->get_meta( '_dibs_recurring_token' ) ) . '</p>';
 				?>
 				</div>
 				<div class="edit_address">
@@ -438,7 +438,7 @@ class Nets_Easy_Subscriptions {
 					woocommerce_wp_text_input(
 						array(
 							'id'            => '_dibs_recurring_token',
-							'label'         => __( 'Nets recurring token' ),
+							'label'         => __( 'Nets recurring token', 'dibs-easy-for-woocommerce' ),
 							'wrapper_class' => '_billing_company_field',
 						)
 					);
