@@ -109,8 +109,8 @@ class Nets_Easy_Subscriptions {
 						// Modify order lines.
 						$order_items = array();
 						foreach ( $wc_order->get_items() as $item ) {
-							$product        = $item->get_product();
-							$order_items[]  = array(
+							$product       = $item->get_product();
+							$order_items[] = array(
 								'reference'        => self::get_sku( $product ),
 								'name'             => $item->get_name(),
 								'quantity'         => $item->get_quantity(),
