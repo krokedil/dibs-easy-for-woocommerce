@@ -265,6 +265,29 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		}
 		$order->payment_complete( $payment_id );
 
+		// Compare WooCommerce order total with the amount Nets actually reserved/charged.
+		// A mismatch here means the PSP processed a different amount than WooCommerce recorded (e.g. 0% VAT sent to Nets while WooCommerce stored the correct VAT).
+		$nets_amount     = $request['payment']['orderDetails']['amount'] ?? 0;
+		$woo_order_total = intval( round( $order->get_total() * 100 ) );
+		if ( $nets_amount > 0 && abs( $woo_order_total - $nets_amount ) > 30 ) {
+			Nets_Easy_Logger::log(
+				sprintf(
+					'[CONFIRM]: Order Mismatch! Order %s: WooCommerce total (%s) does not match Nexi Checkout total (%s). Manual review required.',
+					$order->get_order_number(),
+					$woo_order_total,
+					$nets_amount
+				)
+			);
+			$order->update_status(
+				'on-hold',
+				sprintf(
+					/* translators: 1: WooCommerce order total in minor units, 2: Nexi Checkout total in minor units */
+					__( 'Order needs manual review. WooCommerce order total (%1$s) and Nexi Checkout total (%2$s) do not match.', 'dibs-easy-for-woocommerce' ),
+					$woo_order_total,
+					$nets_amount
+				)
+			);
+		}
 	} else {
 		// Purchase not finalized in DIBS.
 		// If this is a redirect checkout flow let's redirect the customer to cart page.
