@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+Calculate tax based on Nexi shipping address to prevent faulty VAT calculation due to partial or anonymized address.
