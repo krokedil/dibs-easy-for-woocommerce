@@ -208,6 +208,15 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			wp_send_json_error( $message );
 		} else {
 
+			// Convert country code from 3 to 2 letters before using it.
+			if ( $response['payment']['consumer']['shippingAddress']['country'] ) {
+				$response['payment']['consumer']['shippingAddress']['country'] = dibs_get_iso_2_country( $response['payment']['consumer']['shippingAddress']['country'] );
+			}
+
+			// Recalculate the cart using the billing country stored in the Nets session before comparing totals.
+			// This prevents a stale shipping address (e.g. left behind by a failed Apple Pay attempt) from causing a false 0% VAT total in WooCommerce.
+			self::prepare_cart_before_form_processing( $response['payment']['consumer']['shippingAddress']['country'] );
+
 			// Check if the WC cart total matches the Nets order total.
 			$cart_total       = intval( round( WC()->cart->total * 100 ) );
 			$nets_order_total = $response['payment']['orderDetails']['amount'];
@@ -219,18 +228,11 @@ class Nets_Easy_Ajax extends WC_AJAX {
 				wp_send_json_error( __( 'Cart total does not match Nets order total. Please try refreshing the page.', 'dibs-easy-for-woocommerce' ) );
 			}
 
-			// All good with the request.
-			// Convert country code from 3 to 2 letters.
-			if ( $response['payment']['consumer']['shippingAddress']['country'] ) {
-				$response['payment']['consumer']['shippingAddress']['country'] = dibs_get_iso_2_country( $response['payment']['consumer']['shippingAddress']['country'] );
-			}
-
 			// Store the order data in a session. We might need it if form processing in Woo fails.
 			WC()->session->set( 'dibs_order_data', $response );
 
 			Nets_Easy_Logger::log( "[AJAX]: processWooCheckout triggered and checkout form about to be submitted for Nets payment ID $payment_id" );
 
-			self::prepare_cart_before_form_processing( $response['payment']['consumer']['shippingAddress']['country'] );
 			wp_send_json_success( $response );
 		}
 	}
@@ -247,7 +249,17 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			exit;
 		}
 
-		// Comment out this part. That is not what we are doing in all other plugins we have so far.
+		// Mirror shipping address from billing so WC tax is always calculated from the billing address.
+		// This prevents a stale shipping address (e.g. from a failed Apple Pay attempt) from causing 0% VAT to be applied when the payment method is switched.
+		$customer = WC()->customer;
+		if ( $customer->get_billing_country() ) {
+			$customer->set_shipping_country( $customer->get_billing_country() );
+			$customer->set_shipping_state( $customer->get_billing_state() );
+			$customer->set_shipping_postcode( $customer->get_billing_postcode() );
+			$customer->set_shipping_city( $customer->get_billing_city() );
+			$customer->save();
+		}
+
 		WC()->cart->calculate_shipping();
 		WC()->cart->calculate_fees();
 		WC()->cart->calculate_totals();

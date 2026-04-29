@@ -76,16 +76,22 @@ class Nets_Easy_Cart_Helper {
 			$product_id = $cart_item['product_id'];
 		}
 
+		// Compute tax from billing address to avoid 0% VAT when a transient payment method (e.g. Apple Pay)
+		// overwrites the WC session shipping address with a partial or anonymized address before failing.
+		$tax_rate   = self::get_item_tax_rate( $cart_item, $product );
+		$net_total  = intval( round( $cart_item['line_total'] * 100 ) );
+		$tax_amount = intval( round( $net_total * $tax_rate / 10000 ) );
+
 		return array(
 			'reference'        => self::get_sku( $product, $product_id ),
 			'name'             => wc_dibs_clean_name( $product->get_name() ),
 			'quantity'         => $cart_item['quantity'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( ( $cart_item['line_total'] / $cart_item['quantity'] ) * 100 ) ),
-			'taxRate'          => self::get_item_tax_rate( $cart_item, $product ),
-			'taxAmount'        => intval( round( $cart_item['line_tax'] * 100, 2 ) ),
-			'grossTotalAmount' => intval( round( ( $cart_item['line_total'] + $cart_item['line_tax'] ) * 100 ) ),
-			'netTotalAmount'   => intval( round( $cart_item['line_total'] * 100 ) ),
+			'taxRate'          => $tax_rate,
+			'taxAmount'        => $tax_amount,
+			'grossTotalAmount' => $net_total + $tax_amount,
+			'netTotalAmount'   => $net_total,
 		);
 	}
 
@@ -198,19 +204,30 @@ class Nets_Easy_Cart_Helper {
 	 * @return integer $item_tax_rate Item tax percentage formatted for DIBS.
 	 */
 	public static function get_item_tax_rate( $cart_item, $product ) {
-		if ( $product->is_taxable() && $cart_item['line_subtotal_tax'] > 0 ) {
-			// Calculate tax rate.
-			$_tax      = new WC_Tax();
-			$tmp_rates = $_tax->get_rates( $product->get_tax_class() );
-			$vat       = array_shift( $tmp_rates );
-			if ( isset( $vat['rate'] ) ) {
-				$item_tax_rate = round( $vat['rate'] * 100 );
-			} else {
-				$item_tax_rate = 0;
-			}
-		} else {
-			$item_tax_rate = 0;
+		if ( ! $product->is_taxable() ) {
+			return 0;
 		}
-		return round( $item_tax_rate );
+
+		// Always derive the rate from the billing address. WooCommerce's line_subtotal_tax can be zero when a transient payment flow (e.g. Apple Pay) temporarily overwrites the shipping address with an incomplete address, which causes WC to compute 0% tax even for taxable products.
+		// Nets does not support a separate shipping address, so billing address is correct.
+		$customer  = WC()->customer;
+		$tax_rates = WC_Tax::find_rates(
+			array(
+				'country'   => $customer->get_billing_country(),
+				'state'     => $customer->get_billing_state(),
+				'postcode'  => $customer->get_billing_postcode(),
+				'city'      => $customer->get_billing_city(),
+				'tax_class' => $product->get_tax_class(),
+			)
+		);
+
+		if ( ! empty( $tax_rates ) ) {
+			$vat = array_shift( $tax_rates );
+			if ( isset( $vat['rate'] ) ) {
+				return round( $vat['rate'] * 100 );
+			}
+		}
+
+		return 0;
 	}
 }
