@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed an issue where a "Pay" button appeared on the order confirmation page for orders that had already been successfully paid.

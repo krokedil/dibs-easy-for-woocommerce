@@ -69,15 +69,13 @@ class Nets_Easy_Cart_Helper {
 	 */
 	public static function get_item( $cart_item ) {
 		if ( $cart_item['variation_id'] ) {
-			$product    = wc_get_product( $cart_item['variation_id'] );
-			$product_id = $cart_item['variation_id'];
+			$product = wc_get_product( $cart_item['variation_id'] );
 		} else {
-			$product    = wc_get_product( $cart_item['product_id'] );
-			$product_id = $cart_item['product_id'];
+			$product = wc_get_product( $cart_item['product_id'] );
 		}
 
 		return array(
-			'reference'        => self::get_sku( $product, $product_id ),
+			'reference'        => self::get_sku( $product ),
 			'name'             => wc_dibs_clean_name( $product->get_name() ),
 			'quantity'         => $cart_item['quantity'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
