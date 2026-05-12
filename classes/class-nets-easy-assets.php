@@ -219,6 +219,8 @@ class Nets_Easy_Assets {
 		$script_url = $this->get_script_url();
 		wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
 
+		$this->enqueue_intl_tel_input();
+
 		$src = WC_DIBS__URL . '/assets/js/nexi-checkout-inline.js';
 		wp_register_script(
 			'nexi-checkout-inline',
@@ -271,6 +273,8 @@ class Nets_Easy_Assets {
 		// Nets regular checkout script.
 		$script_url = $this->get_script_url();
 		wp_enqueue_script( 'dibs-script', $script_url, array( 'jquery' ), WC_DIBS_EASY_VERSION, false );
+
+		$this->enqueue_intl_tel_input();
 
 		// Plugin checkout script. Registered here, but localized and enqueued on the wc_dibs_before_checkout_form hook.
 		$script_version = $this->nets_easy_is_script_debug_enabled();
@@ -463,6 +467,51 @@ class Nets_Easy_Assets {
 		);
 
 		wp_enqueue_style( 'nets-easy-overlay-style' );
+	}
+
+	/**
+	 * Registers and enqueues the intl-tel-input library plus the plugin glue
+	 * that initializes it on #billing_phone and converts the value to E.164
+	 * before WooCommerce submits the checkout form.
+	 */
+	protected function enqueue_intl_tel_input() {
+		$lib_handle  = 'nets-easy-intl-tel-input';
+		$glue_handle = 'nets-easy-intl-tel';
+
+		wp_register_style(
+			$lib_handle,
+			WC_DIBS__URL . '/assets/css/intl-tel-input/intlTelInput.min.css',
+			array(),
+			WC_DIBS_EASY_VERSION
+		);
+
+		wp_register_script(
+			$lib_handle,
+			WC_DIBS__URL . '/assets/js/intl-tel-input/intlTelInput.min.js',
+			array(),
+			WC_DIBS_EASY_VERSION,
+			true
+		);
+
+		wp_register_script(
+			$glue_handle,
+			WC_DIBS__URL . '/assets/js/nets-easy-intl-tel.js',
+			array( 'jquery', $lib_handle ),
+			WC_DIBS_EASY_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			$glue_handle,
+			'netsEasyIntlTelParams',
+			array(
+				'utilsURL' => WC_DIBS__URL . '/assets/js/intl-tel-input/utils.js',
+			)
+		);
+
+		wp_enqueue_style( $lib_handle );
+		wp_enqueue_script( $lib_handle );
+		wp_enqueue_script( $glue_handle );
 	}
 
 	/**

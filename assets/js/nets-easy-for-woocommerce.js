@@ -11,6 +11,21 @@ jQuery( function ( $ ) {
      *
      * @type {Object} dibsEasyForWoocommerce
      */
+    /**
+     * Writes a phone number into #billing_phone, routing through the
+     * intl-tel-input widget when present so the widget UI and the input
+     * value stay in sync. Falls back to a plain .val() otherwise.
+     *
+     * @param {string} value
+     */
+    function setBillingPhone( value ) {
+        if ( window.netsEasyIti ) {
+            window.netsEasyIti.setNumber( value )
+        } else {
+            $( "#billing_phone" ).val( value )
+        }
+    }
+
     const dibsEasyForWoocommerce = {
         bodyEl: $( "body" ),
         paymentMethodEl: $( 'input[name="payment_method"]' ),
@@ -321,7 +336,7 @@ jQuery( function ( $ ) {
                 $( "#shipping_first_name" ).val( firstName )
                 $( "#shipping_last_name" ).val( lastName )
                 $( "#billing_email" ).val( email )
-                $( "#billing_phone" ).val( `${ prefix }${ number }` )
+                setBillingPhone( `${ prefix }${ number }` )
                 // trigger events for 3rd part plugins.
                 $( "#billing_country" ).change()
                 $( "#billing_email" ).change()
@@ -340,7 +355,7 @@ jQuery( function ( $ ) {
                 // trigger events for 3rd part plugins.
                 $( "#billing_email" ).change()
                 $( "#billing_email" ).blur()
-                $( "#billing_phone" ).val( `${ prefix }${ number }` )
+                setBillingPhone( `${ prefix }${ number }` )
             }
 
             // eslint-disable-next-line eqeqeq
@@ -360,6 +375,18 @@ jQuery( function ( $ ) {
          * Submit the order using the WooCommerce AJAX function.
          */
         submitOrder() {
+            // Ensure #billing_phone holds the full E.164 number before the form
+            // is serialized, otherwise separateDialCode strips the country code.
+            if ( window.netsEasyIti ) {
+                const e164 = window.netsEasyIti.getNumber()
+                if ( e164 ) {
+                    const phoneInput = document.querySelector( "#billing_phone" )
+                    if ( phoneInput ) {
+                        phoneInput.value = e164
+                    }
+                }
+            }
+
             $( ".woocommerce-checkout-review-order-table" ).block( {
                 message: null,
                 overlayCSS: {
