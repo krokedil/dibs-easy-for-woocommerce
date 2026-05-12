@@ -144,9 +144,14 @@ abstract class Nets_Easy_Request {
 	 * @return string
 	 */
 	protected function get_user_agent() {
-		$protocols = array( 'http://', 'http://www.', 'https://', 'https://www.' );
-		$url       = str_replace( $protocols, '', get_bloginfo( 'url' ) );
-		return apply_filters( 'dibs_easy_http_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . iconv( 'UTF-8', 'ASCII//IGNORE', $url ) ) . ' - Plugin/' . WC_DIBS_EASY_VERSION . ' - PHP/' . PHP_VERSION . ' - Krokedil';
+		$protocols   = array( 'http://', 'http://www.', 'https://', 'https://www.' );
+		$wp_version  = get_bloginfo( 'version' );
+		$wp_url      = iconv( 'UTF-8', 'ASCII//IGNORE', str_replace( $protocols, '', get_bloginfo( 'url' ) ) );
+		return apply_filters(
+			'dibs_easy_http_useragent',
+			"WordPress/{$wp_version}; {$wp_url} - Plugin/" . WC_DIBS_EASY_VERSION . ' - PHP/' . PHP_VERSION . ' - Krokedil',
+			$this->get_request_url()
+		);
 	}
 
 	/**
