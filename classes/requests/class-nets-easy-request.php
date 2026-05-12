@@ -144,9 +144,9 @@ abstract class Nets_Easy_Request {
 	 * @return string
 	 */
 	protected function get_user_agent() {
-		$protocols  = array( 'http://', 'http://www.', 'https://', 'https://www.' );
-		$wp_version = get_bloginfo( 'version' );
-		$wp_url     = iconv( 'UTF-8', 'ASCII//IGNORE', str_replace( $protocols, '', get_bloginfo( 'url' ) ) );
+		$protocols   = array( 'http://', 'http://www.', 'https://', 'https://www.' );
+		$wp_version  = get_bloginfo( 'version' );
+		$wp_url      = iconv( 'UTF-8', 'ASCII//IGNORE', str_replace( $protocols, '', get_bloginfo( 'url' ) ) );
 		$request_url = $this->get_request_url();
 		$user_agent  = apply_filters(
 			'http_headers_useragent',
