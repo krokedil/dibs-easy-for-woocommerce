@@ -154,14 +154,12 @@ class Nets_Easy_Checkout_Helper {
 
 		$consumer['shippingAddress']['country'] = dibs_get_iso_3_country( $order->get_billing_country() );
 
-		if ( $order->get_billing_phone() ) {
-			$consumer['phoneNumber']['prefix'] = self::get_phone_prefix( $order );
-			$consumer['phoneNumber']['number'] = self::get_phone_number( $order );
-
-			// The prefix is always set, but the number is not. Both must be non-empty.
-			if ( empty( $consumer['phoneNumber']['number'] ) ) {
-				unset( $consumer['phoneNumber'] );
-			}
+		$phone = self::format_phone( $order->get_billing_phone(), $order->get_billing_country() );
+		if ( ! empty( $phone['number'] ) ) {
+			$consumer['phoneNumber'] = array(
+				'prefix' => $phone['prefix'],
+				'number' => $phone['number'],
+			);
 		}
 
 		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
@@ -190,41 +188,119 @@ class Nets_Easy_Checkout_Helper {
 	}
 
 	/**
-	 * Gets customer phone prefix formatted for Nets.
+	 * Splits a billing phone number into the prefix/number shape Nets expects.
 	 *
-	 * @param object $order The WooCommerce order.
-	 * @return string
+	 * @param string $phone   Billing phone as entered by the customer.
+	 * @param string $country ISO-2 billing country code, used to look up the calling code.
+	 * @return array{prefix: ?string, number: ?string}
 	 */
-	public static function get_phone_prefix( $order ) {
-		$prefix = null;
-		if ( substr( $order->get_billing_phone(), 0, 1 ) === '+' ) {
-			$prefix = substr( $order->get_billing_phone(), 0, 3 );
-		} else {
-			$prefix = dibs_get_phone_prefix_for_country( $order->get_billing_country() );
+	public static function format_phone( $phone, $country ) {
+		$sanitized = wc_sanitize_phone_number( (string) $phone );
+		if ( '' === $sanitized ) {
+			return array(
+				'prefix' => null,
+				'number' => null,
+			);
 		}
-		return $prefix;
+
+		$country_codes = self::get_country_calling_codes( $country );
+
+		if ( strpos( $sanitized, '+' ) === 0 ) {
+			$prefix = self::detect_calling_code( $sanitized, $country_codes );
+			$number = '' !== $prefix ? substr( $sanitized, strlen( $prefix ) ) : $sanitized;
+		} else {
+			// First entry is the canonical code; arrays only occur for NANP territories (PR, DO).
+			$prefix = $country_codes[0] ?? '';
+			$number = ltrim( $sanitized, '0' );
+		}
+
+		return array(
+			'prefix' => '' !== $prefix ? $prefix : null,
+			'number' => preg_match( '/\d/', $number ) ? $number : null,
+		);
 	}
 
 	/**
-	 * Gets customer phone number formatted for Nets.
+	 * Detects which calling code a `+`-prefixed phone number starts with.
 	 *
-	 * @param object $order The WooCommerce order.
-	 * @return string
+	 * Prefers the billing country's codes (longest match wins); falls back to the
+	 * full WooCommerce list so e.g. `+1`, `+46` and `+354` are all handled.
+	 *
+	 * @param string   $sanitized_phone Phone number starting with `+`.
+	 * @param string[] $country_codes   Calling codes for the billing country.
+	 * @return string The detected calling code, or `''` if none matched.
 	 */
-	public static function get_phone_number( $order ) {
-		$phone_number = $order->get_billing_phone();
-
-		if ( ! $phone_number ) {
-			return null;
+	private static function detect_calling_code( $sanitized_phone, array $country_codes ) {
+		foreach ( self::sort_by_length_desc( $country_codes ) as $code ) {
+			if ( strpos( $sanitized_phone, $code ) === 0 ) {
+				return $code;
+			}
 		}
 
-		if ( substr( $phone_number, 0, 1 ) === '+' ) {
-			$phone_number = substr( $phone_number, strlen( self::get_phone_prefix( $order ) ) );
+		foreach ( self::sort_by_length_desc( self::all_calling_codes() ) as $code ) {
+			if ( strpos( $sanitized_phone, $code ) === 0 ) {
+				return $code;
+			}
 		}
 
-		$phone_number = str_replace( array( '-', ' ' ), '', $phone_number );
+		return '';
+	}
 
-		return $phone_number;
+	/**
+	 * Returns the calling codes registered for a country.
+	 *
+	 * WC stores most countries as a single string but a few NANP territories (PR, DO)
+	 * as arrays of multiple area-code-included codes. This normalizes both shapes.
+	 *
+	 * @param string $country ISO-2 country code.
+	 * @return string[]
+	 */
+	private static function get_country_calling_codes( $country ) {
+		if ( ! $country ) {
+			return array();
+		}
+
+		$code = WC()->countries->get_country_calling_code( $country );
+		if ( is_array( $code ) ) {
+			return array_values( array_filter( $code, 'strlen' ) );
+		}
+
+		return '' !== (string) $code ? array( (string) $code ) : array();
+	}
+
+	/**
+	 * Returns every distinct calling code WooCommerce knows about, with array entries flattened.
+	 *
+	 * @return string[]
+	 */
+	private static function all_calling_codes() {
+		$codes = array();
+		foreach ( WC()->countries->get_country_calling_codes() as $value ) {
+			if ( is_array( $value ) ) {
+				foreach ( $value as $entry ) {
+					if ( '' !== (string) $entry ) {
+						$codes[] = $entry;
+					}
+				}
+			} elseif ( '' !== (string) $value ) {
+				$codes[] = $value;
+			}
+		}
+		return array_values( array_unique( $codes ) );
+	}
+
+	/**
+	 * @param string[] $codes
+	 * @return string[]
+	 */
+	private static function sort_by_length_desc( array $codes ) {
+		usort(
+			$codes,
+			static function ( $a, $b ) {
+				return strlen( (string) $b ) - strlen( (string) $a );
+			}
+		);
+		return $codes;
 	}
 
 	/**
@@ -269,13 +345,15 @@ class Nets_Easy_Checkout_Helper {
 			}
 		}
 
-		$consumer['phoneNumber']['prefix'] = self::get_checkout_phone_prefix();
-		$consumer['phoneNumber']['number'] = self::get_checkout_phone_number();
-
-		// The prefix is always set, but the number is not. Both must be non-empty.
-		$has_phone = array_filter( $consumer['phoneNumber'] ?? array() );
-		if ( count( $has_phone ) <= 1 ) {
-			unset( $consumer['phoneNumber'] );
+		$phone = self::format_phone(
+			WC()->customer->get_billing_phone(),
+			WC()->checkout()->get_value( 'billing_country' )
+		);
+		if ( ! empty( $phone['number'] ) ) {
+			$consumer['phoneNumber'] = array(
+				'prefix' => $phone['prefix'],
+				'number' => $phone['number'],
+			);
 		}
 
 		$dibs_settings          = get_option( 'woocommerce_dibs_easy_settings' );
@@ -303,36 +381,4 @@ class Nets_Easy_Checkout_Helper {
 		return $consumer;
 	}
 
-	/**
-	 * Gets customer phone prefix formatted for Nets.
-	 *
-	 * @return string
-	 */
-	public static function get_checkout_phone_prefix() {
-		$prefix       = null;
-		$phone_number = WC()->customer->get_billing_phone();
-		if ( substr( $phone_number, 0, 1 ) === '+' ) {
-			$prefix = substr( $phone_number, 0, 3 );
-		} else {
-			$prefix = dibs_get_phone_prefix_for_country( WC()->checkout()->get_value( 'billing_country' ) );
-		}
-		return $prefix;
-	}
-
-	/**
-	 * Gets customer phone number formatted for Nets.
-	 *
-	 * @return string
-	 */
-	public static function get_checkout_phone_number() {
-		$billing_phone = WC()->customer->get_billing_phone();
-		if ( substr( $billing_phone, 0, 1 ) === '+' ) {
-			$phone_number = substr( $billing_phone, strlen( self::get_checkout_phone_prefix() ) );
-			$phone_number = str_replace( ' ', '', $phone_number );
-		} else {
-			$phone_number = str_replace( '-', '', $billing_phone );
-			$phone_number = str_replace( ' ', '', $phone_number );
-		}
-		return $phone_number;
-	}
 }
