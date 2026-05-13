@@ -41,8 +41,8 @@ class Nets_Easy_Confirmation {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'maybe_reload_page' ), 1 );
-		add_action( 'init', array( $this, 'confirm_order' ), 999 );
-		add_action( 'init', array( $this, 'maybe_confirm_customer_redirected_from_payment_page_order' ), 20 );
+		add_action( 'wp', array( $this, 'confirm_order' ), 999 );
+		add_action( 'wp', array( $this, 'maybe_confirm_customer_redirected_from_payment_page_order' ), 20 );
 	}
 
 	/**

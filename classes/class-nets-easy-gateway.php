@@ -259,7 +259,7 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 			// Unset sessions.
 			wc_dibs_unset_sessions();
 		} elseif ( empty( $order->get_date_paid() ) ) {
-				wc_dibs_confirm_dibs_order( $order_id );
+			wc_dibs_confirm_dibs_order( $order_id );
 		}
 	}
 
