@@ -202,7 +202,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		wc_dibs_save_shipping_reference_to_order( $order_id );
 	}
 
-	$request = Nets_Easy()->api->get_nets_easy_order( $payment_id, $order_id );
+	$request = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 
 	if ( is_wp_error( $request ) ) {
 		$order->add_order_note(
