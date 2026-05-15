@@ -1,4 +1,8 @@
 *** Nexi Checkout Changelog ***
+2026-05-18      - version 2.14.4
+* Fix           - Fixed an issue where a "Pay" button appeared on the order confirmation page for orders that had already been successfully paid.
+* Fix           - Added the request URL as the 2nd parameter to the 'http_headers_useragent' filter which is required for other plugins that hook onto this filter that need the URL to modify the user agent string accordingly.
+
 2026-04-21      - version 2.14.3
 * Fix           - Fixed an issue where some settings fields were not visible on the settings page, caused by a sanitization function in our settings library.
 
