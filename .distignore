@@ -7,6 +7,7 @@
 .distignore
 .eslintrc.json
 .gitignore
+.prettierignore
 *.bak
 composer.json
 composer.lock

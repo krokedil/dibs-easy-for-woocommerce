@@ -36,7 +36,7 @@ class Nets_Easy_Subscriptions {
 		add_action( 'dibs_easy_process_payment', array( $this, 'set_recurring_token_for_order' ), 10, 2 );
 
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'show_recurring_token' ) );
-		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_dibs_recurring_token_update' ), 45, 2 );
+		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_dibs_recurring_token_update' ), 45 );
 
 		// Charge renewal payment.
 		add_action( 'woocommerce_scheduled_subscription_payment_dibs_easy', array( $this, 'trigger_scheduled_payment' ), 10, 2 );
@@ -109,14 +109,9 @@ class Nets_Easy_Subscriptions {
 						// Modify order lines.
 						$order_items = array();
 						foreach ( $wc_order->get_items() as $item ) {
-							$product = $item->get_product();
-							if ( $item['variation_id'] ) {
-								$product_id = $item['variation_id'];
-							} else {
-								$product_id = $item['product_id'];
-							}
+							$product       = $item->get_product();
 							$order_items[] = array(
-								'reference'        => self::get_sku( $product, $product_id ),
+								'reference'        => self::get_sku( $product ),
 								'name'             => $item->get_name(),
 								'quantity'         => $item->get_quantity(),
 								'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -200,11 +195,10 @@ class Nets_Easy_Subscriptions {
 	 * Returns the SKU used in Nets for the product.
 	 *
 	 * @param object $product WooCommerce product.
-	 * @param string $product_id WooCommerce product id.
 	 *
 	 * @return string
 	 */
-	public static function get_sku( $product, $product_id ) {
+	public static function get_sku( $product ) {
 		$part_number = $product->get_sku();
 		if ( empty( $part_number ) ) {
 			$part_number = $product->get_id();
@@ -436,7 +430,7 @@ class Nets_Easy_Subscriptions {
 			<div class="order_data_column" style="clear:both; float:none; width:100%;">
 				<div class="address">
 				<?php
-					echo '<p><strong>' . esc_html( __( 'Nets recurring token' ) ) . ':</strong>' . esc_html( $order->get_meta( '_dibs_recurring_token' ) ) . '</p>';
+					echo '<p><strong>' . esc_html( __( 'Nets recurring token', 'dibs-easy-for-woocommerce' ) ) . ':</strong>' . esc_html( $order->get_meta( '_dibs_recurring_token' ) ) . '</p>';
 				?>
 				</div>
 				<div class="edit_address">
@@ -444,7 +438,7 @@ class Nets_Easy_Subscriptions {
 					woocommerce_wp_text_input(
 						array(
 							'id'            => '_dibs_recurring_token',
-							'label'         => __( 'Nets recurring token' ),
+							'label'         => __( 'Nets recurring token', 'dibs-easy-for-woocommerce' ),
 							'wrapper_class' => '_billing_company_field',
 						)
 					);
@@ -459,9 +453,8 @@ class Nets_Easy_Subscriptions {
 	 * Save recurring token to order.
 	 *
 	 * @param string $post_id WC order id.
-	 * @param object $post WordPress post.
 	 */
-	public function save_dibs_recurring_token_update( $post_id, $post ) {
+	public function save_dibs_recurring_token_update( $post_id ) {
 		$order = wc_get_order( $post_id );
 		if ( 'shop_subscription' === $order->get_type() && $order->get_meta( '_dibs_recurring_token' ) ) {
 				$dibs_recurring_token = filter_input( INPUT_POST, '_dibs_recurring_token', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
@@ -486,6 +479,12 @@ class Nets_Easy_Subscriptions {
 
 		// Only change for Nexi Checkout orders.
 		if ( ! in_array( $order->get_payment_method(), nets_easy_all_payment_method_ids(), true ) ) {
+			return $wc_result;
+		}
+
+		// Do not override the needs payment result if the order is not in a valid status for needing payment.
+		// This is necessary to prevent 'processing' orders from being marked as needing payment. Otherwise, a "Pay" button will appear on the order received page.
+		if ( ! in_array( $order->get_status(), $valid_order_statuses, true ) ) {
 			return $wc_result;
 		}
 

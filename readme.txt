@@ -6,7 +6,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.7.0
-Stable tag: 2.14.3
+Stable tag: 2.14.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -59,6 +59,10 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2026-05-18    - version 2.14.4 =
+* Fix           - Fixed an issue where a "Pay" button appeared on the order confirmation page for orders that had already been successfully paid.
+* Fix           - Added the request URL as the 2nd parameter to the 'http_headers_useragent' filter which is required for other plugins that hook onto this filter that need the URL to modify the user agent string accordingly.
+
 = 2026.04.21    - version 2.14.3 =
 * Fix           - Fixed an issue where some settings fields were not visible on the settings page, caused by a sanitization function in our settings library.
 

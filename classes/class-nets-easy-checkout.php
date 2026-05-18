@@ -28,8 +28,8 @@ class Nets_Easy_Checkout {
 		add_filter( 'allowed_redirect_hosts', array( $this, 'extend_allowed_domains_list' ) );
 
 		if ( in_array( $this->checkout_flow, array( 'embedded', 'inline' ), true ) ) {
-			add_action( 'nexi_inline_after_snippet', array( $this, 'add_hidden_payment_id_field' ), 10 );
-			add_action( 'wc_dibs_after_snippet', array( $this, 'add_hidden_payment_id_field' ), 10 );
+			add_action( 'nexi_inline_after_snippet', array( $this, 'add_hidden_payment_id_field' ) );
+			add_action( 'wc_dibs_after_snippet', array( $this, 'add_hidden_payment_id_field' ) );
 		}
 	}
 
@@ -69,7 +69,7 @@ class Nets_Easy_Checkout {
 			nexi_terminate_session( $payment_id );
 			wc_dibs_unset_sessions();
 			Nets_Easy_Logger::log( 'Currency changed in update Nets function. Clearing Nets session and reloading the checkout page.' );
-			WC()->session->reload_checkout = true;
+			WC()->session->set( 'reload_checkout', true );
 			return;
 		}
 
@@ -86,7 +86,7 @@ class Nets_Easy_Checkout {
 			Nets_Easy_Logger::log( sprintf( 'Payment ID used in checkout (%s) not the same as the one stored in WC session (%s). Clearing Nexi session.', $payment_id, $payment_id_session ) );
 			wc_add_notice( __( 'Nexi session issues. Please reload the page and try again.', 'dibs-easy-for-woocommerce' ), 'error' );
 
-			WC()->session->reload_checkout = true;
+			WC()->session->set( 'reload_checkout', true );
 			return;
 		}
 
@@ -112,9 +112,10 @@ class Nets_Easy_Checkout {
 				nexi_terminate_session( $payment_id_session );
 				wc_dibs_unset_sessions();
 				if ( wp_doing_ajax() ) {
-					WC()->session->reload_checkout = true;
+					WC()->session->set( 'reload_checkout', true );
 				} else {
 					wp_safe_redirect( wc_get_checkout_url() );
+					exit;
 				}
 			}
 		}
@@ -123,7 +124,7 @@ class Nets_Easy_Checkout {
 		if ( apply_filters( 'nets_easy_check_if_needs_payment', true ) && ! Nets_Easy_Subscriptions::cart_has_subscription() ) {
 			if ( ! WC()->cart->needs_payment() ) {
 				Nets_Easy_Logger::log( 'Cart does not need payment. Reloading the checkout page.' );
-				WC()->session->reload_checkout = true;
+				WC()->session->set( 'reload_checkout', true );
 				return;
 			}
 		}
@@ -138,7 +139,7 @@ class Nets_Easy_Checkout {
 			if ( is_wp_error( $updated_nets_easy_order ) && 409 === $updated_nets_easy_order->get_error_code() ) {
 				// 409 response - try again.
 				Nets_Easy_Logger::log( $payment_id . '. Nexi Checkout update order request resulted in 409 response. Reloading the checkout page and try to update again.' );
-				WC()->session->reload_checkout = true;
+				WC()->session->set( 'reload_checkout', true );
 				return;
 			}
 
@@ -161,15 +162,14 @@ class Nets_Easy_Checkout {
 	}
 
 	/**
-	 * Adds a hidden nexi_session checkout form field.
+	 * Adds a hidden nexi_payment_id checkout form field.
 	 * Used to confirm that the token used for the Nexi Checkout widget in frontend is
 	 * the same one currently saved in WC session dibs_payment_id.
 	 * We do this to prevent issues if stores have session problems.
 	 *
-	 * @param array $fields WooCommerce checkout form fields.
-	 * @return array
+	 * @return void
 	 */
-	public function add_hidden_payment_id_field( $fields ) {
+	public function add_hidden_payment_id_field() {
 		$payment_id = WC()->session->get( 'dibs_payment_id' ) ?? '';
 		?>
 		<input type="hidden" class="nexi_payment_id" name="nexi_payment_id" id="nexi_payment_id" value="<?php echo esc_attr( $payment_id ); ?>" />
