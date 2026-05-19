@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+Address three warnings raised during the WordPress.org plugin import:
