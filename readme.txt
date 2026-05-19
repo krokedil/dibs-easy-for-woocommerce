@@ -54,8 +54,8 @@ Available for merchants in Denmark, Sweden and Norway.
 For help setting up and configuring Nexi Checkout please refer to our [documentation](https://docs.krokedil.com/nexi-checkout/).
 
 = Are there any specific requirements? =
-* WooCommerce 5.0 or newer is required.
-* PHP 7.3 or higher is required.
+* WooCommerce 5.6.0 or newer is required.
+* PHP 7.4 or higher is required.
 * A SSL Certificate is required.
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
@@ -164,4 +164,4 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * Tweak         - Tweaks related to PHPCS & WPCS before release on woo.com.
 * Fix           - PHP8.1 compatibility fix. Add missing subscription class prop (thanks @khlieng).
 
-For the full changelog, see the [changelog on GitHub](https://github.com/krokedil/dibs-easy-for-woocommerce/blob/master/CHANGELOG.md).
+For the full changelog, see the [changelog on GitHub](https://github.com/krokedil/dibs-easy-for-woocommerce/blob/master/changelog.txt).
