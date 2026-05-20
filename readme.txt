@@ -48,7 +48,7 @@ With a test account, you will see how the Nexi Checkout administration portal wo
 
 == Frequently Asked Questions ==
 = Which countries does this payment gateway support? =
-Available for merchants in Denmark, Sweden and Norway.
+Available for merchants in Denmark, Sweden, Norway, Germany and Austria..
 
 = Where can I find Nexi Checkout documentation? =
 For help setting up and configuring Nexi Checkout please refer to our [documentation](https://docs.krokedil.com/nexi-checkout/).
