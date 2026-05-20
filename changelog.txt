@@ -113,6 +113,7 @@
 * Feature   - Adds support for WooCommerce blocks checkout using the redirect flow.
 * Feature   - Adds support for switching between Scheduled and Unscheduled subscriptions in the payment method settings.
 * Fix       - Fixes a potential fatal error when the WooCommerce order was not found when making a capture call.
+
 2024.02.05  - version 2.7.1
 * Tweak         - Scroll customer to shipping area in Woo when address-changed event has been triggered by Nets and user is on mobile.
 
