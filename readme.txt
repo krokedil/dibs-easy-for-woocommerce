@@ -164,4 +164,4 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * Tweak         - Tweaks related to PHPCS & WPCS before release on woo.com.
 * Fix           - PHP8.1 compatibility fix. Add missing subscription class prop (thanks @khlieng).
 
-For the full changelog, see the [changelog on GitHub](https://github.com/krokedil/dibs-easy-for-woocommerce/blob/master/changelog.txt).
+For the full changelog, see the [changelog on GitHub](https://raw.githubusercontent.com/krokedil/dibs-easy-for-woocommerce/master/changelog.txt).
