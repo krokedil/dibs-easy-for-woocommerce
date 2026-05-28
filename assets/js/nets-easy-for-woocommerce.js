@@ -309,38 +309,43 @@ jQuery( function ( $ ) {
             $( "#shipping_city" ).val( shippingAddress.city )
             $( "#shipping_country" ).val( shippingAddress.country )
 
-            if ( consumer.company.hasOwnProperty( "name" ) ) {
-                // B2B purchase
-                const company = consumer.company
-                const { firstName, lastName, email, phoneNumber } = company.contactDetails
-                const { prefix, number } = phoneNumber
-                $( "#billing_company" ).val( company.name )
-                $( "#shipping_company" ).val( company.name )
-                $( "#billing_first_name" ).val( firstName )
-                $( "#billing_last_name" ).val( lastName )
-                $( "#shipping_first_name" ).val( firstName )
-                $( "#shipping_last_name" ).val( lastName )
-                $( "#billing_email" ).val( email )
-                $( "#billing_phone" ).val( `${ prefix }${ number }` )
-                // trigger events for 3rd part plugins.
+            const isB2B = consumer.company.hasOwnProperty( "name" )
+            const contactDetails = isB2B ? consumer.company.contactDetails : consumer.privatePerson
+            const { firstName, lastName, email, phoneNumber } = contactDetails
+            const { prefix, number } = phoneNumber
+            const companyName = isB2B ? consumer.company.name : ""
+            debugger
+
+            $( "#billing_company" ).val( companyName )
+            $( "#shipping_company" ).val( companyName )
+            $( "#billing_first_name" ).val( firstName )
+            $( "#billing_last_name" ).val( lastName )
+            $( "#shipping_first_name" ).val( firstName )
+            $( "#shipping_last_name" ).val( lastName )
+            $( "#billing_email" ).val( email )
+            $( "#billing_phone" ).val( `${ prefix }${ number }` )
+
+            // trigger events for 3rd part plugins.
+            if ( isB2B ) {
                 $( "#billing_country" ).change()
-                $( "#billing_email" ).change()
-                $( "#billing_email" ).blur()
-            } else {
-                // B2C purchase
-                const { firstName, lastName, email, phoneNumber } = consumer.privatePerson
-                const { prefix, number } = phoneNumber
-                $( "#billing_company" ).val( "" )
-                $( "#shipping_company" ).val( "" )
-                $( "#billing_first_name" ).val( firstName )
-                $( "#billing_last_name" ).val( lastName )
-                $( "#shipping_first_name" ).val( firstName )
-                $( "#shipping_last_name" ).val( lastName )
-                $( "#billing_email" ).val( email )
-                // trigger events for 3rd part plugins.
-                $( "#billing_email" ).change()
-                $( "#billing_email" ).blur()
-                $( "#billing_phone" ).val( `${ prefix }${ number }` )
+            }
+            $( "#billing_email" ).change()
+            $( "#billing_email" ).blur()
+
+            const $shippingPhone = $( "#shipping_phone" )
+            if ( $shippingPhone.length ) {
+                const spn = shippingAddress.phoneNumber
+                const phoneVal = spn ? `${ spn.prefix }${ spn.number }` : $( "#billing_phone" ).val()
+                if ( phoneVal ) {
+                    $shippingPhone.val( phoneVal )
+                }
+            }
+            const $shippingEmail = $( "#shipping_email" )
+            if ( $shippingEmail.length ) {
+                const emailVal = $( "#billing_email" ).val()
+                if ( emailVal ) {
+                    $shippingEmail.val( emailVal )
+                }
             }
 
             // eslint-disable-next-line eqeqeq
