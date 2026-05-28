@@ -1,4 +1,7 @@
 *** Nexi Checkout Changelog ***
+2026-05-28      - version 2.14.5
+* Fix           - Resolved a checkout validation error that could occur after upgrading to WooCommerce 10.8.0, where an empty shipping phone number caused the order to fail. The shipping phone field is now correctly populated with the value from Nexi, or the billing phone number if no shipping phone is provided.
+
 2026-05-18      - version 2.14.4
 * Fix           - Fixed an issue where a "Pay" button appeared on the order confirmation page for orders that had already been successfully paid.
 * Fix           - Added the request URL as the 2nd parameter to the 'http_headers_useragent' filter which is required for other plugins that hook onto this filter that need the URL to modify the user agent string accordingly.

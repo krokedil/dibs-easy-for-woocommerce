@@ -354,6 +354,23 @@ jQuery( function ( $ ) {
                 $( dibsEasyForWoocommerce.wooTerms ).prop( "checked", true )
             }
             $( "input#ship-to-different-address-checkbox" ).prop( "checked", true )
+
+            const $shippingPhone = $( "#shipping_phone" )
+            if ( $shippingPhone.length ) {
+                const spn = shippingAddress.phoneNumber
+                const phoneVal = spn ? `${ spn.prefix }${ spn.number }` : $( "#billing_phone" ).val()
+                if ( phoneVal ) {
+                    $shippingPhone.val( phoneVal )
+                }
+            }
+            const $shippingEmail = $( "#shipping_email" )
+            if ( $shippingEmail.length ) {
+                const emailVal = $( "#billing_email" ).val()
+                if ( emailVal ) {
+                    $shippingEmail.val( emailVal )
+                }
+            }
+
             dibsEasyForWoocommerce.submitOrder()
         },
         /**
