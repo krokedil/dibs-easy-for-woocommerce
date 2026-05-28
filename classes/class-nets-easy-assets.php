@@ -386,6 +386,8 @@ class Nets_Easy_Assets {
 				'shipping_state',
 				'shipping_country',
 				'shipping_company',
+				'shipping_phone',
+				'shipping_email',
 				'terms',
 				'account_username',
 				'account_password',
