@@ -42,7 +42,8 @@ class Nets_Easy_Confirmation {
 	public function __construct() {
 		add_action( 'init', array( $this, 'maybe_reload_page' ), 1 );
 		add_action( 'init', array( $this, 'confirm_order' ), 999 );
-		add_action( 'init', array( $this, 'maybe_confirm_customer_redirected_from_payment_page_order' ), 20 );
+		// Priority 999 to ensure this runs after plugins that register their `woocommerce_email_order_meta_fields` filter on `init` at priority 20 (e.g. Checkout Field Editor Pro). Otherwise the email triggered by `payment_complete()` inside this handler fires before those filters are registered, and any custom checkout fields get omitted from the email.
+		add_action( 'init', array( $this, 'maybe_confirm_customer_redirected_from_payment_page_order' ), 999 );
 	}
 
 	/**
