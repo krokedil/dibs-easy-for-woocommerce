@@ -228,6 +228,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			include_once plugin_basename( 'classes/requests/class-nets-easy-request-put.php' );
 			include_once plugin_basename( 'classes/requests/class-nets-easy-request-get.php' );
 			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-create-order.php' );
+			include_once plugin_basename( 'classes/requests/post/class-nets-easy-request-create-express-order.php' );
+			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-update-express-order.php' );
 			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-update-order.php' );
 			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-update-order-reference.php' );
 			include_once plugin_basename( 'classes/requests/put/class-nets-easy-request-terminate-session.php' );
@@ -274,6 +276,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			);
 
 			$this->api = new Nets_Easy_API();
+
+			new \Krokedil\Nexi\ExpressButton\ExpressButton();
 		}
 
 		/**

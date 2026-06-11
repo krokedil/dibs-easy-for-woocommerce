@@ -182,6 +182,14 @@ return apply_filters(
 			'default'     => '',
 			'desc_tip'    => true,
 		),
+		'express_button_enabled'           => array(
+			'title'       => __( 'Express Button', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'checkbox',
+			'label'       => __( 'Enable Express Button (Apple Pay / Google Pay) on product pages', 'dibs-easy-for-woocommerce' ),
+			'default'     => 'no',
+			'description' => __( 'Adds an Express checkout button on single product pages. Requires Apple Pay or Google Pay to be enabled in your Nexi account.', 'dibs-easy-for-woocommerce' ),
+			'desc_tip'    => true,
+		),
 		'checkout_experience_section_end'  => array(
 			'type' => 'krokedil_section_end',
 		),
