@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Fixed an issue where some third-party plugins did not work correctly due to a redirect happening too early in the page load process.

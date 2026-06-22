@@ -6,7 +6,7 @@ Tested up to: 7.0
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 10.8.1
-Stable tag: 2.14.5
+Stable tag: 2.14.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,9 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2026-06-22    - version 2.14.6 =
+* Fix           - Fixed an issue where some third-party plugins did not work correctly due to a redirect happening too early in the page load process.
+
 = 2026-05-28    - version 2.14.5 =
 * Fix           - Resolved a checkout validation error that could occur after upgrading to WooCommerce 10.8.0, where an empty shipping phone number caused the order to fail. The shipping phone field is now correctly populated with the value from Nexi, or the billing phone number if no shipping phone is provided.
 
