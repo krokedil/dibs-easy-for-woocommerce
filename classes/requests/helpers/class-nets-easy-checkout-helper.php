@@ -98,7 +98,38 @@ class Nets_Easy_Checkout_Helper {
 			$checkout['charge'] = true;
 		}
 
+		$country_code = self::get_country( $order_id );
+		if ( $country_code ) {
+			$checkout['countryCode'] = $country_code;
+		}
+
 		return $checkout;
+	}
+
+	/**
+	 * Gets country
+
+	 * @param  mixed  $order_id WooCommerce order ID or null.
+	 *
+	 * @return string|null
+	 */
+	public static function get_country( $order_id ) {
+		if ( $order_id ) {
+			$country = wc_get_order( $order_id )->get_billing_country();
+		} else {
+			$country = strtoupper(get_locale());
+			if ( strpos($country, '_') !== false ) {
+				$country = explode('_', $country)[1];
+			}
+		}
+
+		$converted_country = dibs_get_iso_3_country( $country );
+		$supported_dibs_countries = dibs_get_supported_countries();
+		if ( in_array( $converted_country, $supported_dibs_countries, true ) ) {
+			return $converted_country;
+		}
+
+		return null;
 	}
 
 	/**
