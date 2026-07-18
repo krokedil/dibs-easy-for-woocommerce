@@ -501,7 +501,9 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			set_transient( 'nexi_checkout_settings_page_config', $args, 60 * 60 * 24 ); // 24 hours lifetime.
 		}
 
-		$decoded = json_decode( $args, true );
-		return is_array( $decoded ) ? $decoded : null;
+		$decoded_args                        = json_decode( $args, true );
+		$decoded_args['styled_output']       = true;
+		$decoded_args['settings_navigation'] = true;
+		return $decoded_args;
 	}
 }
