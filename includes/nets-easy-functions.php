@@ -42,6 +42,14 @@ function dibs_easy_maybe_create_order() {
 	$session->set( 'nets_easy_currency', get_woocommerce_currency() );
 	$session->set( 'nets_easy_last_update_hash', $cart->get_cart_hash() );
 	$session->set( 'dibs_cart_contains_subscription', Nets_Easy_Subscriptions::cart_has_subscription() );
+
+	// The create response carries no 'created' timestamp, and Nets_Easy_Checkout needs it to
+	// recognize a payment that a later payment attempt has replaced.
+	$created_nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $dibs_easy_order['paymentId'] );
+	if ( ! is_wp_error( $created_nets_easy_order ) ) {
+		$session->set( 'nets_easy_payment_created', $created_nets_easy_order['payment']['created'] ?? '' );
+	}
+
 	// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
 	$payment_id = $dibs_easy_order['paymentId'];
 	set_transient( 'dibs_payment_id_' . $payment_id, $payment_id, 15 * MINUTE_IN_SECONDS ); // phpcs:ignore
@@ -99,6 +107,9 @@ function wc_dibs_unset_sessions() {
 		}
 		if ( WC()->session->get( 'nets_easy_currency' ) ) {
 			WC()->session->__unset( 'nets_easy_currency' );
+		}
+		if ( WC()->session->get( 'nets_easy_payment_created' ) ) {
+			WC()->session->__unset( 'nets_easy_payment_created' );
 		}
 
 		if ( WC()->session->get( 'dibs_cart_contains_subscription' ) ) {

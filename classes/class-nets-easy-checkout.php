@@ -133,6 +133,25 @@ class Nets_Easy_Checkout {
 		$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 		if ( ! is_wp_error( $nets_easy_order ) ) {
 
+			// A cancelled payment attempt leaves Nexi with a new payment behind the same ID, which
+			// answers order item updates with 204 without applying them. The changed 'created'
+			// timestamp is the only signal for it, so start a new payment rather than update a
+			// payment that can no longer follow the cart.
+			$created       = $nets_easy_order['payment']['created'] ?? '';
+			$known_created = WC()->session->get( 'nets_easy_payment_created' );
+
+			if ( ! empty( $created ) && ! empty( $known_created ) && $created !== $known_created ) {
+				nexi_terminate_session( $payment_id );
+				wc_dibs_unset_sessions();
+				Nets_Easy_Logger::log( sprintf( 'Nexi payment %1$s was replaced after a payment attempt (created %2$s, expected %3$s). Clearing the Nexi session and reloading the checkout page.', $payment_id, $created, $known_created ) );
+				WC()->session->set( 'reload_checkout', true );
+				return;
+			}
+
+			if ( ! empty( $created ) && empty( $known_created ) ) {
+				WC()->session->set( 'nets_easy_payment_created', $created );
+			}
+
 			// Updates the order.
 			$updated_nets_easy_order = Nets_Easy()->api->update_nets_easy_order( $payment_id );
 
