@@ -43,8 +43,8 @@ function dibs_easy_maybe_create_order() {
 	$session->set( 'nets_easy_last_update_hash', $cart->get_cart_hash() );
 	$session->set( 'dibs_cart_contains_subscription', Nets_Easy_Subscriptions::cart_has_subscription() );
 
-	// The create response carries no 'created' timestamp, and Nets_Easy_Checkout needs it to
-	// recognize a payment that a later payment attempt has replaced.
+	// The create response carries no 'created' timestamp, so read it back: Nets_Easy_Checkout
+	// compares it later to spot a payment that no longer accepts order updates.
 	$created_nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $dibs_easy_order['paymentId'] );
 	if ( ! is_wp_error( $created_nets_easy_order ) && ! empty( $created_nets_easy_order['payment']['created'] ) ) {
 		$session->set( 'nets_easy_payment_created', $created_nets_easy_order['payment']['created'] );

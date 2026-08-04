@@ -133,10 +133,9 @@ class Nets_Easy_Checkout {
 		$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 		if ( ! is_wp_error( $nets_easy_order ) ) {
 
-			// A cancelled payment attempt leaves Nexi with a new payment behind the same ID, which
-			// answers order item updates with 204 without applying them. The changed 'created'
-			// timestamp is the only signal for it, so start a new payment rather than update a
-			// payment that can no longer follow the cart.
+			// A payment attempt makes Nexi report a different 'created' timestamp for the same
+			// payment ID, and such a payment then answers order item updates with 204 without
+			// applying them. Start a new payment instead of updating one Nexi ignores.
 			$created       = $nets_easy_order['payment']['created'] ?? '';
 			$known_created = WC()->session->get( 'nets_easy_payment_created' );
 
