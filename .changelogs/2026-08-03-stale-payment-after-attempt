@@ -1,4 +1,4 @@
 Type: Fix
 Needs Documentation: no
 
-Fixed an issue in the embedded and inline checkout where a customer who cancelled a payment and then changed to a shipping method with a different price was stopped with "Cart total does not match Nets order total. Please try refreshing the page." and could not continue without reloading the checkout page. Nexi no longer applies order updates to a payment that has already been attempted, so the checkout now starts a new payment automatically instead.
+Fixed an issue where a customer who cancelled a payment could not continue without reloading the checkout page.
