@@ -147,6 +147,10 @@ class Nets_Easy_Checkout {
 				return;
 			}
 
+			// Fallback for sessions started before this plugin version, which have no baseline from
+			// payment creation. It only helps when this is the first update after the checkout was
+			// loaded: if an attempt already happened, the changed timestamp is what gets stored and
+			// this payment is never detected.
 			if ( ! empty( $created ) && empty( $known_created ) ) {
 				WC()->session->set( 'nets_easy_payment_created', $created );
 			}
