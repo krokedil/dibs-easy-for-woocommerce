@@ -1,0 +1,2 @@
+## Enhancement
+- Made the payment type portion of the order's "Payment method" title (e.g. "Card", "Wallet") translatable via translate.wordpress.org, instead of being derived directly from the raw API value.
