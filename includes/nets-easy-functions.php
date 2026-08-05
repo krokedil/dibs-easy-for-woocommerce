@@ -418,6 +418,27 @@ function nets_easy_all_payment_method_ids() {
 
 
 /**
+ * Get translated payment type label.
+ *
+ * @param string $type Payment type from the Nexi API (e.g. CARD, INVOICE).
+ * @return string The translated label.
+ */
+function nexi_get_payment_type_label( $type ) {
+	$labels = array(
+		'CARD'            => __( 'Card', 'dibs-easy-for-woocommerce' ),
+		'INVOICE'         => __( 'Invoice', 'dibs-easy-for-woocommerce' ),
+		'A2A'             => __( 'Account to account', 'dibs-easy-for-woocommerce' ),
+		'INSTALLMENT'     => __( 'Installment', 'dibs-easy-for-woocommerce' ),
+		'WALLET'          => __( 'Wallet', 'dibs-easy-for-woocommerce' ),
+		'PREPAID-INVOICE' => __( 'Prepaid invoice', 'dibs-easy-for-woocommerce' ),
+	);
+
+	$type_key = strtoupper( $type );
+
+	return isset( $labels[ $type_key ] ) ? $labels[ $type_key ] : ucfirst( strtolower( $type ) );
+}
+
+/**
  * Get payment method title.
  *
  * @param WC_Order $order The WooCommerce order.
@@ -434,10 +455,38 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
 	$method_parts = explode( ' ', $method );
 	$type         = strtolower( end( $method_parts ) ) === strtolower( $type ) ? '' : $type;
 
-	// Change first letter to uppercase only (e.g., "CARD" → "Card").
-	$type = ucfirst( strtolower( $type ) );
+	// Kept identical to the pre-existing normalization so the value passed to the
+	// nexi_custom_payment_method_title filter below stays backwards compatible.
+	$type_legacy = ucfirst( strtolower( $type ) );
+	$type_label  = '' === $type ? '' : nexi_get_payment_type_label( $type );
 
-	return apply_filters( 'nexi_custom_payment_method_title', "$gateway / $method $type", $order, $method, $type );
+	if ( '' === $type_label ) {
+		$title = sprintf(
+			/* translators: %1$s: gateway title, %2$s: payment method. */
+			__( '%1$s / %2$s', 'dibs-easy-for-woocommerce' ),
+			$gateway,
+			$method
+		);
+	} else {
+		$title = sprintf(
+			/* translators: %1$s: gateway title, %2$s: payment method, %3$s: payment type. */
+			__( '%1$s / %2$s %3$s', 'dibs-easy-for-woocommerce' ),
+			$gateway,
+			$method,
+			$type_label
+		);
+	}
+
+	/**
+	 * Filter the payment method title set on the order.
+	 *
+	 * @hook nexi_custom_payment_method_title
+	 * @param string   $title  The built payment method title.
+	 * @param WC_Order $order  The WooCommerce order.
+	 * @param string   $method Payment method (spaced, e.g. "Easy Invoice").
+	 * @param string   $type   Normalized payment type (e.g. "Card"), or '' if omitted. Unchanged from pre-2.14.x behavior for backwards compatibility.
+	 */
+	return apply_filters( 'nexi_custom_payment_method_title', $title, $order, $method, $type_legacy );
 }
 
 /**
