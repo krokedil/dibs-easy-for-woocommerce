@@ -455,6 +455,7 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
 	$method_parts = explode( ' ', $method );
 	$type         = strtolower( end( $method_parts ) ) === strtolower( $type ) ? '' : $type;
 
+	// Change first letter to uppercase only (e.g., "CARD" → "Card").
 	// Kept identical to the pre-existing normalization so the value passed to the
 	// nexi_custom_payment_method_title filter below stays backwards compatible.
 	$type_legacy = ucfirst( strtolower( $type ) );
