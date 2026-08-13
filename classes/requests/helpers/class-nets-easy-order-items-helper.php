@@ -76,6 +76,9 @@ class Nets_Easy_Order_Items_Helper {
 			$product_id = $order_item['product_id'];
 		}
 
+		$tax_amount       = intval( round( $order_item->get_total_tax() * 100 ) );
+		$net_total_amount = intval( round( $order_item->get_total() * 100 ) );
+
 		return array(
 			'reference'        => self::get_sku( $product, $product_id ),
 			'name'             => wc_dibs_clean_name( $order_item->get_name() ),
@@ -83,9 +86,10 @@ class Nets_Easy_Order_Items_Helper {
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( ( $order_item->get_total() / $order_item['qty'] ) * 100 ) ),
 			'taxRate'          => self::get_item_tax_rate( $order_item, $order ),
-			'taxAmount'        => intval( round( $order_item->get_total_tax() * 100 ) ),
-			'grossTotalAmount' => intval( round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ) ),
-			'netTotalAmount'   => intval( round( $order_item->get_total() * 100 ) ),
+			'taxAmount'        => $tax_amount,
+			// Derived rather than rounded on its own, so that it always matches the net and tax amounts.
+			'grossTotalAmount' => $net_total_amount + $tax_amount,
+			'netTotalAmount'   => $net_total_amount,
 		);
 	}
 
@@ -135,16 +139,20 @@ class Nets_Easy_Order_Items_Helper {
 			$fee_reference = 'fee|' . $fee_name;
 		}
 
+		$tax_amount       = intval( round( $order_fee->get_total_tax() * 100 ) );
+		$net_total_amount = intval( round( $order_fee->get_total() * 100 ) );
+
 		return array(
 			'reference'        => $fee_reference,
 			'name'             => wc_dibs_clean_name( $order_fee->get_name() ),
 			'quantity'         => '1',
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => intval( round( $order_fee->get_total() * 100 ) ),
+			'unitPrice'        => $net_total_amount,
 			'taxRate'          => ( empty( $order_fee->get_total() ) ) ? 0 : intval( round( ( $order_fee->get_total_tax() / $order_fee->get_total() ) * 10000 ) ),
-			'taxAmount'        => intval( round( $order_fee->get_total_tax() * 100 ) ),
-			'grossTotalAmount' => intval( round( ( $order_fee->get_total() + $order_fee->get_total_tax() ) * 100 ) ),
-			'netTotalAmount'   => intval( round( $order_fee->get_total() * 100 ) ),
+			'taxAmount'        => $tax_amount,
+			// Derived rather than rounded on its own, so that it always matches the net and tax amounts.
+			'grossTotalAmount' => $net_total_amount + $tax_amount,
+			'netTotalAmount'   => $net_total_amount,
 		);
 	}
 
@@ -172,16 +180,20 @@ class Nets_Easy_Order_Items_Helper {
 			$shipping_reference = 'shipping|' . $shipping_method->get_method_id();
 		}
 
+		$tax_amount       = ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total_tax() * 100 ) );
+		$net_total_amount = ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total() * 100 ) );
+
 		return array(
 			'reference'        => $shipping_reference,
 			'name'             => wc_dibs_clean_name( $shipping_method->get_method_title() ),
 			'quantity'         => '1',
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
-			'unitPrice'        => ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total() * 100 ) ),
+			'unitPrice'        => $net_total_amount,
 			'taxRate'          => ( $free_shipping ) ? 0 : intval( round( ( $shipping_method->get_total_tax() / $shipping_method->get_total() ) * 10000 ) ),
-			'taxAmount'        => ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total_tax() * 100 ) ),
-			'grossTotalAmount' => ( $free_shipping ) ? 0 : intval( round( ( $shipping_method->get_total() + $shipping_method->get_total_tax() ) * 100 ) ),
-			'netTotalAmount'   => ( $free_shipping ) ? 0 : intval( round( $shipping_method->get_total() * 100 ) ),
+			'taxAmount'        => $tax_amount,
+			// Derived rather than rounded on its own, so that it always matches the net and tax amounts.
+			'grossTotalAmount' => $net_total_amount + $tax_amount,
+			'netTotalAmount'   => $net_total_amount,
 		);
 	}
 

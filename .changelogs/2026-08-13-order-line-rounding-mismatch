@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed an "Amount does not match sum of orderitems" error from Nexi that could occur when the order total and the individual order lines rounded differently. Each order line was rounded to minor units on its own, while WooCommerce rounds the order total only once, so carts with several lines whose tax ended on half a minor unit could add up to a couple of minor units more than the order total. The sum of the order lines is now reconciled against the order total before the payload is sent, for order creation, capture, cancellation, and subscription charges.

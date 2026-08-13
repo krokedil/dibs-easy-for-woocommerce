@@ -54,9 +54,12 @@ class Nets_Easy_Request_Activate_Order extends Nets_Easy_Request_Post {
 	 * @return array
 	 */
 	protected function get_body() {
+		$items  = Nets_Easy_Order_Items_Helper::get_items( $this->order_id );
+		$amount = intval( round( $this->order->get_total() * 100 ) );
+
 		return array(
-			'amount'     => intval( round( $this->order->get_total() * 100 ) ),
-			'orderItems' => Nets_Easy_Order_Items_Helper::get_items( $this->order_id ),
+			'amount'     => $amount,
+			'orderItems' => Nets_Easy_Order_Helper::reconcile_items( $items, $amount ),
 		);
 	}
 
