@@ -45,6 +45,11 @@ class Nets_Easy_Checkout {
 			return;
 		}
 
+		// An Express Checkout payment was already completed/reserved; don't PUT against it.
+		if ( nexi_express_checkout_is_completed_for_current_cart() ) {
+			return;
+		}
+
 		if ( 'redirect' === $this->checkout_flow ) {
 			return;
 		}

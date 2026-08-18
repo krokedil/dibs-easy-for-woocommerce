@@ -200,6 +200,11 @@ class Nets_Easy_Assets {
 			return;
 		}
 
+		// An Express Checkout payment was already completed; don't load the classic widget on top of it.
+		if ( nexi_express_checkout_is_completed_for_current_cart() ) {
+			return;
+		}
+
 		/* On the 'order-pay' page we redirect the customer to a hosted payment page, and therefore don't need need to enqueue any of the following assets. */
 		if ( ! is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
 			return;
@@ -255,6 +260,11 @@ class Nets_Easy_Assets {
 	 */
 	public function dibs_load_js() {
 		if ( 'yes' !== $this->enabled ) {
+			return;
+		}
+
+		// An Express Checkout payment was already completed; don't load the classic widget on top of it.
+		if ( nexi_express_checkout_is_completed_for_current_cart() ) {
 			return;
 		}
 
@@ -318,6 +328,11 @@ class Nets_Easy_Assets {
 			return;
 		}
 
+		// An Express Checkout payment was already completed; don't load the classic widget on top of it.
+		if ( nexi_express_checkout_is_completed_for_current_cart() ) {
+			return;
+		}
+
 		/* On the 'order-pay' page we redirect the customer to a hosted payment page, and therefore don't need need to enqueue any of the following assets. */
 		if ( ! is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
 			return;
@@ -351,6 +366,11 @@ class Nets_Easy_Assets {
 	 * Loads the needed scripts for Nexi Checkout.
 	 */
 	public function localize_and_enqueue_checkout_script() {
+
+		// An Express Checkout payment was already completed; don't load the classic widget on top of it.
+		if ( nexi_express_checkout_is_completed_for_current_cart() ) {
+			return;
+		}
 
 		if ( WC()->session->get( 'dibs_payment_id' ) ) {
 			$checkout_initiated = 'yes';

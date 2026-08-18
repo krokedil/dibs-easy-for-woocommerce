@@ -10,6 +10,7 @@ const jsConfig = {
   mode: isProduction ? "production" : "development",
   entry: {
     "nets-easy-for-woocommerce": "./assets/js/nets-easy-for-woocommerce.js",
+    "nets-easy-express": "./assets/js/nets-easy-express.js",
   },
 
   output: {

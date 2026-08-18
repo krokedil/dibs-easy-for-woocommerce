@@ -274,6 +274,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			);
 
 			$this->api = new Nets_Easy_API();
+
+			$express_checkout_settings = new \Krokedil\Nexi\ExpressCheckout\Settings();
+			new \Krokedil\Nexi\ExpressCheckout\ExpressCheckout( $express_checkout_settings );
 		}
 
 		/**

@@ -104,6 +104,10 @@ function wc_dibs_unset_sessions() {
 		if ( WC()->session->get( 'dibs_cart_contains_subscription' ) ) {
 			WC()->session->__unset( 'dibs_cart_contains_subscription' );
 		}
+
+		if ( WC()->session->get( 'dibs_express_checkout_completed' ) ) {
+			WC()->session->__unset( 'dibs_express_checkout_completed' );
+		}
 	}
 }
 
@@ -448,6 +452,26 @@ function nexi_get_payment_method_title( $order, $method, $type ) {
  */
 function nexi_is_embedded( $checkout_flow ) {
 	return in_array( $checkout_flow, array( 'embedded', 'inline' ), true );
+}
+
+/**
+ * Checks if an Express Checkout payment was completed for the current cart contents.
+ *
+ * The completion flag is stored together with the cart hash at completion time, so that if the
+ * cart changes afterwards (e.g. the customer abandons the Express Checkout attempt before an
+ * order is created, then later returns to shop normally), this correctly stops treating the
+ * session as an in-progress Express Checkout finalize, instead of indefinitely blocking the
+ * classic Nexi Checkout widget for an unrelated, later purchase.
+ *
+ * @return bool
+ */
+function nexi_express_checkout_is_completed_for_current_cart() {
+	$completed_cart_hash = WC()->session->get( 'dibs_express_checkout_completed' );
+	if ( empty( $completed_cart_hash ) ) {
+		return false;
+	}
+
+	return WC()->cart->get_cart_hash() === $completed_cart_hash;
 }
 
 /**
