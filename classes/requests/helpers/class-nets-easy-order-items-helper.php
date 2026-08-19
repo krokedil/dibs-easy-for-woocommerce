@@ -58,7 +58,7 @@ class Nets_Easy_Order_Items_Helper {
 		// Process gift cards.
 		$items = self::process_gift_cards( $order_id, $order, $items );
 
-		return $items;
+		return Nets_Easy_Order_Helper::adjust_rounding( $items, intval( round( $order->get_total() * 100 ) ) );
 	}
 
 	/**

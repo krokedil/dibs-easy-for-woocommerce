@@ -58,7 +58,7 @@ class Nets_Easy_Cart_Helper {
 			}
 		}
 
-		return $items;
+		return Nets_Easy_Order_Helper::adjust_rounding( $items, intval( round( WC()->cart->total * 100 ) ) );
 	}
 
 	/**

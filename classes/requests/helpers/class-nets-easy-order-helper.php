@@ -69,4 +69,51 @@ class Nets_Easy_Order_Helper {
 		// Amount already rounded and converted to minor units.
 		return $amount;
 	}
+
+	/**
+	 * Makes the order lines add up to the WooCommerce total.
+	 *
+	 * @param array $items The formatted order/cart line items.
+	 * @param int   $total The WooCommerce total in minor units.
+	 *
+	 * @return array
+	 */
+	public static function adjust_rounding( $items, $total ) {
+
+		if ( $total <= 0 ) {
+			return $items;
+		}
+
+		$difference = $total - self::get_order_total( $items );
+		if ( 0 === $difference ) {
+			return $items;
+		}
+
+		// Rounding can only ever put a line off by less than one minor unit, so anything larger than the number of lines is an actual mismatch that should not be hidden.
+		if ( abs( $difference ) > count( $items ) ) {
+			Nets_Easy_Logger::log( "The order lines differ from the WooCommerce total by $difference, which is too much to be a rounding difference. The order lines are left as they are." );
+			return $items;
+		}
+
+		$adjust = null;
+		foreach ( $items as $key => $item ) {
+			if ( empty( $item['taxAmount'] ) ) {
+				continue;
+			}
+
+			if ( null === $adjust || $item['grossTotalAmount'] > $items[ $adjust ]['grossTotalAmount'] ) {
+				$adjust = $key;
+			}
+		}
+
+		if ( null === $adjust ) {
+			Nets_Easy_Logger::log( "The order lines differ from the WooCommerce total by $difference, but no taxable line was found to adjust. The order lines are left as they are." );
+			return $items;
+		}
+
+		$items[ $adjust ]['taxAmount']        += $difference;
+		$items[ $adjust ]['grossTotalAmount'] += $difference;
+
+		return $items;
+	}
 }
