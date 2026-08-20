@@ -30,7 +30,7 @@ class Nets_Easy_Order_Items_Helper {
 
 		// Get order items.
 		foreach ( $order->get_items() as $order_item ) {
-			$items[] = self::get_item( $order_item, $order );
+			$items[] = self::get_item( $order_item );
 		}
 
 		// Get coupons/gift cards.
@@ -65,10 +65,9 @@ class Nets_Easy_Order_Items_Helper {
 	 * Gets one formatted order line item.
 	 *
 	 * @param object $order_item The WooCommerce order line item.
-	 * @param object $order The WooCommerce order.
 	 * @return array
 	 */
-	public static function get_item( $order_item, $order ) {
+	public static function get_item( $order_item ) {
 		$product = $order_item->get_product();
 		if ( $order_item['variation_id'] ) {
 			$product_id = $order_item['variation_id'];
