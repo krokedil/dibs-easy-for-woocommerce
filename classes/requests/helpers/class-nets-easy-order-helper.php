@@ -97,7 +97,12 @@ class Nets_Easy_Order_Helper {
 
 		$adjust = null;
 		foreach ( $items as $key => $item ) {
-			if ( empty( $item['taxAmount'] ) ) {
+
+			if ( $item['grossTotalAmount'] <= 0 ) {
+				continue;
+			}
+
+			if ( $item[ self::get_rounding_field( $item ) ] + $difference < 0 ) {
 				continue;
 			}
 
@@ -111,9 +116,22 @@ class Nets_Easy_Order_Helper {
 			return $items;
 		}
 
-		$items[ $adjust ]['taxAmount']        += $difference;
+		$field = self::get_rounding_field( $items[ $adjust ] );
+
+		$items[ $adjust ][ $field ]           += $difference;
 		$items[ $adjust ]['grossTotalAmount'] += $difference;
 
 		return $items;
+	}
+
+	/**
+	 * Gets the field that the rounding difference should be added to for a line.
+	 *
+	 * @param array $item The formatted order/cart line item.
+	 *
+	 * @return string
+	 */
+	private static function get_rounding_field( $item ) {
+		return empty( $item['taxAmount'] ) ? 'netTotalAmount' : 'taxAmount';
 	}
 }
