@@ -82,7 +82,7 @@ class Nets_Easy_Order_Items_Helper {
 			'quantity'         => $order_item['qty'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( ( $order_item->get_total() / $order_item['qty'] ) * 100 ) ),
-			'taxRate'          => self::get_item_tax_rate( $order_item, $order ),
+			'taxRate'          => self::get_item_tax_rate( $order_item ),
 			'taxAmount'        => intval( round( $order_item->get_total_tax() * 100 ) ),
 			'grossTotalAmount' => intval( round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ) ),
 			'netTotalAmount'   => intval( round( $order_item->get_total() * 100 ) ),
@@ -250,10 +250,9 @@ class Nets_Easy_Order_Items_Helper {
 	 * Gets the tax code for the product.
 	 *
 	 * @param object $order_item The WooCommerce order item.
-	 * @param object $order The WooCommerce order.
 	 * @return intval
 	 */
-	public static function get_item_tax_rate( $order_item, $order ) {
+	public static function get_item_tax_rate( $order_item ) {
 		$tax_rate = 0;
 		$taxes    = $order_item->get_taxes();
 		if ( ! empty( $taxes['total'] ) ) {
