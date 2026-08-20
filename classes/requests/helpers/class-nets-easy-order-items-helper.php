@@ -77,7 +77,7 @@ class Nets_Easy_Order_Items_Helper {
 		}
 
 		return array(
-			'reference'        => self::get_sku( $product, $product_id ),
+			'reference'        => self::get_sku( $product ),
 			'name'             => wc_dibs_clean_name( $order_item->get_name() ),
 			'quantity'         => $order_item['qty'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
@@ -128,7 +128,7 @@ class Nets_Easy_Order_Items_Helper {
 
 		// Check if the refunded fee is the invoice fee.
 		if ( $invoice_fee_name === $order_fee->get_name() ) {
-			$fee_reference = self::get_sku( $_product, $_product->get_id() );
+			$fee_reference = self::get_sku( $_product );
 		} else {
 			// Format the fee name so it match the same fee in Collector.
 			$fee_name      = str_replace( ' ', '-', strtolower( $order_fee->get_name() ) );
@@ -189,10 +189,9 @@ class Nets_Easy_Order_Items_Helper {
 	 * Gets the sku for one item.
 	 *
 	 * @param object $product The WooCommerce product.
-	 * @param string $product_id The WooCommerce product ID.
 	 * @return string
 	 */
-	public static function get_sku( $product, $product_id ) {
+	public static function get_sku( $product ) {
 		if ( is_object( $product ) ) {
 			$part_number = $product->get_sku();
 			if ( empty( $part_number ) ) {
