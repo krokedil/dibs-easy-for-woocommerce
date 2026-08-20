@@ -95,33 +95,62 @@ class Nets_Easy_Order_Helper {
 			return $items;
 		}
 
-		$adjust = null;
+		$step     = ( $difference > 0 ) ? 1 : -1;
+		$adjusted = $items;
+
+		while ( 0 !== $difference ) {
+			$applied = false;
+
+			foreach ( self::get_rounding_order( $adjusted ) as $key ) {
+
+				if ( 0 === $difference ) {
+					break;
+				}
+
+				$field = self::get_rounding_field( $adjusted[ $key ] );
+
+				if ( $adjusted[ $key ][ $field ] + $step < 0 ) {
+					continue;
+				}
+
+				$adjusted[ $key ][ $field ]           += $step;
+				$adjusted[ $key ]['grossTotalAmount'] += $step;
+				$difference                           -= $step;
+				$applied                               = true;
+			}
+
+			if ( ! $applied ) {
+				Nets_Easy_Logger::log( "The order lines differ from the WooCommerce total by $difference, but no line was found that could take the difference. The order lines are left as they are." );
+				return $items;
+			}
+		}
+
+		return $adjusted;
+	}
+
+	/**
+	 * Gets the keys of the lines that can carry a rounding difference, largest line first.
+	 *
+	 * @param array $items The formatted order/cart line items.
+	 *
+	 * @return array
+	 */
+	private static function get_rounding_order( $items ) {
+		$keys = array();
 		foreach ( $items as $key => $item ) {
-
-			if ( $item['grossTotalAmount'] <= 0 ) {
-				continue;
-			}
-
-			if ( $item[ self::get_rounding_field( $item ) ] + $difference < 0 ) {
-				continue;
-			}
-
-			if ( null === $adjust || $item['grossTotalAmount'] > $items[ $adjust ]['grossTotalAmount'] ) {
-				$adjust = $key;
+			if ( $item['grossTotalAmount'] > 0 ) {
+				$keys[] = $key;
 			}
 		}
 
-		if ( null === $adjust ) {
-			Nets_Easy_Logger::log( "The order lines differ from the WooCommerce total by $difference, but no taxable line was found to adjust. The order lines are left as they are." );
-			return $items;
-		}
+		usort(
+			$keys,
+			function ( $a, $b ) use ( $items ) {
+				return array( $items[ $b ]['grossTotalAmount'], $a ) <=> array( $items[ $a ]['grossTotalAmount'], $b );
+			}
+		);
 
-		$field = self::get_rounding_field( $items[ $adjust ] );
-
-		$items[ $adjust ][ $field ]           += $difference;
-		$items[ $adjust ]['grossTotalAmount'] += $difference;
-
-		return $items;
+		return $keys;
 	}
 
 	/**
