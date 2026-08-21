@@ -54,6 +54,7 @@ class Nets_Easy_Assets {
 		if ( nexi_is_embedded( $this->checkout_flow ) ) {
 
 			if ( 'inline' === $this->checkout_flow ) {
+				add_action( 'template_redirect', array( $this, 'maybe_create_nexi_session' ), 10 );
 				add_action( 'wp_enqueue_scripts', array( $this, 'dibs_overlay_css' ) );
 				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_nexi_inline_js' ) );
 			} else {
@@ -191,22 +192,50 @@ class Nets_Easy_Assets {
 	}
 
 	/**
+	 * Whether the inline flow needs a Nexi session and its assets on the current page.
+	 *
+	 * @return bool
+	 */
+	protected function needs_nexi_inline_assets() {
+		if ( 'yes' !== $this->enabled ) {
+			return false;
+		}
+
+		/* On the 'order-pay' page we redirect the customer to a hosted payment page, and therefore don't need need to enqueue any of the following assets. */
+		if ( ! is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
+			return false;
+		}
+
+		// There is no 'thank-you' snippet to show. Use the standard WC template.
+		if ( is_wc_endpoint_url( 'order-received' ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Creates the Nexi session before the checkout template is rendered.
+	 *
+	 * @return void
+	 */
+	public function maybe_create_nexi_session() {
+		if ( ! $this->needs_nexi_inline_assets() ) {
+			return;
+		}
+
+		if ( empty( WC()->session->get( 'dibs_payment_id' ) ) ) {
+			dibs_easy_maybe_create_order();
+		}
+	}
+
+	/**
 	 * Loads script for the embedded inline flow.
 	 *
 	 * @return void
 	 */
 	public function enqueue_nexi_inline_js() {
-		if ( 'yes' !== $this->enabled ) {
-			return;
-		}
-
-		/* On the 'order-pay' page we redirect the customer to a hosted payment page, and therefore don't need need to enqueue any of the following assets. */
-		if ( ! is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
-			return;
-		}
-
-		// There is no 'thank-you' snippet to show. Use the standard WC template.
-		if ( is_wc_endpoint_url( 'order-received' ) ) {
+		if ( ! $this->needs_nexi_inline_assets() ) {
 			return;
 		}
 
