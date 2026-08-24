@@ -55,7 +55,7 @@ class Nets_Easy_Assets {
 
 			if ( 'inline' === $this->checkout_flow ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'dibs_overlay_css' ) );
-				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_nexi_inline_js' ) );
+				add_action( 'template_redirect', array( $this, 'enqueue_nexi_inline_js' ) );
 			} else {
 				/* For block-based themes, the template process is processed BEFORE the `wp_enqueue_script`. We need to enqueue the scripts in 'dibs_load_js' before the localized script is enqueued which depends on the former. The `init` hook cannot be used since `is_checkout` always returns false. With `template_redirect`, `is_checkout` returns the correct value, and is processed before the localization script is enqueued. */
 				add_action( 'template_redirect', array( $this, 'dibs_load_js' ), 10 );
