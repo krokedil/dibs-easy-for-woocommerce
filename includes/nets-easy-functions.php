@@ -266,7 +266,16 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		$order->payment_complete( $payment_id );
 
 	} else {
-		// Purchase not finalized in DIBS.
+		// Purchase not finalized in DIBS. Leave a trace on the order, since the cancel order url cancels the order.
+		Nets_Easy_Logger::log( "[CONFIRM]: $order_id: The payment ($payment_id) has not been reserved or charged. Redirecting the customer to the cancel order url." );
+		$order->add_order_note(
+			sprintf(
+				/* translators: %s: Nexi Checkout payment ID. */
+				__( 'The customer returned from Nexi Checkout, but the payment (%s) has not been reserved or charged. The order was cancelled and the customer was sent back to the cart.', 'dibs-easy-for-woocommerce' ),
+				$payment_id
+			)
+		);
+
 		// If this is a redirect checkout flow let's redirect the customer to cart page.
 		wp_safe_redirect( html_entity_decode( $order->get_cancel_order_url(), ENT_QUOTES ) );
 		exit;
@@ -474,4 +483,80 @@ function nexi_terminate_session( $payment_id ) {
 	} catch ( Exception $e ) {
 		Nets_Easy_Logger::log( 'Exception when terminating Nexi session: ' . $e->getMessage() );
 	}
+}
+
+/**
+ * Check whether a retrieved Nexi payment has been paid for.
+ *
+ * @param array|WP_Error $response The response from a Nexi retrieve payment request.
+ * @return bool
+ */
+function nexi_payment_is_paid( $response ) {
+	if ( is_wp_error( $response ) || ! isset( $response['payment'] ) ) {
+		return false;
+	}
+
+	$payment = $response['payment'];
+
+	return ! empty( $payment['summary']['reservedAmount'] ) || ! empty( $payment['summary']['chargedAmount'] ) || ! empty( $payment['subscription']['id'] );
+}
+
+/**
+ * Make sure an order never has more than one payable payment session in Nexi.
+ *
+ * @param WC_Order $order The WooCommerce order.
+ * @return bool True if the payment stored on the order has already been paid for.
+ */
+function nexi_maybe_terminate_previous_payment_session( $order ) {
+	$payment_id = $order->get_meta( '_dibs_payment_id' );
+	if ( empty( $payment_id ) ) {
+		return false;
+	}
+
+	$order_id = $order->get_id();
+
+	// If the payment has already been paid for, the order must not get a second session. Let the confirmation handle it instead.
+	if ( nexi_payment_is_paid( Nets_Easy()->api->get_nets_easy_order( $payment_id, true ) ) ) {
+		Nets_Easy_Logger::log( "[SESSION]: $order_id: The payment ($payment_id) already stored on the order has been paid for. Confirming the order instead of creating a new payment session." );
+		return true;
+	}
+
+	Nets_Easy_Logger::log( "[SESSION]: $order_id: A payment session ($payment_id) already exists for the order. Terminating it before a new one is created." );
+
+	$response = Nets_Easy()->api->terminate_nets_easy_session( $payment_id );
+
+	// Make sure the checkout doesn't keep using the session we just terminated.
+	if ( isset( WC()->session ) && WC()->session->get( 'dibs_payment_id' ) === $payment_id ) {
+		wc_dibs_unset_sessions();
+	}
+
+	if ( ! is_wp_error( $response ) ) {
+		$order->add_order_note(
+			sprintf(
+				/* translators: %s: Nexi Checkout payment ID. */
+				__( 'A new payment session was requested for this order. The previous payment session (%s) was terminated in Nexi Checkout.', 'dibs-easy-for-woocommerce' ),
+				$payment_id
+			)
+		);
+
+		return false;
+	}
+
+	Nets_Easy_Logger::log( "[SESSION]: $order_id: Could not terminate the payment session ($payment_id): " . $response->get_error_message() );
+
+	// Nexi refuses to terminate a payment that has been paid for. Check again, in case it was paid while we were terminating it.
+	if ( nexi_payment_is_paid( Nets_Easy()->api->get_nets_easy_order( $payment_id, true ) ) ) {
+		Nets_Easy_Logger::log( "[SESSION]: $order_id: The payment ($payment_id) was paid for before it could be terminated. Confirming the order instead of creating a new payment session." );
+		return true;
+	}
+
+	$order->add_order_note(
+		sprintf(
+			/* translators: %s: Nexi Checkout payment ID. */
+			__( 'A new payment session was requested for this order. The previous payment session (%s) could not be terminated in Nexi Checkout, and may still be possible to pay.', 'dibs-easy-for-woocommerce' ),
+			$payment_id
+		)
+	);
+
+	return false;
 }

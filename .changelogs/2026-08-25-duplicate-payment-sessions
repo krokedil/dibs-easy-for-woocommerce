@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed an issue where placing the same order twice created a second payment session in Nexi Checkout for that order. Any previous payment session is now terminated before a new one is created, and an order note is added whenever it happens.

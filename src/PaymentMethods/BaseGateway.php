@@ -327,6 +327,15 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	 * @return array|string[]
 	 */
 	protected function process_redirect_handler( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		// Make sure the order doesn't end up with two payable payment sessions in Nexi.
+		if ( nexi_maybe_terminate_previous_payment_session( $order ) ) {
+			return array(
+				'result'   => 'success',
+				'redirect' => esc_url_raw( add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ) ),
+			);
+		}
 
 		// Create payment in Nets.
 		$args = array(
@@ -344,7 +353,6 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			throw new \Exception( esc_html( $response->get_error_message() ) );
 		}
 
-		$order = wc_get_order( $order_id );
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to Nets payment page.
 			$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
@@ -369,6 +377,16 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	 * @return array|string[]
 	 */
 	protected function process_overlay_handler( $order_id ) {
+		$order = wc_get_order( $order_id );
+
+		// Make sure the order doesn't end up with two payable payment sessions in Nexi.
+		if ( nexi_maybe_terminate_previous_payment_session( $order ) ) {
+			return array(
+				'result'   => 'success',
+				'redirect' => esc_url_raw( add_query_arg( 'easy_confirm', 'yes', $order->get_checkout_order_received_url() ) ),
+			);
+		}
+
 		// Create payment in Nets.
 		$args = array(
 			'checkout_flow' => 'overlay',
@@ -384,7 +402,6 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			throw new \Exception( esc_html( $response->get_error_message() ) );
 		}
 
-		$order = wc_get_order( $order_id );
 		if ( array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 			// All good. Redirect customer to DIBS payment page.
 			$order->add_order_note( __( 'Nets payment page displayed in overlay.', 'dibs-easy-for-woocommerce' ) );
