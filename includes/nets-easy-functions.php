@@ -508,6 +508,11 @@ function nexi_payment_is_paid( $response ) {
  * @return bool True if the payment stored on the order has already been paid for.
  */
 function nexi_maybe_terminate_previous_payment_session( $order ) {
+
+	if ( ! $order instanceof WC_Order ) {
+		return false;
+	}
+
 	$payment_id = $order->get_meta( '_dibs_payment_id' );
 	if ( empty( $payment_id ) ) {
 		return false;
