@@ -104,16 +104,22 @@ class Nets_Easy_API {
 	 * Retrieves Dibs Easy order.
 	 *
 	 * @param string $payment_id The payment identifier.
+	 * @param bool   $suppress_notice Whether to skip printing a customer facing notice if the request fails.
 	 *
 	 * @return array|mixed
 	 */
-	public function get_nets_easy_order( $payment_id ) {
+	public function get_nets_easy_order( $payment_id, $suppress_notice = false ) {
 		$request  = new Nets_Easy_Request_Get_Order(
 			array(
 				'payment_id' => $payment_id,
 			)
 		);
 		$response = $request->request();
+
+		if ( $suppress_notice ) {
+			return $response;
+		}
+
 		return $this->check_for_api_error( $response );
 	}
 
