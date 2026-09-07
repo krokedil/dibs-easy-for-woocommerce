@@ -531,7 +531,7 @@ function nexi_maybe_terminate_previous_payment_session( $order ) {
 	$response = Nets_Easy()->api->terminate_nets_easy_session( $payment_id );
 
 	// Make sure the checkout doesn't keep using the session we just terminated.
-	if ( isset( WC()->session ) && WC()->session->get( 'dibs_payment_id' ) === $payment_id ) {
+	if ( isset( WC()->session ) && method_exists( WC()->session, 'get' ) && WC()->session->get( 'dibs_payment_id' ) === $payment_id ) {
 		wc_dibs_unset_sessions();
 	}
 
