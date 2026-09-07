@@ -294,6 +294,10 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function process_redirect_handler( $order_id ) {
 		$order = wc_get_order( $order_id );
+		if ( empty( $order ) ) {
+			Nets_Easy_Logger::log( "Could not load WooCommerce order ($order_id) when processing the payment." );
+			throw new \Exception( esc_html__( 'Payment could not be initiated in Nexi Checkout. Please try again in a moment or contact us if the issue continues.', 'dibs-easy-for-woocommerce' ) );
+		}
 
 		// Make sure the order doesn't end up with two payable payment sessions in Nexi.
 		if ( nexi_maybe_terminate_previous_payment_session( $order ) ) {
@@ -340,6 +344,10 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	 */
 	protected function process_overlay_handler( $order_id ) {
 		$order = wc_get_order( $order_id );
+		if ( empty( $order ) ) {
+			Nets_Easy_Logger::log( "Could not load WooCommerce order ($order_id) when processing the payment." );
+			throw new \Exception( esc_html__( 'Payment could not be initiated in Nexi Checkout. Please try again in a moment or contact us if the issue continues.', 'dibs-easy-for-woocommerce' ) );
+		}
 
 		// Make sure the order doesn't end up with two payable payment sessions in Nexi.
 		if ( nexi_maybe_terminate_previous_payment_session( $order ) ) {
