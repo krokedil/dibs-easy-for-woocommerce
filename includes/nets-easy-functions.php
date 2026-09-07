@@ -492,13 +492,13 @@ function nexi_terminate_session( $payment_id ) {
  * @return bool
  */
 function nexi_payment_is_paid( $response ) {
-	if ( is_wp_error( $response ) || ! isset( $response['payment'] ) ) {
+	if ( is_wp_error( $response ) || ! isset( $response['payment'] ) || ! is_array( $response['payment'] ) ) {
 		return false;
 	}
 
 	$payment = $response['payment'];
 
-	return ! empty( $payment['summary']['reservedAmount'] ) || ! empty( $payment['summary']['chargedAmount'] ) || ! empty( $payment['subscription']['id'] );
+	return isset( $payment['summary']['reservedAmount'] ) || isset( $payment['summary']['chargedAmount'] ) || isset( $payment['subscription']['id'] );
 }
 
 /**
