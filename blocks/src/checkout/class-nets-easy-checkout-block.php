@@ -84,7 +84,7 @@ class Nets_Easy_Checkout_Block extends AbstractPaymentMethodType {
 
 			$settings = get_option( "woocommerce_{$id}_settings", array() );
 
-			$data[ $id ] =	array(
+			$data[ $id ] = array(
 				'enabled'     => $settings['enabled'] ?? 'no',
 				'title'       => $settings['title'] ?? '',
 				'description' => $settings['description'] ?? '',
