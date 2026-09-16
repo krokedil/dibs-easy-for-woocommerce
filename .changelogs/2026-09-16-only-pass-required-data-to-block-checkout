@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Only the required data is passed to the block checkout.
