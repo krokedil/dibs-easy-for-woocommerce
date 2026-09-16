@@ -5,16 +5,16 @@ msgstr ""
 "Project-Id-Version: Nexi Checkout 2.14.6\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2026-06-22 08:24:55+00:00\n"
+"POT-Creation-Date: 2026-09-16 11:30:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"X-Generator: grunt-wp-i18n 1.0.3\n"
+"X-Generator: grunt-wp-i18n 1.0.4\n"
 
-#: blocks/src/checkout/class-nets-easy-checkout-block.php:90
+#: blocks/src/checkout/class-nets-easy-checkout-block.php:93
 #. translators: %s is the payment method title.
 msgid "Pay with %s"
 msgstr ""
@@ -132,9 +132,9 @@ msgid "Nexi Checkout Payment for checkout"
 msgstr ""
 
 #: classes/class-nets-easy-gateway.php:157
-#: classes/class-nets-easy-gateway.php:312
+#: classes/class-nets-easy-gateway.php:324
 #: src/PaymentMethods/BaseGateway.php:192
-#: src/PaymentMethods/BaseGateway.php:350
+#: src/PaymentMethods/BaseGateway.php:362
 msgid "Customer redirected to Nets payment page."
 msgstr ""
 
@@ -157,16 +157,20 @@ msgstr ""
 msgid "Order finalized in thankyou page."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:322
-#: classes/class-nets-easy-gateway.php:359
-#: src/PaymentMethods/BaseGateway.php:360
+#: classes/class-nets-easy-gateway.php:299
+#: classes/class-nets-easy-gateway.php:334
+#: classes/class-nets-easy-gateway.php:349
+#: classes/class-nets-easy-gateway.php:383
+#: src/PaymentMethods/BaseGateway.php:333
+#: src/PaymentMethods/BaseGateway.php:372
+#: src/PaymentMethods/BaseGateway.php:387
 msgid ""
 "Payment could not be initiated in Nexi Checkout. Please try again in a "
 "moment or contact us if the issue continues."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:349
-#: src/PaymentMethods/BaseGateway.php:390
+#: classes/class-nets-easy-gateway.php:373
+#: src/PaymentMethods/BaseGateway.php:415
 msgid "Nets payment page displayed in overlay."
 msgstr ""
 
@@ -390,6 +394,29 @@ msgstr ""
 msgid ""
 "New payment created in Nexi Checkout with Payment ID %1$s. Payment type - "
 "%2$s. Awaiting charge."
+msgstr ""
+
+#: includes/nets-easy-functions.php:274
+#. translators: %s: Nexi Checkout payment ID.
+msgid ""
+"The customer returned from Nexi Checkout, but the payment (%s) has not been "
+"reserved or charged. The order was cancelled and the customer was sent back "
+"to the cart."
+msgstr ""
+
+#: includes/nets-easy-functions.php:542
+#. translators: %s: Nexi Checkout payment ID.
+msgid ""
+"A new payment session was requested for this order. The previous payment "
+"session (%s) was terminated in Nexi Checkout."
+msgstr ""
+
+#: includes/nets-easy-functions.php:561
+#. translators: %s: Nexi Checkout payment ID.
+msgid ""
+"A new payment session was requested for this order. The previous payment "
+"session (%s) could not be terminated in Nexi Checkout, and may still be "
+"possible to pay."
 msgstr ""
 
 #: includes/nets-easy-settings-card.php:20
@@ -929,7 +956,7 @@ msgstr ""
 msgid "Enable Vipps payment as separate payment method"
 msgstr ""
 
-#: src/PaymentMethods/BaseGateway.php:400
+#: src/PaymentMethods/BaseGateway.php:425
 msgid ""
 "We couldn't start your payment session right now. Please try again in a "
 "moment or contact us if the issue continues."
