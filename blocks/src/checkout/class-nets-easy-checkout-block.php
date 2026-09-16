@@ -82,14 +82,16 @@ class Nets_Easy_Checkout_Block extends AbstractPaymentMethodType {
 				$icon = $matches[1];
 			}
 
-			$data[ $id ] = array_merge(
-				get_option( "woocommerce_{$id}_settings", array() ),
-				array(
-					'icon'        => $icon,
-					// translators: %s is the payment method title.
-					'buttonLabel' => apply_filters( 'nexi_order_button_label', sprintf( __( 'Pay with %s', 'dibs-easy-for-woocommerce' ), $gateway->get_title() ), $id ),
-					'features'    => $gateway->supports,
-				)
+			$settings = get_option( "woocommerce_{$id}_settings", array() );
+
+			$data[ $id ] =	array(
+				'enabled'     => $settings['enabled'] ?? 'no',
+				'title'       => $settings['title'] ?? '',
+				'description' => $settings['description'] ?? '',
+				'icon'        => $icon,
+				// translators: %s is the payment method title.
+				'buttonLabel' => apply_filters( 'nexi_order_button_label', sprintf( __( 'Pay with %s', 'dibs-easy-for-woocommerce' ), $gateway->get_title() ), $id ),
+				'features'    => $gateway->supports,
 			);
 		}
 
