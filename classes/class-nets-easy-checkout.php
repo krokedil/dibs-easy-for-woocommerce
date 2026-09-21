@@ -90,6 +90,28 @@ class Nets_Easy_Checkout {
 			return;
 		}
 
+		// Recreate the payment if the guest's consumer data has become usable, or their
+		// country has changed. Nexi has no endpoint to update consumer data on an
+		// existing payment, so a fresh payment is the only way to give Klarna (and other
+		// methods that need it) the consumer's address once we have one.
+		if ( nexi_is_embedded( $this->checkout_flow ) ) {
+			$consumer       = nets_easy_get_consumer_fingerprint();
+			$saved_consumer = WC()->session->get( 'nets_easy_consumer_hash' );
+
+			if ( is_array( $saved_consumer ) ) {
+				$became_complete = ! $saved_consumer['complete'] && $consumer['complete'];
+				$country_changed = $saved_consumer['country'] !== $consumer['country'];
+
+				if ( $became_complete || $country_changed ) {
+					nexi_terminate_session( $payment_id_session );
+					wc_dibs_unset_sessions();
+					Nets_Easy_Logger::log( 'Consumer data changed in update Nets function. Clearing Nets session and reloading the checkout page.' );
+					WC()->session->set( 'reload_checkout', true );
+					return;
+				}
+			}
+		}
+
 		// Check if the cart hash has been changed since last update.
 		$cart_hash  = $cart->get_cart_hash();
 		$saved_hash = WC()->session->get( 'nets_easy_last_update_hash' );

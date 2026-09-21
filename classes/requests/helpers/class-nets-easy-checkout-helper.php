@@ -243,30 +243,9 @@ class Nets_Easy_Checkout_Helper {
 		$email             = $customer->get_billing_email();
 		$consumer['email'] = $email;
 
-		if ( ! empty( $customer->get_billing_address_1() ) ) {
-			$consumer['shippingAddress']['addressLine1'] = $customer->get_billing_address_1();
-		}
-
-		if ( ! empty( $customer->get_billing_address_2() ) ) {
-			$consumer['shippingAddress']['addressLine2'] = $customer->get_billing_address_2();
-		}
-
-		$has_address = isset( $consumer['shippingAddress']['addressLine1'] );
-		if ( ! $has_address ) {
-			unset( $consumer['shippingAddress'] );
-		}
-
-		if ( ! empty( $customer->get_billing_postcode() ) ) {
-			$postal_code                               = str_replace( ' ', '', $customer->get_billing_postcode() );
-			$consumer['shippingAddress']['postalCode'] = $postal_code;
-		}
-
-		// If any of these fields is set, the other must be set too.
-		if ( $has_address ) {
-			$consumer['shippingAddress']['country'] = dibs_get_iso_3_country( $customer->get_billing_country() );
-			if ( ! empty( $customer->get_billing_city() ) ) {
-				$consumer['shippingAddress']['city'] = $customer->get_billing_city();
-			}
+		$shipping_address = self::get_prefill_shipping_address( $customer );
+		if ( ! empty( $shipping_address ) ) {
+			$consumer['shippingAddress'] = $shipping_address;
 		}
 
 		$consumer['phoneNumber']['prefix'] = self::get_checkout_phone_prefix();
@@ -301,6 +280,52 @@ class Nets_Easy_Checkout_Helper {
 		}
 
 		return $consumer;
+	}
+
+	/**
+	 * Builds a shipping address for the prefilled embedded consumer data.
+	 * Nexi requires addressLine1, postalCode, city and country together, a partial
+	 * address is an invalid payload, so this returns an empty array unless all four
+	 * are present.
+	 *
+	 * @param WC_Customer $customer The customer to build the address for.
+	 * @return array
+	 */
+	protected static function get_prefill_shipping_address( $customer ) {
+		$address_line_1 = $customer->get_billing_address_1();
+		$postal_code    = $customer->get_billing_postcode();
+		$city           = $customer->get_billing_city();
+		$country        = $customer->get_billing_country();
+
+		if ( empty( $address_line_1 ) || empty( $postal_code ) || empty( $city ) || empty( $country ) ) {
+			return array();
+		}
+
+		$shipping_address = array(
+			'addressLine1' => $address_line_1,
+			'postalCode'   => str_replace( ' ', '', $postal_code ),
+			'city'         => $city,
+			'country'      => dibs_get_iso_3_country( $country ),
+		);
+
+		if ( ! empty( $customer->get_billing_address_2() ) ) {
+			$shipping_address['addressLine2'] = $customer->get_billing_address_2();
+		}
+
+		return $shipping_address;
+	}
+
+	/**
+	 * Whether the given customer has a complete enough address for Nexi to accept a
+	 * consumer object with it. Used to decide whether an inline/embedded payment
+	 * session needs recreating once a guest has filled in their address.
+	 *
+	 * @param WC_Customer|null $customer The customer to check, defaults to WC()->customer.
+	 * @return bool
+	 */
+	public static function has_complete_consumer_data( $customer = null ) {
+		$customer = $customer ?? WC()->customer;
+		return ! empty( self::get_prefill_shipping_address( $customer ) );
 	}
 
 	/**

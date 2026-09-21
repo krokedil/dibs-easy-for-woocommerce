@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed Klarna not being offered to guest customers in the Inline embedded checkout flow. The payment session is now recreated once a guest's address becomes complete, or their country changes, so Nexi receives the consumer data it needs.

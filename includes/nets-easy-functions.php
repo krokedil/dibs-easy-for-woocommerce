@@ -10,6 +10,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Build a fingerprint of the current customer's consumer data.
+ * Used to detect when a guest's address becomes complete enough for Nexi to accept, or
+ * when their country changes - both require the Nexi payment session to be recreated
+ * for the inline and embedded checkout flows, since Nexi has no endpoint to update the
+ * consumer data on an existing payment.
+ *
+ * @return array
+ */
+function nets_easy_get_consumer_fingerprint() {
+	$customer = WC()->customer;
+	return array(
+		'complete' => Nets_Easy_Checkout_Helper::has_complete_consumer_data( $customer ),
+		'country'  => $customer->get_billing_country(),
+	);
+}
+
+/**
  * Maybe create an order.
  *
  * @return array|mixed|void|WP_Error
@@ -41,6 +58,7 @@ function dibs_easy_maybe_create_order() {
 	$session->set( 'dibs_payment_id', $dibs_easy_order['paymentId'] );
 	$session->set( 'nets_easy_currency', get_woocommerce_currency() );
 	$session->set( 'nets_easy_last_update_hash', $cart->get_cart_hash() );
+	$session->set( 'nets_easy_consumer_hash', nets_easy_get_consumer_fingerprint() );
 	$session->set( 'dibs_cart_contains_subscription', Nets_Easy_Subscriptions::cart_has_subscription() );
 	// Set a transient for this paymentId. It's valid in DIBS system for 20 minutes.
 	$payment_id = $dibs_easy_order['paymentId'];
@@ -99,6 +117,10 @@ function wc_dibs_unset_sessions() {
 		}
 		if ( WC()->session->get( 'nets_easy_currency' ) ) {
 			WC()->session->__unset( 'nets_easy_currency' );
+		}
+
+		if ( WC()->session->get( 'nets_easy_consumer_hash' ) ) {
+			WC()->session->__unset( 'nets_easy_consumer_hash' );
 		}
 
 		if ( WC()->session->get( 'dibs_cart_contains_subscription' ) ) {
