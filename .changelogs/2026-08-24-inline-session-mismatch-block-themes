@@ -1,4 +1,0 @@
-Type: Fix
-Needs Documentation: no
-
-Fixed an issue with the inline embedded checkout flow where certain themes caused the checkout to repeatedly display "Nexi session issues" and reload itself.
