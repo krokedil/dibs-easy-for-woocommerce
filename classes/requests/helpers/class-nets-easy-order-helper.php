@@ -69,4 +69,98 @@ class Nets_Easy_Order_Helper {
 		// Amount already rounded and converted to minor units.
 		return $amount;
 	}
+
+	/**
+	 * Makes the order lines add up to the WooCommerce total.
+	 *
+	 * @param array $items The formatted order/cart line items.
+	 * @param int   $total The WooCommerce total in minor units.
+	 *
+	 * @return array
+	 */
+	public static function adjust_rounding( $items, $total ) {
+
+		if ( $total <= 0 ) {
+			return $items;
+		}
+
+		$difference = $total - self::get_order_total( $items );
+		if ( 0 === $difference ) {
+			return $items;
+		}
+
+		// Rounding can only ever put a line off by less than one minor unit, so anything larger than the number of lines is an actual mismatch that should not be hidden.
+		if ( abs( $difference ) > count( $items ) ) {
+			Nets_Easy_Logger::log( "The order lines differ from the WooCommerce total by $difference, which is too much to be a rounding difference. The order lines are left as they are." );
+			return $items;
+		}
+
+		$step     = ( $difference > 0 ) ? 1 : -1;
+		$adjusted = $items;
+
+		while ( 0 !== $difference ) {
+			$applied = false;
+
+			foreach ( self::get_rounding_order( $adjusted ) as $key ) {
+
+				if ( 0 === $difference ) {
+					break;
+				}
+
+				$field = self::get_rounding_field( $adjusted[ $key ] );
+
+				if ( $adjusted[ $key ][ $field ] + $step < 0 ) {
+					continue;
+				}
+
+				$adjusted[ $key ][ $field ]           += $step;
+				$adjusted[ $key ]['grossTotalAmount'] += $step;
+				$difference                           -= $step;
+				$applied                               = true;
+			}
+
+			if ( ! $applied ) {
+				Nets_Easy_Logger::log( "The order lines differ from the WooCommerce total by $difference, but no line was found that could take the difference. The order lines are left as they are." );
+				return $items;
+			}
+		}
+
+		return $adjusted;
+	}
+
+	/**
+	 * Gets the keys of the lines that can carry a rounding difference, largest line first.
+	 *
+	 * @param array $items The formatted order/cart line items.
+	 *
+	 * @return array
+	 */
+	private static function get_rounding_order( $items ) {
+		$keys = array();
+		foreach ( $items as $key => $item ) {
+			if ( $item['grossTotalAmount'] > 0 ) {
+				$keys[] = $key;
+			}
+		}
+
+		usort(
+			$keys,
+			function ( $a, $b ) use ( $items ) {
+				return array( $items[ $b ]['grossTotalAmount'], $a ) <=> array( $items[ $a ]['grossTotalAmount'], $b );
+			}
+		);
+
+		return $keys;
+	}
+
+	/**
+	 * Gets the field that the rounding difference should be added to for a line.
+	 *
+	 * @param array $item The formatted order/cart line item.
+	 *
+	 * @return string
+	 */
+	private static function get_rounding_field( $item ) {
+		return empty( $item['taxAmount'] ) ? 'netTotalAmount' : 'taxAmount';
+	}
 }
