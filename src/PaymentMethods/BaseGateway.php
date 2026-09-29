@@ -190,6 +190,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 			if ( ! is_wp_error( $response ) && array_key_exists( 'hostedPaymentPageUrl', $response ) ) {
 				// All good. Redirect customer to DIBS payment page.
 				$order->add_order_note( __( 'Customer redirected to Nets payment page.', 'dibs-easy-for-woocommerce' ) );
+				\Nets_Easy_Subscriptions::set_change_payment_id( $order, $response['paymentId'] );
 
 				return array(
 					'result'   => 'success',

@@ -165,6 +165,18 @@ class Nets_Easy_Subscriptions {
 	}
 
 	/**
+	 * Stores the Nexi payment created for a subscription payment method change, to be matched on return.
+	 *
+	 * @param WC_Order $subscription The subscription whose payment method is being changed.
+	 * @param string   $payment_id The Nexi payment ID.
+	 * @return void
+	 */
+	public static function set_change_payment_id( $subscription, $payment_id ) {
+		$subscription->update_meta_data( '_dibs_change_payment_id', $payment_id );
+		$subscription->save();
+	}
+
+	/**
 	 * Handles subscription payment method change.
 	 */
 	public function dibs_payment_method_changed() {
@@ -178,35 +190,56 @@ class Nets_Easy_Subscriptions {
 		$payment_id = (string) filter_input( INPUT_GET, 'paymentid', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$order      = wc_get_order( $order_id );
 
-		// Same checks WC Subscriptions makes before a payment method change: the owner, holding the subscription's key.
-		if ( ! $order || ! wcs_is_subscription( $order )
-			|| empty( $order_key ) || ! hash_equals( $order->get_order_key(), $order_key )
-			|| ! current_user_can( 'edit_shop_subscription_payment_method', $order->get_id() ) // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Meta capability mapped by WC Subscriptions.
-			|| ! in_array( $order->get_payment_method(), nets_easy_all_payment_method_ids(), true )
-			|| ! preg_match( '/^[a-f0-9]{32}$/i', $payment_id ) ) {
+		if ( ! $order || ! $this->is_valid_payment_method_change_return( $order, $order_key, $payment_id ) ) {
+			Nets_Easy_Logger::log( sprintf( 'Rejected subscription payment method change return for order ID %d.', $order_id ) );
 			return;
 		}
 
 		$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
-		if ( ! is_wp_error( $response ) ) {
-			// The payment must have been created for this subscription, not for another order.
-			if ( (string) $order->get_order_number() !== (string) ( $response['payment']['orderDetails']['reference'] ?? '' ) ) {
-				return;
-			}
-
-			$this->set_recurring_token_for_order( $order_id, $response );
-
-			$order->update_meta_data( 'dibs_payment_type', $response['payment']['paymentDetails']['paymentType'] );
-			$order->update_meta_data( 'dibs_payment_method', $response['payment']['paymentDetails']['paymentMethod'] );
-			$order->save();
-
-			if ( 'CARD' === $response['payment']['paymentDetails']['paymentType'] ) {
-				$order->update_meta_data( 'dibs_customer_card', $response['payment']['paymentDetails']['cardDetails']['maskedPan'] );
-				$order->save();
-			}
-		} else {
+		if ( is_wp_error( $response ) ) {
 			wc_clear_notices(); // Customer did not finalize the payment method change.
+			return;
 		}
+
+		$payment = $response['payment'] ?? array();
+
+		// The payment must have been created for this subscription, not for another order.
+		if ( (string) $order->get_order_number() !== (string) ( $payment['orderDetails']['reference'] ?? '' ) ) {
+			Nets_Easy_Logger::log( sprintf( 'Rejected subscription payment method change return for order ID %d: payment reference mismatch.', $order_id ) );
+			return;
+		}
+
+		$this->set_recurring_token_for_order( $order_id, $response );
+
+		$order->delete_meta_data( '_dibs_change_payment_id' );
+		$order->update_meta_data( 'dibs_payment_type', $payment['paymentDetails']['paymentType'] );
+		$order->update_meta_data( 'dibs_payment_method', $payment['paymentDetails']['paymentMethod'] );
+		if ( 'CARD' === $payment['paymentDetails']['paymentType'] ) {
+			$order->update_meta_data( 'dibs_customer_card', $payment['paymentDetails']['cardDetails']['maskedPan'] );
+		}
+		$order->save();
+	}
+
+	/**
+	 * Whether a payment method change return comes from the subscription owner, for the payment we started.
+	 *
+	 * Mirrors the checks WC Subscriptions makes before a change, and matches the payment ID stored when it began.
+	 *
+	 * @param WC_Order $order The order the return points at.
+	 * @param string   $order_key The order key from the return URL.
+	 * @param string   $payment_id The Nexi payment ID from the return URL.
+	 * @return bool
+	 */
+	private function is_valid_payment_method_change_return( $order, $order_key, $payment_id ) {
+		$expected_payment_id = (string) $order->get_meta( '_dibs_change_payment_id' );
+
+		return wcs_is_subscription( $order )
+			&& is_user_logged_in()
+			&& ! empty( $order_key ) && hash_equals( $order->get_order_key(), $order_key )
+			&& current_user_can( 'edit_shop_subscription_payment_method', $order->get_id() ) // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Meta capability mapped by WC Subscriptions.
+			&& in_array( $order->get_payment_method(), nets_easy_all_payment_method_ids(), true )
+			&& preg_match( '/^[a-f0-9]{32}$/i', $payment_id )
+			&& ! empty( $expected_payment_id ) && hash_equals( $expected_payment_id, $payment_id );
 	}
 
 	/**
