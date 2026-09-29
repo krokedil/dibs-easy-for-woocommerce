@@ -137,6 +137,7 @@ class Nets_Easy_Subscriptions {
 								array(
 									'dibs-action'        => 'subs-payment-changed',
 									'wc-subscription-id' => $order_id,
+									'key'                => $wc_order->get_order_key(),
 								),
 								$wc_order->get_view_order_url()
 							)
@@ -168,26 +169,43 @@ class Nets_Easy_Subscriptions {
 	 */
 	public function dibs_payment_method_changed() {
 		$dibs_action = filter_input( INPUT_GET, 'dibs-action', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$order_id    = filter_input( INPUT_GET, 'wc-subscription-id', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$payment_id  = filter_input( INPUT_GET, 'paymentid', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$order       = wc_get_order( $order_id );
+		if ( 'subs-payment-changed' !== $dibs_action || ! function_exists( 'wcs_is_subscription' ) ) {
+			return;
+		}
 
-		if ( ! empty( $dibs_action ) && 'subs-payment-changed' === $dibs_action && ! empty( $order_id ) && ! empty( $payment_id ) ) {
-			$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
-			if ( ! is_wp_error( $response ) ) {
-				$this->set_recurring_token_for_order( $order_id, $response );
+		$order_id   = absint( filter_input( INPUT_GET, 'wc-subscription-id', FILTER_SANITIZE_NUMBER_INT ) );
+		$order_key  = (string) filter_input( INPUT_GET, 'key', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$payment_id = (string) filter_input( INPUT_GET, 'paymentid', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$order      = wc_get_order( $order_id );
 
-				$order->update_meta_data( 'dibs_payment_type', $response['payment']['paymentDetails']['paymentType'] );
-				$order->update_meta_data( 'dibs_payment_method', $response['payment']['paymentDetails']['paymentMethod'] );
-				$order->save();
+		// Same checks WC Subscriptions makes before a payment method change: the owner, holding the subscription's key.
+		if ( ! $order || ! wcs_is_subscription( $order )
+			|| empty( $order_key ) || ! hash_equals( $order->get_order_key(), $order_key )
+			|| ! current_user_can( 'edit_shop_subscription_payment_method', $order->get_id() ) // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Meta capability mapped by WC Subscriptions.
+			|| ! in_array( $order->get_payment_method(), nets_easy_all_payment_method_ids(), true )
+			|| ! preg_match( '/^[a-f0-9]{32}$/i', $payment_id ) ) {
+			return;
+		}
 
-				if ( 'CARD' === $response['payment']['paymentDetails']['paymentType'] ) {
-					$order->update_meta_data( 'dibs_customer_card', $response['payment']['paymentDetails']['cardDetails']['maskedPan'] );
-					$order->save();
-				}
-			} else {
-				wc_clear_notices(); // Customer did not finalize the payment method change.
+		$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
+		if ( ! is_wp_error( $response ) ) {
+			// The payment must have been created for this subscription, not for another order.
+			if ( (string) $order->get_order_number() !== (string) ( $response['payment']['orderDetails']['reference'] ?? '' ) ) {
+				return;
 			}
+
+			$this->set_recurring_token_for_order( $order_id, $response );
+
+			$order->update_meta_data( 'dibs_payment_type', $response['payment']['paymentDetails']['paymentType'] );
+			$order->update_meta_data( 'dibs_payment_method', $response['payment']['paymentDetails']['paymentMethod'] );
+			$order->save();
+
+			if ( 'CARD' === $response['payment']['paymentDetails']['paymentType'] ) {
+				$order->update_meta_data( 'dibs_customer_card', $response['payment']['paymentDetails']['cardDetails']['maskedPan'] );
+				$order->save();
+			}
+		} else {
+			wc_clear_notices(); // Customer did not finalize the payment method change.
 		}
 	}
 
