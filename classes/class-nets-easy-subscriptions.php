@@ -209,12 +209,20 @@ class Nets_Easy_Subscriptions {
 			return;
 		}
 
+		// A payment that is still pending or was cancelled has no token yet. Keep the stored ID so a later return can complete.
+		$has_token = ! empty( $payment['subscription']['id'] ) || ! empty( $payment['unscheduledSubscription']['unscheduledSubscriptionId'] );
+		if ( ! $has_token || empty( $payment['paymentDetails']['paymentType'] ) || empty( $payment['paymentDetails']['paymentMethod'] ) ) {
+			Nets_Easy_Logger::log( sprintf( 'Subscription payment method change for order ID %d not saved: the payment has no recurring token or payment details yet.', $order_id ) );
+			wc_clear_notices(); // Customer did not finalize the payment method change.
+			return;
+		}
+
 		$this->set_recurring_token_for_order( $order_id, $response );
 
 		$order->delete_meta_data( '_dibs_change_payment_id' );
 		$order->update_meta_data( 'dibs_payment_type', $payment['paymentDetails']['paymentType'] );
 		$order->update_meta_data( 'dibs_payment_method', $payment['paymentDetails']['paymentMethod'] );
-		if ( 'CARD' === $payment['paymentDetails']['paymentType'] ) {
+		if ( 'CARD' === $payment['paymentDetails']['paymentType'] && ! empty( $payment['paymentDetails']['cardDetails']['maskedPan'] ) ) {
 			$order->update_meta_data( 'dibs_customer_card', $payment['paymentDetails']['cardDetails']['maskedPan'] );
 		}
 		$order->save();
