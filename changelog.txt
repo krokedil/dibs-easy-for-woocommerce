@@ -1,4 +1,7 @@
 *** Nexi Checkout Changelog ***
+2026-10-06      - version 2.14.8
+* Fix           - Fixed an issue where the subscription payment method change return did not verify that the request belonged to the subscription owner. Thanks to Shrikant Shinde (https://github.com/FindYourBugs) for the responsible disclosure.
+
 2026-09-21      - version 2.14.7
 * Fix           - Fixed an issue with the inline embedded checkout flow where certain themes caused the checkout to repeatedly display "Nexi session issues" and reload itself.
 * Fix           - Fixed an issue where placing the same order twice created a second payment session in Nexi Checkout for that order. Any previous payment session is now terminated before a new one is created, and an order note is added whenever it happens.
