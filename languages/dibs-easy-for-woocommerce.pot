@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Nexi Checkout 2.14.8\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2026-09-21 08:10:02+00:00\n"
+"POT-Creation-Date: 2026-10-06 06:27:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -132,45 +132,45 @@ msgid "Nexi Checkout Payment for checkout"
 msgstr ""
 
 #: classes/class-nets-easy-gateway.php:157
-#: classes/class-nets-easy-gateway.php:324
+#: classes/class-nets-easy-gateway.php:325
 #: src/PaymentMethods/BaseGateway.php:192
-#: src/PaymentMethods/BaseGateway.php:362
+#: src/PaymentMethods/BaseGateway.php:363
 msgid "Customer redirected to Nets payment page."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:166
-#: src/PaymentMethods/BaseGateway.php:201
+#: classes/class-nets-easy-gateway.php:167
+#: src/PaymentMethods/BaseGateway.php:202
 #. translators: %s: API error message.
 msgid ""
 "We couldn't start your payment session right now. Please try again in a "
 "moment or contact us if the issue continues. Error: %s"
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:209
-#: src/PaymentMethods/BaseGateway.php:244
+#: classes/class-nets-easy-gateway.php:210
+#: src/PaymentMethods/BaseGateway.php:245
 #. Translators: Nets refund ID.
 msgid "Refund made in Nexi Checkout with refund ID %s."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:251
-#: src/PaymentMethods/BaseGateway.php:286
+#: classes/class-nets-easy-gateway.php:252
+#: src/PaymentMethods/BaseGateway.php:287
 msgid "Order finalized in thankyou page."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:299
-#: classes/class-nets-easy-gateway.php:334
-#: classes/class-nets-easy-gateway.php:349
-#: classes/class-nets-easy-gateway.php:383
-#: src/PaymentMethods/BaseGateway.php:333
-#: src/PaymentMethods/BaseGateway.php:372
-#: src/PaymentMethods/BaseGateway.php:387
+#: classes/class-nets-easy-gateway.php:300
+#: classes/class-nets-easy-gateway.php:335
+#: classes/class-nets-easy-gateway.php:350
+#: classes/class-nets-easy-gateway.php:384
+#: src/PaymentMethods/BaseGateway.php:334
+#: src/PaymentMethods/BaseGateway.php:373
+#: src/PaymentMethods/BaseGateway.php:388
 msgid ""
 "Payment could not be initiated in Nexi Checkout. Please try again in a "
 "moment or contact us if the issue continues."
 msgstr ""
 
-#: classes/class-nets-easy-gateway.php:373
-#: src/PaymentMethods/BaseGateway.php:415
+#: classes/class-nets-easy-gateway.php:374
+#: src/PaymentMethods/BaseGateway.php:416
 msgid "Nets payment page displayed in overlay."
 msgstr ""
 
@@ -240,50 +240,50 @@ msgstr ""
 msgid "pcs"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:230
-#: classes/class-nets-easy-subscriptions.php:249
+#: classes/class-nets-easy-subscriptions.php:289
+#: classes/class-nets-easy-subscriptions.php:308
 #. Translators: Nets subscription recurring token.
 msgid "Nexi Checkout subscription ID/recurring token %s saved."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:324
+#: classes/class-nets-easy-subscriptions.php:383
 #. Translators: Nets Payment ID & Charge ID.
 msgid "Subscription payment made with Nets. Payment ID: %1$s. Charge ID %2$s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:333
+#: classes/class-nets-easy-subscriptions.php:392
 #. Translators: Request response from Nets.
 msgid "Subscription payment failed with Nets. Error message: %s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:365
+#: classes/class-nets-easy-subscriptions.php:424
 #. Translators: Nets recurring token.
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
 "Nets. Recurring token: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:375
+#: classes/class-nets-easy-subscriptions.php:434
 #. Translators: Request response.
 msgid "Error during Nets_Easy_Request_Get_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:406
+#: classes/class-nets-easy-subscriptions.php:465
 #. Translators: Recurring token & subscription type.
 msgid ""
 "Saved _dibs_recurring_token in subscription by externalreference request to "
 "Nets. Recurring token:%1$s. Subscription type: %2$s."
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:416
+#: classes/class-nets-easy-subscriptions.php:475
 #. Translators: Request response.
 msgid ""
 "Error during "
 "Nets_Easy_Request_Get_Unscheduled_Subscription_By_External_Reference: %s"
 msgstr ""
 
-#: classes/class-nets-easy-subscriptions.php:433
-#: classes/class-nets-easy-subscriptions.php:441
+#: classes/class-nets-easy-subscriptions.php:492
+#: classes/class-nets-easy-subscriptions.php:500
 msgid "Nets recurring token"
 msgstr ""
 
@@ -956,7 +956,7 @@ msgstr ""
 msgid "Enable Vipps payment as separate payment method"
 msgstr ""
 
-#: src/PaymentMethods/BaseGateway.php:425
+#: src/PaymentMethods/BaseGateway.php:426
 msgid ""
 "We couldn't start your payment session right now. Please try again in a "
 "moment or contact us if the issue continues."
