@@ -30,7 +30,7 @@ class Nets_Easy_Order_Items_Helper {
 
 		// Get order items.
 		foreach ( $order->get_items() as $order_item ) {
-			$items[] = self::get_item( $order_item, $order );
+			$items[] = self::get_item( $order_item );
 		}
 
 		// Get coupons/gift cards.
@@ -58,17 +58,16 @@ class Nets_Easy_Order_Items_Helper {
 		// Process gift cards.
 		$items = self::process_gift_cards( $order_id, $order, $items );
 
-		return $items;
+		return Nets_Easy_Order_Helper::adjust_rounding( $items, intval( round( $order->get_total() * 100 ) ) );
 	}
 
 	/**
 	 * Gets one formatted order line item.
 	 *
 	 * @param object $order_item The WooCommerce order line item.
-	 * @param object $order The WooCommerce order.
 	 * @return array
 	 */
-	public static function get_item( $order_item, $order ) {
+	public static function get_item( $order_item ) {
 		$product = $order_item->get_product();
 		if ( $order_item['variation_id'] ) {
 			$product_id = $order_item['variation_id'];
@@ -77,12 +76,12 @@ class Nets_Easy_Order_Items_Helper {
 		}
 
 		return array(
-			'reference'        => self::get_sku( $product, $product_id ),
+			'reference'        => self::get_sku( $product ),
 			'name'             => wc_dibs_clean_name( $order_item->get_name() ),
 			'quantity'         => $order_item['qty'],
 			'unit'             => __( 'pcs', 'dibs-easy-for-woocommerce' ),
 			'unitPrice'        => intval( round( ( $order_item->get_total() / $order_item['qty'] ) * 100 ) ),
-			'taxRate'          => self::get_item_tax_rate( $order_item, $order ),
+			'taxRate'          => self::get_item_tax_rate( $order_item ),
 			'taxAmount'        => intval( round( $order_item->get_total_tax() * 100 ) ),
 			'grossTotalAmount' => intval( round( ( $order_item->get_total() + $order_item->get_total_tax() ) * 100 ) ),
 			'netTotalAmount'   => intval( round( $order_item->get_total() * 100 ) ),
@@ -128,7 +127,7 @@ class Nets_Easy_Order_Items_Helper {
 
 		// Check if the refunded fee is the invoice fee.
 		if ( $invoice_fee_name === $order_fee->get_name() ) {
-			$fee_reference = self::get_sku( $_product, $_product->get_id() );
+			$fee_reference = self::get_sku( $_product );
 		} else {
 			// Format the fee name so it match the same fee in Collector.
 			$fee_name      = str_replace( ' ', '-', strtolower( $order_fee->get_name() ) );
@@ -189,10 +188,9 @@ class Nets_Easy_Order_Items_Helper {
 	 * Gets the sku for one item.
 	 *
 	 * @param object $product The WooCommerce product.
-	 * @param string $product_id The WooCommerce product ID.
 	 * @return string
 	 */
-	public static function get_sku( $product, $product_id ) {
+	public static function get_sku( $product ) {
 		if ( is_object( $product ) ) {
 			$part_number = $product->get_sku();
 			if ( empty( $part_number ) ) {
@@ -251,10 +249,9 @@ class Nets_Easy_Order_Items_Helper {
 	 * Gets the tax code for the product.
 	 *
 	 * @param object $order_item The WooCommerce order item.
-	 * @param object $order The WooCommerce order.
 	 * @return intval
 	 */
-	public static function get_item_tax_rate( $order_item, $order ) {
+	public static function get_item_tax_rate( $order_item ) {
 		$tax_rate = 0;
 		$taxes    = $order_item->get_taxes();
 		if ( ! empty( $taxes['total'] ) ) {
