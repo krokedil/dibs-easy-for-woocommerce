@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Krokedil\Nexi\Logging\LogMasking;
+
 /**
  * Logger class.
  */
@@ -28,7 +30,7 @@ class Nets_Easy_Logger {
 	public static function log( $data ) {
 		$dibs_easy__settings = get_option( 'woocommerce_dibs_easy_settings' );
 		if ( 'yes' === $dibs_easy__settings['debug_mode'] ) {
-			$message = self::format_data( $data );
+			$message = LogMasking::mask_entry( self::format_data( $data ) );
 			if ( empty( self::$log ) ) {
 				self::$log = new WC_Logger();
 			}
@@ -53,7 +55,7 @@ class Nets_Easy_Logger {
 		}
 
 		$logs   = array_slice( $logs, - 14 );
-		$logs[] = $data;
+		$logs[] = LogMasking::mask_entry( $data );
 		$logs   = wp_json_encode( $logs );
 		update_option( 'dibs_easy_debuglog', $logs, false );
 	}
@@ -69,7 +71,7 @@ class Nets_Easy_Logger {
 		if ( ! is_array( $data ) ) {
 			return $data;
 		}
-		if ( isset( $data['request']['body'] ) ) {
+		if ( isset( $data['request']['body'] ) && is_string( $data['request']['body'] ) ) {
 			$request_body            = json_decode( $data['request']['body'], true );
 			$data['request']['body'] = ( ! empty( $request_body ) ) ? $request_body : $data['request']['body'];
 		}

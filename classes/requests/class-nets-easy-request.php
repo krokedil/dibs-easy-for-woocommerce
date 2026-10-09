@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Krokedil\Nexi\Logging\LogMasking;
+
 /**
  * Main request class
  */
@@ -284,7 +286,10 @@ abstract class Nets_Easy_Request {
 			$order_id = $body['paymentId'] ?? $body['payment']['paymentId'] ?? null;
 		}
 
-		$log = Nets_Easy_Logger::format_log( $order_id, $method, $title, $request_args, $request_url, $response, $code );
+		$request_args = LogMasking::mask_request( $request_args );
+		$body         = LogMasking::mask_response( $body );
+
+		$log = Nets_Easy_Logger::format_log( $order_id, $method, $title, $request_args, $request_url, array( 'body' => $body ), $code );
 		Nets_Easy_Logger::log( $log );
 	}
 }
