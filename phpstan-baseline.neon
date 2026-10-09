@@ -1,0 +1,517 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property WooCommerce\:\:\$payment_gateways\.$#'
+			identifier: property.notFound
+			count: 1
+			path: blocks/src/checkout/class-nets-easy-checkout-block.php
+
+		-
+			message: '#^Access to an undefined property WC_Cart\:\:\$total\.$#'
+			identifier: property.notFound
+			count: 1
+			path: classes/class-nets-easy-ajax.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$country \(false\) of method Nets_Easy_Ajax\:\:prepare_cart_before_form_processing\(\) is incompatible with type string\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: classes/class-nets-easy-ajax.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: classes/class-nets-easy-ajax.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: classes/class-nets-easy-ajax.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: classes/class-nets-easy-ajax.php
+
+		-
+			message: '#^Variable \$cart_total might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: classes/class-nets-easy-ajax.php
+
+		-
+			message: '#^Binary operation "\-" between int and string results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: classes/class-nets-easy-api-callbacks.php
+
+		-
+			message: '#^Binary operation "\-" between string and int results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: classes/class-nets-easy-api-callbacks.php
+
+		-
+			message: '#^Cannot call method get_date_paid\(\) on object\|true\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: classes/class-nets-easy-api-callbacks.php
+
+		-
+			message: '#^Cannot call method get_id\(\) on object\|true\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: classes/class-nets-easy-api-callbacks.php
+
+		-
+			message: '#^Cannot call method get_order_number\(\) on object\|true\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: classes/class-nets-easy-api-callbacks.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(self\:\:\$instance The \*Singleton\* instance\.\)\: Unexpected token "\$instance", expected \* at offset 78 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: classes/class-nets-easy-api-callbacks.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$instance\)\: Unexpected token "\$instance", expected type at offset 75 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: classes/class-nets-easy-api-callbacks.php
+
+		-
+			message: '#^Property WooCommerce\:\:\$session \(WC_Session\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: classes/class-nets-easy-checkout.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(self\:\:\$instance The \*Singleton\* instance\.\)\: Unexpected token "\$instance", expected \* at offset 78 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: classes/class-nets-easy-confirmation.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$instance\)\: Unexpected token "\$instance", expected type at offset 75 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: classes/class-nets-easy-confirmation.php
+
+		-
+			message: '#^Access to an undefined property WooCommerce\:\:\$payment_gateways\.$#'
+			identifier: property.notFound
+			count: 1
+			path: classes/class-nets-easy-gateway.php
+
+		-
+			message: '#^Method Nets_Easy_Gateway\:\:get_icon\(\) should return string but empty return statement found\.$#'
+			identifier: return.empty
+			count: 1
+			path: classes/class-nets-easy-gateway.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of function wc_dibs_confirm_dibs_order expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: classes/class-nets-easy-gateway.php
+
+		-
+			message: '#^Parameter \#2 \$amount \(string\) of method Nets_Easy_Gateway\:\:process_refund\(\) should be compatible with parameter \$amount \(float\|null\) of method WC_Payment_Gateway\:\:process_refund\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: classes/class-nets-easy-gateway.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$log\)\: Unexpected token "\$log", expected type at offset 40 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: classes/class-nets-easy-logger.php
+
+		-
+			message: '#^PHPDoc tag @var does not specify variable name\.$#'
+			identifier: varTag.noVariable
+			count: 2
+			path: classes/class-nets-easy-order-management.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of method Nets_Easy_API\:\:activate_nets_easy_order\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-order-management.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of method Nets_Easy_API\:\:cancel_nets_easy_order\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-order-management.php
+
+		-
+			message: '#^Parameter \#2 \$order_id of method Nets_Easy_Order_Management\:\:is_canceled\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-order-management.php
+
+		-
+			message: '#^Parameter \#2 \$order_id of method Nets_Easy_Order_Management\:\:is_completed\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-order-management.php
+
+		-
+			message: '#^Call to an undefined method WC_Order_Item\:\:get_product\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^Iterating over an object of an unknown class objects\.$#'
+			identifier: class.notFound
+			count: 2
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$array\)\: Unexpected token "\$array", expected type at offset 49 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^Parameter \#1 \$order of function wcs_get_subscriptions_for_order expects int\|WC_Order, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of method Nets_Easy_Subscriptions\:\:set_recurring_token_for_order\(\) expects string, int\<0, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^Parameter \#2 \$order_id of method Nets_Easy_API\:\:get_nets_easy_subscription_by_external_reference\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^Parameter \#2 \$order_id of method Nets_Easy_API\:\:get_nets_easy_unscheduled_subscription_by_external_reference\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^Parameter \#3 \$subscriptions of method Nets_Easy_Subscriptions\:\:get_recurring_token_from_scheduled_subscription_external_reference\(\) expects objects, array\<WC_Subscription\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^Parameter \#3 \$subscriptions of method Nets_Easy_Subscriptions\:\:get_recurring_token_from_unscheduled_subscription_external_reference\(\) expects objects, array\<WC_Subscription\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^Parameter \$subscriptions of method Nets_Easy_Subscriptions\:\:get_recurring_token_from_scheduled_subscription_external_reference\(\) has invalid type objects\.$#'
+			identifier: class.notFound
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^Parameter \$subscriptions of method Nets_Easy_Subscriptions\:\:get_recurring_token_from_unscheduled_subscription_external_reference\(\) has invalid type objects\.$#'
+			identifier: class.notFound
+			count: 1
+			path: classes/class-nets-easy-subscriptions.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(self\:\:\$instance The \*Singleton\* instance\.\)\: Unexpected token "\$instance", expected \* at offset 78 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: classes/class-nets-easy-templates.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$instance\)\: Unexpected token "\$instance", expected type at offset 75 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: classes/class-nets-easy-templates.php
+
+		-
+			message: '#^Property WooCommerce\:\:\$cart \(WC_Cart\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: classes/class-nets-easy-templates.php
+
+		-
+			message: '#^Property WooCommerce\:\:\$session \(WC_Session\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: classes/class-nets-easy-templates.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and array results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: classes/requests/get/class-nets-easy-request-get-order.php
+
+		-
+			message: '#^PHPDoc type array of property Nets_Easy_Request_Get_Order\:\:\$payment_id is not covariant with PHPDoc type string\|null of overridden property Nets_Easy_Request\:\:\$payment_id\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: classes/requests/get/class-nets-easy-request-get-order.php
+
+		-
+			message: '#^Access to an undefined property WooCommerce\:\:\$shipping\.$#'
+			identifier: property.notFound
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-cart-helper.php
+
+		-
+			message: '#^Method Nets_Easy_Cart_Helper\:\:get_item_tax_rate\(\) should return int but returns float\.$#'
+			identifier: return.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-cart-helper.php
+
+		-
+			message: '#^Parameter \#3 \$offset of function strpos expects int, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-cart-helper.php
+
+		-
+			message: '#^Cannot unset offset ''contact'' on array\{email\: string, shippingAddress\: array\{addressLine1\?\: non\-falsy\-string, addressLine2\?\: non\-falsy\-string, postalCode\?\: string, city\?\: non\-falsy\-string, country\: mixed\}, phoneNumber\?\: array\{prefix\: string, number\: non\-falsy\-string\}, company\: array\{name\: non\-falsy\-string, contact\: array\{firstName\: string, lastName\: string\}\}\}\.$#'
+			identifier: unset.offset
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-checkout-helper.php
+
+		-
+			message: '#^Expression in empty\(\) is not falsy\.$#'
+			identifier: empty.expr
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-checkout-helper.php
+
+		-
+			message: '#^Method Nets_Easy_Checkout_Helper\:\:get_phone_number\(\) should return string but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-checkout-helper.php
+
+		-
+			message: '#^Offset ''contact'' on array\{name\: non\-falsy\-string, contact\: array\{firstName\: string, lastName\: mixed\}\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-checkout-helper.php
+
+		-
+			message: '#^Offset ''phoneNumber'' on array\{email\: mixed, shippingAddress\?\: array\{addressLine1\?\: non\-falsy\-string, addressLine2\?\: non\-falsy\-string, country\: mixed, city\?\: mixed\}\|non\-empty\-array\{addressLine1\?\: mixed, addressLine2\?\: mixed, postalCode\?\: array\|string\}, phoneNumber\: array\{prefix\: string, number\: mixed\}\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-checkout-helper.php
+
+		-
+			message: '#^Offset ''privatePerson'' on array\{email\: mixed, shippingAddress\?\: array\{addressLine1\?\: non\-falsy\-string, addressLine2\?\: non\-falsy\-string, country\: mixed, city\?\: mixed\}\|non\-empty\-array\{addressLine1\?\: mixed, addressLine2\?\: mixed, postalCode\?\: array\|string\}, phoneNumber\?\: array\{prefix\: string, number\: mixed\}, privatePerson\: array\{firstName\: string, lastName\: mixed\}\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-checkout-helper.php
+
+		-
+			message: '#^Method Nets_Easy_Order_Helper\:\:get_order_total\(\) should return string but returns \(float\|int\)\.$#'
+			identifier: return.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-order-helper.php
+
+		-
+			message: '#^Method Nets_Easy_Order_Items_Helper\:\:get_item_tax_rate\(\) has invalid return type intval\.$#'
+			identifier: class.notFound
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-order-items-helper.php
+
+		-
+			message: '#^Method Nets_Easy_Order_Items_Helper\:\:get_item_tax_rate\(\) should return intval but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-order-items-helper.php
+
+		-
+			message: '#^Method Nets_Easy_Order_Items_Helper\:\:get_sku\(\) should return string but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-order-items-helper.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_html expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-order-items-helper.php
+
+		-
+			message: '#^Parameter \#2 \$product_id of static method Nets_Easy_Order_Items_Helper\:\:get_sku\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-order-items-helper.php
+
+		-
+			message: '#^Parameter \#3 \$offset of function strpos expects int, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-order-items-helper.php
+
+		-
+			message: '#^Variable \$_product might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: classes/requests/helpers/class-nets-easy-order-items-helper.php
+
+		-
+			message: '#^Call to an undefined method WC_Order_Item\:\:get_product_id\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-refund-helper.php
+
+		-
+			message: '#^Method Nets_Easy_Refund_Helper\:\:get_refund_data\(\) should return array but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-refund-helper.php
+
+		-
+			message: '#^Method Nets_Easy_Refund_Helper\:\:get_refunded_order_id\(\) should return string but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-refund-helper.php
+
+		-
+			message: '#^Method Nets_Easy_Refund_Helper\:\:get_total_refund_amount\(\) should return int but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: classes/requests/helpers/class-nets-easy-refund-helper.php
+
+		-
+			message: '#^Parameter \#1 \$num of function abs expects float\|int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: classes/requests/helpers/class-nets-easy-refund-helper.php
+
+		-
+			message: '#^Variable \$_product might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: classes/requests/helpers/class-nets-easy-refund-helper.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of static method Nets_Easy_Order_Items_Helper\:\:get_items\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/requests/post/class-nets-easy-request-activate-order.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$order_id\)\: Unexpected token "\$order_id", expected type at offset 44 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: classes/requests/post/class-nets-easy-request-cancel-order.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of static method Nets_Easy_Order_Items_Helper\:\:get_items\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/requests/post/class-nets-easy-request-charge-subscription.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of static method Nets_Easy_Order_Items_Helper\:\:get_items\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: classes/requests/post/class-nets-easy-request-charge-unscheduled-subscription.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of static method Nets_Easy_Refund_Helper\:\:get_refund_data\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: classes/requests/post/class-nets-easy-request-refund-order.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of static method Nets_Easy_Refund_Helper\:\:get_total_refund_amount\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: classes/requests/post/class-nets-easy-request-refund-order.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(self\:\:\$instance The \*Singleton\* instance\.\)\: Unexpected token "\$instance", expected \* at offset 81 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: dibs-easy-for-woocommerce.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$array\)\: Unexpected token "\$array", expected type at offset 52 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: dibs-easy-for-woocommerce.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$instance\)\: Unexpected token "\$instance", expected type at offset 78 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: dibs-easy-for-woocommerce.php
+
+		-
+			message: '#^PHPDoc tag @var has invalid value \(\$order_management\)\: Unexpected token "\$order_management", expected type at offset 45 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: dibs-easy-for-woocommerce.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$country \(false\) of function dibs_get_iso_2_country\(\) is incompatible with type string\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: includes/nets-easy-country-converter.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$country \(false\) of function dibs_get_iso_3_country\(\) is incompatible with type string\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: includes/nets-easy-country-converter.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$country \(false\) of function dibs_get_phone_prefix_for_country\(\) is incompatible with type string\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: includes/nets-easy-country-converter.php
+
+		-
+			message: '#^Access to an undefined property WooCommerce\:\:\$shipping\.$#'
+			identifier: property.notFound
+			count: 1
+			path: includes/nets-easy-functions.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: includes/nets-easy-functions.php
+
+		-
+			message: '#^Property WooCommerce\:\:\$session \(WC_Session\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 3
+			path: includes/nets-easy-functions.php
+
+		-
+			message: '#^Access to an undefined property WooCommerce\:\:\$payment_gateways\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/PaymentMethods/BaseGateway.php
+
+		-
+			message: '#^Parameter \#1 \$order_id of function wc_dibs_confirm_dibs_order expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/PaymentMethods/BaseGateway.php
+
+		-
+			message: '#^Parameter \#2 \$amount \(string\) of method Krokedil\\Nexi\\PaymentMethods\\BaseGateway\:\:process_refund\(\) should be compatible with parameter \$amount \(float\|null\) of method WC_Payment_Gateway\:\:process_refund\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/PaymentMethods/BaseGateway.php
