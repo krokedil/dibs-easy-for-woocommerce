@@ -186,7 +186,8 @@ class Nets_Easy_Ajax extends WC_AJAX {
 			if ( $order->has_status( array( 'on-hold', 'processing', 'completed' ) ) ) {
 				Nets_Easy_Logger::log( "[AJAX]: Process Woo checkout triggered but _dibs_payment_id ($order_payment_id ) already exist in this order: $order_id_match" );
 				$location = $order->get_checkout_order_received_url();
-				Nets_Easy_Logger::log( "[AJAX]: \$location: $location" );
+				// The order received URL carries the order key, so only the order is named.
+				Nets_Easy_Logger::log( "[AJAX]: Redirecting to the order received page for order $order_id_match" );
 				wp_send_json_error( array( 'redirect' => $location ) );
 			}
 		}
