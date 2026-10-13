@@ -192,7 +192,7 @@ class Nets_Easy_Order_Items_Helper {
 	 * @param string $product_id The WooCommerce product ID.
 	 * @return string|false
 	 */
-	public static function get_sku( $product, $product_id ) {
+	public static function get_sku( $product, $product_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Kept for backwards compatibility.
 		if ( is_object( $product ) ) {
 			$part_number = $product->get_sku();
 			if ( empty( $part_number ) ) {
@@ -254,7 +254,7 @@ class Nets_Easy_Order_Items_Helper {
 	 * @param object $order The WooCommerce order.
 	 * @return int
 	 */
-	public static function get_item_tax_rate( $order_item, $order ) {
+	public static function get_item_tax_rate( $order_item, $order ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Kept for backwards compatibility.
 		$tax_rate = 0;
 		$taxes    = $order_item->get_taxes();
 		if ( ! empty( $taxes['total'] ) ) {
