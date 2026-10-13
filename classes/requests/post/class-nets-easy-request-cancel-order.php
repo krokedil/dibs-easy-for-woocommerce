@@ -17,7 +17,7 @@ class Nets_Easy_Request_Cancel_Order extends Nets_Easy_Request_Post {
 	/**
 	 * Reference to order_id.
 	 *
-	 * @var $order_id
+	 * @var int
 	 */
 	public $order_id;
 

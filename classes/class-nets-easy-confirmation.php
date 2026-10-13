@@ -21,13 +21,13 @@ class Nets_Easy_Confirmation {
 	/**
 	 * The reference the *Singleton* instance of this class.
 	 *
-	 * @var $instance
+	 * @var Nets_Easy_Confirmation
 	 */
 	protected static $instance;
 	/**
 	 * Returns the *Singleton* instance of this class.
 	 *
-	 * @return self::$instance The *Singleton* instance.
+	 * @return Nets_Easy_Confirmation The *Singleton* instance.
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {

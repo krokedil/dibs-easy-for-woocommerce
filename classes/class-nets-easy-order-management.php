@@ -95,7 +95,7 @@ class Nets_Easy_Order_Management {
 				/**
 				 * Response is WordPress error.
 				 *
-				 * @var string|array WP_Error $response
+				 * @var WP_Error $response
 				 */
 				$this->charge_failed( $wc_order, true, __( 'Unable to activate the order!' ) . ' ' . $response->get_error_message() );
 				return;
@@ -145,7 +145,7 @@ class Nets_Easy_Order_Management {
 				/**
 				 * Response is WordPress error.
 				 *
-				 * @var string|array WP_Error $response
+				 * @var WP_Error $response
 				 */
 				$this->cancel_failed( $wc_order, true, __( 'There was a problem canceling the order in Nexi' ) . ' ' . $response->get_error_message() );
 				return;

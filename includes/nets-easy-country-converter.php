@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Return country code in 2 letter format.
  *
- * @param string $country Three letter country code.
+ * @param string|false $country Three letter country code.
  */
 function dibs_get_iso_2_country( $country = false ) {
 	$result    = '';
@@ -27,7 +27,7 @@ function dibs_get_iso_2_country( $country = false ) {
 /**
  * Return country code in 3 letter format.
  *
- * @param string $country Two letter country code.
+ * @param string|false $country Two letter country code.
  */
 function dibs_get_iso_3_country( $country = false ) {
 	$result    = '';
@@ -53,7 +53,7 @@ function dibs_get_supported_countries() {
 /**
  * Return phone prefix for country.
  *
- * @param string $country Two letter country code.
+ * @param string|false $country Two letter country code.
  */
 function dibs_get_phone_prefix_for_country( $country = false ) {
 	$result   = '';

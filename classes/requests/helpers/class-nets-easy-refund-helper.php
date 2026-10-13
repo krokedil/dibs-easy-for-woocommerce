@@ -78,7 +78,7 @@ class Nets_Easy_Refund_Helper {
 	 * Returns the id of the refunded order.
 	 *
 	 * @param int $order_id The WooCommerce order id.
-	 * @return string
+	 * @return int
 	 */
 	public static function get_refunded_order_id( $order_id ) {
 		$order = wc_get_order( $order_id );

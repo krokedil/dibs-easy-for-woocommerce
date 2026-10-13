@@ -21,7 +21,7 @@ class Nets_Easy_Order_Items_Helper {
 	/**
 	 * Gets formatted order items.
 	 *
-	 * @param string $order_id The WooCommerce order ID.
+	 * @param int|string $order_id The WooCommerce order ID.
 	 * @return array
 	 */
 	public static function get_items( $order_id ) {
@@ -190,7 +190,7 @@ class Nets_Easy_Order_Items_Helper {
 	 *
 	 * @param object $product The WooCommerce product.
 	 * @param string $product_id The WooCommerce product ID.
-	 * @return string
+	 * @return string|false
 	 */
 	public static function get_sku( $product, $product_id ) {
 		if ( is_object( $product ) ) {
@@ -252,7 +252,7 @@ class Nets_Easy_Order_Items_Helper {
 	 *
 	 * @param object $order_item The WooCommerce order item.
 	 * @param object $order The WooCommerce order.
-	 * @return intval
+	 * @return int
 	 */
 	public static function get_item_tax_rate( $order_item, $order ) {
 		$tax_rate = 0;

@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Nets_Easy_Logger {
 	/**
-	 * Log message string
+	 * The WooCommerce logger instance.
 	 *
-	 * @var $log
+	 * @var WC_Logger|null
 	 */
 	public static $log;
 

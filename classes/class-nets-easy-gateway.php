@@ -91,12 +91,12 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Get gateway icon.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_icon() {
 
 		if ( empty( $this->payment_gateway_icon ) ) {
-			return;
+			return null;
 		}
 
 		if ( 'default' === strtolower( $this->payment_gateway_icon ) ) {
@@ -190,9 +190,9 @@ class Nets_Easy_Gateway extends WC_Payment_Gateway {
 	/**
 	 * Process the refund.
 	 *
-	 * @param  int    $order_id WooCommerce order ID.
-	 * @param  string $amount Refund amount.
-	 * @param  string $reason Reason test message for the refund.
+	 * @param  int               $order_id WooCommerce order ID.
+	 * @param  float|string|null $amount Refund amount.
+	 * @param  string            $reason Reason test message for the refund.
 	 *
 	 * @return bool|WP_Error
 	 */
