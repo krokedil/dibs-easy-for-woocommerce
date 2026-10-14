@@ -17,7 +17,7 @@ class Nets_Easy_Request_Get_Order extends Nets_Easy_Request_Get {
 	/**
 	 * Dibs Easy payment_id.
 	 *
-	 * @var array
+	 * @var ?string
 	 */
 	public $payment_id;
 

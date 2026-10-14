@@ -280,7 +280,7 @@ class Nets_Easy_Ajax extends WC_AJAX {
 	/**
 	 * Helper function to prepare the cart session before processing the order form.
 	 *
-	 * @param string $country Customer country.
+	 * @param string|false $country Customer country.
 	 */
 	public static function prepare_cart_before_form_processing( $country = false ) {
 		if ( $country ) {

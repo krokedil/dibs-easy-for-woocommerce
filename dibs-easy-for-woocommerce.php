@@ -50,14 +50,14 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		/**
 		 * The reference the *Singleton* instance of this class.
 		 *
-		 * @var $instance
+		 * @var DIBS_Easy
 		 */
 		protected static $instance;
 
 		/**
 		 * Reference to dibs_settings.
 		 *
-		 * @var $array
+		 * @var array
 		 */
 		public $dibs_settings;
 
@@ -78,7 +78,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		/**
 		 * The order management
 		 *
-		 * @var $order_management
+		 * @var Nets_Easy_Order_Management
 		 */
 		public $order_management;
 
@@ -168,7 +168,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 		/**
 		 * Returns the *Singleton* instance of this class.
 		 *
-		 * @return self::$instance The *Singleton* instance.
+		 * @return DIBS_Easy The *Singleton* instance.
 		 */
 		public static function get_instance() {
 			if ( null === self::$instance ) {

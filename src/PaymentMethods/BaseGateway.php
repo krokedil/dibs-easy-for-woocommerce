@@ -225,9 +225,9 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	/**
 	 * Process the refund.
 	 *
-	 * @param  int    $order_id WooCommerce order ID.
-	 * @param  string $amount Refund amount.
-	 * @param  string $reason Reason test message for the refund.
+	 * @param  int               $order_id WooCommerce order ID.
+	 * @param  float|string|null $amount Refund amount.
+	 * @param  string            $reason Reason test message for the refund.
 	 *
 	 * @return bool|\WP_Error
 	 */

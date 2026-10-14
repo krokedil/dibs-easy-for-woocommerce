@@ -95,9 +95,9 @@ class Nets_Easy_Order_Management {
 				/**
 				 * Response is WordPress error.
 				 *
-				 * @var string|array WP_Error $response
+				 * @var WP_Error $response
 				 */
-				$this->charge_failed( $wc_order, true, __( 'Unable to activate the order!' ) . ' ' . $response->get_error_message() );
+				$this->charge_failed( $wc_order, true, __( 'Unable to activate the order!', 'dibs-easy-for-woocommerce' ) . ' ' . $response->get_error_message() );
 				return;
 			}
 			// Translators: Nets payment charge ID.
@@ -145,9 +145,9 @@ class Nets_Easy_Order_Management {
 				/**
 				 * Response is WordPress error.
 				 *
-				 * @var string|array WP_Error $response
+				 * @var WP_Error $response
 				 */
-				$this->cancel_failed( $wc_order, true, __( 'There was a problem canceling the order in Nexi' ) . ' ' . $response->get_error_message() );
+				$this->cancel_failed( $wc_order, true, __( 'There was a problem canceling the order in Nexi', 'dibs-easy-for-woocommerce' ) . ' ' . $response->get_error_message() );
 				return;
 			}
 			$wc_order = wc_get_order( $order_id );
