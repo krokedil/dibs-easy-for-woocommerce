@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed an issue where a customer who cancelled a payment could not continue without reloading the checkout page.

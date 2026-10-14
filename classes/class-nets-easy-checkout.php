@@ -133,6 +133,28 @@ class Nets_Easy_Checkout {
 		$nets_easy_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 		if ( ! is_wp_error( $nets_easy_order ) ) {
 
+			// A payment attempt makes Nexi report a different 'created' timestamp for the same
+			// payment ID, and such a payment then answers order item updates with 204 without
+			// applying them. Start a new payment instead of updating one Nexi ignores.
+			$created       = $nets_easy_order['payment']['created'] ?? '';
+			$known_created = WC()->session->get( 'nets_easy_payment_created' );
+
+			if ( ! empty( $created ) && ! empty( $known_created ) && $created !== $known_created ) {
+				nexi_terminate_session( $payment_id );
+				wc_dibs_unset_sessions();
+				Nets_Easy_Logger::log( sprintf( 'Nexi payment %1$s was replaced after a payment attempt (created %2$s, expected %3$s). Clearing the Nexi session and reloading the checkout page.', $payment_id, $created, $known_created ) );
+				WC()->session->set( 'reload_checkout', true );
+				return;
+			}
+
+			// Fallback for sessions started before this plugin version, which have no baseline from
+			// payment creation. It only helps when this is the first update after the checkout was
+			// loaded: if an attempt already happened, the changed timestamp is what gets stored and
+			// this payment is never detected.
+			if ( ! empty( $created ) && empty( $known_created ) ) {
+				WC()->session->set( 'nets_easy_payment_created', $created );
+			}
+
 			// Updates the order.
 			$updated_nets_easy_order = Nets_Easy()->api->update_nets_easy_order( $payment_id );
 
