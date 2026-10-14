@@ -1,8 +1,8 @@
 <?php
 namespace Krokedil\Nexi\Logging;
 
-use KrokedilNexiCheckoutDeps\Krokedil\WpApi\FieldMasker;
 use KrokedilNexiCheckoutDeps\Krokedil\WpApi\KeyMasker;
+use KrokedilNexiCheckoutDeps\Krokedil\WpApi\Masking;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,6 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * safety net for everything else that reaches a log entry, including the stack trace.
  */
 class LogMasking {
+	/**
+	 * The slug the plugin logs under, which the krokedil_wp_api_mask_log_data filter receives.
+	 */
+	const SLUG = 'nexi_checkout';
+
 	/**
 	 * The address fields kept readable, since a rejected address is a common support case
 	 * and none of these identify a person on their own.
@@ -96,7 +101,7 @@ class LogMasking {
 				$request_args['body'] = is_array( $decoded ) ? $decoded : $request_args['body'];
 			}
 
-			return FieldMasker::mask( $request_args, self::request_fields() );
+			return Masking::mask_fields( $request_args, self::request_fields(), self::SLUG );
 		} catch ( \Throwable $e ) {
 			return KeyMasker::FAILED;
 		}
@@ -113,11 +118,7 @@ class LogMasking {
 			return $body;
 		}
 
-		try {
-			return FieldMasker::mask( $body, self::body_fields() );
-		} catch ( \Throwable $e ) {
-			return KeyMasker::FAILED;
-		}
+		return Masking::mask_fields( $body, self::body_fields(), self::SLUG );
 	}
 
 	/**
@@ -127,6 +128,17 @@ class LogMasking {
 	 * @return mixed The masked entry, or the failure marker.
 	 */
 	public static function mask_entry( $data ) {
+		return Masking::mask_keys( $data, self::SLUG );
+	}
+
+	/**
+	 * Mask an entry kept in the database by key name, even when the filter turned masking off.
+	 * It outlives the debugging session in the options table, and debugging never reads it.
+	 *
+	 * @param mixed $data The log entry.
+	 * @return mixed The masked entry, or the failure marker.
+	 */
+	public static function mask_stored_entry( $data ) {
 		// A failure here costs the entry, it never lets an unmasked one through.
 		try {
 			return KeyMasker::mask( $data );

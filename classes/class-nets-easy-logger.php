@@ -55,7 +55,7 @@ class Nets_Easy_Logger {
 		}
 
 		$logs   = array_slice( $logs, - 14 );
-		$logs[] = LogMasking::mask_entry( $data );
+		$logs[] = LogMasking::mask_stored_entry( $data );
 		$logs   = wp_json_encode( $logs );
 		update_option( 'dibs_easy_debuglog', $logs, false );
 	}
