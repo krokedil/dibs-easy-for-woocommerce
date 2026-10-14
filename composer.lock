@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6e9bd8dcf1e37ac86f27ac087b1047f",
+    "content-hash": "5edd1bd749733fe3894f7b01c20333fd",
     "packages": [],
     "packages-dev": [
         {
@@ -474,12 +474,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "b61a76e704c676ceea00f6f7fcdafee243488266"
+                "reference": "8d2b672aff65a1a4dbf7936cec27d19f51989412"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/b61a76e704c676ceea00f6f7fcdafee243488266",
-                "reference": "b61a76e704c676ceea00f6f7fcdafee243488266",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8d2b672aff65a1a4dbf7936cec27d19f51989412",
+                "reference": "8d2b672aff65a1a4dbf7936cec27d19f51989412",
                 "shasum": ""
             },
             "require": {
@@ -524,7 +524,7 @@
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
                 "source": "https://github.com/nikic/PHP-Parser/tree/master"
             },
-            "time": "2026-09-29T19:40:19+00:00"
+            "time": "2026-10-05T07:07:23+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -647,24 +647,24 @@
         },
         {
             "name": "php-stubs/woocommerce-stubs",
-            "version": "v8.9.1",
+            "version": "v10.9.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/woocommerce-stubs.git",
-                "reference": "2f5be3f363ff3d02b4e29404c7895d9d15fd3e73"
+                "reference": "a569e43283b86178628beb7aa22cc34b4076b435"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/2f5be3f363ff3d02b4e29404c7895d9d15fd3e73",
-                "reference": "2f5be3f363ff3d02b4e29404c7895d9d15fd3e73",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/a569e43283b86178628beb7aa22cc34b4076b435",
+                "reference": "a569e43283b86178628beb7aa22cc34b4076b435",
                 "shasum": ""
             },
             "require": {
-                "php-stubs/wordpress-stubs": "^5.3 || ^6.0"
+                "php-stubs/wordpress-stubs": "^5.3 || ^6.0 || ^7.0"
             },
             "require-dev": {
                 "php": "~7.1 || ~8.0",
-                "php-stubs/generator": "^0.8.0"
+                "php-stubs/generator": "^0.9.0"
             },
             "suggest": {
                 "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
@@ -685,9 +685,55 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
-                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v8.9.1"
+                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v10.9.4"
             },
-            "time": "2024-05-21T11:47:54+00:00"
+            "time": "2026-07-16T18:17:41+00:00"
+        },
+        {
+            "name": "php-stubs/woocommerce-subscriptions-stubs",
+            "version": "v9.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/woocommerce-subscriptions-stubs.git",
+                "reference": "6621458394b01d71566975261e474e25891fe6eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-subscriptions-stubs/zipball/6621458394b01d71566975261e474e25891fe6eb",
+                "reference": "6621458394b01d71566975261e474e25891fe6eb",
+                "shasum": ""
+            },
+            "require": {
+                "php-stubs/woocommerce-stubs": "^10.2",
+                "php-stubs/wordpress-stubs": "^5.3 || ^6.0"
+            },
+            "require-dev": {
+                "php": "~7.4 || ~8.1",
+                "php-stubs/generator": "^0.8.0"
+            },
+            "suggest": {
+                "symfony/polyfill-php74": "Symfony polyfill backporting some PHP 7.4+ features to lower PHP versions",
+                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WooCommerce Subscriptions function and class declaration stubs for static analysis.",
+            "homepage": "https://github.com/php-stubs/woocommerce-subscriptions-stubs",
+            "keywords": [
+                "PHPStan",
+                "static analysis",
+                "subscription",
+                "woocommerce",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/php-stubs/woocommerce-subscriptions-stubs/issues",
+                "source": "https://github.com/php-stubs/woocommerce-subscriptions-stubs/tree/v9.1.0"
+            },
+            "time": "2026-08-06T00:30:20+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
@@ -1132,6 +1178,71 @@
             "time": "2026-09-11T18:20:41+00:00"
         },
         {
+            "name": "phpstan/phpstan",
+            "version": "2.3.x-dev",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c066ed5c007001d24bf3bac469cef814d128cee3",
+                "reference": "c066ed5c007001d24bf3bac469cef814d128cee3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "default-branch": true,
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Mirtes"
+                },
+                {
+                    "name": "Markus Staab"
+                },
+                {
+                    "name": "Vincent Langlet"
+                }
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "keywords": [
+                "dev",
+                "static analysis"
+            ],
+            "support": {
+                "docs": "https://phpstan.org/user-guide/getting-started",
+                "forum": "https://github.com/phpstan/phpstan/discussions",
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "security": "https://github.com/phpstan/phpstan/security/policy",
+                "source": "https://github.com/phpstan/phpstan-src"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-14T05:39:25+00:00"
+        },
+        {
             "name": "phpunit/php-code-coverage",
             "version": "9.2.32",
             "source": {
@@ -1456,12 +1567,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f9c9098efdbea3881b52b72d4aef2689378c94da"
+                "reference": "5487b34837ee7dd5c528302e6144ebc799583de1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9c9098efdbea3881b52b72d4aef2689378c94da",
-                "reference": "f9c9098efdbea3881b52b72d4aef2689378c94da",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5487b34837ee7dd5c528302e6144ebc799583de1",
+                "reference": "5487b34837ee7dd5c528302e6144ebc799583de1",
                 "shasum": ""
             },
             "require": {
@@ -1543,7 +1654,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-09-26T12:30:19+00:00"
+            "time": "2026-10-12T11:28:36+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2927,13 +3038,13 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {},
-    "platform-dev": {},
+    "platform": [],
+    "platform-dev": [],
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
