@@ -37,6 +37,7 @@ define( 'DIBS_API_TEST_ENDPOINT', 'https://test.api.dibspayment.eu/v1/' );
 
 use KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use Krokedil\Nexi\PaymentMethods;
+use Krokedil\Nexi\Logging\LogMasking;
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 
@@ -207,6 +208,9 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 			if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 				return;
 			}
+
+			// Masking has to be in place before anything can log.
+			LogMasking::register();
 
 			// Functions are used in the files below.
 			include_once plugin_basename( 'includes/nets-easy-functions.php' );

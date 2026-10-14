@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Krokedil\Nexi\Logging\LogMasking;
+
 /**
  * Nets_Easy_Api_Callbacks class.
  *
@@ -56,9 +58,8 @@ class Nets_Easy_Api_Callbacks {
 
 			if ( ! is_array( $data ) || ! isset( $data['data'] ) ) {
 				$json_error = json_last_error_msg();
-				// Limit the length of the log.
-				$log_post_body = substr( $post_body, 0, 100 ) . ( strlen( $post_body ) > 100 ? '...' : '' );
-				Nets_Easy_Logger::log( 'Invalid JSON received from Nets on payment created callback. JSON error: ' . $json_error . '. No action scheduled. Post body: ' . $log_post_body );
+				// Only the length of the body, since it could not be decoded for masking.
+				Nets_Easy_Logger::log( 'Invalid JSON received from Nets on payment created callback. JSON error: ' . $json_error . '. No action scheduled. Post body length: ' . strlen( $post_body ) );
 				return;
 			}
 
@@ -66,7 +67,13 @@ class Nets_Easy_Api_Callbacks {
 			$payment_id   = $data['data']['paymentId'];
 			$order_number = $data['data']['order']['reference'];
 
-			Nets_Easy_Logger::log( 'Payment created webhook listener hit ' . wp_json_encode( $data ) );
+			// Log the payload as an array, so the masking can reach the customer details in it.
+			Nets_Easy_Logger::log(
+				array(
+					'title' => 'Payment created webhook listener hit',
+					'data'  => LogMasking::mask_response( $data ),
+				)
+			);
 
 			as_schedule_single_action( time() + 120, 'dibs_payment_created_callback', array( $payment_id, $order_number, $amount ) );
 			header( 'HTTP/1.1 200 OK' );
