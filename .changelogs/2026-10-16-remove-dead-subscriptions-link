@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: no
+
+Removed a link to Nexi's documentation about scheduled vs unscheduled subscriptions from the settings page, since the page no longer exists.
