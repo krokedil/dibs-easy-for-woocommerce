@@ -21,6 +21,13 @@ use Krokedil\Nexi\Logging\LogMasking;
 class Nets_Easy_Api_Callbacks {
 
 	/**
+	 * Max number of times the payment created callback is run before giving up.
+	 *
+	 * @var int
+	 */
+	const MAX_CALLBACK_ATTEMPTS = 10;
+
+	/**
 	 * The reference the *Singleton* instance of this class.
 	 *
 	 * @var Nets_Easy_Api_Callbacks
@@ -44,6 +51,7 @@ class Nets_Easy_Api_Callbacks {
 	public function __construct() {
 		add_action( 'woocommerce_api_dibs_api_callbacks', array( $this, 'payment_created_scheduler' ) );
 		add_action( 'dibs_payment_created_callback', array( $this, 'execute_dibs_payment_created_callback' ), 10, 3 );
+		add_filter( 'woocommerce_cancel_unpaid_order', array( $this, 'maybe_prevent_unpaid_cancel' ), 10, 2 );
 	}
 
 	/**
@@ -104,9 +112,89 @@ class Nets_Easy_Api_Callbacks {
 			Nets_Easy_Logger::log( 'Aborting Payment created API callback. Order ' . $order->get_order_number() . '(order ID ' . $order->get_id() . ') already processed.' );
 		} else {
 			Nets_Easy_Logger::log( 'Order status not set correctly for order ' . $order->get_order_number() . ' during checkout process. Setting order status to Processing/Completed in API callback.' );
-			wc_dibs_confirm_dibs_order( $order->get_id() );
+			$result = wc_dibs_confirm_dibs_order( $order->get_id() );
+			if ( is_wp_error( $result ) ) {
+				$this->maybe_reschedule_callback( $order, $payment_id, $order_number, $amount );
+				return;
+			}
 			$this->check_order_totals( $order, $amount );
 		}
+	}
+
+	/**
+	 * Reschedule the payment created callback with a growing delay, until the max number of attempts is reached.
+	 *
+	 * @param WC_Order $order WC order.
+	 * @param string   $payment_id Nets payment id.
+	 * @param string   $order_number WC order number.
+	 * @param string   $amount Nets order amount.
+	 */
+	private function maybe_reschedule_callback( $order, $payment_id, $order_number, $amount ) {
+		$attempts = absint( $order->get_meta( '_dibs_callback_attempts' ) ) + 1;
+		$order->update_meta_data( '_dibs_callback_attempts', (string) $attempts );
+		$order->save();
+
+		if ( $attempts >= self::MAX_CALLBACK_ATTEMPTS ) {
+			Nets_Easy_Logger::log( 'Payment created API callback failed ' . $attempts . ' times for order ' . $order->get_order_number() . '. Payment ID: ' . $payment_id . '. No more attempts.' );
+			$order->add_order_note(
+				sprintf(
+					/* translators: %s: Nexi Checkout payment ID. */
+					__( 'Nexi Checkout: The payment (%s) could not be confirmed with Nexi after several attempts. Please verify the payment in the Nexi portal before handling the order.', 'dibs-easy-for-woocommerce' ),
+					$payment_id
+				)
+			);
+			return;
+		}
+
+		// 1, 2, 4, 8... minutes, capped at one hour.
+		$delay = min( MINUTE_IN_SECONDS * pow( 2, $attempts - 1 ), HOUR_IN_SECONDS );
+		as_schedule_single_action( time() + $delay, 'dibs_payment_created_callback', array( $payment_id, $order_number, $amount ) );
+		Nets_Easy_Logger::log( 'Payment created API callback failed for order ' . $order->get_order_number() . ' (attempt ' . $attempts . '). Rescheduled in ' . $delay . ' seconds.' );
+	}
+
+	/**
+	 * Prevent WooCommerce from cancelling an unpaid order that has been paid in Nexi, and confirm it instead.
+	 *
+	 * @param bool     $cancel Whether the order should be cancelled.
+	 * @param WC_Order $order WC order.
+	 *
+	 * @return bool
+	 */
+	public function maybe_prevent_unpaid_cancel( $cancel, $order ) {
+		if ( ! $cancel || ! in_array( $order->get_payment_method(), nets_easy_all_payment_method_ids(), true ) ) {
+			return $cancel;
+		}
+
+		$payment_id = $order->get_meta( '_dibs_payment_id' );
+		if ( empty( $payment_id ) || ! empty( $order->get_meta( '_dibs_date_paid' ) ) ) {
+			return $cancel;
+		}
+
+		$nexi_order = Nets_Easy()->api->get_nets_easy_order( $payment_id );
+		if ( is_wp_error( $nexi_order ) ) {
+			// We can't tell if the payment is completed, so leave the order pending until the next run.
+			Nets_Easy_Logger::log( 'Could not retrieve payment ' . $payment_id . ' before cancelling unpaid order ' . $order->get_order_number() . '. Cancellation postponed.' );
+			if ( empty( $order->get_meta( '_dibs_unpaid_cancel_deferred' ) ) ) {
+				$order->update_meta_data( '_dibs_unpaid_cancel_deferred', 'yes' );
+				$order->add_order_note(
+					sprintf(
+						/* translators: %s: Error message. */
+						__( 'Nexi Checkout: The unpaid order was not cancelled, since the payment status could not be retrieved from Nexi. Error message: %s', 'dibs-easy-for-woocommerce' ),
+						$nexi_order->get_error_message()
+					)
+				);
+				$order->save();
+			}
+			return false;
+		}
+
+		if ( nexi_payment_is_paid( $nexi_order ) ) {
+			Nets_Easy_Logger::log( 'Unpaid order ' . $order->get_order_number() . ' has a completed payment in Nexi (' . $payment_id . '). Confirming the order instead of cancelling it.' );
+			wc_dibs_confirm_dibs_order( $order->get_id() );
+			return false;
+		}
+
+		return $cancel;
 	}
 
 	/**
