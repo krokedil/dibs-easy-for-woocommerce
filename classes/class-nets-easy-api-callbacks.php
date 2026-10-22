@@ -188,7 +188,7 @@ class Nets_Easy_Api_Callbacks {
 			return false;
 		}
 
-		if ( nexi_is_payment_completed( $nexi_order ) ) {
+		if ( nexi_payment_is_paid( $nexi_order ) ) {
 			Nets_Easy_Logger::log( 'Unpaid order ' . $order->get_order_number() . ' has a completed payment in Nexi (' . $payment_id . '). Confirming the order instead of cancelling it.' );
 			wc_dibs_confirm_dibs_order( $order->get_id() );
 			return false;

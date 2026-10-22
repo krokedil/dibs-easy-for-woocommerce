@@ -170,17 +170,6 @@ function wc_dibs_clean_name( $name ) {
 }
 
 /**
- * Check if a Nexi payment has been reserved, charged or set up as a subscription.
- *
- * @param array $nexi_order The Nexi payment response.
- *
- * @return bool
- */
-function nexi_is_payment_completed( $nexi_order ) {
-	return isset( $nexi_order['payment']['summary']['reservedAmount'] ) || isset( $nexi_order['payment']['summary']['chargedAmount'] ) || isset( $nexi_order['payment']['subscription']['id'] );
-}
-
-/**
  * Confirm the order in WooCommerce.
  *
  * @param int $order_id Woocommerce order id.
@@ -226,7 +215,7 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 		return $request;
 	}
 
-	if ( nexi_is_payment_completed( $request ) ) {
+	if ( nexi_payment_is_paid( $request ) ) {
 
 		do_action( 'dibs_easy_process_payment', $order_id, $request );
 
