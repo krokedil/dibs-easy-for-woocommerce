@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Retry confirming the payment when the Nexi API request fails in the payment created callback, and no longer cancel unpaid orders that have been paid in Nexi.
