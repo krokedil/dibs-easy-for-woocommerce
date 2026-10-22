@@ -34,7 +34,7 @@ class Nets_Easy_Logger {
 			if ( empty( self::$log ) ) {
 				self::$log = new WC_Logger();
 			}
-			self::$log->add( 'nexi_checkout', wp_json_encode( $message, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
+			self::$log->add( LogMasking::SLUG, wp_json_encode( $message, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 		}
 
 		if ( isset( $data['response']['code'] ) && ( $data['response']['code'] < 200 || $data['response']['code'] > 299 ) ) {
@@ -55,7 +55,7 @@ class Nets_Easy_Logger {
 		}
 
 		$logs   = array_slice( $logs, - 14 );
-		$logs[] = LogMasking::mask_entry( $data );
+		$logs[] = LogMasking::mask_stored_entry( $data );
 		$logs   = wp_json_encode( $logs );
 		update_option( 'dibs_easy_debuglog', $logs, false );
 	}
