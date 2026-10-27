@@ -1,4 +1,4 @@
 Type: Fix
 Needs Documentation: no
 
-The Nexi payment fetch is now retried if the embedded checkout lacks the customer email at payment. If it’s still missing, a clear error is shown; missing phone numbers no longer block order submission.
+The Nexi payment fetch is now retried if the embedded checkout lacks the customer email at payment. If it's still missing, a clear error is shown; missing phone numbers no longer block order submission.
