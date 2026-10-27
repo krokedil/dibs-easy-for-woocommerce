@@ -63,6 +63,7 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 = 2026-10-27    - version 2.14.9 =
 * Enhancement   - Masked customer personal data, credentials and other sensitive data in the plugin log. Masking can be turned off while debugging with the krokedil_wp_api_mask_log_data filter.
 * Tweak         - Removed a link to a non-existing Nexi documentation page.
+* Fix           - Retry confirming the payment when the Nexi API request fails in the payment created callback, and no longer cancel unpaid orders that have been paid in Nexi.
 
 = 2026-10-06    - version 2.14.8 =
 * Fix           - Fixed an issue where the subscription payment method change return did not verify that the request belonged to the subscription owner. Thanks to Shrikant Shinde (https://github.com/FindYourBugs) for the responsible disclosure.
