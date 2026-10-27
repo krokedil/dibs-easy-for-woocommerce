@@ -2,10 +2,10 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nexi Checkout 2.14.8\n"
+"Project-Id-Version: Nexi Checkout 2.14.9\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dibs-easy-for-woocommerce\n"
-"POT-Creation-Date: 2026-10-06 06:27:56+00:00\n"
+"POT-Creation-Date: 2026-10-27 08:18:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -54,12 +54,12 @@ msgstr ""
 msgid "An account is already registered with your email address. Please log in."
 msgstr ""
 
-#: classes/class-nets-easy-ajax.php:219
+#: classes/class-nets-easy-ajax.php:220
 msgid "Cart total does not match Nets order total. Please try refreshing the page."
 msgstr ""
 
-#: classes/class-nets-easy-api-callbacks.php:120
-#: classes/class-nets-easy-api-callbacks.php:125
+#: classes/class-nets-easy-api-callbacks.php:127
+#: classes/class-nets-easy-api-callbacks.php:132
 #. Translators: Nets order total.
 msgid ""
 "Order needs manual review. WooCommerce order total and Nexi order total do "
@@ -235,8 +235,8 @@ msgstr ""
 #: classes/requests/helpers/class-nets-easy-order-items-helper.php:239
 #: classes/requests/helpers/class-nets-easy-payment-method-helper.php:40
 #: classes/requests/helpers/class-nets-easy-refund-helper.php:112
-#: classes/requests/helpers/class-nets-easy-refund-helper.php:171
-#: classes/requests/helpers/class-nets-easy-refund-helper.php:232
+#: classes/requests/helpers/class-nets-easy-refund-helper.php:169
+#: classes/requests/helpers/class-nets-easy-refund-helper.php:230
 msgid "pcs"
 msgstr ""
 
@@ -319,7 +319,7 @@ msgstr ""
 
 #: dependencies/krokedil/settings-page/src/Navigation.php:54
 #: dependencies/krokedil/settings-page/src/Support.php:30
-#: dibs-easy-for-woocommerce.php:351
+#: dibs-easy-for-woocommerce.php:355
 msgid "Support"
 msgstr ""
 
@@ -347,22 +347,22 @@ msgstr ""
 msgid "Sections"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:185 dibs-easy-for-woocommerce.php:194
+#: dibs-easy-for-woocommerce.php:186 dibs-easy-for-woocommerce.php:195
 msgid "Nope"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:321 dibs-easy-for-woocommerce.php:330
+#: dibs-easy-for-woocommerce.php:325 dibs-easy-for-woocommerce.php:334
 msgid ""
 "Your installation of Nexi Checkout is not complete. If you installed this "
 "plugin directly from Github please refer to the README.DEV.md file in the "
 "plugin."
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:349
+#: dibs-easy-for-woocommerce.php:353
 msgid "Settings"
 msgstr ""
 
-#: dibs-easy-for-woocommerce.php:350
+#: dibs-easy-for-woocommerce.php:354
 msgid "Docs"
 msgstr ""
 
@@ -467,7 +467,7 @@ msgstr ""
 msgid "This is the title that the user sees on the checkout page for Nexi Checkout."
 msgstr ""
 
-#: includes/nets-easy-settings-card.php:34 includes/nets-easy-settings.php:246
+#: includes/nets-easy-settings-card.php:34 includes/nets-easy-settings.php:245
 msgid "Card payment"
 msgstr ""
 
@@ -500,7 +500,7 @@ msgstr ""
 #: includes/nets-easy-settings-sofort.php:44
 #: includes/nets-easy-settings-swish.php:44
 #: includes/nets-easy-settings-trustly.php:44
-#: includes/nets-easy-settings-vipps.php:44 includes/nets-easy-settings.php:172
+#: includes/nets-easy-settings-vipps.php:44 includes/nets-easy-settings.php:171
 msgid "Payment gateway icon"
 msgstr ""
 
@@ -511,7 +511,7 @@ msgstr ""
 #: includes/nets-easy-settings-sofort.php:46
 #: includes/nets-easy-settings-swish.php:46
 #: includes/nets-easy-settings-trustly.php:46
-#: includes/nets-easy-settings-vipps.php:46 includes/nets-easy-settings.php:174
+#: includes/nets-easy-settings-vipps.php:46 includes/nets-easy-settings.php:173
 msgid ""
 "Enter an URL to the icon you want to display for the payment method. Use "
 "<i>default</i> to display the default Nexi logo. Leave blank to not show an "
@@ -525,7 +525,7 @@ msgstr ""
 #: includes/nets-easy-settings-sofort.php:51
 #: includes/nets-easy-settings-swish.php:51
 #: includes/nets-easy-settings-trustly.php:51
-#: includes/nets-easy-settings-vipps.php:51 includes/nets-easy-settings.php:179
+#: includes/nets-easy-settings-vipps.php:51 includes/nets-easy-settings.php:178
 msgid "Payment gateway icon width"
 msgstr ""
 
@@ -536,7 +536,7 @@ msgstr ""
 #: includes/nets-easy-settings-sofort.php:53
 #: includes/nets-easy-settings-swish.php:53
 #: includes/nets-easy-settings-trustly.php:53
-#: includes/nets-easy-settings-vipps.php:53 includes/nets-easy-settings.php:181
+#: includes/nets-easy-settings-vipps.php:53 includes/nets-easy-settings.php:180
 msgid "Specify the max width (in px) of the payment gateway icon."
 msgstr ""
 
@@ -545,7 +545,7 @@ msgid "Enable Nexi Checkout Klarna"
 msgstr ""
 
 #: includes/nets-easy-settings-klarna.php:34
-#: includes/nets-easy-settings.php:280
+#: includes/nets-easy-settings.php:279
 msgid "Klarna payment"
 msgstr ""
 
@@ -554,7 +554,7 @@ msgid "Enable Nexi Checkout MobilePay"
 msgstr ""
 
 #: includes/nets-easy-settings-mobilepay.php:34
-#: includes/nets-easy-settings.php:286
+#: includes/nets-easy-settings.php:285
 msgid "MobilePay payment"
 msgstr ""
 
@@ -602,7 +602,7 @@ msgstr ""
 msgid "Enable Nexi Checkout Swish"
 msgstr ""
 
-#: includes/nets-easy-settings-swish.php:34 includes/nets-easy-settings.php:266
+#: includes/nets-easy-settings-swish.php:34 includes/nets-easy-settings.php:265
 msgid "Swish payment"
 msgstr ""
 
@@ -670,7 +670,7 @@ msgstr ""
 msgid "Enable Nexi Checkout Vipps"
 msgstr ""
 
-#: includes/nets-easy-settings-vipps.php:34 includes/nets-easy-settings.php:292
+#: includes/nets-easy-settings-vipps.php:34 includes/nets-easy-settings.php:291
 msgid "Vipps payment"
 msgstr ""
 
@@ -844,115 +844,113 @@ msgstr ""
 msgid "Unscheduled subscriptions"
 msgstr ""
 
-#: includes/nets-easy-settings.php:160
-#. Translators: URL to Nexi with info about subscriptions.
+#: includes/nets-easy-settings.php:159
 msgid ""
 "If using Nexi Checkout together with Woo Subscriptions, select the "
-"subscription type to use. Read more about scheduled vs unscheduled "
-"subscriptions <a href=\"%s\" target=\"_blank\">here</a>."
+"subscription type to use."
 msgstr ""
 
-#: includes/nets-easy-settings.php:165
+#: includes/nets-easy-settings.php:164
 msgid "Other payment method button text"
 msgstr ""
 
-#: includes/nets-easy-settings.php:167
+#: includes/nets-easy-settings.php:166
 msgid ""
 "Customize the <em>Select another payment method</em> button text that is "
 "displayed in checkout if using other payment methods than Nexi Checkout. "
 "Leave blank to use the default (and translatable) text."
 msgstr ""
 
-#: includes/nets-easy-settings.php:190
+#: includes/nets-easy-settings.php:189
 msgid "Email settings"
 msgstr ""
 
-#: includes/nets-easy-settings.php:192
+#: includes/nets-easy-settings.php:191
 msgid "Configure what appears in order confirmation emails."
 msgstr ""
 
-#: includes/nets-easy-settings.php:195
+#: includes/nets-easy-settings.php:194
 msgid "Email text"
 msgstr ""
 
-#: includes/nets-easy-settings.php:197
+#: includes/nets-easy-settings.php:196
 msgid "This text will be added to your customers order confirmation email."
 msgstr ""
 
-#: includes/nets-easy-settings.php:201
+#: includes/nets-easy-settings.php:200
 msgid "Email payment data"
 msgstr ""
 
-#: includes/nets-easy-settings.php:203
+#: includes/nets-easy-settings.php:202
 msgid "Add Nexi payment data to order confirmation email."
 msgstr ""
 
-#: includes/nets-easy-settings.php:211
+#: includes/nets-easy-settings.php:210
 msgid "Order management and logging"
 msgstr ""
 
-#: includes/nets-easy-settings.php:213
+#: includes/nets-easy-settings.php:212
 msgid "Control backend order handling and logging."
 msgstr ""
 
-#: includes/nets-easy-settings.php:216
+#: includes/nets-easy-settings.php:215
 msgid "Manage orders"
 msgstr ""
 
-#: includes/nets-easy-settings.php:218
+#: includes/nets-easy-settings.php:217
 msgid "Enable WooCommerce to manage orders in Nexi Checkout backend"
 msgstr ""
 
-#: includes/nets-easy-settings.php:222
+#: includes/nets-easy-settings.php:221
 msgid "Invoice fee ID"
 msgstr ""
 
-#: includes/nets-easy-settings.php:224
+#: includes/nets-easy-settings.php:223
 msgid ""
 "Create a hidden (simple) product that acts as the invoice fee. Enter the "
 "product <strong>ID</strong> number in this textfield. Leave blank to "
 "disable."
 msgstr ""
 
-#: includes/nets-easy-settings.php:229
+#: includes/nets-easy-settings.php:228
 msgid "Logging"
 msgstr ""
 
-#: includes/nets-easy-settings.php:231
+#: includes/nets-easy-settings.php:230
 msgid "Log debug messages"
 msgstr ""
 
-#: includes/nets-easy-settings.php:232
+#: includes/nets-easy-settings.php:231
 msgid "Save debug messages to the WooCommerce System Status log"
 msgstr ""
 
-#: includes/nets-easy-settings.php:241
+#: includes/nets-easy-settings.php:240
 msgid "Payment method splitting"
 msgstr ""
 
-#: includes/nets-easy-settings.php:243
+#: includes/nets-easy-settings.php:242
 msgid ""
 "Enable specific payment methods as standalone payment methods in the "
 "checkout."
 msgstr ""
 
-#: includes/nets-easy-settings.php:248
+#: includes/nets-easy-settings.php:247
 msgid "Enable Card payment as separate payment method"
 msgstr ""
 
-#: includes/nets-easy-settings.php:268
+#: includes/nets-easy-settings.php:267
 msgid "Enable Swish payment as separate payment method"
 msgstr ""
 
-#: includes/nets-easy-settings.php:282
+#: includes/nets-easy-settings.php:281
 msgid "Enable Klarna payment as separate payment method"
 msgstr ""
 
-#: includes/nets-easy-settings.php:288
+#: includes/nets-easy-settings.php:287
 msgid "Enable MobilePay payment as separate payment method"
 msgstr ""
 
-#: includes/nets-easy-settings.php:294
+#: includes/nets-easy-settings.php:293
 msgid "Enable Vipps payment as separate payment method"
 msgstr ""
 
