@@ -129,6 +129,20 @@ class Nets_Easy_Ajax extends WC_AJAX {
 	}
 
 	/**
+	 * Whether the Nexi payment has an email for the consumer type the checkout will use.
+	 *
+	 * @param array $response The Nexi payment response.
+	 * @return bool
+	 */
+	private static function has_consumer_email( $response ) {
+		$consumer = $response['payment']['consumer'] ?? array();
+
+		$email = ! empty( $consumer['company']['name'] ) ? ( $consumer['company']['contactDetails']['email'] ?? '' ) : ( $consumer['privatePerson']['email'] ?? '' );
+
+		return ! empty( $email );
+	}
+
+	/**
 	 * Get Nets order data, right before WC form is submitted in checkout.
 	 *
 	 * @return void
@@ -195,6 +209,15 @@ class Nets_Easy_Ajax extends WC_AJAX {
 		// Make the request.
 		$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
 
+		// Nexi can return the consumer without email and phone right after the pay click, so fetch it again a few times.
+		$attempt = 0;
+		while ( ! is_wp_error( $response ) && ! empty( $response ) && ! self::has_consumer_email( $response ) && $attempt < 2 ) {
+			++$attempt;
+			Nets_Easy_Logger::log( "[AJAX]: Email missing in the consumer data for Nets payment ID $payment_id. Fetching the payment again (retry $attempt)." );
+			sleep( $attempt );
+			$response = Nets_Easy()->api->get_nets_easy_order( $payment_id );
+		}
+
 		if ( is_wp_error( $response ) || empty( $response ) ) {
 			// Something went wrong.
 			if ( is_wp_error( $response ) ) {
@@ -218,6 +241,13 @@ class Nets_Easy_Ajax extends WC_AJAX {
 				Nets_Easy_Logger::log( "[AJAX]: processWooCheckout triggered for Nets payment ID $payment_id, but cart total does not match Nets order total. WooCommerce form not submitted. Cart total: $cart_total, Nets order total: $nets_order_total" );
 
 				wp_send_json_error( __( 'Cart total does not match Nets order total. Please try refreshing the page.', 'dibs-easy-for-woocommerce' ) );
+			}
+
+			// Stop here rather than letting WooCommerce reject the order with a required field error.
+			if ( ! self::has_consumer_email( $response ) ) {
+				Nets_Easy_Logger::log( "[AJAX]: processWooCheckout triggered for Nets payment ID $payment_id, but the consumer email is still missing after $attempt retries. WooCommerce form not submitted." );
+
+				wp_send_json_error( __( 'We could not get your contact details from Nexi. Please wait a moment and try again.', 'dibs-easy-for-woocommerce' ) );
 			}
 
 			// All good with the request.

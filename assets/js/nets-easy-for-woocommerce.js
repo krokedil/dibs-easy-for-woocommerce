@@ -313,7 +313,7 @@ jQuery( function ( $ ) {
                 // B2B purchase
                 const company = consumer.company
                 const { firstName, lastName, email, phoneNumber } = company.contactDetails
-                const { prefix, number } = phoneNumber
+                const { prefix = "", number = "" } = phoneNumber || {}
                 $( "#billing_company" ).val( company.name )
                 $( "#shipping_company" ).val( company.name )
                 $( "#billing_first_name" ).val( firstName )
@@ -329,7 +329,7 @@ jQuery( function ( $ ) {
             } else {
                 // B2C purchase
                 const { firstName, lastName, email, phoneNumber } = consumer.privatePerson
-                const { prefix, number } = phoneNumber
+                const { prefix = "", number = "" } = phoneNumber || {}
                 $( "#billing_company" ).val( "" )
                 $( "#shipping_company" ).val( "" )
                 $( "#billing_first_name" ).val( firstName )
