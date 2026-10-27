@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed subscriptions paid with the separate Card payment method not being charged on renewal.
