@@ -193,7 +193,7 @@ class Nets_Easy_Cart_Helper {
 	 * @param  array  $cart_item Cart item.
 	 * @param  object $product   Product object.
 	 *
-	 * @return integer $item_tax_rate Item tax percentage formatted for DIBS.
+	 * @return float $item_tax_rate Item tax percentage formatted for DIBS.
 	 */
 	public static function get_item_tax_rate( $cart_item, $product ) {
 		if ( $product->is_taxable() && $cart_item['line_subtotal_tax'] > 0 ) {

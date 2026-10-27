@@ -174,7 +174,7 @@ function wc_dibs_clean_name( $name ) {
  *
  * @param int $order_id Woocommerce order id.
  *
- * @return void
+ * @return WP_Error|void WP_Error if the payment could not be retrieved from Nexi.
  */
 function wc_dibs_confirm_dibs_order( $order_id ) {
 	$order      = wc_get_order( $order_id );
@@ -212,10 +212,10 @@ function wc_dibs_confirm_dibs_order( $order_id ) {
 				$request->get_error_message()
 			)
 		);
-		return;
+		return $request;
 	}
 
-	if ( isset( $request['payment']['summary']['reservedAmount'] ) || isset( $request['payment']['summary']['chargedAmount'] ) || isset( $request['payment']['subscription']['id'] ) ) {
+	if ( nexi_payment_is_paid( $request ) ) {
 
 		do_action( 'dibs_easy_process_payment', $order_id, $request );
 

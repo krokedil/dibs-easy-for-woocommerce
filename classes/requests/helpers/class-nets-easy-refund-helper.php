@@ -78,7 +78,7 @@ class Nets_Easy_Refund_Helper {
 	 * Returns the id of the refunded order.
 	 *
 	 * @param int $order_id The WooCommerce order id.
-	 * @return string
+	 * @return int
 	 */
 	public static function get_refunded_order_id( $order_id ) {
 		$order = wc_get_order( $order_id );
@@ -158,12 +158,10 @@ class Nets_Easy_Refund_Helper {
 			$nets_shipping_reference = $original_order->get_meta( '_nets_shipping_reference' );
 			if ( isset( $nets_shipping_reference ) && ! empty( $nets_shipping_reference ) ) {
 				$shipping_reference = $nets_shipping_reference;
+			} elseif ( null !== $shipping_item->get_instance_id() ) {
+				$shipping_reference = 'shipping|' . $shipping_item->get_method_id() . ':' . $shipping_item->get_instance_id();
 			} else {
-				if ( null !== $shipping_item->get_instance_id() ) {
-					$shipping_reference = 'shipping|' . $shipping_item->get_method_id() . ':' . $shipping_item->get_instance_id();
-				} else {
-					$shipping_reference = 'shipping|' . $shipping_item->get_method_id();
-				}
+				$shipping_reference = 'shipping|' . $shipping_item->get_method_id();
 			}
 
 			$name               = wc_dibs_clean_name( $shipping_item->get_name() );
@@ -259,7 +257,7 @@ class Nets_Easy_Refund_Helper {
 	 * @param int        $invoice_fee_id The invoice fee product id.
 	 * @return string
 	 */
-	public static function get_sku( $product, $invoice_fee_id ) {
+	public static function get_sku( $product, $invoice_fee_id ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Kept for backwards compatibility.
 		$part_number = $product->get_sku();
 		if ( empty( $part_number ) ) {
 			$part_number = $product->get_id();

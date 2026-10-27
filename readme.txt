@@ -5,8 +5,8 @@ Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
-WC tested up to: 11.1.2
-Stable tag: 2.14.8
+WC tested up to: 11.2.1
+Stable tag: 2.14.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,11 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2026-10-27    - version 2.14.9 =
+* Enhancement   - Masked customer personal data, credentials and other sensitive data in the plugin log. Masking can be turned off while debugging with the krokedil_wp_api_mask_log_data filter.
+* Tweak         - Removed a link to a non-existing Nexi documentation page.
+* Fix           - Retry confirming the payment when the Nexi API request fails in the payment created callback, and no longer cancel unpaid orders that have been paid in Nexi.
+
 = 2026-10-06    - version 2.14.8 =
 * Fix           - Fixed an issue where the subscription payment method change return did not verify that the request belonged to the subscription owner. Thanks to Shrikant Shinde (https://github.com/FindYourBugs) for the responsible disclosure.
 

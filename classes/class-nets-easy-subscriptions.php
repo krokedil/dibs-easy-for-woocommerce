@@ -17,7 +17,7 @@ class Nets_Easy_Subscriptions {
 	/**
 	 * Reference to dibs_settings.
 	 *
-	 * @var $array
+	 * @var array
 	 */
 	public $dibs_settings;
 
@@ -399,10 +399,10 @@ class Nets_Easy_Subscriptions {
 	/**
 	 * Try to get recurring token by external reference from scheduled subscription.
 	 *
-	 * @param string  $dibs_ticket The recurring ticket from the old DIBS subscription platform.
-	 * @param string  $order_id The WooCommerce order ID.
-	 * @param objects $subscriptions WooCommerce Subscriptions tied to the renewal order.
-	 * @param object  $renewal_order The WooCommerce order for the renewal.
+	 * @param string            $dibs_ticket The recurring ticket from the old DIBS subscription platform.
+	 * @param string            $order_id The WooCommerce order ID.
+	 * @param WC_Subscription[] $subscriptions WooCommerce Subscriptions tied to the renewal order.
+	 * @param object            $renewal_order The WooCommerce order for the renewal.
 	 *
 	 * @return string The recurring token.
 	 */
@@ -440,10 +440,10 @@ class Nets_Easy_Subscriptions {
 	/**
 	 * Try to get recurring token by external reference from unscheduled subscription.
 	 *
-	 * @param string  $dibs_ticket The recurring ticket from the old DIBS subscription platform.
-	 * @param string  $order_id The WooCommerce order ID.
-	 * @param objects $subscriptions WooCommerce Subscriptions tied to the renewal order.
-	 * @param object  $renewal_order The WooCommerce order for the renewal.
+	 * @param string            $dibs_ticket The recurring ticket from the old DIBS subscription platform.
+	 * @param string            $order_id The WooCommerce order ID.
+	 * @param WC_Subscription[] $subscriptions WooCommerce Subscriptions tied to the renewal order.
+	 * @param object            $renewal_order The WooCommerce order for the renewal.
 	 *
 	 * @return string The recurring token.
 	 */

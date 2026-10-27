@@ -9,14 +9,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Krokedil\Nexi\Logging\LogMasking;
+
 /**
  * Logger class.
  */
 class Nets_Easy_Logger {
 	/**
-	 * Log message string
+	 * The WooCommerce logger instance.
 	 *
-	 * @var $log
+	 * @var WC_Logger|null
 	 */
 	public static $log;
 
@@ -28,11 +30,11 @@ class Nets_Easy_Logger {
 	public static function log( $data ) {
 		$dibs_easy__settings = get_option( 'woocommerce_dibs_easy_settings' );
 		if ( 'yes' === $dibs_easy__settings['debug_mode'] ) {
-			$message = self::format_data( $data );
+			$message = LogMasking::mask_entry( self::format_data( $data ) );
 			if ( empty( self::$log ) ) {
 				self::$log = new WC_Logger();
 			}
-			self::$log->add( 'nexi_checkout', wp_json_encode( $message, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
+			self::$log->add( LogMasking::SLUG, wp_json_encode( $message, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 		}
 
 		if ( isset( $data['response']['code'] ) && ( $data['response']['code'] < 200 || $data['response']['code'] > 299 ) ) {
@@ -53,7 +55,7 @@ class Nets_Easy_Logger {
 		}
 
 		$logs   = array_slice( $logs, - 14 );
-		$logs[] = $data;
+		$logs[] = LogMasking::mask_stored_entry( $data );
 		$logs   = wp_json_encode( $logs );
 		update_option( 'dibs_easy_debuglog', $logs, false );
 	}
@@ -69,7 +71,7 @@ class Nets_Easy_Logger {
 		if ( ! is_array( $data ) ) {
 			return $data;
 		}
-		if ( isset( $data['request']['body'] ) ) {
+		if ( isset( $data['request']['body'] ) && is_string( $data['request']['body'] ) ) {
 			$request_body            = json_decode( $data['request']['body'], true );
 			$data['request']['body'] = ( ! empty( $request_body ) ) ? $request_body : $data['request']['body'];
 		}

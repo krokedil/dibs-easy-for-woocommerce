@@ -55,7 +55,7 @@ class Nets_Easy_Order_Helper {
 	 *
 	 * @param array $items The order/cart line items.
 	 *
-	 * @return string
+	 * @return int|float
 	 */
 	public static function get_order_total( $items ) {
 		$amount = 0;

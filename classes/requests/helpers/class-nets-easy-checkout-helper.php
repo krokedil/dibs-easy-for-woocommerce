@@ -209,7 +209,7 @@ class Nets_Easy_Checkout_Helper {
 	 * Gets customer phone number formatted for Nets.
 	 *
 	 * @param object $order The WooCommerce order.
-	 * @return string
+	 * @return string|null
 	 */
 	public static function get_phone_number( $order ) {
 		$phone_number = $order->get_billing_phone();
