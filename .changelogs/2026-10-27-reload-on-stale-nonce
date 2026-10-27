@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+The checkout now reloads when a retried payment fails because the checkout logged the new customer in, instead of failing with a "bad_nonce" error.
