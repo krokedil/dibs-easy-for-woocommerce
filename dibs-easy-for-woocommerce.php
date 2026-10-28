@@ -38,6 +38,7 @@ define( 'DIBS_API_TEST_ENDPOINT', 'https://test.api.dibspayment.eu/v1/' );
 use KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use Krokedil\Nexi\PaymentMethods;
 use Krokedil\Nexi\Logging\LogMasking;
+use Krokedil\Nexi\Checkout\StalePaymentSession;
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 
@@ -260,6 +261,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			if ( nexi_is_embedded( $this->checkout_flow ) ) {
 				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
+				StalePaymentSession::register();
 			}
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );
