@@ -1,4 +1,4 @@
 Type: Fix
 Needs Documentation: no
 
-The checkout now reloads when a retried payment fails because the checkout logged the new customer in, instead of failing with a "bad_nonce" error. A reloaded checkout also starts a new Nexi payment if the previous one was submitted but never paid, so the customer can pay again after a declined attempt.
+The checkout now reloads when a retried payment fails because the checkout logged the new customer in, instead of failing with a "bad_nonce" error. When the checkout reloads itself this way, it also starts a new Nexi payment if the previous one was submitted but never paid, so the customer can pay again.

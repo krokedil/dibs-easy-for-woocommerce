@@ -190,7 +190,9 @@ jQuery( function ( $ ) {
                         // WooCommerce asks for a reload after the checkout logged the customer in.
                         if ( true === data.reload ) {
                             wcNexiCheckout.nexiCheckout.send( "payment-order-finalized", false )
-                            window.location.reload()
+                            const url = new URL( window.location.href )
+                            url.searchParams.set( "nexi_new_payment", "1" )
+                            window.location.replace( url.toString() )
                             return
                         }
                         if ( data.messages ) {

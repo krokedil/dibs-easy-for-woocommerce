@@ -507,7 +507,9 @@ jQuery( function ( $ ) {
          */
         reloadCheckout() {
             dibsEasyForWoocommerce.dibsCheckout.send( "payment-order-finalized", false )
-            window.location.reload()
+            const url = new URL( window.location.href )
+            url.searchParams.set( "nexi_new_payment", "1" )
+            window.location.replace( url.toString() )
         },
         /**
          * Fails the order with Dibs Easy on a checkout error and timeout.
