@@ -273,6 +273,11 @@ jQuery( function ( $ ) {
                 },
                 success( data ) {
                     console.log( data )
+                    // The nonce goes stale when the checkout logged the customer in. Reload to get fresh ones.
+                    if ( false === data.success && "bad_nonce" === data.data ) {
+                        dibsEasyForWoocommerce.reloadCheckout()
+                        return
+                    }
                     if ( false === data.success && data.data && data.data.retry ) {
                         // Nexi can lack the customer email right after the pay click, so fetch it again a few times.
                         if ( attempt < 2 ) {
@@ -428,6 +433,11 @@ jQuery( function ( $ ) {
                             throw "Result failed"
                         }
                     } catch ( err ) {
+                        // WooCommerce asks for a reload after the checkout logged the customer in.
+                        if ( true === data.reload ) {
+                            dibsEasyForWoocommerce.reloadCheckout()
+                            return
+                        }
                         if ( data.messages ) {
                             dibsEasyForWoocommerce.logToFile( "Checkout error | " + data.messages )
                             dibsEasyForWoocommerce.failOrder( "submission", data.messages )
@@ -520,6 +530,15 @@ jQuery( function ( $ ) {
                     nonce: wcDibsEasy.log_to_file_nonce,
                 },
             } )
+        },
+        /**
+         * Cancels the pending payment in the Nexi box and reloads the checkout.
+         */
+        reloadCheckout() {
+            dibsEasyForWoocommerce.dibsCheckout.send( "payment-order-finalized", false )
+            const url = new URL( window.location.href )
+            url.searchParams.set( "nexi_new_payment", "1" )
+            window.location.replace( url.toString() )
         },
         /**
          * Fails the order with Dibs Easy on a checkout error and timeout.
