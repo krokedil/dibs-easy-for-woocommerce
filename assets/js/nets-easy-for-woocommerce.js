@@ -252,6 +252,15 @@ jQuery( function ( $ ) {
             dibsEasyForWoocommerce.dibsOrderProcessing = true
             dibsEasyForWoocommerce.logToFile( `Pay initialized is triggered with payment id: ${ paymentId }` )
             $( document.body ).trigger( "dibs_pay_initialized" )
+            dibsEasyForWoocommerce.getOrderData( paymentId, 0 )
+        },
+        /**
+         * Fetches the Nets Easy order data, retrying while the customer email is missing.
+         *
+         * @param {string} paymentId
+         * @param {number} attempt
+         */
+        getOrderData( paymentId, attempt ) {
             $.ajax( {
                 type: "POST",
                 dataType: "json",
@@ -269,7 +278,27 @@ jQuery( function ( $ ) {
                         dibsEasyForWoocommerce.reloadCheckout()
                         return
                     }
-                    if ( false === data.success ) {
+                    if ( false === data.success && data.data && data.data.retry ) {
+                        // Nexi can lack the customer email right after the pay click, so fetch it again a few times.
+                        if ( attempt < 2 ) {
+                            const nextAttempt = attempt + 1
+                            dibsEasyForWoocommerce.logToFile(
+                                `Customer email missing for payment id: ${ paymentId }. Fetching the payment again (retry ${ nextAttempt }).`,
+                            )
+                            setTimeout(
+                                () => dibsEasyForWoocommerce.getOrderData( paymentId, nextAttempt ),
+                                nextAttempt * 1000,
+                            )
+                        } else {
+                            dibsEasyForWoocommerce.logToFile(
+                                `Customer email still missing for payment id: ${ paymentId } after ${ attempt } retries.`,
+                            )
+                            dibsEasyForWoocommerce.failOrder(
+                                "ajax-error",
+                                '<div class="woocommerce-error">' + data.data.message + "</div>",
+                            )
+                        }
+                    } else if ( false === data.success ) {
                         console.log( "PaymentID already exist in order" )
                         console.log( data )
                         dibsEasyForWoocommerce.failOrder(
@@ -318,7 +347,7 @@ jQuery( function ( $ ) {
                 // B2B purchase
                 const company = consumer.company
                 const { firstName, lastName, email, phoneNumber } = company.contactDetails
-                const { prefix, number } = phoneNumber
+                const { prefix = "", number = "" } = phoneNumber || {}
                 $( "#billing_company" ).val( company.name )
                 $( "#shipping_company" ).val( company.name )
                 $( "#billing_first_name" ).val( firstName )
@@ -334,7 +363,7 @@ jQuery( function ( $ ) {
             } else {
                 // B2C purchase
                 const { firstName, lastName, email, phoneNumber } = consumer.privatePerson
-                const { prefix, number } = phoneNumber
+                const { prefix = "", number = "" } = phoneNumber || {}
                 $( "#billing_company" ).val( "" )
                 $( "#shipping_company" ).val( "" )
                 $( "#billing_first_name" ).val( firstName )
