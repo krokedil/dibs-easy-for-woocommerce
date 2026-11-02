@@ -187,6 +187,14 @@ jQuery( function ( $ ) {
                             throw "Result failed"
                         }
                     } catch ( err ) {
+                        // WooCommerce asks for a reload after the checkout logged the customer in.
+                        if ( true === data.reload ) {
+                            wcNexiCheckout.nexiCheckout.send( "payment-order-finalized", false )
+                            const url = new URL( window.location.href )
+                            url.searchParams.set( "nexi_new_payment", "1" )
+                            window.location.replace( url.toString() )
+                            return
+                        }
                         if ( data.messages ) {
                             wcNexiCheckout.logToFile( "Checkout error | " + data.messages )
                             wcNexiCheckout.failOrder( "submission", data.messages )

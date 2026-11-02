@@ -8,7 +8,7 @@
  * Plugin Name:             Nexi Checkout
  * Plugin URI:              https://krokedil.se/produkt/nets-easy/
  * Description:             Extends WooCommerce. Provides a <a href="http://developer.nexigroup.com/nexi-checkout/en-EU/docs/checkout-for-woocommerce/" target="_blank">Nexi Checkout</a> payment solution for WooCommerce.
- * Version:                 2.14.9
+ * Version:                 2.14.10
  * Author:                  Krokedil
  * Author URI:              https://krokedil.se/
  * Developer:               Krokedil
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required minimums and constants
  */
-define( 'WC_DIBS_EASY_VERSION', '2.14.9' );
+define( 'WC_DIBS_EASY_VERSION', '2.14.10' );
 define( 'WC_DIBS__URL', untrailingslashit( plugins_url( '/', __FILE__ ) ) );
 define( 'WC_DIBS_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'DIBS_API_LIVE_ENDPOINT', 'https://api.dibspayment.eu/v1/' );
@@ -38,6 +38,7 @@ define( 'DIBS_API_TEST_ENDPOINT', 'https://test.api.dibspayment.eu/v1/' );
 use KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use Krokedil\Nexi\PaymentMethods;
 use Krokedil\Nexi\Logging\LogMasking;
+use Krokedil\Nexi\Checkout\StalePaymentSession;
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 
@@ -260,6 +261,7 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			if ( nexi_is_embedded( $this->checkout_flow ) ) {
 				include_once plugin_basename( 'classes/class-nets-easy-templates.php' );
+				StalePaymentSession::register();
 			}
 
 			load_plugin_textdomain( 'dibs-easy-for-woocommerce', false, plugin_basename( __DIR__ ) . '/languages' );

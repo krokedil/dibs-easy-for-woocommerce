@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 5.6.0
 WC tested up to: 11.2.1
-Stable tag: 2.14.9
+Stable tag: 2.14.10
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,6 +60,11 @@ For help setting up and configuring Nexi Checkout please refer to our [documenta
 * This plugin integrates with Nexi Checkout. You need an agreement with Nets specific to the Nexi Checkout platform to use this plugin.
 
 == CHANGELOG ==
+= 2026-11-02    - version 2.14.10 =
+* Fix           - Fixed subscriptions paid with the separate Card payment method not being charged on renewal.
+* Fix           - The checkout now reloads when a retried payment fails because the checkout logged the new customer in, instead of failing with a "bad_nonce" error. When the checkout reloads itself this way, it also starts a new Nexi payment if the previous one was submitted but never paid, so the customer can pay again.
+* Fix           - The Nexi payment fetch is now retried if the embedded checkout lacks the customer email at payment. If it's still missing, a clear error is shown; missing phone numbers no longer block order submission.
+
 = 2026-10-27    - version 2.14.9 =
 * Enhancement   - Masked customer personal data, credentials and other sensitive data in the plugin log. Masking can be turned off while debugging with the krokedil_wp_api_mask_log_data filter.
 * Tweak         - Removed a link to a non-existing Nexi documentation page.

@@ -38,8 +38,10 @@ class Nets_Easy_Subscriptions {
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'show_recurring_token' ) );
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save_dibs_recurring_token_update' ), 45 );
 
-		// Charge renewal payment.
-		add_action( 'woocommerce_scheduled_subscription_payment_dibs_easy', array( $this, 'trigger_scheduled_payment' ), 10, 2 );
+		// Charge renewal payment for each gateway that supports subscriptions.
+		foreach ( array( 'dibs_easy', 'nets_easy_card' ) as $gateway_id ) {
+			add_action( "woocommerce_scheduled_subscription_payment_{$gateway_id}", array( $this, 'trigger_scheduled_payment' ), 10, 2 );
+		}
 
 		add_action( 'init', array( $this, 'dibs_payment_method_changed' ) );
 
