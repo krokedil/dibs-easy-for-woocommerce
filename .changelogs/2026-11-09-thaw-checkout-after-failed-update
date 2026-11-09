@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed the Nexi pay button not responding after a cart change when the checkout update failed or was interrupted. The embedded and inline checkout now thaws once all updates are done, whatever their outcome, with a 20-second safety net, and logs when it thaws after an error.
