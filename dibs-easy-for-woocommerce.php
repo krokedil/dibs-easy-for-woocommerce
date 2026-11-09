@@ -39,6 +39,7 @@ use KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use Krokedil\Nexi\PaymentMethods;
 use Krokedil\Nexi\Logging\LogMasking;
 use Krokedil\Nexi\Checkout\StalePaymentSession;
+use Krokedil\Nexi\Webhooks\ReservationFailed;
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 
@@ -215,6 +216,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			// Functions are used in the files below.
 			include_once plugin_basename( 'includes/nets-easy-functions.php' );
+
+			ReservationFailed::register();
 
 			include_once plugin_basename( 'classes/class-nets-easy-ajax.php' );
 			include_once plugin_basename( 'classes/class-nets-easy-order-management.php' );
