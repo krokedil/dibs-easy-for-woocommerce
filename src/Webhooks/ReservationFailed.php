@@ -50,7 +50,17 @@ class ReservationFailed {
 	}
 
 	/**
-	 * Handle the webhook request. Always answers 200, since Nexi retries anything else.
+	 * The credential Nexi sends back in the Authorization header. Stable and secret per site, so it can be checked for the
+	 * webhook's whole lifetime. Nexi accepts 8-64 alphanumeric characters.
+	 *
+	 * @return string
+	 */
+	public static function get_authorization() {
+		return wp_hash( self::EVENT . '-webhook' );
+	}
+
+	/**
+	 * Handle the webhook request. Answers 200 unless the payment state could not be read, since Nexi retries anything else.
 	 *
 	 * @return void
 	 */
@@ -59,18 +69,41 @@ class ReservationFailed {
 			return;
 		}
 
-		$data = json_decode( file_get_contents( 'php://input' ), true );
-		self::handle( is_array( $data ) ? $data : array() );
+		if ( ! self::is_authorized() ) {
+			\Nets_Easy_Logger::log( 'Reservation failed webhook rejected: invalid authorization.' );
+			status_header( 401 );
+			exit;
+		}
 
-		status_header( 200 );
+		$data   = json_decode( file_get_contents( 'php://input' ), true );
+		$result = self::handle( is_array( $data ) ? $data : array() );
+
+		status_header( null === $result ? 503 : 200 );
 		exit;
+	}
+
+	/**
+	 * Check the Authorization header against the credential sent when the webhook was registered.
+	 *
+	 * @return bool
+	 */
+	private static function is_authorized() {
+		$header = '';
+		foreach ( array( 'HTTP_AUTHORIZATION', 'REDIRECT_HTTP_AUTHORIZATION' ) as $key ) {
+			if ( ! empty( $_SERVER[ $key ] ) ) {
+				$header = sanitize_text_field( wp_unslash( $_SERVER[ $key ] ) );
+				break;
+			}
+		}
+
+		return '' !== $header && hash_equals( self::get_authorization(), $header );
 	}
 
 	/**
 	 * Add a note about the declined attempt to the order the payment belongs to.
 	 *
 	 * @param array $data The decoded webhook body.
-	 * @return bool True if a note was added.
+	 * @return bool|null True if a note was added, null if the payment state could not be read and Nexi should retry.
 	 */
 	public static function handle( $data ) {
 		if ( self::EVENT !== ( $data['event'] ?? '' ) || empty( $data['data']['paymentId'] ) || ! is_string( $data['data']['paymentId'] ) ) {
@@ -106,7 +139,13 @@ class ReservationFailed {
 		}
 
 		// A retry in the same checkout can succeed before this arrives.
-		if ( nexi_payment_is_paid( Nets_Easy()->api->get_nets_easy_order( $payment_id, true ) ) ) {
+		$nexi_order = Nets_Easy()->api->get_nets_easy_order( $payment_id, true );
+		if ( is_wp_error( $nexi_order ) ) {
+			\Nets_Easy_Logger::log( "Reservation failed webhook: could not read payment $payment_id from Nexi. No note added to order $order_id, Nexi will retry." );
+			return null;
+		}
+
+		if ( nexi_payment_is_paid( $nexi_order ) ) {
 			\Nets_Easy_Logger::log( "Reservation failed webhook: payment $payment_id is reserved in Nexi. No note added to order $order_id." );
 			return false;
 		}
