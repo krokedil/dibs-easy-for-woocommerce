@@ -24,6 +24,14 @@ jQuery( function ( $ ) {
         standardWooFields: wcDibsEasy.standard_woo_checkout_fields,
         wooTerms: "form.checkout #terms",
         alreadyRedirected: false,
+        isFrozen: false,
+        isLoginFrozen: false,
+        pendingUpdates: 0,
+        lastUpdateStatus: "success",
+        thawTimer: null,
+        watchdogTimer: null,
+        thawDelay: 500,
+        watchdogDelay: 20000,
 
         /**
          * Initialize the gateway
@@ -58,6 +66,127 @@ jQuery( function ( $ ) {
                 dibsEasyForWoocommerce.initDibsCheckout()
                 dibsEasyForWoocommerce.bodyEl.on( "update_checkout", dibsEasyForWoocommerce.updateCheckout )
                 dibsEasyForWoocommerce.bodyEl.on( "updated_checkout", dibsEasyForWoocommerce.updatedCheckout )
+                $( document ).on( "ajaxSend", dibsEasyForWoocommerce.onAjaxSend )
+                $( document ).on( "ajaxComplete", dibsEasyForWoocommerce.onAjaxComplete )
+            }
+        },
+
+        /**
+         * Checks if a request is a WooCommerce update_order_review request.
+         *
+         * @param {Object} settings The jQuery AJAX settings.
+         * @return {boolean} True if it is an update_order_review request.
+         */
+        isUpdateOrderReview( settings ) {
+            return (
+                !! settings && "string" === typeof settings.url && -1 !== settings.url.indexOf( "update_order_review" )
+            )
+        },
+
+        /**
+         * Counts the update_order_review requests in flight.
+         *
+         * @param {Event}  event
+         * @param {Object} jqXHR
+         * @param {Object} settings
+         */
+        onAjaxSend( event, jqXHR, settings ) {
+            if ( ! dibsEasyForWoocommerce.isUpdateOrderReview( settings ) ) {
+                return
+            }
+            dibsEasyForWoocommerce.pendingUpdates++
+            clearTimeout( dibsEasyForWoocommerce.thawTimer )
+        },
+
+        /**
+         * Thaws the checkout once no update_order_review requests are left, whatever their outcome.
+         * WooCommerce only triggers updated_checkout on success, so an error or abort would leave it frozen.
+         *
+         * @param {Event}  event
+         * @param {Object} jqXHR
+         * @param {Object} settings
+         */
+        onAjaxComplete( event, jqXHR, settings ) {
+            if ( ! dibsEasyForWoocommerce.isUpdateOrderReview( settings ) ) {
+                return
+            }
+            dibsEasyForWoocommerce.pendingUpdates = Math.max( 0, dibsEasyForWoocommerce.pendingUpdates - 1 )
+
+            if ( "abort" === jqXHR.statusText ) {
+                dibsEasyForWoocommerce.lastUpdateStatus = "abort"
+            } else if ( jqXHR.status < 200 || jqXHR.status >= 300 ) {
+                dibsEasyForWoocommerce.lastUpdateStatus = "error"
+            } else {
+                dibsEasyForWoocommerce.lastUpdateStatus = "success"
+            }
+
+            if ( 0 === dibsEasyForWoocommerce.pendingUpdates ) {
+                const reason = dibsEasyForWoocommerce.lastUpdateStatus
+                clearTimeout( dibsEasyForWoocommerce.thawTimer )
+                dibsEasyForWoocommerce.thawTimer = setTimeout(
+                    () => dibsEasyForWoocommerce.thaw( reason ),
+                    dibsEasyForWoocommerce.thawDelay,
+                )
+            }
+        },
+
+        /**
+         * Freezes the Nexi checkout, which blocks the pay button. Safe to call more than once.
+         *
+         * @param {boolean} forLogin True if the customer must log in before paying.
+         */
+        freeze( forLogin = false ) {
+            if ( ! dibsEasyForWoocommerce.dibsCheckout ) {
+                return
+            }
+            clearTimeout( dibsEasyForWoocommerce.thawTimer )
+
+            if ( forLogin ) {
+                dibsEasyForWoocommerce.isLoginFrozen = true
+                clearTimeout( dibsEasyForWoocommerce.watchdogTimer )
+            } else if ( ! dibsEasyForWoocommerce.isLoginFrozen ) {
+                clearTimeout( dibsEasyForWoocommerce.watchdogTimer )
+                dibsEasyForWoocommerce.watchdogTimer = setTimeout(
+                    () => dibsEasyForWoocommerce.thaw( "watchdog" ),
+                    dibsEasyForWoocommerce.watchdogDelay,
+                )
+            }
+
+            if ( ! dibsEasyForWoocommerce.isFrozen ) {
+                dibsEasyForWoocommerce.isFrozen = true
+                dibsEasyForWoocommerce.dibsCheckout.freezeCheckout()
+            }
+        },
+
+        /**
+         * Thaws the Nexi checkout, which enables the pay button and reloads the amount. Safe to call more than once.
+         *
+         * @param {string} reason Why the checkout is thawed: success, error, abort, watchdog, address or failOrder.
+         */
+        thaw( reason ) {
+            clearTimeout( dibsEasyForWoocommerce.thawTimer )
+            if ( ! dibsEasyForWoocommerce.dibsCheckout || dibsEasyForWoocommerce.isLoginFrozen ) {
+                return
+            }
+            clearTimeout( dibsEasyForWoocommerce.watchdogTimer )
+            $( "#dibs-order-review" ).unblock()
+
+            if ( ! dibsEasyForWoocommerce.isFrozen ) {
+                return
+            }
+            dibsEasyForWoocommerce.isFrozen = false
+            dibsEasyForWoocommerce.dibsCheckout.thawCheckout()
+
+            if ( "watchdog" === reason ) {
+                dibsEasyForWoocommerce.logToFile(
+                    `Nexi checkout thawed by the watchdog after ${
+                        dibsEasyForWoocommerce.watchdogDelay / 1000
+                    } seconds. Checkout updates in flight: ${ dibsEasyForWoocommerce.pendingUpdates }.`,
+                )
+            } else if ( "error" === reason || "abort" === reason ) {
+                dibsEasyForWoocommerce.logToFile(
+                    `Nexi checkout thawed after checkout update ended with "${ reason }".`,
+                )
             }
         },
 
@@ -95,7 +224,7 @@ jQuery( function ( $ ) {
 					<li>${ message }</li>
 				</ul>
 			</div>`
-            dibsEasyForWoocommerce.checkoutFormSelector.prepend( mustLoginNotice )
+            $( dibsEasyForWoocommerce.checkoutFormSelector ).prepend( mustLoginNotice )
         },
         /**
          * Update WC form if needed
@@ -113,9 +242,9 @@ jQuery( function ( $ ) {
             if ( "yes" === data.mustLogin ) {
                 // Customer might need to log in. Inform customer and freeze DIBS checkout.
                 dibsEasyForWoocommerce.displayMustLoginError( data.mustLoginMessage )
-                dibsEasyForWoocommerce.dibsCheckout.freezeCheckout()
+                dibsEasyForWoocommerce.freeze( true )
 
-                const etop = dibsEasyForWoocommerce.checkoutFormSelector.offset().top
+                const etop = $( dibsEasyForWoocommerce.checkoutFormSelector ).offset().top
                 $( "html, body" ).animate(
                     {
                         scrollTop: etop,
@@ -124,7 +253,8 @@ jQuery( function ( $ ) {
                 )
             } else {
                 // All good release checkout and trigger update_checkout event
-                dibsEasyForWoocommerce.dibsCheckout.thawCheckout()
+                dibsEasyForWoocommerce.isLoginFrozen = false
+                dibsEasyForWoocommerce.thaw( "address" )
                 $( document.body ).trigger( "update_checkout" )
             }
         },
@@ -132,16 +262,18 @@ jQuery( function ( $ ) {
         updateCheckout() {
             console.log( "update_checkout" )
             if ( window.Dibs !== undefined ) {
-                // lock iframe
-                dibsEasyForWoocommerce.dibsCheckout.freezeCheckout()
+                dibsEasyForWoocommerce.freeze()
             }
         },
         updatedCheckout() {
             console.log( "updated_checkout" )
-            if ( window.Dibs !== undefined ) {
-                // unlock iframe
-                dibsEasyForWoocommerce.dibsCheckout.thawCheckout()
-                $( "#dibs-order-review" ).unblock()
+            // The update_order_review request is thawed by onAjaxComplete. Thaw here for other triggers of the event.
+            if ( window.Dibs !== undefined && 0 === dibsEasyForWoocommerce.pendingUpdates ) {
+                clearTimeout( dibsEasyForWoocommerce.thawTimer )
+                dibsEasyForWoocommerce.thawTimer = setTimeout(
+                    () => dibsEasyForWoocommerce.thaw( "success" ),
+                    dibsEasyForWoocommerce.thawDelay,
+                )
             }
         },
         /**
@@ -552,6 +684,7 @@ jQuery( function ( $ ) {
 
             // Send false and cancel
             dibsEasyForWoocommerce.dibsCheckout.send( "payment-order-finalized", false )
+            dibsEasyForWoocommerce.thaw( "failOrder" )
             // Reenable the form.
             dibsEasyForWoocommerce.bodyEl.trigger( "updated_checkout" )
             $( dibsEasyForWoocommerce.checkoutFormSelector ).removeClass( "processing" )

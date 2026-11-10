@@ -14,6 +14,13 @@ jQuery( function ( $ ) {
         nexiCheckout: null,
         checkoutFormSelector: "form.checkout",
         selectedGateway: "",
+        isFrozen: false,
+        pendingUpdates: 0,
+        lastUpdateStatus: "success",
+        thawTimer: null,
+        watchdogTimer: null,
+        thawDelay: 500,
+        watchdogDelay: 20000,
         log: ( ...args ) => {
             if ( nexiCheckoutParams.debug ) {
                 console.log( ...args )
@@ -53,6 +60,8 @@ jQuery( function ( $ ) {
                 // Update the Nexi Checkout when the checkout is updated.
                 wcNexiCheckout.bodyEl.on( "update_checkout", wcNexiCheckout.updateCheckout )
                 wcNexiCheckout.bodyEl.on( "updated_checkout", wcNexiCheckout.updatedCheckout )
+                $( document ).on( "ajaxSend", wcNexiCheckout.onAjaxSend )
+                $( document ).on( "ajaxComplete", wcNexiCheckout.onAjaxComplete )
             } )
 
             $( "#nexi-inline-close-modal" ).on( "click", () => {
@@ -71,14 +80,124 @@ jQuery( function ( $ ) {
             wcNexiCheckout.log( "update_checkout" )
             if ( window.Dibs !== undefined ) {
                 wcNexiCheckout.blockUI()
-                wcNexiCheckout.nexiCheckout.freezeCheckout()
+                wcNexiCheckout.freeze()
             }
         },
         updatedCheckout() {
             wcNexiCheckout.log( "updated_checkout" )
-            if ( window.Dibs !== undefined ) {
-                wcNexiCheckout.nexiCheckout.thawCheckout()
-                wcNexiCheckout.unblockUI()
+            // The update_order_review request is thawed by onAjaxComplete. Thaw here for other triggers of the event.
+            if ( window.Dibs !== undefined && 0 === wcNexiCheckout.pendingUpdates ) {
+                clearTimeout( wcNexiCheckout.thawTimer )
+                wcNexiCheckout.thawTimer = setTimeout(
+                    () => wcNexiCheckout.thaw( "success" ),
+                    wcNexiCheckout.thawDelay,
+                )
+            }
+        },
+
+        /**
+         * Checks if a request is a WooCommerce update_order_review request.
+         *
+         * @param {Object} settings The jQuery AJAX settings.
+         * @return {boolean} True if it is an update_order_review request.
+         */
+        isUpdateOrderReview( settings ) {
+            return (
+                !! settings && "string" === typeof settings.url && -1 !== settings.url.indexOf( "update_order_review" )
+            )
+        },
+
+        /**
+         * Counts the update_order_review requests in flight.
+         *
+         * @param {Event}  event
+         * @param {Object} jqXHR
+         * @param {Object} settings
+         */
+        onAjaxSend( event, jqXHR, settings ) {
+            if ( ! wcNexiCheckout.isUpdateOrderReview( settings ) ) {
+                return
+            }
+            wcNexiCheckout.pendingUpdates++
+            clearTimeout( wcNexiCheckout.thawTimer )
+        },
+
+        /**
+         * Thaws the checkout once no update_order_review requests are left, whatever their outcome.
+         * WooCommerce only triggers updated_checkout on success, so an error or abort would leave it frozen.
+         *
+         * @param {Event}  event
+         * @param {Object} jqXHR
+         * @param {Object} settings
+         */
+        onAjaxComplete( event, jqXHR, settings ) {
+            if ( ! wcNexiCheckout.isUpdateOrderReview( settings ) ) {
+                return
+            }
+            wcNexiCheckout.pendingUpdates = Math.max( 0, wcNexiCheckout.pendingUpdates - 1 )
+
+            if ( "abort" === jqXHR.statusText ) {
+                wcNexiCheckout.lastUpdateStatus = "abort"
+            } else if ( jqXHR.status < 200 || jqXHR.status >= 300 ) {
+                wcNexiCheckout.lastUpdateStatus = "error"
+            } else {
+                wcNexiCheckout.lastUpdateStatus = "success"
+            }
+
+            if ( 0 === wcNexiCheckout.pendingUpdates ) {
+                const reason = wcNexiCheckout.lastUpdateStatus
+                clearTimeout( wcNexiCheckout.thawTimer )
+                wcNexiCheckout.thawTimer = setTimeout( () => wcNexiCheckout.thaw( reason ), wcNexiCheckout.thawDelay )
+            }
+        },
+
+        /**
+         * Freezes the Nexi checkout, which blocks the pay button. Safe to call more than once.
+         */
+        freeze() {
+            if ( ! wcNexiCheckout.nexiCheckout ) {
+                return
+            }
+            clearTimeout( wcNexiCheckout.thawTimer )
+            clearTimeout( wcNexiCheckout.watchdogTimer )
+            wcNexiCheckout.watchdogTimer = setTimeout(
+                () => wcNexiCheckout.thaw( "watchdog" ),
+                wcNexiCheckout.watchdogDelay,
+            )
+
+            if ( ! wcNexiCheckout.isFrozen ) {
+                wcNexiCheckout.isFrozen = true
+                wcNexiCheckout.nexiCheckout.freezeCheckout()
+            }
+        },
+
+        /**
+         * Thaws the Nexi checkout, which enables the pay button and reloads the amount. Safe to call more than once.
+         *
+         * @param {string} reason Why the checkout is thawed: success, error, abort, watchdog or failOrder.
+         */
+        thaw( reason ) {
+            clearTimeout( wcNexiCheckout.thawTimer )
+            if ( ! wcNexiCheckout.nexiCheckout ) {
+                return
+            }
+            clearTimeout( wcNexiCheckout.watchdogTimer )
+            wcNexiCheckout.unblockUI()
+
+            if ( ! wcNexiCheckout.isFrozen ) {
+                return
+            }
+            wcNexiCheckout.isFrozen = false
+            wcNexiCheckout.nexiCheckout.thawCheckout()
+
+            if ( "watchdog" === reason ) {
+                wcNexiCheckout.logToFile(
+                    `Nexi checkout thawed by the watchdog after ${
+                        wcNexiCheckout.watchdogDelay / 1000
+                    } seconds. Checkout updates in flight: ${ wcNexiCheckout.pendingUpdates }.`,
+                )
+            } else if ( "error" === reason || "abort" === reason ) {
+                wcNexiCheckout.logToFile( `Nexi checkout thawed after checkout update ended with "${ reason }".` )
             }
         },
 
@@ -313,6 +432,7 @@ jQuery( function ( $ ) {
 
             // Send false and cancel
             wcNexiCheckout.nexiCheckout.send( "payment-order-finalized", false )
+            wcNexiCheckout.thaw( "failOrder" )
             // Reenable the form.
             wcNexiCheckout.bodyEl.trigger( "updated_checkout" )
             $( wcNexiCheckout.checkoutFormSelector ).removeClass( "processing" )
