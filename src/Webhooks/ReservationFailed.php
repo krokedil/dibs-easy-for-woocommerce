@@ -50,8 +50,7 @@ class ReservationFailed {
 	}
 
 	/**
-	 * The credential Nexi sends back in the Authorization header. Stable and secret per site, so it can be checked for the
-	 * webhook's whole lifetime. Nexi accepts 8-64 alphanumeric characters.
+	 * The credential Nexi sends back in the Authorization header.
 	 *
 	 * @return string
 	 */
