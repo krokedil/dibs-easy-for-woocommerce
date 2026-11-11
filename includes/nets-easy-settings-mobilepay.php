@@ -24,14 +24,14 @@ return apply_filters(
 		'enabled'                    => array(
 			'title'   => __( 'Enable/Disable', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Nexi Checkout MobilePay', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Nexi Checkout Vipps (DK/FI)', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'title'                      => array(
 			'title'       => __( 'Title', 'dibs-easy-for-woocommerce' ),
 			'type'        => 'text',
 			'description' => __( 'This is the title that the user sees on the checkout page for Nexi Checkout.', 'dibs-easy-for-woocommerce' ),
-			'default'     => __( 'MobilePay payment', 'dibs-easy-for-woocommerce' ),
+			'default'     => __( 'Vipps payment', 'dibs-easy-for-woocommerce' ),
 		),
 		'description'                => array(
 			'title'       => __( 'Description', 'dibs-easy-for-woocommerce' ),

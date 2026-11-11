@@ -10,7 +10,7 @@ Stable tag: 2.14.10
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Accept payments via Nexi Checkout (formerly Nets Easy) in WooCommerce with cards, Vipps, MobilePay, Klarna and more.
+Accept payments via Nexi Checkout (formerly Nets Easy) in WooCommerce with cards, Vipps, Klarna and more.
 
 == DESCRIPTION ==
 Nexi Checkout is a plugin that extends WooCommerce, allowing you to take payments via Nets/Nexi's payment method Nexi Checkout.

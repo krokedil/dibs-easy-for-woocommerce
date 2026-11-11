@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: yes
+
+Renamed the standalone MobilePay payment method to Vipps and gave it the new blue Vipps logo, ahead of Vipps MobilePay rebranding MobilePay to Vipps in Denmark, Finland and Greenland on 12 January 2027. The two standalone gateways are now told apart by market, "Nexi Checkout Vipps (DK/FI)" and "Nexi Checkout Vipps (NO)". This is a branding change only: the payment method shown on existing orders and what is sent to Nexi are unchanged, and a merchant who has set their own title for the payment method keeps it.

@@ -282,15 +282,15 @@ return apply_filters(
 			'default' => 'no',
 		),
 		'enable_payment_method_mobilepay'  => array(
-			'title'   => __( 'MobilePay payment', 'dibs-easy-for-woocommerce' ),
+			'title'   => __( 'Vipps payment (DK/FI)', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable MobilePay payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Vipps (DK/FI) payment as separate payment method', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'enable_payment_method_vipps'      => array(
-			'title'   => __( 'Vipps payment', 'dibs-easy-for-woocommerce' ),
+			'title'   => __( 'Vipps payment (NO)', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Vipps payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Vipps (NO) payment as separate payment method', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'payment_method_split_section_end' => array(

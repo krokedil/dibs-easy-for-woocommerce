@@ -19,12 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Vipps extends BaseGateway {
 
 	/**
-	 * MobilePay constructor.
+	 * Vipps constructor.
 	 */
 	public function __construct() {
 		$this->id                   = 'nets_easy_vipps';
-		$this->method_title         = __( 'Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' );
-		$this->method_description   = __( 'Nexi Checkout Vipps payment', 'dibs-easy-for-woocommerce' );
+		$this->method_title         = __( 'Nexi Checkout Vipps (NO)', 'dibs-easy-for-woocommerce' );
+		$this->method_description   = __( 'Nexi Checkout Vipps payment for Norway', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name  = 'Vipps';
 		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/vipps.png';
 		$this->available_countries  = array( 'NO' );

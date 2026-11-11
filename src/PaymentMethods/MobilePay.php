@@ -22,9 +22,13 @@ class MobilePay extends BaseGateway {
 	 * MobilePay constructor.
 	 */
 	public function __construct() {
+		// MobilePay is branded as Vipps in Denmark, Finland and Greenland from 12 January 2027.
+		// Only the name and the logo change: the gateway id is stored as the payment method on
+		// existing orders, and 'MobilePay' remains the payment method name in the Nexi API, so
+		// neither may be renamed.
 		$this->id                   = 'nets_easy_mobilepay';
-		$this->method_title         = __( 'Nexi Checkout MobilePay', 'dibs-easy-for-woocommerce' );
-		$this->method_description   = __( 'Nexi Checkout MobilePay payment', 'dibs-easy-for-woocommerce' );
+		$this->method_title         = __( 'Nexi Checkout Vipps (DK/FI)', 'dibs-easy-for-woocommerce' );
+		$this->method_description   = __( 'Nexi Checkout Vipps payment for Denmark and Finland', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name  = 'MobilePay';
 		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/mobilepay.png';
 		$this->available_countries  = array( 'DK' );
