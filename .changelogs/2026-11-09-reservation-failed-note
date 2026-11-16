@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: no
+
+A declined card payment now adds an order note with Nexi's decline code, for example "79 Declined due to lifecycle (source: Issuer)".

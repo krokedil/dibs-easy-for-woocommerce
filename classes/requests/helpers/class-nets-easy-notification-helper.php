@@ -5,6 +5,8 @@
  * @package DIBS_Easy/Classes/Requests/Helpers
  */
 
+use Krokedil\Nexi\Webhooks\ReservationFailed;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -44,6 +46,11 @@ class Nets_Easy_Notification_Helper {
 				'eventName'     => 'payment.checkout.completed',
 				'url'           => esc_url_raw( add_query_arg( array( 'dibs-payment-created-callback' => '1' ), get_home_url() . '/wc-api/DIBS_Api_Callbacks/' ) ),
 				'authorization' => wp_create_nonce( 'dibs_web_hooks' ),
+			);
+			$web_hooks[] = array(
+				'eventName'     => ReservationFailed::EVENT,
+				'url'           => esc_url_raw( ReservationFailed::get_url() ),
+				'authorization' => ReservationFailed::get_authorization(),
 			);
 			return $web_hooks;
 		}
