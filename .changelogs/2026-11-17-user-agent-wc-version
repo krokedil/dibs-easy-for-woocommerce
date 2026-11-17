@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: no
+
+API requests to Nexi now include the WooCommerce version in the User-Agent header, in the same format as other Krokedil plugins.

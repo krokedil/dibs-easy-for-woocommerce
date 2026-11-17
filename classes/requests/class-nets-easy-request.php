@@ -149,10 +149,11 @@ abstract class Nets_Easy_Request {
 		$protocols   = array( 'http://', 'http://www.', 'https://', 'https://www.' );
 		$wp_version  = get_bloginfo( 'version' );
 		$wp_url      = iconv( 'UTF-8', 'ASCII//IGNORE', str_replace( $protocols, '', get_bloginfo( 'url' ) ) );
+		$wc_version  = WC()->version;
 		$request_url = $this->get_request_url();
 		$user_agent  = apply_filters(
 			'http_headers_useragent',
-			"WordPress/{$wp_version}; {$wp_url} - Plugin/" . WC_DIBS_EASY_VERSION . ' - PHP/' . PHP_VERSION . ' - Krokedil',
+			"WordPress/{$wp_version}; {$wp_url} - WooCommerce: {$wc_version} - Nexi Checkout: " . WC_DIBS_EASY_VERSION . ' - PHP Version: ' . PHP_VERSION . ' - Krokedil',
 			$request_url
 		);
 
