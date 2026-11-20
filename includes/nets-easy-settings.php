@@ -282,16 +282,22 @@ return apply_filters(
 			'default' => 'no',
 		),
 		'enable_payment_method_mobilepay'  => array(
-			'title'   => __( 'Vipps payment (DK/FI)', 'dibs-easy-for-woocommerce' ),
-			'type'    => 'checkbox',
-			'label'   => __( 'Enable Vipps (DK/FI) payment as separate payment method', 'dibs-easy-for-woocommerce' ),
-			'default' => 'no',
+			'title'       => __( 'Vipps payment', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'checkbox',
+			'label'       => __( 'Enable Vipps payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			// Both standalone payment methods are called Vipps and are told apart by the colour of
+			// their logo. There is no logo next to these checkboxes, so the colour is named here.
+			'description' => __( 'The Vipps with the blue logo, for Denmark. This payment method was called MobilePay until 12 January 2027.', 'dibs-easy-for-woocommerce' ),
+			'desc_tip'    => false,
+			'default'     => 'no',
 		),
 		'enable_payment_method_vipps'      => array(
-			'title'   => __( 'Vipps payment (NO)', 'dibs-easy-for-woocommerce' ),
-			'type'    => 'checkbox',
-			'label'   => __( 'Enable Vipps (NO) payment as separate payment method', 'dibs-easy-for-woocommerce' ),
-			'default' => 'no',
+			'title'       => __( 'Vipps payment', 'dibs-easy-for-woocommerce' ),
+			'type'        => 'checkbox',
+			'label'       => __( 'Enable Vipps payment as separate payment method', 'dibs-easy-for-woocommerce' ),
+			'description' => __( 'The Vipps with the orange logo, for Norway.', 'dibs-easy-for-woocommerce' ),
+			'desc_tip'    => false,
+			'default'     => 'no',
 		),
 		'payment_method_split_section_end' => array(
 			'type' => 'krokedil_section_end',

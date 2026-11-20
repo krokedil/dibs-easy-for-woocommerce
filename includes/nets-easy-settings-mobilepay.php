@@ -24,7 +24,7 @@ return apply_filters(
 		'enabled'                    => array(
 			'title'   => __( 'Enable/Disable', 'dibs-easy-for-woocommerce' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable Nexi Checkout Vipps (DK/FI)', 'dibs-easy-for-woocommerce' ),
+			'label'   => __( 'Enable Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' ),
 			'default' => 'no',
 		),
 		'title'                      => array(

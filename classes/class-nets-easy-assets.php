@@ -155,8 +155,8 @@ class Nets_Easy_Assets {
 				'logo'  => WC_DIBS__URL . '/assets/images/klarna.png',
 			),
 			'nets_easy_mobilepay'    => array(
-				'label' => __( 'Nexi Checkout Vipps (DK/FI)', 'dibs-easy-for-woocommerce' ),
-				'logo'  => WC_DIBS__URL . '/assets/images/mobilepay.png',
+				'label' => __( 'Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/vipps-blue.svg',
 			),
 			'nets_easy_ratepay_sepa' => array(
 				'label' => __( 'Nexi Checkout Ratepay SEPA', 'dibs-easy-for-woocommerce' ),
@@ -175,8 +175,8 @@ class Nets_Easy_Assets {
 				'logo'  => WC_DIBS__URL . '/assets/images/trustly.png',
 			),
 			'nets_easy_vipps'        => array(
-				'label' => __( 'Nexi Checkout Vipps (NO)', 'dibs-easy-for-woocommerce' ),
-				'logo'  => WC_DIBS__URL . '/assets/images/vipps.png',
+				'label' => __( 'Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' ),
+				'logo'  => WC_DIBS__URL . '/assets/images/vipps-orange.svg',
 			),
 		);
 		wp_localize_script(

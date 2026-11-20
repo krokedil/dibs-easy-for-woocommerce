@@ -27,10 +27,10 @@ class MobilePay extends BaseGateway {
 		// existing orders, and 'MobilePay' remains the payment method name in the Nexi API, so
 		// neither may be renamed.
 		$this->id                   = 'nets_easy_mobilepay';
-		$this->method_title         = __( 'Nexi Checkout Vipps (DK/FI)', 'dibs-easy-for-woocommerce' );
-		$this->method_description   = __( 'Nexi Checkout Vipps payment for Denmark and Finland', 'dibs-easy-for-woocommerce' );
+		$this->method_title         = __( 'Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' );
+		$this->method_description   = __( 'Nexi Checkout Vipps payment', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name  = 'MobilePay';
-		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/mobilepay.png';
+		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/vipps-blue.svg';
 		$this->available_countries  = array( 'DK' );
 		$this->available_currencies = array( 'DKK' );
 

@@ -1,0 +1,4 @@
+Type: Tweak
+Needs Documentation: yes
+
+Renamed the standalone MobilePay payment method to Vipps, ahead of Vipps MobilePay rebranding MobilePay to Vipps in Denmark, Finland and Greenland on 12 January 2027. Both standalone payment methods are now called Vipps and are told apart by the colour of their logo, blue for the one that was MobilePay and orange for the one that was already Vipps, following the brand's two colour variants. Both logos are now the official Vipps pay mark as SVG. This is a branding change only: the payment method shown on existing orders and what is sent to Nexi are unchanged, and a merchant who has set their own title for the payment method keeps it. The two checkboxes that turn the standalone payment methods on now say which Vipps is which, since there is no logo next to them to go by.
