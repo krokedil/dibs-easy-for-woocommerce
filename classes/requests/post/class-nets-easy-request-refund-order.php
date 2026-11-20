@@ -72,7 +72,7 @@ class Nets_Easy_Request_Refund_Order extends Nets_Easy_Request_Post {
 	 * @return IdempotencyKey
 	 */
 	protected function get_idempotency_key() {
-		return new IdempotencyKey( wc_get_order( $this->order_id ), 'refund', $this->get_request_url(), Nets_Easy_Refund_Helper::get_total_refund_amount( absint( $this->order_id ) ) );
+		return new IdempotencyKey( wc_get_order( $this->order_id ), 'refund', $this->get_request_url(), Nets_Easy_Refund_Helper::get_total_refund_amount( absint( $this->order_id ) ), true );
 	}
 
 	/**

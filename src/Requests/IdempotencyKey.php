@@ -9,8 +9,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * The Idempotency-Key for a charge or refund, so a retry after a lost response cannot charge twice.
  *
- * The key is derived from the order and an attempt counter in order meta. The counter only moves
- * once Nexi has given a definite answer, so an ambiguous failure is retried under the same key.
+ * The key is derived from the order and an attempt counter in order meta. The counter moves on a
+ * rejection, and on success only for repeatable actions, so an ambiguous failure keeps its key.
  */
 class IdempotencyKey {
 	/**
@@ -45,6 +45,13 @@ class IdempotencyKey {
 	private $fingerprint;
 
 	/**
+	 * Whether the same amount can legitimately be sent again after a success, as with partial refunds.
+	 *
+	 * @var bool
+	 */
+	private $repeatable;
+
+	/**
 	 * The key, once built.
 	 *
 	 * @var string|null
@@ -58,11 +65,13 @@ class IdempotencyKey {
 	 * @param string   $action What is being done, for example "renewal" or "refund".
 	 * @param string   $request_url The request URL, which holds the payment, charge or subscription id.
 	 * @param int      $amount The amount in minor units.
+	 * @param bool     $repeatable Whether a new key is needed after a success, as with partial refunds.
 	 */
-	public function __construct( $order, $action, $request_url, $amount ) {
+	public function __construct( $order, $action, $request_url, $amount, $repeatable = false ) {
 		$this->order       = $order;
 		$this->action      = $action;
 		$this->fingerprint = home_url() . '|' . $request_url . '|' . $amount;
+		$this->repeatable  = $repeatable;
 	}
 
 	/**
@@ -89,9 +98,11 @@ class IdempotencyKey {
 	}
 
 	/**
-	 * Moves to a new key when Nexi gave a definite answer, and keeps it when the outcome is unknown.
+	 * Moves to a new key when Nexi rejected the request, or succeeded on a repeatable action.
 	 *
-	 * @param array|WP_Error $response The processed response from the request.
+	 * A charge or renewal keeps its key after a success, so a duplicate attempt is replayed, not charged.
+	 *
+	 * @param array|WP_Error|null $response The processed response from the request.
 	 * @return void
 	 */
 	public function settle( $response ) {
@@ -106,6 +117,10 @@ class IdempotencyKey {
 			return;
 		}
 
+		if ( ! is_wp_error( $response ) && ! $this->repeatable ) {
+			return;
+		}
+
 		$this->order->update_meta_data( self::META_PREFIX . $this->action, (string) ( $this->get_attempt() + 1 ) );
 		$this->order->save();
 	}
@@ -113,14 +128,14 @@ class IdempotencyKey {
 	/**
 	 * Whether Nexi may have acted on the request without us learning the result.
 	 *
-	 * Transport errors, 5xx and 409 (a request with the same key still in progress) all count.
+	 * Transport errors, 5xx, 409 (same key still in progress) and a 2xx body we could not decode all count.
 	 *
-	 * @param array|WP_Error $response The processed response from the request.
+	 * @param array|WP_Error|null $response The processed response from the request.
 	 * @return bool
 	 */
 	public static function is_outcome_unknown( $response ) {
 		if ( ! is_wp_error( $response ) ) {
-			return false;
+			return ! is_array( $response );
 		}
 
 		// The request classes use the HTTP status as the error code, transport errors have a string code.

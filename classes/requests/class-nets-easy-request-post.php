@@ -58,7 +58,7 @@ abstract class Nets_Easy_Request_Post extends Nets_Easy_Request {
 	}
 
 	/**
-	 * Make the request, then move to a new idempotency key if Nexi gave a definite answer.
+	 * Make the request, then let the idempotency key decide whether the next attempt needs a new key.
 	 *
 	 * @return array|WP_Error
 	 */
