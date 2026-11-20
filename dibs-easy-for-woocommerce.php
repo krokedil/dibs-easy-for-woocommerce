@@ -39,6 +39,7 @@ use KrokedilNexiCheckoutDeps\Krokedil\WooCommerce\KrokedilWooCommerce;
 use Krokedil\Nexi\PaymentMethods;
 use Krokedil\Nexi\Logging\LogMasking;
 use Krokedil\Nexi\Checkout\StalePaymentSession;
+use Krokedil\Nexi\Migrations\VippsTitleMigration;
 
 if ( ! class_exists( 'DIBS_Easy' ) ) {
 
@@ -212,6 +213,8 @@ if ( ! class_exists( 'DIBS_Easy' ) ) {
 
 			// Masking has to be in place before anything can log.
 			LogMasking::register();
+
+			VippsTitleMigration::register();
 
 			// Functions are used in the files below.
 			include_once plugin_basename( 'includes/nets-easy-functions.php' );
