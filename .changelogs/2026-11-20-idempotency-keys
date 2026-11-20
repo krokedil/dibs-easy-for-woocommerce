@@ -1,0 +1,4 @@
+Type: Enhancement
+Needs Documentation: no
+
+Charges, subscription renewals and refunds now send an idempotency key to Nexi. If a request times out or fails before Nexi answers, the retry reuses the same key, so Nexi returns the original result instead of charging or refunding twice.
