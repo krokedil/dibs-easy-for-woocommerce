@@ -82,7 +82,7 @@ abstract class BaseGateway extends WC_Payment_Gateway {
 	public function __construct() {
 		$this->shared_settings                = get_option( 'woocommerce_dibs_easy_settings', array() );
 		$this->payment_gateway_icon           = $this->payment_gateway_icon ?? $this->settings['payment_gateway_icon'] ?? 'default';
-		$this->payment_gateway_icon_max_width = $this->settings['payment_gateway_icon_max_width'] ?? '145';
+		$this->payment_gateway_icon_max_width = $this->payment_gateway_icon_max_width ?? $this->settings['payment_gateway_icon_max_width'] ?? '145';
 
 		$available_countries       = empty( $this->available_countries ) ? $this->settings['available_countries'] ?? array() : $this->available_countries;
 		$this->available_countries = ! is_array( $available_countries ) ? array() : $available_countries;

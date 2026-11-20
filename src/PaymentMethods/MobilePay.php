@@ -30,9 +30,13 @@ class MobilePay extends BaseGateway {
 		$this->method_title         = __( 'Nexi Checkout Vipps', 'dibs-easy-for-woocommerce' );
 		$this->method_description   = __( 'Nexi Checkout Vipps payment', 'dibs-easy-for-woocommerce' );
 		$this->payment_method_name  = 'MobilePay';
-		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/vipps-blue.svg';
+		$this->payment_gateway_icon = WC_DIBS__URL . '/assets/images/vipps-blue.png';
 		$this->available_countries  = array( 'DK' );
 		$this->available_currencies = array( 'DKK' );
+
+		// The Vipps mark is a square app icon, so it is capped much lower than the default
+		// 145 px, which is meant for the wide wordmarks the other payment methods use.
+		$this->payment_gateway_icon_max_width = '40';
 
 		$this->init_form_fields();
 		$this->init_settings();
