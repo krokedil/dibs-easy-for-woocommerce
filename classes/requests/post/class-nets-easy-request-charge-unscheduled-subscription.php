@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Krokedil\Nexi\Requests\IdempotencyKey;
+
 /**
  * Charge unscheduled subscription renewal order request class
  */
@@ -54,6 +56,16 @@ class Nets_Easy_Request_Charge_Unscheduled_Subscription extends Nets_Easy_Reques
 		$body['order']['currency']  = $order->get_currency();
 		$body['order']['reference'] = $order->get_order_number();
 		return $body;
+	}
+
+	/**
+	 * Get the idempotency key, so a retry after a lost response cannot charge twice.
+	 *
+	 * @return IdempotencyKey
+	 */
+	protected function get_idempotency_key() {
+		$order = wc_get_order( $this->order_id );
+		return new IdempotencyKey( $order, 'renewal', $this->get_request_url(), intval( round( $order->get_total() * 100 ) ) );
 	}
 
 	/**
