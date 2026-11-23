@@ -109,8 +109,8 @@ class IdempotencyKey {
 		if ( self::is_outcome_unknown( $response ) ) {
 			$this->order->add_order_note(
 				sprintf(
-					/* translators: %s: The idempotency key. */
-					__( 'No clear answer from Nexi, so the request may have gone through. A retry reuses idempotency key %s, so it cannot be processed twice.', 'dibs-easy-for-woocommerce' ),
+					/* translators: %s: The idempotency key, a technical reference for support. */
+					__( 'Nexi did not respond, so this may still have gone through. Check the payment in the Nexi portal before trying again. Reference: %s', 'dibs-easy-for-woocommerce' ),
 					$this->get_value()
 				)
 			);
