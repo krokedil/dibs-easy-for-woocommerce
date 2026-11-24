@@ -218,11 +218,11 @@ class Nets_Easy_Checkout_Helper {
 			return null;
 		}
 
+		$phone_number = str_replace( array( '-', ' ' ), '', $phone_number );
+
 		if ( substr( $phone_number, 0, 1 ) === '+' ) {
 			$phone_number = substr( $phone_number, strlen( self::get_phone_prefix( $order ) ) );
 		}
-
-		$phone_number = str_replace( array( '-', ' ' ), '', $phone_number );
 
 		return $phone_number;
 	}
@@ -376,8 +376,8 @@ class Nets_Easy_Checkout_Helper {
 	public static function get_checkout_phone_number() {
 		$billing_phone = WC()->customer->get_billing_phone();
 		if ( substr( $billing_phone, 0, 1 ) === '+' ) {
-			$phone_number = substr( $billing_phone, strlen( self::get_checkout_phone_prefix() ) );
-			$phone_number = str_replace( ' ', '', $phone_number );
+			$phone_number = str_replace( array( '-', ' ' ), '', $billing_phone );
+			$phone_number = substr( $phone_number, strlen( self::get_checkout_phone_prefix() ) );
 		} else {
 			$phone_number = str_replace( '-', '', $billing_phone );
 			$phone_number = str_replace( ' ', '', $phone_number );
