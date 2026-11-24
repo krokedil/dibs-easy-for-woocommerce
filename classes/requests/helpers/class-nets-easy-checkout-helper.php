@@ -198,7 +198,7 @@ class Nets_Easy_Checkout_Helper {
 	public static function get_phone_prefix( $order ) {
 		$prefix = null;
 		if ( substr( $order->get_billing_phone(), 0, 1 ) === '+' ) {
-			$prefix = substr( $order->get_billing_phone(), 0, 3 );
+			$prefix = self::get_calling_code_from_phone( $order->get_billing_phone() );
 		} else {
 			$prefix = dibs_get_phone_prefix_for_country( $order->get_billing_country() );
 		}
@@ -312,11 +312,60 @@ class Nets_Easy_Checkout_Helper {
 		$prefix       = null;
 		$phone_number = WC()->customer->get_billing_phone();
 		if ( substr( $phone_number, 0, 1 ) === '+' ) {
-			$prefix = substr( $phone_number, 0, 3 );
+			$prefix = self::get_calling_code_from_phone( $phone_number );
 		} else {
 			$prefix = dibs_get_phone_prefix_for_country( WC()->checkout()->get_value( 'billing_country' ) );
 		}
 		return $prefix;
+	}
+
+	/**
+	 * Finds the country calling code a "+"-prefixed phone number starts with.
+	 *
+	 * @param string $phone Phone number starting with "+".
+	 * @return string The calling code, e.g. "+358". Falls back to the first three characters if none matches.
+	 */
+	private static function get_calling_code_from_phone( $phone ) {
+		$phone = str_replace( array( '-', ' ' ), '', $phone );
+
+		foreach ( self::get_calling_codes() as $code ) {
+			if ( 0 === strpos( $phone, $code ) ) {
+				return $code;
+			}
+		}
+
+		return substr( $phone, 0, 3 );
+	}
+
+	/**
+	 * Gets the distinct country calling codes known to WooCommerce, longest first.
+	 *
+	 * Area-code entries such as "+1246" or "+441534" are skipped so their numbers split at the country code.
+	 *
+	 * @return string[]
+	 */
+	private static function get_calling_codes() {
+		static $codes = null;
+
+		if ( null === $codes ) {
+			$codes = array();
+			foreach ( dibs_get_all_prefixes() as $country_codes ) {
+				foreach ( (array) $country_codes as $code ) {
+					if ( preg_match( '/^\+\d{1,3}$/', $code ) ) {
+						$codes[ $code ] = $code;
+					}
+				}
+			}
+			$codes = array_values( $codes );
+			usort(
+				$codes,
+				function ( $a, $b ) {
+					return strlen( $b ) - strlen( $a );
+				}
+			);
+		}
+
+		return $codes;
 	}
 
 	/**
