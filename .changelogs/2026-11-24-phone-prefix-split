@@ -1,4 +1,4 @@
 Type: Fix
 Needs Documentation: no
 
-Phone numbers entered with a country calling code that is not two digits long, such as +358 (Finland) or +1 (USA), are now split into the correct prefix and number when sent to Nexi.
+Fixed phone numbers with a country code that is not two digits, such as +358, being sent to Nexi with the wrong prefix.

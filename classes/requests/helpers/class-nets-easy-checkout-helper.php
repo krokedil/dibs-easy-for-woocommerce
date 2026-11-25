@@ -218,7 +218,7 @@ class Nets_Easy_Checkout_Helper {
 			return null;
 		}
 
-		$phone_number = str_replace( array( '-', ' ' ), '', $phone_number );
+		$phone_number = self::normalize_phone( $phone_number );
 
 		if ( substr( $phone_number, 0, 1 ) === '+' ) {
 			$phone_number = substr( $phone_number, strlen( self::get_phone_prefix( $order ) ) );
@@ -326,7 +326,7 @@ class Nets_Easy_Checkout_Helper {
 	 * @return string The calling code, e.g. "+358". Falls back to the first three characters if none matches.
 	 */
 	private static function get_calling_code_from_phone( $phone ) {
-		$phone = str_replace( array( '-', ' ' ), '', $phone );
+		$phone = self::normalize_phone( $phone );
 
 		foreach ( self::get_calling_codes() as $code ) {
 			if ( 0 === strpos( $phone, $code ) ) {
@@ -375,13 +375,23 @@ class Nets_Easy_Checkout_Helper {
 	 */
 	public static function get_checkout_phone_number() {
 		$billing_phone = WC()->customer->get_billing_phone();
+		$phone_number  = self::normalize_phone( $billing_phone );
 		if ( substr( $billing_phone, 0, 1 ) === '+' ) {
-			$phone_number = str_replace( array( '-', ' ' ), '', $billing_phone );
 			$phone_number = substr( $phone_number, strlen( self::get_checkout_phone_prefix() ) );
-		} else {
-			$phone_number = str_replace( '-', '', $billing_phone );
-			$phone_number = str_replace( ' ', '', $phone_number );
 		}
 		return $phone_number;
+	}
+
+	/**
+	 * Strips everything but digits from a phone number, keeping a leading "+".
+	 *
+	 * @param string $phone Phone number as entered by the customer.
+	 * @return string
+	 */
+	private static function normalize_phone( $phone ) {
+		$phone  = trim( (string) $phone );
+		$digits = preg_replace( '/\D/', '', $phone );
+
+		return 0 === strpos( $phone, '+' ) ? '+' . $digits : $digits;
 	}
 }
