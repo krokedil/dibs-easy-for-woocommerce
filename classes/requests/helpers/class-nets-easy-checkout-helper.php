@@ -196,9 +196,10 @@ class Nets_Easy_Checkout_Helper {
 	 * @return string
 	 */
 	public static function get_phone_prefix( $order ) {
-		$prefix = null;
-		if ( substr( $order->get_billing_phone(), 0, 1 ) === '+' ) {
-			$prefix = self::get_calling_code_from_phone( $order->get_billing_phone() );
+		$prefix       = null;
+		$phone_number = self::normalize_phone( $order->get_billing_phone() );
+		if ( substr( $phone_number, 0, 1 ) === '+' ) {
+			$prefix = self::get_calling_code_from_phone( $phone_number );
 		} else {
 			$prefix = dibs_get_phone_prefix_for_country( $order->get_billing_country() );
 		}
@@ -310,7 +311,7 @@ class Nets_Easy_Checkout_Helper {
 	 */
 	public static function get_checkout_phone_prefix() {
 		$prefix       = null;
-		$phone_number = WC()->customer->get_billing_phone();
+		$phone_number = self::normalize_phone( WC()->customer->get_billing_phone() );
 		if ( substr( $phone_number, 0, 1 ) === '+' ) {
 			$prefix = self::get_calling_code_from_phone( $phone_number );
 		} else {
@@ -376,7 +377,7 @@ class Nets_Easy_Checkout_Helper {
 	public static function get_checkout_phone_number() {
 		$billing_phone = WC()->customer->get_billing_phone();
 		$phone_number  = self::normalize_phone( $billing_phone );
-		if ( substr( $billing_phone, 0, 1 ) === '+' ) {
+		if ( substr( $phone_number, 0, 1 ) === '+' ) {
 			$phone_number = substr( $phone_number, strlen( self::get_checkout_phone_prefix() ) );
 		}
 		return $phone_number;
