@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use Krokedil\Nexi\Requests\IdempotencyKey;
+
 /**
  * Activate order request class
  */
@@ -58,6 +60,15 @@ class Nets_Easy_Request_Activate_Order extends Nets_Easy_Request_Post {
 			'amount'     => intval( round( $this->order->get_total() * 100 ) ),
 			'orderItems' => Nets_Easy_Order_Items_Helper::get_items( $this->order_id ),
 		);
+	}
+
+	/**
+	 * Get the idempotency key, so a retry after a lost response cannot charge twice.
+	 *
+	 * @return IdempotencyKey
+	 */
+	protected function get_idempotency_key() {
+		return new IdempotencyKey( $this->order, 'charge', $this->get_request_url(), intval( round( $this->order->get_total() * 100 ) ) );
 	}
 
 	/**
