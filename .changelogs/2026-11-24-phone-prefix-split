@@ -1,0 +1,4 @@
+Type: Fix
+Needs Documentation: no
+
+Fixed phone numbers with a country code that is not two digits, such as +358, being sent to Nexi with the wrong prefix.

@@ -196,9 +196,10 @@ class Nets_Easy_Checkout_Helper {
 	 * @return string
 	 */
 	public static function get_phone_prefix( $order ) {
-		$prefix = null;
-		if ( substr( $order->get_billing_phone(), 0, 1 ) === '+' ) {
-			$prefix = substr( $order->get_billing_phone(), 0, 3 );
+		$prefix       = null;
+		$phone_number = self::normalize_phone( $order->get_billing_phone() );
+		if ( substr( $phone_number, 0, 1 ) === '+' ) {
+			$prefix = self::get_calling_code_from_phone( $phone_number );
 		} else {
 			$prefix = dibs_get_phone_prefix_for_country( $order->get_billing_country() );
 		}
@@ -218,11 +219,11 @@ class Nets_Easy_Checkout_Helper {
 			return null;
 		}
 
+		$phone_number = self::normalize_phone( $phone_number );
+
 		if ( substr( $phone_number, 0, 1 ) === '+' ) {
 			$phone_number = substr( $phone_number, strlen( self::get_phone_prefix( $order ) ) );
 		}
-
-		$phone_number = str_replace( array( '-', ' ' ), '', $phone_number );
 
 		return $phone_number;
 	}
@@ -310,13 +311,62 @@ class Nets_Easy_Checkout_Helper {
 	 */
 	public static function get_checkout_phone_prefix() {
 		$prefix       = null;
-		$phone_number = WC()->customer->get_billing_phone();
+		$phone_number = self::normalize_phone( WC()->customer->get_billing_phone() );
 		if ( substr( $phone_number, 0, 1 ) === '+' ) {
-			$prefix = substr( $phone_number, 0, 3 );
+			$prefix = self::get_calling_code_from_phone( $phone_number );
 		} else {
 			$prefix = dibs_get_phone_prefix_for_country( WC()->checkout()->get_value( 'billing_country' ) );
 		}
 		return $prefix;
+	}
+
+	/**
+	 * Finds the country calling code a "+"-prefixed phone number starts with.
+	 *
+	 * @param string $phone Phone number starting with "+".
+	 * @return string The calling code, e.g. "+358". Falls back to the first three characters if none matches.
+	 */
+	private static function get_calling_code_from_phone( $phone ) {
+		$phone = self::normalize_phone( $phone );
+
+		foreach ( self::get_calling_codes() as $code ) {
+			if ( 0 === strpos( $phone, $code ) ) {
+				return $code;
+			}
+		}
+
+		return substr( $phone, 0, 3 );
+	}
+
+	/**
+	 * Gets the distinct country calling codes known to WooCommerce, longest first.
+	 *
+	 * Area-code entries such as "+1246" or "+441534" are skipped so their numbers split at the country code.
+	 *
+	 * @return string[]
+	 */
+	private static function get_calling_codes() {
+		static $codes = null;
+
+		if ( null === $codes ) {
+			$codes = array();
+			foreach ( dibs_get_all_prefixes() as $country_codes ) {
+				foreach ( (array) $country_codes as $code ) {
+					if ( preg_match( '/^\+\d{1,3}$/', $code ) ) {
+						$codes[ $code ] = $code;
+					}
+				}
+			}
+			$codes = array_values( $codes );
+			usort(
+				$codes,
+				function ( $a, $b ) {
+					return strlen( $b ) - strlen( $a );
+				}
+			);
+		}
+
+		return $codes;
 	}
 
 	/**
@@ -326,13 +376,23 @@ class Nets_Easy_Checkout_Helper {
 	 */
 	public static function get_checkout_phone_number() {
 		$billing_phone = WC()->customer->get_billing_phone();
-		if ( substr( $billing_phone, 0, 1 ) === '+' ) {
-			$phone_number = substr( $billing_phone, strlen( self::get_checkout_phone_prefix() ) );
-			$phone_number = str_replace( ' ', '', $phone_number );
-		} else {
-			$phone_number = str_replace( '-', '', $billing_phone );
-			$phone_number = str_replace( ' ', '', $phone_number );
+		$phone_number  = self::normalize_phone( $billing_phone );
+		if ( substr( $phone_number, 0, 1 ) === '+' ) {
+			$phone_number = substr( $phone_number, strlen( self::get_checkout_phone_prefix() ) );
 		}
 		return $phone_number;
+	}
+
+	/**
+	 * Strips everything but digits from a phone number, keeping a leading "+".
+	 *
+	 * @param string $phone Phone number as entered by the customer.
+	 * @return string
+	 */
+	private static function normalize_phone( $phone ) {
+		$phone  = trim( (string) $phone );
+		$digits = preg_replace( '/\D/', '', $phone );
+
+		return 0 === strpos( $phone, '+' ) ? '+' . $digits : $digits;
 	}
 }
